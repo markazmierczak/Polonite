@@ -1,0 +1,9 @@
+[submodule "Stp/Base"]
+	path = Stp/Base
+	url = https://github.com/Polonite/Base.git
+[submodule "Stp/Build"]
+	path = Stp/Build
+	url = https://github.com/Polonite/Build.git
+[submodule "Stp/Xml"]
+	path = Stp/Xml
+	url = https://github.com/Polonite/Xml.git

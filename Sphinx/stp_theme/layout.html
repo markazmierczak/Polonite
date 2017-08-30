@@ -1,0 +1,48 @@
+{%- extends "basic/layout.html" %}
+
+{%- macro searchbox() %}
+{# modified from sphinx/themes/basic/searchbox.html #}
+  {%- if builder != "htmlhelp" %}
+  <div class="inline-search" style="display: none" role="search">
+      <form class="inline-search" action="{{ pathto('search') }}" method="get">
+        <input placeholder="{{ _('Quick search') }}" type="text" name="q" />
+        <input type="submit" value="{{ _('Go') }}" />
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+  </div>
+  <script type="text/javascript">$('.inline-search').show(0);</script>
+  {%- endif %}
+{%- endmacro %}
+
+{%- block extrahead %}
+  {{ super() }}
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+{% endblock %}
+
+{% block relbar1 %} {% if builder != 'qthelp' %} {{ relbar() }} {% endif %} {% endblock %}
+{% block relbar2 %} {% if builder != 'qthelp' %} {{ relbar() }} {% endif %} {% endblock %}
+
+{% block relbaritems %}
+{%- if pagename != "search" and builder != "singlehtml" and builder != "htmlhelp" %}
+<li class="right">
+    {{ searchbox() }}
+</li>
+{%- endif %}
+{% endblock %}
+
+{% block header %}
+  {{ super() }}
+  {% if pagename == 'index' %}
+  <div class="indexwrapper">
+  {% endif %}
+{% endblock %}
+{%- block footer %}
+  <div class="footer">
+    &copy; Copyright {{ copyright }}.
+    {% trans sphinx_version=sphinx_version|e %}Created using <a href="http://sphinx-doc.org/">Sphinx</a> {{ sphinx_version }}.{% endtrans %}
+  </div>
+  {% if pagename == 'index' %}
+  </div>
+  {% endif %}
+{%- endblock %}

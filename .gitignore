@@ -1,0 +1,18 @@
+# Output directory
+/Out
+
+# IDE project files
+/.classpath
+/.cproject
+/.externalToolBuilders
+/.project
+/.settings
+/.pydevproject
+/.idea/
+/.vscode/
+
+# Info file created by Dolphin file browser
+.directory
+
+# Python Compiled
+*.pyc

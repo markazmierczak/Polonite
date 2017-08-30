@@ -1,0 +1,20 @@
+# Copyright 2017 Polonite Authors. All rights reserved.
+# Distributed under MIT license that can be found in the LICENSE file.
+
+group("gn_all") {
+  testonly = true
+
+  has_stp_xml = exec_script(
+      "//Stp/Build/DirExists.py",
+      [ rebase_path("//Stp/Xml", root_build_dir) ],
+      "string") == "True"
+
+  deps = [
+    "Stp/Base/Test:BasePerfTests",
+    "Stp/Base/Test:BaseUnitTests",
+  ]
+
+  if (has_stp_xml) {
+    deps += [ "Stp/Xml" ]
+  }
+}
