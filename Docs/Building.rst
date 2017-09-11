@@ -16,7 +16,7 @@ Install dependencies
 Windows
 -------
 
-Install Visual Studio **2017 version 15.2** at least. Use the Custom install option and select:
+Install Visual Studio **2017 version 15.3** at least. Use the Custom install option and select:
 
 * Visual C++
 * Universal Windows Apps Development Tools
