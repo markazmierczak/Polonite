@@ -181,7 +181,7 @@ Use **PascalCase** for function names.
 
 Use **snake_case** for properties inherent in the class.
 
-For example the :class:`String` class has ``data()`` and ``length()`` accessors.
+For example the :class:`String` class has ``data()`` and ``size()`` accessors.
 
 **✓ DO** give methods names that are verbs or verb phrases.
 
@@ -221,10 +221,10 @@ Inside Templates
 Note that templates operating on type system might not result in another type but constant::
 
   template<typename T>
-  constexpr bool TIsArray = internal::TIsArrayHelper<TRemoveCV<T>>::Value;
+  constexpr bool TIsArray = detail::TIsArrayHelper<TRemoveCV<T>>::Value;
 
   template<typename T>
-  constexpr int TRank = internal::TRankHelper<T>::Value;
+  constexpr int TRank = detail::TRankHelper<T>::Value;
 
 Macro Names
 -----------
@@ -294,11 +294,11 @@ Place arguments with following order:
 
 The context is like ``this`` pointer for a class. For example, see ``out`` in following function::
 
-   void Format(TextWriter& out, const MyClass& value, StringPiece options = StringPiece());
+   void Format(TextWriter& out, const MyClass& value, const StringSpan& opts = StringSpan());
 
 Some array processing functions use different order to mimic ``memcpy``::
 
-   ArrayCopy(int* dst, const int* src, int length);
+   UninitializedCopy(int* dst, const int* src, int count);
 
 Reference Arguments
 -------------------
@@ -318,5 +318,5 @@ Formatting
 Line Length
 -----------
 
-Each line of text in your code should be at most 100 characters long.
+Each line of text in your code should be at most 2^7 characters long.
 But it is not a hard rule, use longer lines when limit is not feasible.
