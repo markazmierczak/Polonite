@@ -1,0 +1,301 @@
+# Copyright (c) 2013 The Chromium Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+import("Test.gni")
+
+config("gtest_config") {
+  visibility = [ ":*" ]
+
+  defines = [
+    # In order to allow regex matches in gtest to be shared between Windows
+    # and other systems, we tell gtest to always use it's internal engine.
+    "GTEST_HAS_POSIX_RE=0",
+  ]
+
+  # Gtest headers need to be able to find themselves.
+  include_dirs = [ "include" ]
+
+  if (is_win) {
+    cflags = [ "/wd4800" ]  # Unused variable warning.
+  }
+}
+
+config("gtest_direct_config") {
+  visibility = [ ":*" ]
+  defines = [ "UNIT_TEST" ]
+}
+
+config("gtest_warnings") {
+  if (is_win && is_clang) {
+    # The Mutex constructor initializer list in gtest-port.cc is incorrectly
+    # ordered. See
+    # https://groups.google.com/d/msg/googletestframework/S5uSV8L2TX8/U1FaTDa6J6sJ.
+    cflags = [ "-Wno-reorder" ]
+  }
+}
+
+static_library("GTest") {
+  testonly = true
+  sources = [
+    "GMock.cpp",
+    "GMockCardinalities.cpp",
+    "GMockMatchers.cpp",
+    "GMockSpecBuilders.cpp",
+    "GTest.cpp",
+    "GTestDeath.cpp",
+    "GTestFilePath.cpp",
+    "GTestPart.cpp",
+    "GTestPort.cpp",
+    "GTestPrinters.cpp",
+    "GTestTyped.cpp",
+    "GTestUtil.h",
+    "Internal/GMockInternalUtils.cpp",
+    "PlatformTest.h",
+    "ScopedLocale.cpp",
+    "ScopedLocale.h",
+    "TestSuite.cpp",
+    "TestSuite.h",
+  ]
+
+  if (is_darwin) {
+    sources += [
+      "GTestDarwin.h",
+      "GTestDarwin.mm",
+      "PlatformTestDarwin.mm",
+    ]
+  }
+
+  deps = [ "//Stp/Base" ]
+  include_dirs = [ "." ]
+
+  all_dependent_configs = [ ":gtest_config" ]
+  public_configs = [ ":gtest_direct_config" ]
+
+  configs -= [ "//Stp/Build/Config/Compiler:internal_code" ]
+  # FIXME fix gtest ifdefs
+  configs -= [ "//Stp/Build/Config/Compiler:wundef" ]
+  configs += [
+    "//Stp/Build/Config/Compiler:external_code",
+
+    # Must be after external_code for warning flags to be ordered correctly.
+    ":gtest_warnings",
+  ]
+
+  if (!is_posix) {
+    sources -= [
+      "ScopedLocale.cpp",
+      "ScopedLocale.h",
+    ]
+  }
+
+  if (is_mac) {
+    libs = [ "AppKit.framework" ]
+  }
+
+  if (is_android) {
+    deps += [ ":base_unittests_jni_headers" ]
+  }
+}
+
+config("perf_test_config") {
+  defines = [ "PERF_TEST" ]
+}
+
+source_set("PerfTest") {
+  testonly = true
+  sources = [
+    "PerfLog.cpp",
+    "PerfLog.h",
+    "PerfTest.cpp",
+    "PerfTest.h",
+    "PerfTestSuite.cpp",
+    "PerfTestSuite.h",
+    "PerfTimeLogger.cpp",
+    "PerfTimeLogger.h",
+  ]
+
+  configs -= [ "//Stp/Build/Config/Compiler:wundef" ]
+
+  deps = [
+    "//Stp/Base",
+    ":GTest",
+  ]
+}
+
+static_library("GTestMain") {
+  testonly = true
+  sources = [
+    "GTestMain.cpp",
+  ]
+  public_deps = [
+    "//Stp/Base",
+    ":GTest",
+  ]
+}
+
+# This is a source set instead of a static library because it seems like some
+# linkers get confused when "main" is in a static library, and if you link to
+# this, you always want the object file anyway.
+source_set("PerfTestMain") {
+  testonly = true
+  sources = [
+    "PerfTestMain.cpp",
+  ]
+  public_deps = [
+    "//Stp/Base",
+    ":PerfTest",
+  ]
+
+  public_configs = [ ":perf_test_config" ]
+}
+
+test("BasePerfTests") {
+  sources = [
+    "../Call/DelegatePerfTest.cpp",
+    "../Math/CommonFactorPerfTest.cpp",
+  ]
+  deps = [
+    "//Stp/Base/Test:PerfTestMain",
+  ]
+
+  if (is_android) {
+    deps += [ "//testing/android/native_test:native_test_native_code" ]
+  }
+}
+
+test("BaseUnitTests") {
+  sources = [
+    "../App/AtExitTest.cpp",
+#    "../Byte/BytesTest.cpp",
+    "../Call/DelegateTest.cpp",
+    "../Call/FunctionTest.cpp",
+    "../Call/ObserverListTest.cpp",
+    "../Containers/ArrayTest.cpp",
+    "../Containers/BinarySearchTest.cpp",
+    "../Containers/BitArrayTest.cpp",
+    "../Containers/FlatMapTest.cpp",
+    "../Containers/FlatSetTest.cpp",
+    "../Containers/HashMapTest.cpp",
+    # TODO "Containers/LinkedListTest.cpp",
+    "../Containers/ListTest.cpp",
+    # TODO "Containers/LruCacheTest.cpp",
+    # TODO "Containers/SinglyLinkedListTest.cpp",
+    "../Containers/SortingTest.cpp",
+    # FIXME "../Containers/SpanTest.cpp",
+    # TODO "Containers/StackTest.cpp",
+#    "../Exe/LibraryTest.cpp",
+#    "../Fs/DirectoryTest.cpp",
+#    "../Fs/FilePathTest.cpp",
+    # FIXME "Fs/FileTest.cpp",
+    # FIXME "Fs/MemoryMappedFileTest.cpp",
+    # FIXME "Fs/TemporaryDirectoryTest.cpp",
+#    "../Geometry/AffineTest.cpp",
+#    "../Geometry/CubicBezierTest.cpp",
+#    "../Geometry/Line2Test.cpp",
+#    "../Geometry/PlaneTest.cpp",
+#    "../Geometry/Quad2Test.cpp",
+#    "../Geometry/QuaternionTest.cpp",
+#    "../Geometry/RectTest.cpp",
+#    "../Geometry/Size2Test.cpp",
+#    "../Geometry/Vector2Test.cpp",
+#    "../Geometry/Vector3Test.cpp",
+#    "../Geometry/Xform3Test.cpp",
+    "../Hash/Crc32Test.cpp",
+    "../Hash/Md5Test.cpp",
+#    "../Hash/Sha1Test.cpp",
+    "../Io/Base64Test.cpp",
+    "../Io/TextWriterTest.cpp",
+
+#    "../Json/JsonParserTest.cpp",
+#    "../Json/JsonValueTest.cpp",
+#    "../Json/JsonFormatterTest.cpp",
+
+    # FIXME "Linux/ProcMapsTest.cpp",
+
+    "../Math/AlignmentTest.cpp",
+#    "../Math/BitsTest.cpp",
+#    "../Math/CommonFactorTest.cpp",
+#    "../Math/FixedTest.cpp",
+    "../Math/FloatToIntegerTest.cpp",
+    "../Math/HalfTest.cpp",
+    "../Math/NBitsTest.cpp",
+#    "../Math/PowerOfTwoTest.cpp",
+    "../Math/RawFloatTest.cpp",
+    "../Math/SafeConversionsTest.cpp",
+#    "../Math/SafeTest.cpp",
+    "../Math/SaturatedMathTest.cpp",
+    "../Mem/AlignedMallocTest.cpp",
+    "../Mem/LinearAllocatorTest.cpp",
+    "../Mem/OwnPtrTest.cpp",
+    "../Mem/RefCountedTest.cpp",
+    # FIXME "Mem/WeakPtrTest.cpp",
+#    "../Random/CryptoRandomTest.cpp",
+    "../Random/RandomTest.cpp",
+    "../Simd/VnxTest.cpp",
+    "../Sync/AtomicOpsTest.cpp",
+    "../Sync/ConditionVariableTest.cpp",
+    "../Sync/LockTest.cpp",
+    "../Sync/OneWriterSeqLockTest.cpp",
+#    "../Sync/ReadWriteLockTest.cpp",
+#    "../Sync/WaitableEventTest.cpp",
+    "../System/CpuInfoTest.cpp",
+    "../System/EnvironmentTest.cpp",
+#    "../System/SysInfoTest.cpp",
+    "../Text/AsciiCharTest.cpp",
+    "../Text/FormatIntegerTest.cpp",
+    "../Text/StringSpanTest.cpp",
+#    "../Text/StringTest.cpp",
+    # FIXME "Text/UtfStringConversionsTest.cpp",
+    "../Time/PrTimeTest.cpp",
+    "../Time/ThreadTicksTest.cpp",
+    "../Time/TimeDeltaTest.cpp",
+    "../Time/TimeTicksTest.cpp",
+    "../Time/TimeTest.cpp",
+    "../Type/BasicTest.cpp",
+    "../Type/HashableTest.cpp",
+    "../Type/NullableTest.cpp",
+    "../Type/ObjectCastTest.cpp",
+    "../Type/ParseFloatTest.cpp",
+    "../Type/ParseIntegerTest.cpp",
+    "../Type/SignTest.cpp",
+    "../Type/VariableTest.cpp",
+
+    "../Util/AutoResetTest.cpp",
+    "../Util/FinallyTest.cpp",
+    "../Util/FlagsTest.cpp",
+    "../Util/LazyInstanceTest.cpp",
+    "../Util/SwapBytesTest.cpp",
+    "../Util/TupleTest.cpp",
+    "../Util/VersionTest.cpp",
+  ]
+
+  defines = []
+
+  deps = [
+    "//Stp/Base/Test:GTestMain",
+  ]
+
+  if (is_android) {
+    deps += [
+      "//Stp/Base:base_java",
+      "//Stp/Base:base_java_unittest_support",
+      "//Stp/Base/android/jni_generator:jni_generator_tests",
+    ]
+  }
+
+  if (is_mac) {
+    libs = [
+      "CoreFoundation.framework",
+      "Foundation.framework",
+    ]
+  }
+
+  if (is_android) {
+    set_sources_assignment_filter([])
+    sources += [
+      "../Linux/ProcMapsTest.cpp",
+    ]
+    set_sources_assignment_filter(sources_assignment_filter)
+  }
+}

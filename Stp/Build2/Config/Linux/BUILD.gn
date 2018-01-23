@@ -1,0 +1,77 @@
+# Copyright (c) 2013 The Chromium Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+import("//Stp/Build/Config/Linux/PkgConfig.gni")
+
+group("linux") {
+  visibility = [ "//:optimize_gn_gen" ]
+}
+
+# This is included by reference in the //Stp/Build/Config/Compiler config that
+# is applied to all targets. It is here to separate out the logic that is
+# Linux-only. This is not applied to Android, but is applied to ChromeOS.
+config("compiler") {
+}
+
+# This is included by reference in the //Stp/Build/Config/Compiler:runtime_library
+# config that is applied to all targets. It is here to separate out the logic
+# that is Linux-only. Please see that target for advice on what should go in
+# :runtime_library vs. :compiler.
+config("runtime_library") {
+}
+
+config("fontconfig") {
+  visibility = [ "//Stp/Build/Linux:fontconfig" ]
+  libs = [ "fontconfig" ]
+}
+
+config("x11") {
+  libs = [
+    "X11",
+    "Xcomposite",
+    "Xcursor",
+    "Xdamage",
+    "Xext",
+    "Xfixes",
+    "Xi",
+    "Xrender",
+    "Xtst",
+  ]
+}
+
+config("xcomposite") {
+  libs = [ "Xcomposite" ]
+}
+
+config("xext") {
+  libs = [ "Xext" ]
+}
+
+config("xrandr") {
+  libs = [ "Xrandr" ]
+}
+
+config("xscrnsaver") {
+  libs = [ "Xss" ]
+}
+
+config("xfixes") {
+  libs = [ "Xfixes" ]
+}
+
+config("libcap") {
+  libs = [ "cap" ]
+}
+
+config("xi") {
+  libs = [ "Xi" ]
+}
+
+config("xtst") {
+  libs = [ "Xtst" ]
+}
+
+config("libresolv") {
+  libs = [ "resolv" ]
+}

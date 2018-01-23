@@ -1,0 +1,187 @@
+# Copyright 2017 Polonite Authors. All rights reserved.
+# Copyright (c) 2013 The Chromium Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+import("//Stp/Build/Config/AssertAlwaysOn.gni")
+import("//Stp/Build/Config/Sanitizers/Sanitizers.gni")
+
+declare_args() {
+  # When set (the default) enables C++ iterator debugging in debug builds.
+  # Iterator debugging is always off in release builds (technically, this flag
+  # affects the "debug" config, which is always available but applied by
+  # default only in debug builds).
+  #
+  # Iterator debugging is generally useful for catching bugs. But it can
+  # introduce extra locking to check the state of an iterator against the state
+  # of the current object. For iterator- and thread-heavy code, this can
+  # significantly slow execution.
+  enable_iterator_debugging = true
+}
+
+# TODO(brettw) Most of these should be removed. Instead of global feature
+# flags, we should have more modular flags that apply only to a target and its
+# dependents. For example, depending on the "x11" meta-target should define
+# USE_X11 for all dependents so that everything that could use X11 gets the
+# define, but anything that doesn't depend on X11 doesn't see it.
+config("feature_flags") {
+  defines = []
+  if (assert_always_on) {
+    defines += [ "HAS_ASSERT_ALWAYS_ON=1" ]
+  }
+  if (is_official_build) {
+    defines += [ "OFFICIAL_BUILD=1" ]
+  }
+  if (is_asan) {
+    defines += [ "HAS_ADDRESS_SANITIZER=1" ]
+  }
+  if (is_lsan) {
+    defines += [ "HAS_LEAK_SANITIZER=1" ]
+  }
+  if (is_tsan) {
+    defines += [ "HAS_THREAD_SANITIZER=1" ]
+  }
+  if (is_msan) {
+    defines += [ "HAS_MEMORY_SANITIZER=1" ]
+  }
+  if (is_ubsan || is_ubsan_null || is_ubsan_vptr || is_ubsan_security) {
+    defines += [ "HAS_UNDEFINED_SANITIZER=1" ]
+  }
+  if (is_syzyasan) {
+    defines += [ "HAS_SYZYASAN_SANITIZER=1" ]
+  }
+}
+
+# Debug/release ----------------------------------------------------------------
+
+config("debug") {
+  defines = [ "_DEBUG" ]
+
+  if (is_win) {
+    if (!enable_iterator_debugging) {
+      # Iterator debugging is enabled by default by the compiler on debug
+      # builds, and we have to tell it to turn it off.
+      defines += [ "_HAS_ITERATOR_DEBUGGING=0" ]
+    }
+  } else if (is_linux) {
+    if (current_cpu == "x64" && enable_iterator_debugging) {
+      # Enable libstdc++ debugging facilities to help catch problems early.
+      defines += [ "_GLIBCXX_DEBUG=1" ]
+    }
+  }
+}
+
+config("release") {
+  defines = [ "NDEBUG" ]
+
+  if (!is_tsan) {
+    defines += [ "NVALGRIND" ]
+  }
+}
+
+# Default libraries ------------------------------------------------------------
+
+# This config defines the default libraries applied to all targets.
+config("default_libs") {
+  if (is_win) {
+    # TODO(brettw) this list of defaults should probably be smaller, and
+    # instead the targets that use the less common ones (e.g. wininet or
+    # winspool) should include those explicitly.
+    libs = [
+      "advapi32.lib",
+      "comdlg32.lib",
+      "dbghelp.lib",
+      "delayimp.lib",
+      "dnsapi.lib",
+      "gdi32.lib",
+      "kernel32.lib",
+      "msimg32.lib",
+      "odbc32.lib",
+      "odbccp32.lib",
+      "ole32.lib",
+      "oleaut32.lib",
+      "psapi.lib",
+      "shell32.lib",
+      "shlwapi.lib",
+      "user32.lib",
+      "usp10.lib",
+      "uuid.lib",
+      "version.lib",
+      "wininet.lib",
+      "winmm.lib",
+      "winspool.lib",
+      "ws2_32.lib",
+
+      # Please don't add more stuff here. We should actually be making this
+      # list smaller, since all common things should be covered. If you need
+      # some extra libraries, please just add a libs = [ "foo.lib" ] to your
+      # target that needs it.
+    ]
+  } else if (is_android) {
+    libs = [
+      "dl",
+      "m",
+    ]
+  } else if (is_mac) {
+    # Targets should choose to explicitly link frameworks they require. Since
+    # linking can have run-time side effects, nothing should be listed here.
+    libs = []
+  } else if (is_ios) {
+    # The libraries listed here will be specified for both the target and the
+    # host. Only the common ones should be listed here.
+    libs = [
+      "CoreFoundation.framework",
+      "CoreGraphics.framework",
+      "CoreText.framework",
+      "Foundation.framework",
+    ]
+  } else if (is_linux) {
+    libs = [
+      "dl",
+      "pthread",
+      "rt",
+    ]
+  }
+}
+
+# Executable configs -----------------------------------------------------------
+
+# Windows linker setup for EXEs and DLLs.
+if (is_win) {
+  _windows_linker_configs = [
+    "//Stp/Build/Config/Win:sdk_link",
+    "//Stp/Build/Config/Win:common_linker_setup",
+  ]
+}
+
+# This config defines the configs applied to all executables.
+config("executable_config") {
+  configs = []
+
+  if (is_win) {
+    configs += _windows_linker_configs
+  } else if (is_mac) {
+    configs += [
+      "//Stp/Build/Config/mac:mac_dynamic_flags",
+      "//Stp/Build/Config/mac:mac_executable_flags",
+    ]
+  } else if (is_linux || is_android) {
+    configs += [ "//Stp/Build/Config/Gcc:executable_ldconfig" ]
+    if (is_android) {
+      configs += [ "//Stp/Build/Config/Android:executable_config" ]
+    }
+  }
+}
+
+# Shared library configs -------------------------------------------------------
+
+# This config defines the configs applied to all shared libraries.
+config("shared_library_config") {
+  configs = []
+
+  if (is_win) {
+    configs += _windows_linker_configs
+  } else if (is_mac) {
+    configs += [ "//Stp/Build/Config/mac:mac_dynamic_flags" ]
+  }
+}

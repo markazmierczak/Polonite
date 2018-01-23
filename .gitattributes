@@ -1,0 +1,6 @@
+/Stp/Build/Tools/Gn/GnLinux filter=lfs diff=lfs merge=lfs -text
+/Stp/Build/Tools/Gn/GnWin.exe filter=lfs diff=lfs merge=lfs -text
+/Stp/Build/Tools/Gn/GnMac filter=lfs diff=lfs merge=lfs -text
+/Stp/Build/Tools/Ninja/NinjaLinux filter=lfs diff=lfs merge=lfs -text
+/Stp/Build/Tools/Ninja/NinjaMac filter=lfs diff=lfs merge=lfs -text
+/Stp/Build/Tools/Ninja/NinjaWin.exe filter=lfs diff=lfs merge=lfs -text

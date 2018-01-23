@@ -38,7 +38,7 @@ ToString
 
 ``std::to_string(T)`` simply converts a a type to ``std::string``.
 
-``ToString(T, const StringSpan& opts = StringSpan())`` from Polonite is built upon ``Formattable`` concept and gives possibility for customization.
+``ToString(T, const StringSpan& opts)`` from Polonite is built upon ``Formattable`` concept and gives possibility for customization.
 
 Once you define ``Format()`` function for your type, you are able to use this type for: ``TextWriter::Format()``, ``String::Format()`` and ``ToString()``.
 
@@ -88,12 +88,10 @@ C++17 introduced the distinct type ``std::byte``.
 In Polonite we believe that arithmetic operations on bytes are useful in many scenarios.
 And since ``std::byte`` is ``enum class`` these operations are hard to write.
 
-The Polonite takes different approach and ``typedef``\s ``int8_t`` to type ``byte_t``.
+The Polonite takes different approach and ``typedef``\s ``uint8_t`` to type ``byte_t``.
 
 Moreover, there are many debates on ``std::string`` vs ``std::vector<char>``/``std::vector<std::byte>``.
 Both classes have to wide interfaces for working with bytes.
-
-The Polonite introduces ``Bytes``/``BytesSpan`` types to simplify operations on bytes.
 
 Code Style
 ==========

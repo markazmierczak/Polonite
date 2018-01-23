@@ -1,0 +1,193 @@
+# Copyright 2014 The Chromium Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+import("//Stp/Build/Toolchain/Toolchain.gni")
+
+assert(is_android)
+
+if (enable_java_templates) {
+  import("//Stp/Build/Config/Sanitizers/Sanitizers.gni")
+
+  # Declare a jni target
+  #
+  # This target generates the native jni bindings for a set of .java files.
+  #
+  # See base/android/jni_generator/jni_generator.py for more info about the
+  # format of generating JNI bindings.
+  #
+  # Variables
+  #   sources: list of .java files to generate jni for
+  #   jni_package: subdirectory path for generated bindings
+  #
+  # Example
+  #   generate_jni("foo_jni") {
+  #     sources = [
+  #       "android/java/src/org/chromium/foo/Foo.java",
+  #       "android/java/src/org/chromium/foo/FooUtil.java",
+  #     ]
+  #     jni_package = "foo"
+  #   }
+  template("generate_jni") {
+    set_sources_assignment_filter([])
+    forward_variables_from(invoker, [ "testonly" ])
+
+    assert(defined(invoker.sources))
+    assert(defined(invoker.jni_package))
+    jni_package = invoker.jni_package
+    base_output_dir = "${target_gen_dir}/${target_name}"
+    package_output_dir = "${base_output_dir}/${jni_package}"
+    jni_output_dir = "${package_output_dir}/jni"
+
+    jni_generator_include =
+        "//Stp/Base/android/jni_generator/jni_generator_helper.h"
+
+    foreach_target_name = "${target_name}__jni_gen"
+    action_foreach(foreach_target_name) {
+      script = "//Stp/Base/android/jni_generator/jni_generator.py"
+      depfile = "$target_gen_dir/$target_name.{{source_name_part}}.d"
+      sources = invoker.sources
+      outputs = [
+        depfile,
+        "${jni_output_dir}/{{source_name_part}}_jni.h",
+      ]
+
+      args = [
+        "--depfile",
+        rebase_path(depfile, root_build_dir),
+        "--input_file={{source}}",
+        "--optimize_generation=1",
+        "--ptr_type=long",
+        "--output_dir",
+        rebase_path(jni_output_dir, root_build_dir),
+        "--includes",
+        rebase_path(jni_generator_include, jni_output_dir),
+        "--native_exports_optional",
+      ]
+    }
+
+    config("jni_includes_${target_name}") {
+      # TODO(cjhopman): #includes should probably all be relative to
+      # base_output_dir. Remove that from this config once the includes are
+      # updated.
+      include_dirs = [
+        base_output_dir,
+        package_output_dir,
+      ]
+    }
+
+    group(target_name) {
+      forward_variables_from(invoker,
+                             [
+                               "deps",
+                               "public_deps",
+                               "visibility",
+                             ])
+      if (!defined(public_deps)) {
+        public_deps = []
+      }
+      public_deps += [ ":$foreach_target_name" ]
+      public_configs = [ ":jni_includes_${target_name}" ]
+    }
+  }
+
+  # Declare a jni target for a prebuilt jar
+  #
+  # This target generates the native jni bindings for a set of classes in a .jar.
+  #
+  # See base/android/jni_generator/jni_generator.py for more info about the
+  # format of generating JNI bindings.
+  #
+  # Variables
+  #   classes: list of .class files in the jar to generate jni for. These should
+  #     include the full path to the .class file.
+  #   jni_package: subdirectory path for generated bindings
+  #   jar_file: the path to the .jar. If not provided, will default to the sdk's
+  #     android.jar
+  #
+  #   deps, public_deps: As normal
+  #
+  # Example
+  #   generate_jar_jni("foo_jni") {
+  #     classes = [
+  #       "android/view/Foo.class",
+  #     ]
+  #     jni_package = "foo"
+  #   }
+  template("generate_jar_jni") {
+    set_sources_assignment_filter([])
+    forward_variables_from(invoker, [ "testonly" ])
+
+    assert(defined(invoker.classes))
+    assert(defined(invoker.jni_package))
+
+    if (defined(invoker.jar_file)) {
+      jar_file = invoker.jar_file
+    } else {
+      jar_file = android_sdk_jar
+    }
+
+    jni_package = invoker.jni_package
+    base_output_dir = "${root_gen_dir}/${target_name}/${jni_package}"
+    jni_output_dir = "${base_output_dir}/jni"
+
+    jni_generator_include =
+        "//Stp/Base/android/jni_generator/jni_generator_helper.h"
+
+    # TODO(cjhopman): make jni_generator.py support generating jni for multiple
+    # .class files from a .jar.
+    jni_actions = []
+    foreach(class, invoker.classes) {
+      _classname_list = []
+      _classname_list = process_file_template([ class ], "{{source_name_part}}")
+      classname = _classname_list[0]
+      jni_target_name = "${target_name}__jni_${classname}"
+      jni_actions += [ ":$jni_target_name" ]
+      action(jni_target_name) {
+        # The sources aren't compiled so don't check their dependencies.
+        check_includes = false
+        depfile = "$target_gen_dir/$target_name.d"
+        script = "//Stp/Base/android/jni_generator/jni_generator.py"
+        sources = [
+          jar_file,
+        ]
+        outputs = [
+          depfile,
+          "${jni_output_dir}/${classname}_jni.h",
+        ]
+
+        args = [
+          "--depfile",
+          rebase_path(depfile, root_build_dir),
+          "--jar_file",
+          rebase_path(jar_file, root_build_dir),
+          "--input_file",
+          class,
+          "--optimize_generation=1",
+          "--ptr_type=long",
+          "--output_dir",
+          rebase_path(jni_output_dir, root_build_dir),
+          "--includes",
+          rebase_path(jni_generator_include, jni_output_dir),
+          "--native_exports_optional",
+        ]
+      }
+    }
+
+    config("jni_includes_${target_name}") {
+      include_dirs = [ base_output_dir ]
+    }
+
+    group(target_name) {
+      public_deps = []
+      forward_variables_from(invoker,
+                             [
+                               "deps",
+                               "public_deps",
+                               "visibility",
+                             ])
+      public_deps += jni_actions
+      public_configs = [ ":jni_includes_${target_name}" ]
+    }
+  }
+}

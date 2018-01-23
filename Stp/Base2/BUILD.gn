@@ -1,0 +1,700 @@
+# Copyright 2017 Polonite Authors.
+# Copyright (c) 2013 The Chromium Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+import("//Stp/Build/BuildFlagHeader.gni")
+import("//Stp/Build/Config/Compiler/Compiler.gni")
+import("//Stp/Build/Config/Sysroot.gni")
+
+if (is_win) {
+  import("//Stp/Build/Config/Win/VisualStudioVersion.gni")
+}
+
+if (is_win) {
+  # This is in a separate config so the flags can be applied to dependents.
+  # ldflags in GN aren't automatically inherited.
+  config("BaseWinLinkerFlags") {
+    ldflags = [
+      "/DELAYLOAD:cfgmgr32.dll",
+      "/DELAYLOAD:powrprof.dll",
+      "/DELAYLOAD:setupapi.dll",
+    ]
+  }
+}
+
+if (is_android) {
+  config("AndroidSystemLibs") {
+    libs = [ "log" ]
+  }
+}
+
+component("Base") {
+  sources = [
+    "App/Application.cpp",
+    "App/Application.h",
+    "App/ApplicationPart.h",
+    "App/AtExit.cpp",
+    "App/AtExit.h",
+    "App/BaseApplicationPart.cpp",
+    "App/BaseApplicationPart.h",
+
+#    "Call/Delegate.cpp",
+#    "Call/Delegate.h",
+#    "Call/DelegateFwd.h",
+#    "Call/Function.h",
+#    "Call/FunctionFwd.h",
+#    "Call/ObserverList.h",
+
+    "Compiler/ByteOrder.h",
+    "Compiler/Config.h",
+    "Compiler/Control.h",
+    "Compiler/Cpu.h",
+    "Compiler/Lsan.h",
+    "Compiler/Msan.h",
+    "Compiler/Os.h",
+    "Compiler/Sanitizer.h",
+    "Compiler/Simd.h",
+    "Compiler/Stringize.h",
+    "Compiler/Tsan.h",
+
+    "Containers/Array.h",
+    "Containers/ArrayFwd.h",
+    "Containers/ArrayOps.h",
+    "Containers/BinarySearch.h",
+    "Containers/BitArray.cpp",
+    "Containers/BitArray.h",
+    "Containers/Buffer.h",
+    "Containers/BufferSpan.cpp",
+    "Containers/BufferSpan.h",
+    "Containers/BufferSpanFwd.h",
+    "Containers/ContiguousAlgo.h",
+    "Containers/FlatMap.h",
+    "Containers/FlatSet.h",
+    "Containers/HashMap.cpp",
+    "Containers/HashMap.h",
+    "Containers/HashSet.h",
+    "Containers/InitializerList.h",
+    "Containers/InlineList.h",
+    "Containers/InlineListFwd.h",
+    "Containers/KeyValuePair.h",
+    "Containers/LinkedList.h",
+    "Containers/List.cpp",
+    "Containers/List.h",
+    "Containers/ListFwd.h",
+    "Containers/LruCache.h",
+    "Containers/MapFwd.h",
+    "Containers/SinglyLinkedList.h",
+    "Containers/Sorting.h",
+    "Containers/SortingBasic.h",
+    "Containers/Span.h",
+    "Containers/SpanFwd.h",
+    "Containers/Stack.h",
+
+    "Debug/Alias.cpp",
+    "Debug/Alias.h",
+    "Debug/Assert.cpp",
+    "Debug/Assert.h",
+    "Debug/Console.cpp",
+    "Debug/Console.h",
+    "Debug/ConsoleAndroid.cpp",
+    "Debug/ConsolePosix.cpp",
+    "Debug/ConsoleWin.cpp",
+    "Debug/Debugger.cpp",
+    "Debug/Debugger.h",
+    "Debug/DebuggerPosix.cpp",
+    "Debug/DebuggerWin.cpp",
+    "Debug/Log.cpp",
+    "Debug/Log.h",
+    "Debug/SourceLocation.cpp",
+    "Debug/SourceLocation.h",
+#    "Debug/StackTrace.cpp",
+    "Debug/StackTrace.h",
+    "Debug/StackTraceAndroid.cpp",
+    "Debug/StackTraceDarwin.cpp",
+    "Debug/StackTraceLinux.cpp",
+#    "Debug/StackTracePosix.cpp",
+    "Debug/StackTraceWin.cpp",
+
+    "Dtoa/Bignum.cpp",
+    "Dtoa/Bignum.h",
+    "Dtoa/BignumDtoa.cpp",
+    "Dtoa/BignumDtoa.h",
+    "Dtoa/CachedPowers.cpp",
+    "Dtoa/CachedPowers.h",
+    "Dtoa/DiyFp.cpp",
+    "Dtoa/DiyFp.h",
+    "Dtoa/Double.h",
+    "Dtoa/DoubleConversion.cpp",
+    "Dtoa/DoubleConversion.h",
+    "Dtoa/Dtoa.cpp",
+    "Dtoa/Dtoa.h",
+    "Dtoa/FastDtoa.cpp",
+    "Dtoa/FastDtoa.h",
+    "Dtoa/FixedDtoa.cpp",
+    "Dtoa/FixedDtoa.h",
+    "Dtoa/Strtod.cpp",
+    "Dtoa/Strtod.h",
+    "Dtoa/Utils.h",
+
+    "Error/BasicExceptions.cpp",
+    "Error/BasicExceptions.h",
+    "Error/ErrorCode.cpp",
+    "Error/ErrorCode.h",
+    "Error/Exception.cpp",
+    "Error/Exception.h",
+    "Error/ExceptionFwd.h",
+    "Error/ExceptionPtr.h",
+    "Error/SystemErrorCode.h",
+    "Error/SystemException.cpp",
+    "Error/SystemException.h",
+
+#    "Exe/Library.cpp",
+    "Exe/Library.h",
+#    "Exe/LibraryPosix.cpp",
+#    "Exe/LibraryWin.cpp",
+
+    "Export.h",
+    "ExportTemplate.h",
+
+    "Fs/Directory.cpp",
+    "Fs/Directory.h",
+    "Fs/DirectoryEnumerator.cpp",
+    "Fs/DirectoryEnumerator.h",
+    "Fs/DirectoryEnumeratorPosix.cpp",
+    "Fs/DirectoryEnumeratorWin.cpp",
+    "Fs/DirectoryPosix.cpp",
+    "Fs/DirectoryWin.cpp",
+    "Fs/File.cpp",
+    "Fs/File.h",
+    "Fs/FileInfo.h",
+    "Fs/FilePath.cpp",
+    "Fs/FilePath.h",
+    "Fs/FilePathCompare.cpp",
+    "Fs/FilePathSpan.cpp",
+    "Fs/FilePathSpan.h",
+    "Fs/FilePathWriter.cpp",
+    "Fs/FilePathWriter.h",
+    "Fs/FilePosix.cpp",
+    "Fs/FileSystemException.cpp",
+    "Fs/FileSystemException.h",
+    "Fs/FileWin.cpp",
+    "Fs/KnownPaths.cpp",
+    "Fs/KnownPaths.h",
+    "Fs/KnownPathsAndroid.cpp",
+    "Fs/KnownPathsDarwin.mm",
+    "Fs/KnownPathsLinux.cpp",
+    "Fs/KnownPathsPosix.cpp",
+    "Fs/KnownPathsWin.cpp",
+    "Fs/KnownPathUtil.cpp",
+    "Fs/KnownPathUtil.h",
+#    "Fs/MemoryMappedFile.cpp",
+#    "Fs/MemoryMappedFile.h",
+#    "Fs/MemoryMappedFilePosix.cpp",
+#    "Fs/MemoryMappedFileWin.cpp",
+    "Fs/RecursiveDirectoryEnumerator.cpp",
+    "Fs/RecursiveDirectoryEnumerator.h",
+#    "Fs/TemporaryDirectory.cpp",
+#    "Fs/TemporaryDirectory.h",
+
+#    "Geometry/Affine.cpp",
+#    "Geometry/Affine.h",
+#    "Geometry/Angle.cpp",
+#    "Geometry/Angle.h",
+#    "Geometry/CubicBezier.cpp",
+#    "Geometry/CubicBezier.h",
+#    "Geometry/Bounds2.cpp",
+#    "Geometry/Bounds2.h",
+#    "Geometry/Bounds3.cpp",
+#    "Geometry/Bounds3.h",
+#    "Geometry/Ellipse.cpp",
+#    "Geometry/Ellipse.h",
+#    "Geometry/Line2.cpp",
+#    "Geometry/Line2.h",
+#    "Geometry/Plane.cpp",
+#    "Geometry/Plane.h",
+#    "Geometry/Quad2.cpp",
+#    "Geometry/Quad2.h",
+#    "Geometry/Quaternion.cpp",
+#    "Geometry/Quaternion.h",
+#    "Geometry/Ray3.cpp",
+#    "Geometry/Ray3.h",
+#    "Geometry/Rect.cpp",
+#    "Geometry/Rect.h",
+#    "Geometry/Size2.cpp",
+#    "Geometry/Size2.h",
+#    "Geometry/Triangle2.cpp",
+#    "Geometry/Triangle2.h",
+#    "Geometry/Triangle3.cpp",
+#    "Geometry/Triangle3.h",
+#    "Geometry/Vector2.cpp",
+#    "Geometry/Vector2.h",
+#    "Geometry/Vector3.cpp",
+#    "Geometry/Vector3.h",
+#    "Geometry/Xform2.cpp",
+#    "Geometry/Xform2.h",
+#    "Geometry/Xform3.cpp",
+#    "Geometry/Xform3.h",
+
+    "Hash/Crc32.cpp",
+    "Hash/Crc32.h",
+    "Hash/Md5.cpp",
+    "Hash/Md5.h",
+    "Hash/Sha1.cpp",
+    "Hash/Sha1.h",
+
+    "Io/Base64.cpp",
+    "Io/Base64.h",
+    "Io/BufferedStream.cpp",
+    "Io/BufferedStream.h",
+    "Io/ClipTextWriter.cpp",
+    "Io/ClipTextWriter.h",
+    "Io/FileStream.cpp",
+    "Io/FileStream.h",
+    "Io/FileStreamInfo.h",
+    "Io/FileStreamPosix.cpp",
+    "Io/FileStreamWin.cpp",
+    "Io/InlineStringWriter.cpp",
+    "Io/InlineStringWriter.h",
+    "Io/IoException.cpp",
+    "Io/IoException.h",
+    "Io/MemoryStream.cpp",
+    "Io/MemoryStream.h",
+    "Io/Stream.cpp",
+    "Io/Stream.h",
+#    "Io/StreamWriter.cpp",
+    "Io/StreamWriter.h",
+#    "Io/StringReader.cpp",
+#    "Io/StringReader.h",
+    "Io/StringWriter.cpp",
+    "Io/StringWriter.h",
+#    "Io/TextReader.cpp",
+#    "Io/TextReader.h",
+    "Io/TextWriter.cpp",
+    "Io/TextWriter.h",
+
+#    "Json/JsonArray.cpp",
+#    "Json/JsonArray.h",
+#    "Json/JsonError.cpp",
+#    "Json/JsonError.h",
+#    "Json/JsonFormatter.cpp",
+#    "Json/JsonFormatter.h",
+#    "Json/JsonObject.cpp",
+#    "Json/JsonObject.h",
+#    "Json/JsonOptions.cpp",
+#    "Json/JsonOptions.h",
+#    "Json/JsonParser.cpp",
+#    "Json/JsonParser.h",
+#    "Json/JsonStringBuilder.cpp",
+#    "Json/JsonStringBuilder.h",
+#    "Json/JsonValue.cpp",
+#    "Json/JsonValue.h",
+
+    "Linux/ProcCommon.cpp",
+    "Linux/ProcCommon.h",
+    # FIXME "Linux/ProcMaps.cpp",
+    "Linux/ProcMaps.h",
+    "Linux/Xdg.cpp",
+    "Linux/Xdg.h",
+
+    "Math/Abs.cpp",
+    "Math/Abs.h",
+    "Math/Alignment.h",
+    "Math/Bcd.h",
+    "Math/Bits.cpp",
+    "Math/Bits.h",
+    "Math/BitsImpl.h",
+    "Math/BitsShift.h",
+    "Math/CommonFactor.h",
+    "Math/Fixed.cpp",
+    "Math/Fixed.h",
+    "Math/FloatToInteger.h",
+    "Math/FlushToZero.h",
+    "Math/Half.cpp",
+    "Math/Half.h",
+    "Math/Math.h",
+    "Math/MathConstants.h",
+    "Math/Multiple.h",
+    "Math/NBits.h",
+    "Math/OverflowMath.h",
+    "Math/PowerOfTwo.h",
+    "Math/Prime.cpp",
+    "Math/Prime.h",
+    "Math/RawFloat.h",
+    "Math/Safe.h",
+    "Math/SafeConversions.h",
+    "Math/SafeConversionsImpl.h",
+    "Math/SaturatedMath.h",
+
+    "Mem/AddressOf.h",
+    "Mem/AlignedMalloc.cpp",
+    "Mem/AlignedMalloc.h",
+    "Mem/Allocate.h",
+    "Mem/LinearAllocator.cpp",
+    "Mem/LinearAllocator.h",
+    "Mem/New.h",
+    "Mem/OwnPtr.h",
+    "Mem/RefCounted.h",
+    "Mem/RefCountedThreadSafe.h",
+    "Mem/RefPtr.h",
+    "Mem/WeakPtr.cpp",
+    "Mem/WeakPtr.h",
+
+    "Posix/EintrWrapper.h",
+    "Posix/FileDescriptor.cpp",
+    "Posix/FileDescriptor.h",
+    "Posix/PosixErrorCode.cpp",
+    "Posix/PosixErrorCode.h",
+    "Posix/StatWrapper.h",
+
+    "Process/CommandLine.cpp",
+    "Process/CommandLine.h",
+    "Process/NativeProcess.h",
+    "Process/NativeProcessLinux.cpp",
+    "Process/NativeProcessMac.cpp",
+    "Process/NativeProcessPosix.cpp",
+    "Process/NativeProcessWin.cpp",
+
+#    "Random/CryptoRandom.cpp",
+    "Random/CryptoRandom.h",
+#    "Random/CryptoRandomPosix.cpp",
+    "Random/CryptoRandomWin.cpp",
+    "Random/Random.cpp",
+    "Random/Random.h",
+    "Random/RandomInternal.h",
+    "Random/RandomShuffle.h",
+
+    "Simd/Vnx.h",
+    "Simd/VnxNeon.h",
+    "Simd/VnxSse.h",
+
+    "Sync/AtomicFlag.h",
+    "Sync/AtomicOps.h",
+    "Sync/AtomicOpsInternalsAtomicWordCompat.h",
+    "Sync/AtomicOpsInternalsPortable.h",
+    "Sync/AtomicOpsInternalsX86Msvc.h",
+    "Sync/AtomicRefCount.h",
+    "Sync/AtomicSequenceNum.h",
+    "Sync/ConditionVariable.h",
+    "Sync/ConditionVariablePosix.cpp",
+    "Sync/ConditionVariableWin.cpp",
+    "Sync/Lock.cpp",
+    "Sync/Lock.h",
+    "Sync/NativeLock.h",
+    "Sync/OneWriterSeqLock.cpp",
+    "Sync/OneWriterSeqLock.h",
+    "Sync/ReadWriteLock.h",
+    "Sync/SpinLock.cpp",
+    "Sync/SpinLock.h",
+    "Sync/WaitableEvent.h",
+#    "Sync/WaitableEventPosix.cpp",
+#    "Sync/WaitableEventWin.cpp",
+
+    "System/CpuInfo.cpp",
+    "System/CpuInfo.h",
+    "System/Environment.cpp",
+    "System/Environment.h",
+    "System/EnvironmentPosix.cpp",
+    "System/EnvironmentWin.cpp",
+#    "System/SysInfo.cpp",
+#    "System/SysInfo.h",
+#    "System/SysInfoDarwin.mm",
+#    "System/SysInfoIos.mm",
+#    "System/SysInfoLinux.cpp",
+#    "System/SysInfoPosix.cpp",
+#    "System/SysInfoWin.cpp",
+
+    "Text/AsciiChar.h",
+    "Text/AsciiString.cpp",
+    "Text/AsciiString.h",
+    "Text/Format.cpp",
+    "Text/Format.h",
+    "Text/FormatFwd.h",
+    "Text/FormatInteger.h",
+    "Text/ParsingUtil.h",
+    "Text/String.h",
+    "Text/StringSpan.h",
+    "Text/StringUtfConversions.h",
+    "Text/SystemString.h",
+    "Text/SystemStringWin.cpp",
+    "Text/Utf.cpp",
+    "Text/Utf.h",
+    "Text/Wtf.cpp",
+    "Text/Wtf.h",
+    "Text/Detail/StringDetail.cpp",
+    "Text/Detail/StringDetail.h",
+
+    "Text/Codec/AsciiCodec.cpp",
+    "Text/Codec/Cp1252Codec.cpp",
+    "Text/Codec/Latin1Codec.cpp",
+    "Text/Codec/Latin2Codec.cpp",
+    "Text/Codec/Latin3Codec.cpp",
+    "Text/Codec/Latin4Codec.cpp",
+    "Text/Codec/TextCodec.cpp",
+    "Text/Codec/TextCodec.h",
+#    "Text/Codec/TextCodecDatabase.cpp",
+    "Text/Codec/TextCodecDatabase.h",
+    "Text/Codec/TextDecoder.h",
+    "Text/Codec/TextEncoder.h",
+    "Text/Codec/Utf16Codec.cpp",
+    "Text/Codec/Utf32Codec.cpp",
+    "Text/Codec/Utf8Codec.cpp",
+
+    "ThirdParty/nspr/prtime.cpp",
+    "ThirdParty/nspr/prtime.h",
+
+    "Thread/NativeThread.h",
+    "Thread/NativeThreadAndroid.cpp",
+    "Thread/NativeThreadDarwin.mm",
+    "Thread/NativeThreadLinux.cpp",
+    "Thread/NativeThreadLocal.cpp",
+    "Thread/NativeThreadLocal.h",
+    "Thread/NativeThreadPosix.cpp",
+    "Thread/NativeThreadWin.cpp",
+    "Thread/Thread.cpp",
+    "Thread/Thread.h",
+    "Thread/ThreadChecker.cpp",
+    "Thread/ThreadChecker.h",
+    "Thread/ThreadExitWin.cpp",
+    "Thread/ThreadLocal.cpp",
+    "Thread/ThreadLocal.h",
+
+    "Time/ElapsedTimer.h",
+    "Time/ThreadTicks.h",
+    "Time/Time.cpp",
+    "Time/Time.h",
+    "Time/TimeBase.h",
+    "Time/TimeDarwin.cpp",
+    "Time/TimeDelta.cpp",
+    "Time/TimeDelta.h",
+    "Time/TimeDeltaF.h",
+    "Time/TimeLiterals.h",
+    "Time/TimePosix.cpp",
+    "Time/TimeTicks.cpp",
+    "Time/TimeTicks.h",
+    "Time/TimeWin.cpp",
+
+    "Type/Array.h",
+    "Type/Attributes.h",
+    "Type/Basic.h",
+    "Type/Common.h",
+    "Type/Comparable.cpp",
+    "Type/Comparable.h",
+    "Type/ComparableFwd.h",
+    "Type/CVRef.h",
+    "Type/Formattable.cpp",
+    "Type/Formattable.h",
+    "Type/FormattableFwd.h",
+    "Type/Hashable.cpp",
+    "Type/Hashable.h",
+    "Type/HashableFwd.h",
+    "Type/IntegerSelection.h",
+    "Type/Limits.h",
+    "Type/Nullable.h",
+    "Type/NullableFwd.h",
+    "Type/ObjectCast.h",
+    "Type/ParameterPack.h",
+    "Type/ParseFloat.h",
+    "Type/ParseInteger.h",
+    "Type/Scalar.h",
+    "Type/Sign.h",
+    "Type/Variable.h",
+
+    "Util/AutoReset.h",
+    "Util/Build.cpp",
+    "Util/Build.h",
+    "Util/CallOnce.cpp",
+    "Util/CallOnce.h",
+    "Util/Finally.h",
+    "Util/Flags.h",
+    "Util/LazyInstance.cpp",
+    "Util/LazyInstance.h",
+    "Util/SwapBytes.h",
+    "Util/Tuple.h",
+    "Util/Version.cpp",
+    "Util/Version.h",
+
+    "Win/ScopedCoMem.h",
+    "Win/ScopedComInitializer.h",
+    "Win/ScopedComPtr.h",
+    "Win/ScopedHandle.cpp",
+    "Win/ScopedHandle.h",
+    "Win/WindowsHeader.h",
+    "Win/WinErrorCode.cpp",
+    "Win/WinErrorCode.h",
+  ]
+
+  defines = [ "STP_BASE_IMPLEMENTATION" ]
+  data = []
+  deps = []
+
+  public_deps = [
+    ":DebuggingFlags",
+  ]
+
+  # Needed for <atomic> if using newer C++ library than sysroot
+  if (!use_sysroot && (is_android || is_linux)) {
+    libs = [ "atomic" ]
+  }
+
+  # Android.
+  if (is_android) {
+    sources -= [
+      "Debug/StackTracePosix.cpp",
+    ]
+
+    # Android uses some Linux sources, put those back.
+    set_sources_assignment_filter([])
+    sources += [
+      "Linux/ProcMaps.cpp",
+      "Process/NativeProcessHandleLinux.cpp",
+      "System/SysInfoLinux.cpp",
+    ]
+    set_sources_assignment_filter(sources_assignment_filter)
+
+    deps += [
+      ":base_jni_headers",
+      "//third_party/android_tools:cpu_features",
+    ]
+
+    # Needs to be a public config so that dependent targets link against it as
+    # well when doing a component build.
+    public_configs = [ ":AndroidSystemLibs" ]
+  }
+
+  # Windows.
+  if (is_win) {
+    if (is_component_build) {
+      # Copy the VS runtime DLLs into the isolate so that they don't have to be
+      # preinstalled on the target machine. The debug runtimes have a "d" at
+      # the end.
+      if (is_debug) {
+        vcrt_suffix = "d"
+      } else {
+        vcrt_suffix = ""
+      }
+
+      # These runtime files are copied to the output directory by the
+      # VsToolchain script that runs as part of toolchain configuration.
+      if (visual_studio_version == "2015") {
+        data += [
+          "$root_out_dir/msvcp140${vcrt_suffix}.dll",
+          "$root_out_dir/vccorlib140${vcrt_suffix}.dll",
+          "$root_out_dir/vcruntime140${vcrt_suffix}.dll",
+
+          # Universal Windows 10 CRT files
+          "$root_out_dir/api-ms-win-core-console-l1-1-0.dll",
+          "$root_out_dir/api-ms-win-core-datetime-l1-1-0.dll",
+          "$root_out_dir/api-ms-win-core-debug-l1-1-0.dll",
+          "$root_out_dir/api-ms-win-core-errorhandling-l1-1-0.dll",
+          "$root_out_dir/api-ms-win-core-file-l1-1-0.dll",
+          "$root_out_dir/api-ms-win-core-file-l1-2-0.dll",
+          "$root_out_dir/api-ms-win-core-file-l2-1-0.dll",
+          "$root_out_dir/api-ms-win-core-handle-l1-1-0.dll",
+          "$root_out_dir/api-ms-win-core-heap-l1-1-0.dll",
+          "$root_out_dir/api-ms-win-core-interlocked-l1-1-0.dll",
+          "$root_out_dir/api-ms-win-core-libraryloader-l1-1-0.dll",
+          "$root_out_dir/api-ms-win-core-localization-l1-2-0.dll",
+          "$root_out_dir/api-ms-win-core-memory-l1-1-0.dll",
+          "$root_out_dir/api-ms-win-core-namedpipe-l1-1-0.dll",
+          "$root_out_dir/api-ms-win-core-processenvironment-l1-1-0.dll",
+          "$root_out_dir/api-ms-win-core-processthreads-l1-1-0.dll",
+          "$root_out_dir/api-ms-win-core-processthreads-l1-1-1.dll",
+          "$root_out_dir/api-ms-win-core-profile-l1-1-0.dll",
+          "$root_out_dir/api-ms-win-core-rtlsupport-l1-1-0.dll",
+          "$root_out_dir/api-ms-win-core-string-l1-1-0.dll",
+          "$root_out_dir/api-ms-win-core-synch-l1-1-0.dll",
+          "$root_out_dir/api-ms-win-core-synch-l1-2-0.dll",
+          "$root_out_dir/api-ms-win-core-sysinfo-l1-1-0.dll",
+          "$root_out_dir/api-ms-win-core-timezone-l1-1-0.dll",
+          "$root_out_dir/api-ms-win-core-util-l1-1-0.dll",
+          "$root_out_dir/api-ms-win-crt-conio-l1-1-0.dll",
+          "$root_out_dir/api-ms-win-crt-convert-l1-1-0.dll",
+          "$root_out_dir/api-ms-win-crt-environment-l1-1-0.dll",
+          "$root_out_dir/api-ms-win-crt-filesystem-l1-1-0.dll",
+          "$root_out_dir/api-ms-win-crt-heap-l1-1-0.dll",
+          "$root_out_dir/api-ms-win-crt-locale-l1-1-0.dll",
+          "$root_out_dir/api-ms-win-crt-math-l1-1-0.dll",
+          "$root_out_dir/api-ms-win-crt-multibyte-l1-1-0.dll",
+          "$root_out_dir/api-ms-win-crt-private-l1-1-0.dll",
+          "$root_out_dir/api-ms-win-crt-process-l1-1-0.dll",
+          "$root_out_dir/api-ms-win-crt-runtime-l1-1-0.dll",
+          "$root_out_dir/api-ms-win-crt-stdio-l1-1-0.dll",
+          "$root_out_dir/api-ms-win-crt-string-l1-1-0.dll",
+          "$root_out_dir/api-ms-win-crt-time-l1-1-0.dll",
+          "$root_out_dir/api-ms-win-crt-utility-l1-1-0.dll",
+          "$root_out_dir/ucrtbase${vcrt_suffix}.dll",
+        ]
+      } else {
+        data += [
+          "$root_out_dir/msvcp120${vcrt_suffix}.dll",
+          "$root_out_dir/msvcr120${vcrt_suffix}.dll",
+        ]
+      }
+      if (is_asan) {
+        data += [ "//Stp/Build/Tools/LlvmBuild/Release+Asserts/lib/clang/$clang_version/lib/windows/clang_rt.asan_dynamic-i386.dll" ]
+      }
+    }
+
+    libs = [
+      "cfgmgr32.lib",
+      "powrprof.lib",
+      "setupapi.lib",
+      "userenv.lib",
+      "winmm.lib",
+    ]
+    all_dependent_configs = [ ":BaseWinLinkerFlags" ]
+  }
+
+  if (is_mac) {
+    libs = [
+      "ApplicationServices.framework",
+      "AppKit.framework",
+      "bsm",
+      "CoreFoundation.framework",
+      "IOKit.framework",
+      "Security.framework",
+    ]
+  }
+
+  if (is_mac || is_ios) {
+    sources -= [
+      "LibraryPosix.cpp",
+    ]
+  }
+
+  if (is_linux) {
+    if (is_asan || is_lsan || is_msan || is_tsan) {
+      # For llvm-sanitizer.
+      data += [ "//Stp/Build/Tools/LlvmBuild/Release+Asserts/lib/libstdc++.so.6" ]
+    }
+
+    # These dependencies are not required on Android, and in the case
+    # of xdg_mime must be excluded due to licensing restrictions.
+    deps += [
+      "//Stp/Base/ThirdParty/xdg_user_dirs",
+    ]
+  }
+
+  if (using_sanitizer) {
+    if (is_win) {
+      data += [ "//Stp/Build/Tools/LlvmBuild/Release+Asserts/bin/llvm-symbolizer.exe" ]
+    } else {
+      data += [ "//Stp/Build/Tools/LlvmBuild/Release+Asserts/bin/llvm-symbolizer" ]
+    }
+  }
+
+  configs += [ "//Stp/Build/Config/Compiler:wexit_time_destructors" ]
+  if (!is_debug) {
+    configs -= [ "//Stp/Build/Config/Compiler:default_optimization" ]
+    configs += [ "//Stp/Build/Config/Compiler:optimize_max" ]
+  }
+
+  allow_circular_includes_from = public_deps
+}
+
+BuildFlagHeader("DebuggingFlags") {
+  header = "DebuggingFlags.h"
+  header_dir = "Base/Debug"
+  flags = [ "ENABLE_PROFILING=$enable_profiling" ]
+}

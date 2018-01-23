@@ -1,0 +1,10 @@
+# Identical layouts.
+# If base and derived classes have identifical memory layouts (i.e., the same
+# object size) and both have no virtual functions, we blacklist them as there
+# would be not much security implications.
+
+type:*SkAutoTUnref*
+
+# Base class's constructor accesses a derived class's member.
+
+fun:*LinkedListNode*

@@ -1,0 +1,11 @@
+# UBsan goes into an infinite recursion when __dynamic_cast instrumented with
+# "vptr". See crbug.com/609786.
+
+src:*/libc\+\+abi/trunk/src/private_typeinfo.cpp
+
+# Ignore system libraries.
+src:*/usr/*
+
+# YASM does some funny things that UBsan doesn't like.
+# https://crbug.com/489901
+src:*/Tools/Yasm/*

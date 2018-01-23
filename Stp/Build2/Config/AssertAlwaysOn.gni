@@ -1,0 +1,7 @@
+# Copyright 2017 Polonite Authors. All rights reserved.
+# Distributed under MIT license that can be found in the LICENSE file.
+
+declare_args() {
+  # Set to true to enable assert in Release builds.
+  assert_always_on = false
+}

@@ -16,3 +16,6 @@
 
 # Python Compiled
 *.pyc
+
+# Clang binaries
+/Stp/Build/Tools/LlvmBuild/
