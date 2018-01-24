@@ -42,6 +42,8 @@ class OwnPtr {
   T& operator*() const { ASSERT(ptr_); return *ptr_; }
   T* operator->() const { ASSERT(ptr_); return ptr_; }
 
+  ALWAYS_INLINE T* get() const { return ptr_; }
+
   explicit operator bool() const { return ptr_ != nullptr; }
 
   template<typename... TArgs>

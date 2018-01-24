@@ -21,37 +21,41 @@ ALWAYS_INLINE void RefAdopted(const void*) {}
 template<typename T>
 class RefPtr {
  public:
-  // TODO noexcept
-  RefPtr() : ptr_(nullptr) {}
-  RefPtr(nullptr_t) : ptr_(nullptr) {}
-  RefPtr(T* ptr) : ptr_(ptr) { IncRefIfNotNull(ptr); }
-
-  RefPtr(const RefPtr& o) : ptr_(o.ptr_) { IncRefIfNotNull(ptr_); }
-  template<typename U>
-  RefPtr(const RefPtr<U>& o) : ptr_(o.get()) { IncRefIfNotNull(ptr_); }
-  RefPtr(RefPtr&& o) : ptr_(o.ptr_) { o.ptr_ = nullptr; }
-
+  RefPtr() noexcept : ptr_(nullptr) {}
   ~RefPtr() { DecRefIfNotNull(ptr_); }
 
-  RefPtr& operator=(RefPtr&& o) {
+  RefPtr(T* ptr) noexcept : ptr_(ptr) { IncRefIfNotNull(ptr); }
+
+  RefPtr(RefPtr&& o) noexcept : ptr_(Exchange(o.ptr_, nullptr)) {}
+
+  RefPtr& operator=(RefPtr&& o) noexcept {
     T* old_ptr = Exchange(ptr_, Exchange(o.ptr_, nullptr));
     DecRefIfNotNull(old_ptr);
     return *this;
   }
-  RefPtr& operator=(const RefPtr& o) {
+
+  RefPtr(const RefPtr& o) noexcept : ptr_(o.ptr_) { IncRefIfNotNull(ptr_); }
+
+  RefPtr& operator=(const RefPtr& o) noexcept {
     T* old_ptr = Exchange(ptr_, o.ptr_);
     IncRefIfNotNull(ptr_);
     DecRefIfNotNull(old_ptr);
     return *this;
   }
-  RefPtr& operator=(nullptr_t) {
+
+  template<typename U>
+  RefPtr(const RefPtr<U>& o) noexcept : ptr_(o.get()) { IncRefIfNotNull(ptr_); }
+
+  RefPtr(nullptr_t) noexcept : ptr_(nullptr) {}
+
+  RefPtr& operator=(nullptr_t) noexcept {
     Reset();
     return *this;
   }
 
-  T* Release() WARN_UNUSED_RESULT { return Exchange(ptr_, nullptr); }
+  [[nodiscard]] T* Release() { return Exchange(ptr_, nullptr); }
 
-  void Reset() { DecRefIfNotNull(Exchange(ptr_, nullptr)); }
+  void Reset(T* new_ptr = nullptr) { DecRefIfNotNull(Exchange(ptr_, new_ptr)); }
 
   ALWAYS_INLINE T& operator*() const { return *ptr_; }
   ALWAYS_INLINE T* operator->() const { return ptr_; }
