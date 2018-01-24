@@ -28,7 +28,7 @@ inline WinErrorCode GetLastWinErrorCode() {
   return static_cast<WinErrorCode>(::GetLastError());
 }
 
-BASE_EXPORT Ptr<const ErrorCategory> GetWinErrorCategory();
+BASE_EXPORT const ErrorCategory* GetWinErrorCategory();
 
 inline ErrorCode MakeErrorCode(WinErrorCode code) {
   return ErrorCode(static_cast<int>(code), GetWinErrorCategory());

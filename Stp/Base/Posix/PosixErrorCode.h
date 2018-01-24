@@ -23,7 +23,7 @@ inline bool IsOk(PosixErrorCode code) { return code == PosixErrorCode::Ok; }
 
 inline PosixErrorCode GetLastPosixErrorCode() { return static_cast<PosixErrorCode>(errno); }
 
-BASE_EXPORT Ptr<const ErrorCategory> GetPosixErrorCategory() noexcept;
+BASE_EXPORT const ErrorCategory* GetPosixErrorCategory() noexcept;
 
 inline ErrorCode MakeErrorCode(PosixErrorCode code) noexcept {
   return ErrorCode(static_cast<int>(code), GetPosixErrorCategory());

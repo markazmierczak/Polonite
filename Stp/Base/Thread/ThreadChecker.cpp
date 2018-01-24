@@ -17,17 +17,17 @@ ThreadChecker::~ThreadChecker() {}
 
 bool ThreadChecker::CalledOnValidThread() const {
   EnsureThreadIdAssigned();
-  AutoLock auto_lock(lock_);
+  AutoLock auto_lock(&lock_);
   return valid_thread_ == NativeThread::CurrentHandle();
 }
 
 void ThreadChecker::DetachFromThread() {
-  AutoLock auto_lock(lock_);
+  AutoLock auto_lock(&lock_);
   valid_thread_ = InvalidNativeThreadHandle;
 }
 
 void ThreadChecker::EnsureThreadIdAssigned() const {
-  AutoLock auto_lock(lock_);
+  AutoLock auto_lock(&lock_);
   if (valid_thread_ == InvalidNativeThreadHandle)
     valid_thread_ = NativeThread::CurrentHandle();
 }

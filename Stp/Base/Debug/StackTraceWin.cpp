@@ -109,7 +109,7 @@ union SymbolInfoUnion {
 void FormatSymbol(TextWriter& out, void* pc) {
   HANDLE current_process_handle = GetCurrentProcess();
 
-  AutoLock auto_lock(g_symbolizer_lock);
+  AutoLock auto_lock(&g_symbolizer_lock);
 
   DWORD_PTR frame = reinterpret_cast<DWORD_PTR>(pc);
   SymbolInfoUnion symbol;

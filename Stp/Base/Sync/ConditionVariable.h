@@ -76,7 +76,7 @@ class TimeDelta;
 class BASE_EXPORT ConditionVariable {
  public:
   // Construct a cv for use with ONLY one user lock.
-  explicit ConditionVariable(BasicLock& user_lock);
+  explicit ConditionVariable(BasicLock* user_lock);
 
   ~ConditionVariable();
 

@@ -90,7 +90,7 @@ class AutoLock {
  public:
   struct AlreadyAcquired {};
 
-  explicit AutoLock(BasicLock& lock) : lock_(lock) {
+  explicit AutoLock(BasicLock* lock) : lock_(*lock) {
     lock_.Acquire();
   }
 
@@ -113,7 +113,7 @@ class AutoLock {
 // constructor, and re-Acquire() it in the destructor.
 class AutoUnlock {
  public:
-  explicit AutoUnlock(BasicLock& lock) : lock_(lock) {
+  explicit AutoUnlock(BasicLock* lock) : lock_(*lock) {
     // We require our caller to have the lock.
     lock_.AssertAcquired();
     lock_.Release();

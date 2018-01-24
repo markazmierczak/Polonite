@@ -37,12 +37,12 @@ WaitableEvent::WaitableEvent(ResetPolicy reset_policy, InitialState initial_stat
 WaitableEvent::~WaitableEvent() = default;
 
 void WaitableEvent::Reset() {
-  AutoLock locked(kernel_->lock_);
+  AutoLock locked(&kernel_->lock_);
   kernel_->signaled_ = false;
 }
 
 void WaitableEvent::Signal() {
-  AutoLock locked(kernel_->lock_);
+  AutoLock locked(&kernel_->lock_);
 
   if (kernel_->signaled_)
     return;
@@ -59,7 +59,7 @@ void WaitableEvent::Signal() {
 }
 
 bool WaitableEvent::IsSignaled() {
-  AutoLock locked(kernel_->lock_);
+  AutoLock locked(&kernel_->lock_);
 
   const bool result = kernel_->signaled_;
   if (result && !kernel_->manual_reset_)
@@ -77,11 +77,11 @@ class SyncWaiter : public WaitableEvent::Waiter {
       : fired_(false),
         signaling_event_(nullptr),
         lock_(),
-        cv_(lock_) {
+        cv_(&lock_) {
   }
 
   bool Fire(WaitableEvent* signaling_event) override {
-    AutoLock locked(lock_);
+    AutoLock locked(&lock_);
 
     if (fired_)
       return false;

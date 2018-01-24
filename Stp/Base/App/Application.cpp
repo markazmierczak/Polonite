@@ -163,7 +163,7 @@ static String ResolveNameFromExecutablePath() {
 }
 
 const String& Application::GetName() {
-  AutoLock auto_lock(g_data_lock);
+  AutoLock auto_lock(&g_data_lock);
   if (name_.IsEmpty())
     name_ = ResolveNameFromExecutablePath();
   return name_;

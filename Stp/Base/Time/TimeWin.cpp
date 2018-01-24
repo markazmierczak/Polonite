@@ -81,7 +81,7 @@ FILETIME Time::ToFileTime() const {
 void Time::ActivateHighResolutionTimer(bool activating) {
   const int kMinTimerIntervalHighResMs = 1;
 
-  AutoLock lock(g_high_res_lock);
+  AutoLock lock(&g_high_res_lock);
   UINT period = kMinTimerIntervalHighResMs;
   if (activating) {
     ASSERT(g_high_res_timer_count != UINT32_MAX);
@@ -97,7 +97,7 @@ void Time::ActivateHighResolutionTimer(bool activating) {
 }
 
 bool Time::IsHighResolutionTimerInUse() {
-  AutoLock lock(g_high_res_lock);
+  AutoLock lock(&g_high_res_lock);
   return g_high_res_timer_count > 0;
 }
 

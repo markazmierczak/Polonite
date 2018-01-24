@@ -125,7 +125,7 @@ class PosixErrorCategory final : public ErrorCategory {
 
 } // namespace
 
-Ptr<const ErrorCategory> GetPosixErrorCategory() noexcept {
+const ErrorCategory* GetPosixErrorCategory() noexcept {
   static const PosixErrorCategory instance;
   return &instance;
 }

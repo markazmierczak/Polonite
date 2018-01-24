@@ -50,7 +50,7 @@ class STP_XML_EXPORT XmlSaxParser : public XmlReader {
   void ParseChunk(StringSpan chunk, bool is_final) override;
   void StopParsing() override;
 
-  XmlNamespaceContext* namespace_context() const { return namespace_context_.get(); }
+  XmlNamespaceContext* namespace_context() const { return namespace_context_; }
 
   // Internal implementation of SAX parser visible in public due C shims
   // to libxml library.
@@ -81,7 +81,7 @@ class STP_XML_EXPORT XmlSaxParser : public XmlReader {
  private:
   void StopParsingWithNamespaceError(StringSpan prefix);
 
-  Ptr<XmlNamespaceContext> namespace_context_;
+  XmlNamespaceContext* namespace_context_;
 
   XmlSaxAttributes attributes_;
 

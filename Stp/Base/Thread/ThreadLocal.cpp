@@ -34,7 +34,7 @@ void BasicThreadLocal::OnThreadExit() {
   List<Callback> callbacks;
 
   {
-    AutoLock guard(g_tls_lock);
+    AutoLock guard(&g_tls_lock);
     callbacks.EnsureCapacity(g_with_dtor_count);
 
     // Iterate the TLS list backwards to destroy objects in reversed order
@@ -57,7 +57,7 @@ void BasicThreadLocal::Init(void (*dtor)(void*)) {
   dtor_ = dtor;
   slot_ = NativeThreadLocal::Allocate(dtor_);
   #if OS(WIN)
-  AutoLock guard(g_tls_lock);
+  AutoLock guard(&g_tls_lock);
   AppendToList(&g_tls_root);
   if (dtor)
     ++g_with_dtor_count;
@@ -67,7 +67,7 @@ void BasicThreadLocal::Init(void (*dtor)(void*)) {
 void BasicThreadLocal::Fini() {
   NativeThreadLocal::Free(slot_);
   #if OS(WIN)
-  AutoLock guard(g_tls_lock);
+  AutoLock guard(&g_tls_lock);
   RemoveFromList();
   if (dtor_)
     --g_with_dtor_count;

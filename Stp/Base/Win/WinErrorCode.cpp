@@ -38,7 +38,7 @@ class WinErrorCategory final : public ErrorCategory {
 
 } // namespace
 
-Ptr<const ErrorCategory> GetWinErrorCategory() {
+const ErrorCategory* GetWinErrorCategory() {
   static const WinErrorCategory instance;
   return &instance;
 }

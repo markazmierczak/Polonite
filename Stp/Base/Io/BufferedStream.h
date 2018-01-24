@@ -29,7 +29,7 @@ class BASE_EXPORT BufferedStream final : public Stream {
   void FlushBuffers();
 
   void Open(OwnPtr<Stream> underlying) { OpenInternal(underlying.Release(), true); }
-  void Open(Ptr<Stream> underlying) { OpenInternal(ToPointer(underlying), false); }
+  void Open(Stream* underlying) { OpenInternal(underlying, false); }
 
   void Close() override;
   bool IsOpen() const noexcept override;

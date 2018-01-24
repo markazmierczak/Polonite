@@ -44,7 +44,7 @@ void AtExitManager::RegisterCallback(void (*func)(void*), void* param) {
 void AtExitManager::RegisterCallback(Callback callback) {
   ASSERT(g_top_manager_ != nullptr, "tried to RegisterFunction without an AtExitManager");
 
-  AutoLock lock(g_top_manager_->lock_);
+  AutoLock lock(&g_top_manager_->lock_);
   ASSERT(!g_top_manager_->processing_callbacks_);
   g_top_manager_->stack_.Push(Move(callback));
 }
@@ -57,7 +57,7 @@ void AtExitManager::ProcessCallbacksNow() {
   // handle it gracefully in release builds so we don't deadlock.
   Stack<Callback> tasks;
   {
-    AutoLock lock(g_top_manager_->lock_);
+    AutoLock lock(&g_top_manager_->lock_);
     Swap(tasks, g_top_manager_->stack_);
     g_top_manager_->processing_callbacks_ = true;
   }

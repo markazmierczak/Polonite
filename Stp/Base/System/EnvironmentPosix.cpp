@@ -33,7 +33,7 @@ bool Environment::TryGet(const char* name, String& out_value) {
 }
 
 bool Environment::TryGetNative(const char* name, String& out_value) {
-  AutoLock auto_lock(g_lock_);
+  AutoLock auto_lock(&g_lock_);
   const char* mbvalue_cstr = ::getenv(name);
   if (!mbvalue_cstr)
     return false;
@@ -55,7 +55,7 @@ bool Environment::Has(StringSpan name) {
 
 bool Environment::Has(const char* name) {
   ASSERT(name);
-  AutoLock auto_lock(g_lock_);
+  AutoLock auto_lock(&g_lock_);
   return ::getenv(name) != nullptr;
 }
 
@@ -64,7 +64,7 @@ bool Environment::TrySet(StringSpan name, StringSpan value) {
 }
 
 bool Environment::TrySet(const char* name, const char* value) {
-  AutoLock auto_lock(g_lock_);
+  AutoLock auto_lock(&g_lock_);
   return ::setenv(name, value, 1) == 0;
 }
 
@@ -77,7 +77,7 @@ bool Environment::TryUnset(StringSpan name) {
 }
 
 bool Environment::TryUnset(const char* name) {
-  AutoLock auto_lock(g_lock_);
+  AutoLock auto_lock(&g_lock_);
   return ::unsetenv(name) == 0;
 }
 } // namespace stp

@@ -21,7 +21,7 @@ template<typename T>
 class AutoReset {
  public:
   template<typename U>
-  AutoReset(Ptr<T> var, U&& new_value)
+  AutoReset(T* var, U&& new_value)
       : scoped_variable_(var),
         original_value_(Exchange(*var, Forward<U>(new_value))) {
   }

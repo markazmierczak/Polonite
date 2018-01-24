@@ -7,6 +7,7 @@
 
 #include "Base/Call/Bind.h"
 #include "Base/Compiler/Lsan.h"
+#include "Base/Mem/OwnPtr.h"
 #include "Base/Debug/SourceLocation.h"
 #include "Base/Sync/WaitableEvent.h"
 #include "Base/task/task_runner.h"
@@ -364,7 +365,7 @@ TEST(WeakPtrTest, ObjectAndWeakPtrOnDifferentThreads) {
   // Test that it is OK to create an object that supports WeakPtr on one thread,
   // but use it on another.  This tests that we do not trip runtime checks that
   // ensure that a WeakPtr is not used by multiple threads.
-  Ptr<Target> target(OffThreadObjectCreator<Target>::NewObject());
+  OwnPtr<Target> target(OffThreadObjectCreator<Target>::NewObject());
   WeakPtr<Target> weak_ptr = target->AsWeakPtr();
   EXPECT_EQ(target.get(), weak_ptr.get());
 }
@@ -373,7 +374,7 @@ TEST(WeakPtrTest, WeakPtrInitiateAndUseOnDifferentThreads) {
   // Test that it is OK to create an object that has a WeakPtr member on one
   // thread, but use it on another.  This tests that we do not trip runtime
   // checks that ensure that a WeakPtr is not used by multiple threads.
-  Ptr<Arrow> arrow(OffThreadObjectCreator<Arrow>::NewObject());
+  OwnPtr<Arrow> arrow(OffThreadObjectCreator<Arrow>::NewObject());
   Target target;
   arrow->target = target.AsWeakPtr();
   EXPECT_EQ(&target, arrow->target.get());
@@ -446,7 +447,7 @@ TEST(WeakPtrTest, MoveOwnershipAfterInvalidate) {
   background.Start();
 
   Arrow arrow;
-  Ptr<TargetWithFactory> target(new TargetWithFactory);
+  OwnPtr<TargetWithFactory> target(new TargetWithFactory);
 
   // Bind to main thread.
   arrow.target = target->factory.GetWeakPtr();
@@ -614,7 +615,7 @@ TEST(WeakPtrDeathTest, NonOwnerThreadDeletesWeakPtrAfterReference) {
   // (introduces deadlock on Linux).
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  Ptr<Target> target(new Target());
+  auto target = OwnPtr<Target>::New();
 
   // Main thread creates an arrow referencing the Target.
   Arrow arrow;
@@ -626,11 +627,11 @@ TEST(WeakPtrDeathTest, NonOwnerThreadDeletesWeakPtrAfterReference) {
   background.DeRef(&arrow);
 
   // Main thread deletes Target, violating thread binding.
-  ASSERT_ASSERT_DEATH(target.reset());
+  ASSERT_ASSERT_DEATH(target.Reset());
 
   // |target.reset()| died so |target| still holds the object, so we
   // must pass it to the background thread to teardown.
-  background.DeleteTarget(target.release());
+  background.DeleteTarget(target.Release());
 }
 
 TEST(WeakPtrDeathTest, NonOwnerThreadDeletesObjectAfterReference) {
@@ -638,7 +639,7 @@ TEST(WeakPtrDeathTest, NonOwnerThreadDeletesObjectAfterReference) {
   // (introduces deadlock on Linux).
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  Ptr<Target> target(new Target());
+  auto target = OwnPtr<Target>::New();
 
   // Main thread creates an arrow referencing the Target, and references it, so
   // that it becomes bound to the thread.
@@ -649,7 +650,7 @@ TEST(WeakPtrDeathTest, NonOwnerThreadDeletesObjectAfterReference) {
   // Background thread tries to delete target, volating thread binding.
   BackgroundThread background;
   background.Start();
-  ASSERT_ASSERT_DEATH(background.DeleteTarget(target.release()));
+  ASSERT_ASSERT_DEATH(background.DeleteTarget(target.Release()));
 }
 
 TEST(WeakPtrDeathTest, NonOwnerThreadReferencesObjectAfterDeletion) {
@@ -657,7 +658,7 @@ TEST(WeakPtrDeathTest, NonOwnerThreadReferencesObjectAfterDeletion) {
   // (introduces deadlock on Linux).
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  Ptr<Target> target(new Target());
+  auto target = OwnPtr<Target>::New();
 
   // Main thread creates an arrow referencing the Target.
   Arrow arrow;
@@ -666,7 +667,7 @@ TEST(WeakPtrDeathTest, NonOwnerThreadReferencesObjectAfterDeletion) {
   // Background thread tries to delete target, binding the object to the thread.
   BackgroundThread background;
   background.Start();
-  background.DeleteTarget(target.release());
+  background.DeleteTarget(target.Release());
 
   // Main thread attempts to dereference the target, violating thread binding.
   ASSERT_ASSERT_DEATH(arrow.target.get());

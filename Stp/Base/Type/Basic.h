@@ -15,7 +15,6 @@ typedef uint8_t byte_t;
 typedef decltype(nullptr) nullptr_t;
 enum NoInitTag { NoInit };
 enum class HashCode : uint32_t { Zero = 0 };
-template<typename T> using Ptr = T*;
 
 #define isizeof(x) static_cast<int>(sizeof(x))
 #define ialignof(x) static_cast<int>(alignof(x))

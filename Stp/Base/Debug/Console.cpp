@@ -42,7 +42,7 @@ ConsoleWriter::~ConsoleWriter() {
 
 void ConsoleWriter::OnFlush() {
   // ConsoleWriter buffers output until newline is written.
-  AutoLock auto_lock(lock_);
+  AutoLock auto_lock(&lock_);
   if (!buffer_.IsEmpty())
     PrintBuffer(buffer_.size());
 }

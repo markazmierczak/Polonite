@@ -33,7 +33,7 @@ FilePath ResolveInternal(
 
   bool resolved = false;
   if (!CacheDisabled) {
-    AutoLock scoped_lock(g_database_lock);
+    AutoLock scoped_lock(&g_database_lock);
     if (key == 0) {
       key = g_next_key++;
       if (key == 0) {
@@ -72,7 +72,7 @@ FilePath ResolveInternal(
   }
 
   if (!CacheDisabled) {
-    AutoLock scoped_lock(g_database_lock);
+    AutoLock scoped_lock(&g_database_lock);
     // Must be TryAdd() instead of Add() - other thread might already resolve this path.
     g_database->TryAdd(key, path);
   }

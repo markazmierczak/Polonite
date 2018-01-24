@@ -42,7 +42,7 @@ inline ErrorCode MakeErrorCode(PosixErrorCode code) noexcept;
 
 class ErrorCode final {
  public:
-  using CategoryType = Ptr<const ErrorCategory>;
+  using CategoryType = const ErrorCategory*;
 
   ErrorCode() noexcept : code_(0), category_(&detail::SuccessErrorCategoryInstance) {}
 

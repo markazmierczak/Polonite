@@ -12,10 +12,10 @@
 
 namespace stp {
 
-ConditionVariable::ConditionVariable(BasicLock& user_lock)
-    : user_mutex_(&user_lock.native_object_)
+ConditionVariable::ConditionVariable(BasicLock* user_lock)
+    : user_mutex_(&user_lock->native_object_)
     #if ASSERT_IS_ON()
-    , user_lock_(&user_lock)
+    , user_lock_(user_lock)
     #endif
 {
   int rv;
@@ -43,7 +43,7 @@ ConditionVariable::~ConditionVariable() {
   // Darwin kernel.
   {
     Lock lock;
-    AutoLock l(lock);
+    AutoLock l(&lock);
     struct timespec ts;
     ts.tv_sec = 0;
     ts.tv_nsec = 1;
