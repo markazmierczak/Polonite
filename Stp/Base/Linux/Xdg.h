@@ -5,7 +5,7 @@
 #define STP_BASE_LINUX_XDG_H_
 
 #include "Base/Containers/List.h"
-#include "Base/Fs/FilePath.h"
+#include "Base/FileSystem/FilePath.h"
 
 namespace stp {
 namespace linux {

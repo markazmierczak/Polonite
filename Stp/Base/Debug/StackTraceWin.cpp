@@ -6,7 +6,7 @@
 #include "Base/Debug/StackTrace.h"
 
 #include "Base/Debug/Log.h"
-#include "Base/Fs/KnownPaths.h"
+#include "Base/FileSystem/KnownPaths.h"
 #include "Base/Mem/OwnPtr.h"
 #include "Base/Sync/Lock.h"
 #include "Base/Text/Format.h"

@@ -3,7 +3,7 @@
 
 #include "Base/Io/FileStream.h"
 
-#include "Base/Fs/FileSystemException.h"
+#include "Base/FileSystem/FileSystemException.h"
 #include "Base/Io/FileStreamInfo.h"
 #include "Base/Util/Finally.h"
 #include "Base/Win/WinErrorCode.h"

@@ -4,7 +4,7 @@
 #ifndef STP_BASE_LINUX_PROCCOMMON_H_
 #define STP_BASE_LINUX_PROCCOMMON_H_
 
-#include "Base/Fs/FilePath.h"
+#include "Base/FileSystem/FilePath.h"
 #include "Base/Process/NativeProcess.h"
 
 namespace stp {

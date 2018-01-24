@@ -87,8 +87,8 @@ class BASE_EXPORT Exception {
   int msg_size_ = 0;
   int msg_capacity_ = 0;
 
-  void AddMessage(const StringSpan& message, bool literal) noexcept;
-  void AddMessage(const char* msg, int msg_size, bool literal) noexcept;
+  void AddMessage(const StringSpan& message, bool literal);
+  void AddMessage(const char* msg, int msg_size, bool literal);
   void FormatImpl(TextWriter& out) const;
 };
 

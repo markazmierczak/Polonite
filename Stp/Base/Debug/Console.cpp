@@ -3,7 +3,7 @@
 
 #include "Base/Debug/Console.h"
 
-#include "Base/Fs/KnownPaths.h"
+#include "Base/FileSystem/KnownPaths.h"
 #include "Base/Io/FileStream.h"
 #include "Base/Process/CommandLine.h"
 #include "Base/Text/Codec/TextCodec.h"

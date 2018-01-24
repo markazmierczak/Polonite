@@ -3,7 +3,7 @@
 
 #include "Base/System/Environment.h"
 
-#include "Base/Fs/FilePath.h"
+#include "Base/FileSystem/FilePath.h"
 #include "Base/Sync/Lock.h"
 #include "Base/Text/Wtf.h"
 

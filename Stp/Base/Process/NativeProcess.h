@@ -5,7 +5,7 @@
 #define STP_BASE_PROCESS_NATIVEPROCESS_H_
 
 #include "Base/Compiler/Os.h"
-#include "Base/Fs/FilePath.h"
+#include "Base/FileSystem/FilePath.h"
 
 #include <sys/types.h>
 

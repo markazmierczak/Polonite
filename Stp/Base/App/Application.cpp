@@ -9,7 +9,7 @@
 #include "Base/Debug/Console.h"
 #include "Base/Debug/StackTrace.h"
 #include "Base/Error/ExceptionPtr.h"
-#include "Base/Fs/KnownPaths.h"
+#include "Base/FileSystem/KnownPaths.h"
 #include "Base/Text/Format.h"
 
 namespace stp {

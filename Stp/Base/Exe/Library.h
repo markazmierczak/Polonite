@@ -4,7 +4,7 @@
 #ifndef STP_BASE_EXE_LIBRARY_H_
 #define STP_BASE_EXE_LIBRARY_H_
 
-#include "Base/Fs/FilePath.h"
+#include "Base/FileSystem/FilePath.h"
 
 #if OS(WIN)
 #include "Base/Win/WindowsHeader.h"

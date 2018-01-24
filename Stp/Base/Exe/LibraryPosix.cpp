@@ -3,7 +3,7 @@
 
 #include "Base/Exe/Library.h"
 
-#include "Base/Fs/FilePath.h"
+#include "Base/FileSystem/FilePath.h"
 #include "Base/Text/Format.h"
 
 #include <dlfcn.h>

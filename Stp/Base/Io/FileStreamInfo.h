@@ -4,7 +4,7 @@
 #ifndef STP_BASE_IO_FILESTREAMINFO_H_
 #define STP_BASE_IO_FILESTREAMINFO_H_
 
-#include "Base/Fs/FilePath.h"
+#include "Base/FileSystem/FilePath.h"
 #include "Base/Time/Time.h"
 
 #if OS(POSIX)

@@ -64,7 +64,7 @@ Double conversion. Efficient conversion routines that have been extracted
 from the V8 JavaScript engine. The code has been refactored and improved so that
 it can be used more easily in other projects.
 
-``Fs/``
+``FileSystem/``
 =======
 
 Native representation of file paths.

@@ -6,7 +6,7 @@
 #include "Base/Test/PerfTestSuite.h"
 
 #include "Base/Debug/Debugger.h"
-#include "Base/Fs/KnownPaths.h"
+#include "Base/FileSystem/KnownPaths.h"
 #include "Base/Process/CommandLine.h"
 #include "Base/Test/GTest.h"
 #include "Base/Test/PerfLog.h"

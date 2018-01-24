@@ -4,7 +4,7 @@
 #ifndef STP_BASE_IO_FILESTREAM_H_
 #define STP_BASE_IO_FILESTREAM_H_
 
-#include "Base/Fs/File.h"
+#include "Base/FileSystem/File.h"
 #include "Base/Io/Stream.h"
 
 #if OS(POSIX)

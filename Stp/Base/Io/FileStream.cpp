@@ -3,7 +3,7 @@
 
 #include "Base/Io/FileStream.h"
 
-#include "Base/Fs/FileSystemException.h"
+#include "Base/FileSystem/FileSystemException.h"
 
 namespace stp {
 

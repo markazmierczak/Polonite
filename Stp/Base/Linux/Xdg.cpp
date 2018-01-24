@@ -3,7 +3,7 @@
 
 #include "Base/Linux/Xdg.h"
 
-#include "Base/Fs/KnownPaths.h"
+#include "Base/FileSystem/KnownPaths.h"
 #include "Base/System/Environment.h"
 #include "Base/ThirdParty/xdg_user_dirs/xdg_user_dir_lookup.h"
 
