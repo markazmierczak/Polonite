@@ -22,6 +22,7 @@ struct TextConversionContext {
   };
   State state;
   bool exception_on_fallback = false;
+  bool did_fallback = false;
 
   void MaybeThrow(bool saw_error);
 };
@@ -121,8 +122,11 @@ constexpr TextCodecBuilder BuildTextCodec(StringSpan name, const TextCodecVtable
 }
 
 inline void TextConversionContext::MaybeThrow(bool saw_error) {
-  if (saw_error && exception_on_fallback)
-    throw TextConversionFallbackException();
+  if (saw_error) {
+    did_fallback = true;
+    if (exception_on_fallback)
+      throw TextConversionFallbackException();
+  }
 }
 
 } // namespace stp
