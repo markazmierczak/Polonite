@@ -8,6 +8,7 @@
 #include "Base/Compiler/Cpu.h"
 #include "Base/Debug/Assert.h"
 #include "Base/Type/HashableFwd.h"
+#include "Base/Type/NullableFwd.h"
 #include "Base/Type/Variable.h"
 
 namespace stp {
@@ -197,8 +198,8 @@ BASE_EXPORT void FormatDelegate(TextWriter& out, const StringSpan& opts, void* p
 
 } // namespace delegate_impl
 
-template<typename R, typename... TArgs>
-class Delegate<R(TArgs...)> {
+template<typename TResult, typename... TArgs>
+class Delegate<TResult(TArgs...)> {
  public:
   Delegate()
       : gobject_(nullptr), gmethod_(nullptr) {}
@@ -210,12 +211,12 @@ class Delegate<R(TArgs...)> {
       : gobject_(other.gobject_),
         gmethod_(other.gmethod_) {}
 
-  template<class X>
-  Delegate(R (X::*method)(TArgs...), X* object) {
+  template<class TClass>
+  Delegate(TResult (TClass::*method)(TArgs...), TClass* object) {
     gobject_ = delegate_impl::SimplifyMethod<sizeof(method)>::Convert(method, object, gmethod_);
   }
 
-  R operator()(TArgs... args) const {
+  TResult operator()(TArgs... args) const {
     ASSERT(gmethod_ != nullptr);
     return (*gmethod_)(gobject_, Forward<TArgs>(args)...);
   }
@@ -236,7 +237,12 @@ class Delegate<R(TArgs...)> {
 
  private:
   delegate_impl::GenericClass* gobject_;
-  R (*gmethod_)(delegate_impl::GenericClass*, TArgs...);
+  TResult (*gmethod_)(delegate_impl::GenericClass*, TArgs...);
+};
+
+template<typename TResult, typename... TArgs>
+struct NullableTmpl<Delegate<TResult(TArgs...)>> {
+  typedef Delegate<Delegate<TResult(TArgs...)>> Type;
 };
 
 template<typename TClass, typename TThis, typename TResult, typename... TArgs>
