@@ -183,7 +183,7 @@ constexpr TimeDelta TimeDelta::FromMillisecondsF(double ms) {
 }
 
 constexpr TimeDelta TimeDelta::FromDouble(double value) {
-  return TimeDelta(CheckedCast<int64_t>(value));
+  return TimeDelta(AssertedCast<int64_t>(value));
 }
 
 constexpr int TimeDelta::InDays() const {

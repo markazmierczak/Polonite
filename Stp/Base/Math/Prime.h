@@ -43,7 +43,7 @@ inline T NextPrimeNumber(T x) {
   ASSERT(!IsNegative(x));
   auto ux = ToUnsigned(x);
   auto rv = detail::NextPrimeNumberImpl(ux);
-  return CheckedCast<T>(rv);
+  return AssertedCast<T>(rv);
 }
 
 } // namespace stp

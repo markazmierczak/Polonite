@@ -718,7 +718,7 @@ config("wundef") {
 
 # On Windows compiling on x64, VC will issue a warning when converting
 # size_t to int because it will truncate the value. Our code should not have
-# these warnings and one should use a static_cast or a CheckedCast for the
+# these warnings and one should use a static_cast or a AssertedCast for the
 # conversion depending on the case. However, a lot of code still needs to be
 # fixed. Apply this config to such targets to disable the warning.
 #

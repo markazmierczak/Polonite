@@ -18,12 +18,12 @@ constexpr bool IsValueInRangeForNumericType(TSrc value) {
   return detail::DstRangeRelationToSrcRange<TDst>(value).IsValid();
 }
 
-// CheckedCast<> is analogous to static_cast<> for numeric types,
+// AssertedCast<> is analogous to static_cast<> for numeric types,
 // except that it asserts that the specified numeric conversion will not
 // overflow or underflow. NaN source will always trigger a ASSERT.
 template<typename TDst, typename TSrc,
          TEnableIf<TIsArithmetic<TDst> && TIsArithmetic<TSrc>>* = nullptr>
-constexpr TDst CheckedCast(TSrc value) {
+constexpr TDst AssertedCast(TSrc value) {
   ASSERT(IsValueInRangeForNumericType<TDst>(value));
   return static_cast<TDst>(value);
 }

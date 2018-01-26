@@ -20,7 +20,7 @@ Time Time::FromTimeT(time_t tt) {
 }
 
 time_t Time::ToTimeT() const {
-  return CheckedCast<time_t>(us_ / TimeDelta::MicrosecondsPerSecond);
+  return AssertedCast<time_t>(us_ / TimeDelta::MicrosecondsPerSecond);
 }
 
 Time Time::FromDoubleT(double dt) {

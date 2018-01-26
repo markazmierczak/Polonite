@@ -63,7 +63,7 @@ class Fixed {
       : bits_(MakeSafe(x) * OneBitValue) {}
 
   template<typename T, TEnableIf<TIsInteger<T>>* = nullptr>
-  constexpr explicit operator T() const { return CheckedCast<T>(bits_ >> P); }
+  constexpr explicit operator T() const { return AssertedCast<T>(bits_ >> P); }
 
   template<typename T, TEnableIf<TIsFloatingPoint<T>>* = nullptr>
   constexpr explicit operator T() const { return bits_ * (T(1) / OneBitValue); }
@@ -144,12 +144,12 @@ class Fixed {
     ASSERT(0 <= t.bits_ && t.bits_ <= OneBitValue);
     auto a = static_cast<WideBitsType>(x.bits_) * (OneBitValue - t.bits_);
     auto b = static_cast<WideBitsType>(y.bits_) * t.bits_;
-    return FromBits(CheckedCast<int32_t>((a + b) >> P));
+    return FromBits(AssertedCast<int32_t>((a + b) >> P));
   }
 
   friend constexpr Fixed FusedMulAdd(Fixed x, Fixed y, Fixed z) {
     auto res64 = static_cast<WideBitsType>(x.bits_) * y.bits_ + z.bits_;
-    return FromBits(CheckedCast<BitsType>(res64 >> P));
+    return FromBits(AssertedCast<BitsType>(res64 >> P));
   }
 
   friend Fixed Sqrt(Fixed x) { return FromBits(detail::SqrtFixed(x.bits_, P)); }

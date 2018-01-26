@@ -32,13 +32,13 @@ class Safe {
   constexpr Safe operator--(int) { Safe r = *this; operator--(); return r; }
 
   template<typename U>
-  constexpr operator U() const { return CheckedCast<U>(value_); }
+  constexpr operator U() const { return AssertedCast<U>(value_); }
 
   template<typename U>
   constexpr operator Safe<U>() const { return Safe<U>(value_); }
 
   template<typename U, TEnableIf<TIsArithmetic<U>>* = nullptr>
-  constexpr Safe(U other) : value_(CheckedCast<T>(other)) {}
+  constexpr Safe(U other) : value_(AssertedCast<T>(other)) {}
 
  private:
   T value_;
@@ -552,8 +552,8 @@ constexpr int Signum(Safe<T> x) {
 }
 
 template<typename TDst, typename TSrc>
-constexpr Safe<TDst> CheckedCast(Safe<TSrc> x) {
-  return MakeSafe(CheckedCast<TDst>(x.get()));
+constexpr Safe<TDst> AssertedCast(Safe<TSrc> x) {
+  return MakeSafe(AssertedCast<TDst>(x.get()));
 }
 
 template<typename T, typename U, TEnableIf<safe::TAreValidBinaryArguments<T, U>>* = nullptr>

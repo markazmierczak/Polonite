@@ -76,7 +76,7 @@ TEST(SafeNumerics, CastTests) {
   double double_small_int = Limits<int>::Min;
 
   // Just test that the casts compile, since the other tests cover logic.
-  EXPECT_EQ(0, CheckedCast<int>(static_cast<size_t>(0)));
+  EXPECT_EQ(0, AssertedCast<int>(static_cast<size_t>(0)));
   EXPECT_EQ(0, StrictCast<int>(static_cast<unsigned char>(0)));
   EXPECT_EQ(0U, StrictCast<unsigned>(static_cast<unsigned char>(0)));
 
