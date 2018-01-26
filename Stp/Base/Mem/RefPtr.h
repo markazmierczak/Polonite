@@ -35,27 +35,20 @@ class RefPtr {
   }
 
   RefPtr(const RefPtr& o) noexcept : ptr_(o.ptr_) { IncRefIfNotNull(ptr_); }
-
-  RefPtr& operator=(const RefPtr& o) noexcept {
-    T* old_ptr = Exchange(ptr_, o.ptr_);
-    IncRefIfNotNull(ptr_);
-    DecRefIfNotNull(old_ptr);
-    return *this;
-  }
+  RefPtr& operator=(const RefPtr& o) noexcept { Reset(o.ptr_); return *this; }
 
   template<typename U>
   RefPtr(const RefPtr<U>& o) noexcept : ptr_(o.get()) { IncRefIfNotNull(ptr_); }
 
   RefPtr(nullptr_t) noexcept : ptr_(nullptr) {}
-
-  RefPtr& operator=(nullptr_t) noexcept {
-    Reset();
-    return *this;
-  }
+  RefPtr& operator=(nullptr_t) noexcept { Reset(); return *this; }
 
   [[nodiscard]] T* Release() { return Exchange(ptr_, nullptr); }
 
-  void Reset(T* new_ptr = nullptr) { DecRefIfNotNull(Exchange(ptr_, new_ptr)); }
+  void Reset(T* new_ptr = nullptr) {
+    IncRefIfNotNull(new_ptr);
+    DecRefIfNotNull(Exchange(ptr_, new_ptr));
+  }
 
   ALWAYS_INLINE T& operator*() const { return *ptr_; }
   ALWAYS_INLINE T* operator->() const { return ptr_; }
