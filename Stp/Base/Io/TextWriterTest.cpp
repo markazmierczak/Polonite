@@ -10,7 +10,7 @@ namespace stp {
 
 TEST(TextWriterTest, Char16) {
   String str;
-  StringWriter out(str);
+  StringWriter out(&str);
 
   out.Write("abc");
   EXPECT_EQ(StringSpan("abc"), str);

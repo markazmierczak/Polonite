@@ -11,7 +11,7 @@ namespace stp {
 
 class BASE_EXPORT InlineStringWriter final : public TextWriter {
  public:
-  explicit InlineStringWriter(InlineListBase<char>& string) : string_(string) {}
+  explicit InlineStringWriter(InlineListBase<char>* string) : string_(*string) {}
 
   const TextCodec& GetEncoding() const override;
 
@@ -30,7 +30,7 @@ class BASE_EXPORT InlineStringWriter final : public TextWriter {
 
 class BASE_EXPORT InlineString16Writer final : public TextWriter {
  public:
-  explicit InlineString16Writer(InlineListBase<char16_t>& string) : string_(string) {}
+  explicit InlineString16Writer(InlineListBase<char16_t>* string) : string_(*string) {}
 
   const TextCodec& GetEncoding() const override;
 

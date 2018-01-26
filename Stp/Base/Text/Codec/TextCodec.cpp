@@ -11,7 +11,7 @@ namespace stp {
 template<typename T>
 static inline List<T> BytesToStringWithCodec(BufferSpan bytes, const TextCodec& codec) {
   List<T> result;
-  StringTmplWriter<T> writer(result);
+  StringTmplWriter<T> writer(&result);
   writer.Write(bytes, codec);
   return result;
 }

@@ -130,7 +130,7 @@ static inline String WtfToUtf8Tmpl(Span<T> wtf) {
   String utf;
   utf.EnsureCapacity(wtf.size());
 
-  StringWriter writer(utf);
+  StringWriter writer(&utf);
   WriteWtf(writer, wtf);
   return utf;
 }
@@ -143,7 +143,7 @@ static inline void AppendWtfTmpl(List<TOutput>& output, Span<TInput> wtf) {
   if constexpr (sizeof(TOutput) == sizeof(TInput)) {
     output.EnsureCapacity(output.size() + wtf.size());
   }
-  StringWriter writer(output);
+  StringWriter writer(&output);
   WriteWtf(writer, wtf);
 }
 

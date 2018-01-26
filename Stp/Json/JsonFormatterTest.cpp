@@ -91,7 +91,7 @@ TEST(JsonFormatterTest, EscapeUTF8) {
     auto escaped = test.escaped;
 
     String out;
-    StringWriter os(out);
+    StringWriter os(&out);
     JsonFormatter::Escape(os, in, true);
     EXPECT_EQ(escaped, out);
     EXPECT_TRUE(Utf8::Validate(out));
@@ -104,7 +104,7 @@ TEST(JsonFormatterTest, EscapeUTF8) {
 
   String in = cases[0].to_escape;
   String out;
-  StringWriter os(out);
+  StringWriter os(&out);
   JsonFormatter::Escape(os, in, true);
   EXPECT_TRUE(Utf8::Validate(out));
 

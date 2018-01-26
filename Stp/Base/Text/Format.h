@@ -105,7 +105,7 @@ inline void AssertFail(
 template<typename T, typename... TArgs>
 inline List<T> StringTmplFormatMany(StringSpan fmt, const TArgs&... args) {
   List<T> result;
-  StringTmplWriter<T> writer(result);
+  StringTmplWriter<T> writer(&result);
   FormatMany(writer, fmt, args...);
   return result;
 }
@@ -118,7 +118,7 @@ inline String StringFormatMany(StringSpan fmt, const TArgs&... args) {
 template<typename T, typename TValue>
 inline List<T> FormattableToStringTmpl(const TValue& value, const StringSpan& opts = StringSpan()) {
   List<T> result;
-  StringTmplWriter<T> writer(result);
+  StringTmplWriter<T> writer(&result);
   Format(writer, value, opts);
   return result;
 }

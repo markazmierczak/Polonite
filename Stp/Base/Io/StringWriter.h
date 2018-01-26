@@ -11,7 +11,7 @@ namespace stp {
 
 class BASE_EXPORT StringWriter final : public TextWriter {
  public:
-  explicit StringWriter(String& string) : string_(string) {}
+  explicit StringWriter(String* string) : string_(*string) {}
 
   const TextCodec& GetEncoding() const override;
 
@@ -30,7 +30,7 @@ class BASE_EXPORT StringWriter final : public TextWriter {
 
 class BASE_EXPORT String16Writer : public TextWriter {
  public:
-  explicit String16Writer(String16& string) : string_(string) {}
+  explicit String16Writer(String16* string) : string_(*string) {}
 
   const TextCodec& GetEncoding() const override;
 

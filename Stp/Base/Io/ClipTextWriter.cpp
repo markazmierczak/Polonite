@@ -161,7 +161,7 @@ void ClipTextWriter::OnWriteUtf16(String16Span text) {
 template<typename T>
 static void Rewrite(TextWriter& out, const BufferSpan& text, const TextCodec& encoding) {
   InlineList<T, 256> buffer;
-  InlineStringTmplWriter<T> buffer_writer(buffer);
+  InlineStringTmplWriter<T> buffer_writer(&buffer);
   buffer_writer.Write(text, encoding);
   out.Write(buffer);
 }
