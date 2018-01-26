@@ -50,15 +50,15 @@ class RefPtr {
     DecRefIfNotNull(Exchange(ptr_, new_ptr));
   }
 
+  ALWAYS_INLINE T* get() const { return ptr_; }
+
   ALWAYS_INLINE T& operator*() const { return *ptr_; }
   ALWAYS_INLINE T* operator->() const { return ptr_; }
 
   ALWAYS_INLINE bool operator!() const { return !ptr_; }
   ALWAYS_INLINE explicit operator bool() const { return ptr_ != nullptr; }
 
-  ALWAYS_INLINE void SwapWith(RefPtr& other) { Swap(ptr_, other.ptr_); }
-
-  ALWAYS_INLINE T* get() const { return ptr_; }
+  friend void Swap(RefPtr& lhs, RefPtr& rhs) { Swap(lhs.ptr_, rhs.ptr_); }
 
  private:
   friend RefPtr AdoptRef<T>(T* ptr);

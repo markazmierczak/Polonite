@@ -21,11 +21,6 @@ class BASE_EXPORT FileStream final : public Stream {
   FileStream() {}
   ~FileStream() override;
 
-  FileStream(FileStream&& other) = default;
-  FileStream& operator=(FileStream&& other) = default;
-
-  void SwapWith(FileStream& other);
-
   void Create(
       const FilePath& path,
       FileMode mode = FileMode::Create,
@@ -117,11 +112,6 @@ class BASE_EXPORT FileStream final : public Stream {
 
   SystemErrorCode TryOpenInternal(const FilePath& path, FileMode mode, FileAccess access);
 };
-
-inline void FileStream::SwapWith(FileStream& other) {
-  Swap(native_, other.native_);
-  Swap(access_, other.access_);
-}
 
 } // namespace stp
 

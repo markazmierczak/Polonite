@@ -22,11 +22,11 @@ JsonStringBuilder& JsonStringBuilder::operator=(const JsonStringBuilder& other) 
 }
 
 JsonStringBuilder::JsonStringBuilder(JsonStringBuilder&& other) {
-  SwapWith(other);
+  Swap(*this, other);
 }
 
 JsonStringBuilder& JsonStringBuilder::operator=(JsonStringBuilder&& other) {
-  SwapWith(other);
+  Swap(*this, other);
   return *this;
 }
 

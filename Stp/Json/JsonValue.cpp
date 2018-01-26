@@ -44,6 +44,7 @@ JsonValue& JsonValue::operator=(JsonValue&& other) {
   return *this;
 }
 
+// FIXME rewrite
 void JsonValue::SwapWith(JsonValue& other) {
   Swap(type_, other.type_);
 

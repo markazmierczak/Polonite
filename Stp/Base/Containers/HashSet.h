@@ -23,8 +23,6 @@ class HashSet {
   HashSet(HashSet&& other) : map_(Move(other.map_)) {}
   HashSet& operator=(HashSet&& other);
 
-  void SwapWith(HashSet& other) { map_.SwapWith(other.map_); }
-
   int size() const { return map_.size(); }
 
   bool IsEmpty() const { return map_.IsEmpty(); }
@@ -39,6 +37,8 @@ class HashSet {
 
   template<typename U>
   bool Contains(const U& value) const { return map_.Contains(value); }
+
+  friend void Swap(HashSet& lhs, HashSet& rhs) { Swap(lhs.map_, rhs.map_); }
 
  private:
   HashMap<T, DummyEmpty> map_;

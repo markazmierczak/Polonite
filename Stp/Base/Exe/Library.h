@@ -63,15 +63,10 @@ class BASE_EXPORT Library {
 
   explicit Library(NativeLibrary native) : native_(native) {}
 
-  Library(Library&& other) : native_(other.native_) {
-    other.native_ = NullNativeLibrary;
-  }
-  Library& operator=(Library&& other) {
-    SwapWith(other);
-    return *this;
-  }
+  Library(Library&& other) : native_(Exchange(other.native_, NullNativeLibrary)) {}
+  Library& operator=(Library&& other) { Reset(other.Release()); return *this; }
 
-  void SwapWith(Library& other) { Swap(native_, other.native_); }
+  friend void Swap(Library& lhs, Library& rhs) { Swap(lhs.native_, rhs.native_); }
 
   void Reset(NativeLibrary native = NullNativeLibrary);
 

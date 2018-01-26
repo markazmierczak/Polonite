@@ -31,8 +31,6 @@ class SinglyLinkedList {
 
   ~SinglyLinkedList() { Clear(); }
 
-  void SwapWith(SinglyLinkedList& other);
-
   ALWAYS_INLINE T* head() const { return head_; }
   ALWAYS_INLINE T* tail() const { return tail_; }
 
@@ -90,6 +88,11 @@ class SinglyLinkedList {
   // Only for range-based for-loop.
   ALWAYS_INLINE Iterator begin() const { return Iterator(head()); }
   ALWAYS_INLINE Iterator end() const { return Iterator(nullptr); }
+
+  friend void Swap(SinglyLinkedList& lhs, SinglyLinkedList& rhs) {
+    Swap(lhs.head_, rhs.head_);
+    Swap(lhs.tail_, rhs.tail_);
+  }
 
  private:
   T* head_ = nullptr;
@@ -202,12 +205,6 @@ inline T* SinglyLinkedList<T>::Find(const T& value) const {
       return n;
   }
   return nullptr;
-}
-
-template<typename T>
-inline void SinglyLinkedList<T>::SwapWith(SinglyLinkedList& other) {
-  Swap(head_, other.head_);
-  Swap(tail_, other.tail_);
 }
 
 template<typename T>

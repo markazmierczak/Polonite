@@ -55,8 +55,6 @@ class LinkedList {
   constexpr LinkedList() : root_(root(), root()) {}
   ~LinkedList() { Clear(); }
 
-  void SwapWith(LinkedList& other);
-
   ALWAYS_INLINE NodeType* root() const { return const_cast<NodeType*>(&root_); }
 
   ALWAYS_INLINE bool IsEmpty() const { return root_.next() == root(); }
@@ -114,6 +112,10 @@ class LinkedList {
   ALWAYS_INLINE Iterator begin() const { return Iterator(root_.next()); }
   ALWAYS_INLINE Iterator end() const { return Iterator(const_cast<NodeType*>(&root_)); }
 
+  friend void Swap(LinkedList& lhs, LinkedList& rhs) {
+    Swap(lhs.root_, rhs.root_);
+  }
+
  private:
   NodeType root_;
 
@@ -145,12 +147,6 @@ inline void LinkedListNode<T>::RemoveFromList() {
   this->next_->prev_ = this->prev_;
   this->next_ = nullptr;
   this->prev_ = nullptr;
-}
-
-template<typename T>
-inline void LinkedList<T>::SwapWith(LinkedList& other) {
-  Swap(root_.prev_, other.root_.prev_);
-  Swap(root_.next_, other.root_.next_);
 }
 
 template<typename T>

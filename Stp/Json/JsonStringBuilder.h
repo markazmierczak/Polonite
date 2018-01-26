@@ -24,8 +24,6 @@ class BASE_EXPORT JsonStringBuilder {
   JsonStringBuilder(JsonStringBuilder&& other);
   JsonStringBuilder& operator=(JsonStringBuilder&& other);
 
-  void SwapWith(JsonStringBuilder& other);
-
   JsonStringBuilder& operator=(StringSpan other);
 
   // For creating a reference to read-only data.
@@ -60,6 +58,12 @@ class BASE_EXPORT JsonStringBuilder {
 
   bool OwnsData() const { return capacity_ >= 0; }
 
+  friend void Swap(JsonStringBuilder& lhs, JsonStringBuilder& rhs) {
+    Swap(lhs.data_, rhs.data_);
+    Swap(lhs.size_, rhs.size_);
+    Swap(lhs.capacity_, rhs.capacity_);
+  }
+
  private:
   int RecommendCapacity(int n);
 
@@ -71,12 +75,6 @@ class BASE_EXPORT JsonStringBuilder {
 inline JsonStringBuilder::~JsonStringBuilder() {
   if (capacity_ > 0)
     Free(data_);
-}
-
-inline void JsonStringBuilder::SwapWith(JsonStringBuilder& other) {
-  Swap(other.data_, data_);
-  Swap(other.size_, size_);
-  Swap(other.capacity_, capacity_);
 }
 
 } // namespace stp

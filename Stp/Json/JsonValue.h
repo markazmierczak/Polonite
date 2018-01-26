@@ -38,8 +38,6 @@ class BASE_EXPORT JsonValue {
   JsonValue(JsonValue&& other);
   JsonValue& operator=(JsonValue&& other);
 
-  void SwapWith(JsonValue& other);
-
   JsonValue(nullptr_t) { type_ = Type::Null; }
 
   // Use SFINAE to disable implicit conversion from const char[] to bool.
