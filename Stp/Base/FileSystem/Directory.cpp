@@ -60,7 +60,7 @@ SystemErrorCode Directory::TryCreatePath(const FilePath& path) {
 
     error_code = TryCreate(copy);
 
-    *copy.AppendCharsUninitialized(path_length - offset) = char_copy;
+    *copy.chars().AppendUninitialized(path_length - offset) = char_copy;
 
     if (!IsOk(error_code))
       break;

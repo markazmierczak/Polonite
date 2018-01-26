@@ -58,7 +58,7 @@ FilePath GetCurrentDirPath() {
   FilePath path;
   for (int buffer_len = StackLength * 2; errno == ERANGE; buffer_len *= 2) {
     path.Clear();
-    char* dst = path.AppendCharsUninitialized(buffer_len);
+    char* dst = path.chars().AppendUninitialized(buffer_len);
     if (::getcwd(dst, buffer_len) != nullptr) {
       int real_length = MakeSpanFromNullTerminated(dst).size();
       path.Truncate(real_length);

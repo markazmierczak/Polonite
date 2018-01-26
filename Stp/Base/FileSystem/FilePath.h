@@ -94,9 +94,6 @@ class BASE_EXPORT FilePath {
   void Add(SpanType component);
   void AddAscii(StringSpan component);
 
-  void AppendChars(Span<CharType> chars);
-  CharType* AppendCharsUninitialized(int n);
-
   int GetRootLength() const { return ToSpan().GetRootLength(); }
   int GetDirectoryNameLength() const { return ToSpan().GetDirectoryNameLength(); }
   int IndexOfExtension() const { return ToSpan().IndexOfExtension(); }

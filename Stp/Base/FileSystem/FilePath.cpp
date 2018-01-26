@@ -29,14 +29,6 @@ void FilePath::ShrinkToFit() {
   chars_.ShrinkToFit();
 }
 
-void FilePath::AppendChars(Span<CharType> chars) {
-  chars_.Append(chars);
-}
-
-FilePathChar* FilePath::AppendCharsUninitialized(int n) {
-  return chars_.AppendUninitialized(n);
-}
-
 bool FilePath::CdUp() {
   Truncate(GetDirectoryNameLength());
   return !IsEmpty();
@@ -82,7 +74,7 @@ bool FilePath::ReplaceExtension(StringSpan extension) {
   if (!extension.IsEmpty()) {
     if (extension[0] != '.')
       chars_.Add('.');
-    AppendChars(extension);
+    chars_.Append(extension);
   }
   return true;
 }
@@ -121,7 +113,7 @@ void FilePath::Add(FilePathSpan component) {
     need_separator = !IsFilePathSeparator(chars_.GetLast());
 
   int length = component.size();
-  CharType* dst = AppendCharsUninitialized(length + (need_separator ? 1 : 0));
+  CharType* dst = chars_.AppendUninitialized(length + (need_separator ? 1 : 0));
 
   if (need_separator)
     *dst++ = FilePathSeparator;
@@ -137,7 +129,7 @@ void FilePath::AddAscii(StringSpan component) {
 
   int length = component.size();
   auto* src = component.data();
-  CharType* dst = AppendCharsUninitialized(length + (need_separator ? 1 : 0));
+  CharType* dst = chars_.AppendUninitialized(length + (need_separator ? 1 : 0));
 
   if (need_separator)
     *dst++ = FilePathSeparator;
