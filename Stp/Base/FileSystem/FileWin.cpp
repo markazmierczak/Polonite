@@ -61,28 +61,9 @@ SystemErrorCode File::TryMakeLongPath(const FilePath& input, FilePath& output) {
 }
 
 SystemErrorCode File::TryDelete(const FilePath& path) {
-  if (::DeleteFileW(ToNullTerminated(path)) != 0)
-    return WinErrorCode::Success;
-
-  auto error = GetLastWinErrorCode();
-
-  if (error.GetCode() == WinErrorCode::AccessDenied) {
-    DWORD attr = ::GetFileAttributesW(ToNullTerminated(path));
-    if (attr == INVALID_FILE_ATTRIBUTES)
-      return error;
-
-    // We may need to clear the read-only bit.
-    if ((attr & FILE_ATTRIBUTE_READONLY) &&
-        !::SetFileAttributesW(ToNullTerminated(path), attr & ~FILE_ATTRIBUTE_READONLY)) {
-      return GetLastWinErrorCode();
-    }
-    // Second chance.
-    if (::DeleteFileW(ToNullTerminated(path)) != 0)
-      return WinErrorCode::Success;
-
-    error = GetLastWinErrorCode();
-  }
-  return error;
+  if (!::DeleteFileW(ToNullTerminated(path)))
+    return GetLastWinErrorCode();
+  return WinErrorCode::Success;
 }
 
 SystemErrorCode File::TryDeleteAfterReboot(const FilePath& path) {

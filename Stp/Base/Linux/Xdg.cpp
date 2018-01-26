@@ -20,7 +20,7 @@ FilePath Xdg::GetDirectory(const char* env_name, StringSpan fallback_dir) {
     path.StripTrailingSeparators();
   } else {
     path = GetHomeDirPath();
-    path.AddAscii(fallback_dir);
+    path.AddComponentAscii(fallback_dir);
   }
   return path;
 }
@@ -34,7 +34,7 @@ FilePath Xdg::GetUserDirectory(const char* dir_name, StringSpan fallback_dir) {
     path.StripTrailingSeparators();
   } else {
     path = GetHomeDirPath();
-    path.AddAscii(fallback_dir);
+    path.AddComponentAscii(fallback_dir);
   }
   return path;
 }

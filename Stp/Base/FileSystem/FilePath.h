@@ -91,8 +91,8 @@ class BASE_EXPORT FilePath {
   static FilePath FromString(WStringSpan string);
   #endif
 
-  void Add(SpanType component);
-  void AddAscii(StringSpan component);
+  void AddComponent(SpanType component);
+  void AddComponentAscii(StringSpan component);
 
   int GetRootLength() const { return ToSpan().GetRootLength(); }
   int GetDirectoryNameLength() const { return ToSpan().GetDirectoryNameLength(); }

@@ -14,7 +14,7 @@ NativeProcessId NativeProcess::GetParentId(NativeProcessHandle process) {
 
 FilePath NativeProcess::GetExecutablePath(NativeProcessHandle process) {
   FilePath exe_file = linux::ProcCommon::DirectoryForProcess(process);
-  exe_file.AddAscii("exe");
+  exe_file.AddComponentAscii("exe");
   return File::ReadSymbolicLink(exe_file);
 }
 

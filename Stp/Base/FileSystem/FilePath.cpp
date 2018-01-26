@@ -104,7 +104,7 @@ FilePath FilePath::FromString(WStringSpan string) {
 }
 #endif
 
-void FilePath::Add(FilePathSpan component) {
+void FilePath::AddComponent(FilePathSpan component) {
   ASSERT(!component.IsAbsolute());
   ASSERT(!chars_.IsSourceOf(component.chars()));
 
@@ -120,7 +120,7 @@ void FilePath::Add(FilePathSpan component) {
   UninitializedCopy(dst, component.data(), length);
 }
 
-void FilePath::AddAscii(StringSpan component) {
+void FilePath::AddComponentAscii(StringSpan component) {
   ASSERT(IsAscii(component));
 
   bool need_separator = false;
@@ -146,7 +146,7 @@ FilePath CombineFilePaths(Span<FilePathSpan> components) {
     return init + component.size();
   }));
   for (int i = 0; i < n; ++i)
-    result.Add(components[i]);
+    result.AddComponent(components[i]);
   return result;
 }
 
