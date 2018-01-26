@@ -11,10 +11,10 @@ namespace stp {
 template<typename K, typename T>
 class KeyValuePair;
 
-template<typename K, typename T, template<class TItem> class TList = List>
+template<typename K, typename T, class TList = List<KeyValuePair<K, T>>>
 class FlatMap;
 
-template<typename T, template<class TItem> class TList = List>
+template<typename T, class TList = List<T>>
 class FlatSet;
 
 template<typename K, typename T>

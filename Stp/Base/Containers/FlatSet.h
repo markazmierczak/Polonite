@@ -10,11 +10,11 @@
 
 namespace stp {
 
-template<typename T, template<class TItem> class TList>
+template<typename T, class TList>
 class FlatSet {
  public:
   using ValueType = T;
-  using ListType = TList<T>;
+  using ListType = TList;
 
   static_assert(TIsContiguousContainer<ListType>, "!");
 
@@ -73,14 +73,14 @@ class FlatSet {
   FlatSet(OrderedUniqueTag, ListType&& list) noexcept : list_(Move(list)) {}
 };
 
-template<typename T, template<class TItem> class TList>
+template<typename T, class TList>
 struct TIsZeroConstructibleTmpl<FlatSet<T, TList>>
     : TIsZeroConstructibleTmpl<typename FlatSet<T, TList>::ListType> {};
-template<typename T, template<class TItem> class TList>
+template<typename T, class TList>
 struct TIsTriviallyRelocatableTmpl<FlatSet<T, TList>>
     : TIsTriviallyRelocatableTmpl<typename FlatSet<T, TList>::ListType> {};
 
-template<typename T, template<class TItem> class TList>
+template<typename T, class TList>
 template<typename U>
 inline bool FlatSet<T, TList>::TryAdd(U&& value) {
   int pos = IndexOf(value);
@@ -91,7 +91,7 @@ inline bool FlatSet<T, TList>::TryAdd(U&& value) {
   return true;
 }
 
-template<typename T, template<class TItem> class TList>
+template<typename T, class TList>
 template<typename U>
 inline bool FlatSet<T, TList>::TryRemove(const U& value) {
   int pos = IndexOf(value);

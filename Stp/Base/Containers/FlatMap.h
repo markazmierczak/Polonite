@@ -13,13 +13,13 @@
 
 namespace stp {
 
-template<typename K, typename T, template<class TItem> class TList>
+template<typename K, typename T, class TList>
 class FlatMap {
  public:
   using KeyType = K;
   using ValueType = T;
   using PairType = KeyValuePair<K, T>;
-  using ListType = TList<PairType>;
+  using ListType = TList;
 
   static_assert(TIsContiguousContainer<ListType>, "!");
 
@@ -117,15 +117,15 @@ class FlatMap {
   FlatMap(OrderedUniqueTag, ListType&& list) noexcept : list_(Move(list)) {}
 };
 
-template<typename K, typename T, template<class TItem> class TList>
+template<typename K, typename T, class TList>
 struct TIsZeroConstructibleTmpl<FlatMap<K, T, TList>>
     : TIsZeroConstructibleTmpl<typename FlatMap<K, T, TList>::ListType> {};
 
-template<typename K, typename T, template<class TItem> class TList>
+template<typename K, typename T, class TList>
 struct TIsTriviallyRelocatableTmpl<FlatMap<K, T, TList>>
     : TIsTriviallyRelocatableTmpl<typename FlatMap<K, T, TList>::ListType> {};
 
-template<typename K, typename T, template<class TItem> class TList>
+template<typename K, typename T, class TList>
 template<typename U>
 inline const T& FlatMap<K, T, TList>::operator[](const U& key) const {
   const T* pvalue = TryGet(key);
@@ -133,7 +133,7 @@ inline const T& FlatMap<K, T, TList>::operator[](const U& key) const {
   return *pvalue;
 }
 
-template<typename K, typename T, template<class TItem> class TList>
+template<typename K, typename T, class TList>
 template<typename U>
 inline T& FlatMap<K, T, TList>::operator[](const U& key) {
   T* pvalue = TryGet(key);
@@ -141,21 +141,21 @@ inline T& FlatMap<K, T, TList>::operator[](const U& key) {
   return *pvalue;
 }
 
-template<typename K, typename T, template<class TItem> class TList>
+template<typename K, typename T, class TList>
 template<typename U>
 inline const T* FlatMap<K, T, TList>::TryGet(const U& key) const {
   int pos = IndexOf(key);
   return pos >= 0 ? &list_[pos].value() : nullptr;
 }
 
-template<typename K, typename T, template<class TItem> class TList>
+template<typename K, typename T, class TList>
 template<typename U>
 inline T* FlatMap<K, T, TList>::TryGet(const U& key) {
   int pos = IndexOf(key);
   return pos >= 0 ? &list_[pos].value() : nullptr;
 }
 
-template<typename K, typename T, template<class TItem> class TList>
+template<typename K, typename T, class TList>
 template<typename U>
 inline void FlatMap<K, T, TList>::Set(U&& key, T value) {
   int pos = IndexOf(key);
@@ -168,7 +168,7 @@ inline void FlatMap<K, T, TList>::Set(U&& key, T value) {
   }
 }
 
-template<typename K, typename T, template<class TItem> class TList>
+template<typename K, typename T, class TList>
 template<typename U>
 inline T* FlatMap<K, T, TList>::TryAdd(U&& key, T value) {
   int pos = IndexOf(key);
@@ -179,7 +179,7 @@ inline T* FlatMap<K, T, TList>::TryAdd(U&& key, T value) {
   return &list_[~pos].value();
 }
 
-template<typename K, typename T, template<class TItem> class TList>
+template<typename K, typename T, class TList>
 template<typename U>
 inline bool FlatMap<K, T, TList>::TryRemove(const U& key) {
   int pos = IndexOf(key);
@@ -190,7 +190,7 @@ inline bool FlatMap<K, T, TList>::TryRemove(const U& key) {
   return true;
 }
 
-template<typename K, typename T, template<class TItem> class TList>
+template<typename K, typename T, class TList>
 template<typename U>
 inline void FlatMap<K, T, TList>::InsertAt(int at, U&& key, T value) {
   ASSERT(at == 0 || Compare(list_[at - 1].key(), key) < 0);
