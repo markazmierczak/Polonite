@@ -5,7 +5,7 @@
 #define STP_BASE_FS_FILE_H_
 
 #include "Base/Containers/Buffer.h"
-#include "Base/Error/ErrorCode.h"
+#include "Base/Error/SystemErrorCode.h"
 #include "Base/FileSystem/FilePath.h"
 #include "Base/Time/Time.h"
 
@@ -49,24 +49,24 @@ class BASE_EXPORT File {
 
   // Fetch information about the given file path.
   static void GetInfo(const FilePath& path, FileInfo& info);
-  static ErrorCode TryGetInfo(const FilePath& path, FileInfo& info) WARN_UNUSED_RESULT;
+  static SystemErrorCode TryGetInfo(const FilePath& path, FileInfo& info) WARN_UNUSED_RESULT;
 
   // Return an absolute version of a relative path.
   // On POSIX, this function fails if the path does not exist.
   // This function can result in I/O so it can be slow.
   static FilePath MakeAbsolutePath(const FilePath& input);
-  static ErrorCode TryMakeAbsolutePath(const FilePath& input, FilePath& output) WARN_UNUSED_RESULT;
+  static SystemErrorCode TryMakeAbsolutePath(const FilePath& input, FilePath& output) WARN_UNUSED_RESULT;
 
   // Delete an existing file.
   static void Delete(const FilePath& path);
-  static ErrorCode TryDelete(const FilePath& path) WARN_UNUSED_RESULT;
+  static SystemErrorCode TryDelete(const FilePath& path) WARN_UNUSED_RESULT;
 
   #if OS(WIN)
-  static ErrorCode TryMakeLongPath(const FilePath& input, FilePath& output) WARN_UNUSED_RESULT;
+  static SystemErrorCode TryMakeLongPath(const FilePath& input, FilePath& output) WARN_UNUSED_RESULT;
   // Schedule to delete the given path, whether it's a file or an empty directory,
   // until the operating system is restarted.
   // The file/directory to be deleted should exist in a temp folder.
-  static ErrorCode TryDeleteAfterReboot(const FilePath& path) WARN_UNUSED_RESULT;
+  static SystemErrorCode TryDeleteAfterReboot(const FilePath& path) WARN_UNUSED_RESULT;
   #endif
 
   // Rename file |from| to |to|.
@@ -74,7 +74,7 @@ class BASE_EXPORT File {
   // Destination file will be created if it doesn't exist.
   // On Windows it preserves attributes of the target file.
   static void Replace(const FilePath& from, const FilePath& to);
-  static ErrorCode TryReplace(const FilePath& from, const FilePath& to) WARN_UNUSED_RESULT;
+  static SystemErrorCode TryReplace(const FilePath& from, const FilePath& to) WARN_UNUSED_RESULT;
 
   static Buffer ReadAll(const FilePath& path);
   static void WriteAll(const FilePath& path, BufferSpan input);
@@ -91,25 +91,25 @@ class BASE_EXPORT File {
   static FilePath CreateTemporary();
 
   static FilePath CreateTemporaryIn(const FilePath& dir);
-  static ErrorCode TryCreateTemporaryIn(const FilePath& dir, FilePath& output_path) WARN_UNUSED_RESULT;
+  static SystemErrorCode TryCreateTemporaryIn(const FilePath& dir, FilePath& output_path) WARN_UNUSED_RESULT;
 
   static void WriteAtomically(const FilePath& path, BufferSpan input);
 
   #if OS(POSIX)
   // Creates a symbolic link at |symlink| pointing to |target|.
   static void CreateSymbolicLink(const FilePath& symlink, const FilePath& target);
-  static ErrorCode TryCreateSymbolicLink(const FilePath& symlink, const FilePath& target) WARN_UNUSED_RESULT;
+  static SystemErrorCode TryCreateSymbolicLink(const FilePath& symlink, const FilePath& target) WARN_UNUSED_RESULT;
 
   static FilePath ReadSymbolicLink(const FilePath& symlink);
-  static ErrorCode TryReadSymbolicLink(const FilePath& symlink, FilePath& out_target) WARN_UNUSED_RESULT;
+  static SystemErrorCode TryReadSymbolicLink(const FilePath& symlink, FilePath& out_target) WARN_UNUSED_RESULT;
 
   // Get/Set the permissions of the given |path|.
   // If |path| is symbolic link, |mode| is the permission of a file which the symlink points to.
   static int GetPosixPermissions(const FilePath& path);
-  static ErrorCode TryGetPosixPermissions(const FilePath& path, int& out_mode) WARN_UNUSED_RESULT;
+  static SystemErrorCode TryGetPosixPermissions(const FilePath& path, int& out_mode) WARN_UNUSED_RESULT;
 
   static void SetPosixPermissions(const FilePath& path, int mode);
-  static ErrorCode TrySetPosixPermissions(const FilePath& path, int mode) WARN_UNUSED_RESULT;
+  static SystemErrorCode TrySetPosixPermissions(const FilePath& path, int mode) WARN_UNUSED_RESULT;
   #endif
 };
 

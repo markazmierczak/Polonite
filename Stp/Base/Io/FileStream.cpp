@@ -40,12 +40,12 @@ void FileStream::Create(const FilePath& path, FileMode mode, FileAccess access) 
     throw FileSystemException(error_code, path);
 }
 
-ErrorCode FileStream::TryOpen(const FilePath& path, FileMode mode, FileAccess access) {
+SystemErrorCode FileStream::TryOpen(const FilePath& path, FileMode mode, FileAccess access) {
   ASSERT(mode >= FileMode::OpenExisting);
   return TryOpenInternal(path, mode, access);
 }
 
-ErrorCode FileStream::TryCreate(const FilePath& path, FileMode mode, FileAccess access) {
+SystemErrorCode FileStream::TryCreate(const FilePath& path, FileMode mode, FileAccess access) {
   ASSERT(mode <= FileMode::CreateNew);
   return TryOpenInternal(path, mode, access);
 }

@@ -29,8 +29,8 @@ void Directory::RemoveEmpty(const FilePath& path) {
     throw FileSystemException(error_code, path);
 }
 
-ErrorCode Directory::TryCreatePath(const FilePath& path) {
-  ErrorCode error_code = TryCreate(path);
+SystemErrorCode Directory::TryCreatePath(const FilePath& path) {
+  SystemErrorCode error_code = TryCreate(path);
   if (IsOk(error_code))
     return error_code;
 

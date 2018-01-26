@@ -4,7 +4,7 @@
 #ifndef STP_BASE_FS_DIRECTORY_H_
 #define STP_BASE_FS_DIRECTORY_H_
 
-#include "Base/Error/ErrorCode.h"
+#include "Base/Error/SystemErrorCode.h"
 #include "Base/FileSystem/FilePath.h"
 #include "Base/Util/Flags.h"
 
@@ -17,15 +17,15 @@ class BASE_EXPORT Directory {
   static bool Exists(const FilePath& path);
 
   static void Create(const FilePath& path);
-  static ErrorCode TryCreate(const FilePath& path);
+  static SystemErrorCode TryCreate(const FilePath& path);
 
   static void RemoveEmpty(const FilePath& path);
-  static ErrorCode TryRemoveEmpty(const FilePath& path);
+  static SystemErrorCode TryRemoveEmpty(const FilePath& path);
 
   // Creates a directory, as well as creating any parent directories, if they don't exist.
   // Returns 'true' on successful creation, or if the directory already exists.
   static void CreatePath(const FilePath& path);
-  static ErrorCode TryCreatePath(const FilePath& path);
+  static SystemErrorCode TryCreatePath(const FilePath& path);
 
   // Deletes a file or directory (recursively).
   // EQUIVALENT TO "rm -rf", SO USE WITH CAUTION.
@@ -41,7 +41,7 @@ class BASE_EXPORT Directory {
     int64_t available; // similar to free, but takes disk quotas into account
   };
   static DriveSpaceInfo GetDriveSpaceInfo(const FilePath& path);
-  static ErrorCode TryGetDriveSpaceInfo(const FilePath& path, DriveSpaceInfo& out_info);
+  static SystemErrorCode TryGetDriveSpaceInfo(const FilePath& path, DriveSpaceInfo& out_info);
 };
 
 } // namespace stp

@@ -4,7 +4,6 @@
 #include "Base/FileSystem/Directory.h"
 
 #include "Base/Posix/EintrWrapper.h"
-#include "Base/Posix/PosixErrorCode.h"
 #include "Base/Posix/StatWrapper.h"
 
 #include <unistd.h>
@@ -30,19 +29,18 @@ bool Directory::Exists(const FilePath& path) {
   return false;
 }
 
-ErrorCode Directory::TryCreate(const FilePath& path) {
+SystemErrorCode Directory::TryCreate(const FilePath& path) {
   if (::mkdir(ToNullTerminated(path), 0775) == 0)
-    return ErrorCode();
-
-  auto error = GetLastPosixErrorCode();
-  if (error == PosixErrorCode::FileExists)
-    return ErrorCode();
-  return error;
+    return PosixErrorCode::Ok;
+  auto error_code = GetLastSystemErrorCode();
+  if (Exists(path))
+    return PosixErrorCode::Ok;
+  return error_code;
 }
 
-ErrorCode Directory::TryRemoveEmpty(const FilePath& path) {
+SystemErrorCode Directory::TryRemoveEmpty(const FilePath& path) {
   if (::rmdir(ToNullTerminated(path)) == 0)
-    return ErrorCode();
+    return PosixErrorCode::Ok;
   return GetLastPosixErrorCode();
 }
 
@@ -62,7 +60,7 @@ static bool IsStatsZeroIfUnlimited(const FilePath& path) {
 }
 #endif
 
-ErrorCode Directory::TryGetDriveSpaceInfo(const FilePath& path, DriveSpaceInfo& out_space) {
+SystemErrorCode Directory::TryGetDriveSpaceInfo(const FilePath& path, DriveSpaceInfo& out_space) {
   struct statvfs stats;
   if (HANDLE_EINTR(::statvfs(ToNullTerminated(path), &stats)) != 0)
     return GetLastPosixErrorCode();
@@ -79,7 +77,7 @@ ErrorCode Directory::TryGetDriveSpaceInfo(const FilePath& path, DriveSpaceInfo& 
   out_space.total = Normalize(stats.f_blocks, stats.f_frsize);
   out_space.free = Normalize(stats.f_bfree, stats.f_frsize);
   out_space.available = Normalize(stats.f_bavail, stats.f_frsize);
-  return ErrorCode();
+  return PosixErrorCode::Ok;
 }
 
 } // namespace stp

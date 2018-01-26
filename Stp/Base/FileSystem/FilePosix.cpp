@@ -9,7 +9,6 @@
 #include "Base/Io/FileStream.h"
 #include "Base/App/Application.h"
 #include "Base/Posix/EintrWrapper.h"
-#include "Base/Posix/PosixErrorCode.h"
 #include "Base/Posix/StatWrapper.h"
 
 #include <errno.h>
@@ -24,34 +23,34 @@ bool File::Exists(const FilePath& path) {
   return ::access(ToNullTerminated(path), F_OK) == 0;
 }
 
-ErrorCode File::TryGetInfo(const FilePath& path, FileInfo& out) {
+SystemErrorCode File::TryGetInfo(const FilePath& path, FileInfo& out) {
   if (posix::CallStat(ToNullTerminated(path), &out.stat_) != 0)
     return GetLastPosixErrorCode();
-  return ErrorCode();
+  return PosixErrorCode::Ok;
 }
 
-ErrorCode File::TryMakeAbsolutePath(const FilePath& input, FilePath& output) {
+SystemErrorCode File::TryMakeAbsolutePath(const FilePath& input, FilePath& output) {
   char full_path[PATH_MAX + 1];
   if (::realpath(ToNullTerminated(input), full_path) == nullptr)
     return GetLastPosixErrorCode();
 
   output = MakeFilePathSpanFromNullTerminated(full_path);
-  return ErrorCode();
+  return PosixErrorCode::Ok;
 }
 
-ErrorCode File::TryDelete(const FilePath& path) {
+SystemErrorCode File::TryDelete(const FilePath& path) {
   if (::unlink(ToNullTerminated(path)) != 0)
     return GetLastPosixErrorCode();
-  return ErrorCode();
+  return PosixErrorCode::Ok;
 }
 
-ErrorCode File::TryReplace(const FilePath& from, const FilePath& to) {
+SystemErrorCode File::TryReplace(const FilePath& from, const FilePath& to) {
   if (::rename(ToNullTerminated(from), ToNullTerminated(to)) != 0)
     return GetLastPosixErrorCode();
-  return ErrorCode();
+  return PosixErrorCode::Ok;
 }
 
-ErrorCode File::TryCreateTemporaryIn(const FilePath& dir, FilePath& output_path) {
+SystemErrorCode File::TryCreateTemporaryIn(const FilePath& dir, FilePath& output_path) {
   output_path.Clear();
   output_path = dir;
 
@@ -67,16 +66,16 @@ ErrorCode File::TryCreateTemporaryIn(const FilePath& dir, FilePath& output_path)
   if (rv == -1)
     return GetLastPosixErrorCode();
 
-  return ErrorCode();
+  return PosixErrorCode::Ok;
 }
 
-ErrorCode File::TryCreateSymbolicLink(const FilePath& symlink, const FilePath& target) {
+SystemErrorCode File::TryCreateSymbolicLink(const FilePath& symlink, const FilePath& target) {
   if (::symlink(ToNullTerminated(target), ToNullTerminated(symlink)) != 0)
     return GetLastPosixErrorCode();
-  return ErrorCode();
+  return PosixErrorCode::Ok;
 }
 
-ErrorCode File::TryReadSymbolicLink(const FilePath& symlink, FilePath& out_target) {
+SystemErrorCode File::TryReadSymbolicLink(const FilePath& symlink, FilePath& out_target) {
   char buf[PATH_MAX];
   int count = ::readlink(ToNullTerminated(symlink), buf, sizeof(buf));
   ASSERT(-1 <= count && count <= PATH_MAX);
@@ -84,7 +83,7 @@ ErrorCode File::TryReadSymbolicLink(const FilePath& symlink, FilePath& out_targe
     return GetLastPosixErrorCode();
 
   out_target = FilePathSpan(buf, count);
-  return ErrorCode();
+  return PosixErrorCode::Ok;
 }
 
 void File::CreateSymbolicLink(const FilePath& symlink, const FilePath& target) {
@@ -101,15 +100,15 @@ FilePath File::ReadSymbolicLink(const FilePath& symlink) {
   return target;
 }
 
-ErrorCode File::TryGetPosixPermissions(const FilePath& path, int& out_mode) {
+SystemErrorCode File::TryGetPosixPermissions(const FilePath& path, int& out_mode) {
   stat_wrapper_t file_info;
   if (posix::CallStat(ToNullTerminated(path), &file_info) != 0)
     return GetLastPosixErrorCode();
   out_mode = file_info.st_mode & 0777;
-  return ErrorCode();
+  return PosixErrorCode::Ok;
 }
 
-ErrorCode File::TrySetPosixPermissions(const FilePath& path, int mode) {
+SystemErrorCode File::TrySetPosixPermissions(const FilePath& path, int mode) {
   ASSERT((mode & ~0777) == 0);
 
   // Calls stat() so that we can preserve the higher bits like S_ISGID.
@@ -124,7 +123,7 @@ ErrorCode File::TrySetPosixPermissions(const FilePath& path, int mode) {
   if (HANDLE_EINTR(::chmod(ToNullTerminated(path), updated_mode_bits)) != 0)
     return GetLastPosixErrorCode();
 
-  return ErrorCode();
+  return PosixErrorCode::Ok;
 }
 
 int File::GetPosixPermissions(const FilePath& path) {

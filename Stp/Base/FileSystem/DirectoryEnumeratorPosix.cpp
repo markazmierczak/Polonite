@@ -3,24 +3,22 @@
 
 #include "Base/FileSystem/DirectoryEnumerator.h"
 
-#include "Base/Posix/PosixErrorCode.h"
-
 #include <fnmatch.h>
 
 namespace stp {
 
-ErrorCode DirectoryEnumerator::TryOpen(const FilePath& path, StringSpan pattern) {
+SystemErrorCode DirectoryEnumerator::TryOpen(const FilePath& path, StringSpan pattern) {
   ASSERT(!IsOpen());
   pattern_ = pattern;
   return TryOpen(path);
 }
 
-ErrorCode DirectoryEnumerator::TryOpen(const FilePath& path) {
+SystemErrorCode DirectoryEnumerator::TryOpen(const FilePath& path) {
   ASSERT(!IsOpen());
   DIR* dir = ::opendir(ToNullTerminated(path));
   if (dir) {
     current_dir_ = dir;
-    return ErrorCode();
+    return PosixErrorCode::Ok;
   }
   return GetLastPosixErrorCode();
 }
@@ -40,7 +38,7 @@ static bool IsDotEntry(const FilePathChar* basename) {
   return basename[1] == '.' && basename[2] == '\0';
 }
 
-bool DirectoryEnumerator::TryMoveNext(ErrorCode& out_error_code) {
+bool DirectoryEnumerator::TryMoveNext(SystemErrorCode& out_error_code) {
   ASSERT(IsOpen());
   DIR* dir = current_dir_;
 

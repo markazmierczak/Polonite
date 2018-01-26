@@ -6,7 +6,6 @@
 #include "Base/FileSystem/FileSystemException.h"
 #include "Base/Io/FileStreamInfo.h"
 #include "Base/Util/Finally.h"
-#include "Base/Win/WinErrorCode.h"
 
 namespace stp {
 
@@ -15,7 +14,7 @@ static_assert(static_cast<int>(SeekOrigin::Begin) == FILE_BEGIN &&
               static_cast<int>(SeekOrigin::End) == FILE_END,
               "SeekOrigin must match the system headers");
 
-ErrorCode FileStream::TryOpenInternal(const FilePath& path, FileMode mode, FileAccess access) {
+SystemErrorCode FileStream::TryOpenInternal(const FilePath& path, FileMode mode, FileAccess access) {
   ASSERT(!IsOpen());
 
   DWORD disposition = 0;
@@ -72,7 +71,7 @@ ErrorCode FileStream::TryOpenInternal(const FilePath& path, FileMode mode, FileA
   #if ASSERT_IS_ON()
   append_ = mode == FileMode::Append;
   #endif
-  return ErrorCode();
+  return SystemErrorCode::Success;
 }
 
 void FileStream::CloseInternal(NativeFile handle) {

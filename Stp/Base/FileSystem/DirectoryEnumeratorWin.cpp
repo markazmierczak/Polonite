@@ -5,16 +5,15 @@
 
 #include "Base/Text/StringUtfConversions.h"
 #include "Base/Time/Time.h"
-#include "Base/Win/WinErrorCode.h"
 
 namespace stp {
 
-ErrorCode DirectoryEnumerator::TryOpen(const FilePath& path, StringSpan pattern) {
+SystemErrorCode DirectoryEnumerator::TryOpen(const FilePath& path, StringSpan pattern) {
   AppendUnicode(pattern_, pattern);
   return TryOpen(path);
 }
 
-ErrorCode DirectoryEnumerator::TryOpen(const FilePath& path) {
+SystemErrorCode DirectoryEnumerator::TryOpen(const FilePath& path) {
   ASSERT(!IsOpen());
   search_path_.Clear();
   search_path_.EnsureCapacity(path.size() + pattern_.size() + 2);
@@ -37,14 +36,14 @@ ErrorCode DirectoryEnumerator::TryOpen(const FilePath& path) {
 
   if (find_handle_ != INVALID_HANDLE_VALUE) {
     status_ = Status::AtFirst;
-    return ErrorCode();
+    return WinErrorCode::Success;
   }
   auto error = GetLastWinErrorCode();
   // An empty root directory has no entries (even dot entries).
   if (error == WinErrorCode::FileNotFound ||
       error == WinErrorCode::NoMoreFiles) {
     status_ = Status::Empty;
-    return ErrorCode();
+    return WinErrorCode::Success;
   }
   return error;
 }
@@ -68,7 +67,7 @@ static bool IsDotEntry(const FilePathChar* basename) {
   return basename[1] == '.' && basename[2] == '\0';
 }
 
-bool DirectoryEnumerator::TryMoveNext(ErrorCode& out_error_code) {
+bool DirectoryEnumerator::TryMoveNext(SystemErrorCode& out_error_code) {
   ASSERT(IsOpen());
   if (status_ != Status::AtNext) {
     if (status_ == Status::Empty)
@@ -84,7 +83,7 @@ bool DirectoryEnumerator::TryMoveNext(ErrorCode& out_error_code) {
   }
   auto error = GetLastWinErrorCode();
   if (error == WinErrorCode::NoMoreFiles)
-    out_error_code = ErrorCode();
+    out_error_code = WinErrorCode::Sucess;
   else
     out_error_code = error;
   return false;

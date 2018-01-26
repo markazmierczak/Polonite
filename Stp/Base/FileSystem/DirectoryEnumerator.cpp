@@ -31,7 +31,7 @@ void DirectoryEnumerator::Open(const FilePath& path, StringSpan pattern) {
 }
 
 bool DirectoryEnumerator::MoveNext() {
-  ErrorCode error_code;
+  SystemErrorCode error_code;
   bool has_next = TryMoveNext(error_code);
   if (!has_next && !IsOk(error_code))
     throw FileSystemException(error_code);

@@ -4,7 +4,7 @@
 #ifndef STP_BASE_FS_DIRECTORYENUMERATOR_H_
 #define STP_BASE_FS_DIRECTORYENUMERATOR_H_
 
-#include "Base/Error/ErrorCode.h"
+#include "Base/Error/SystemErrorCode.h"
 #include "Base/FileSystem/FilePath.h"
 
 #if OS(WIN)
@@ -27,16 +27,16 @@ class DirectoryEnumerator {
   ~DirectoryEnumerator();
 
   void Open(const FilePath& path);
-  ErrorCode TryOpen(const FilePath& path);
+  SystemErrorCode TryOpen(const FilePath& path);
 
   void Open(const FilePath& path, StringSpan pattern);
-  ErrorCode TryOpen(const FilePath& path, StringSpan pattern);
+  SystemErrorCode TryOpen(const FilePath& path, StringSpan pattern);
 
   void Close() noexcept;
 
   bool IsOpen() const;
 
-  bool TryMoveNext(ErrorCode& out_error_code);
+  bool TryMoveNext(SystemErrorCode& out_error_code);
   bool MoveNext();
 
   FilePathSpan GetFileName() const;

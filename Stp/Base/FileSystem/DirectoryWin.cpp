@@ -3,8 +3,6 @@
 
 #include "Base/FileSystem/Directory.h"
 
-#include "Base/Win/WinErrorCode.h"
-
 namespace stp {
 
 bool Directory::Exists(const FilePath& path) {
@@ -14,27 +12,27 @@ bool Directory::Exists(const FilePath& path) {
   return false;
 }
 
-ErrorCode Directory::TryCreate(const FilePath& path) {
+SystemErrorCode Directory::TryCreate(const FilePath& path) {
   if (::CreateDirectoryW(ToNullTerminated(path), nullptr) != 0)
-    return ErrorCode();
+    return WinErrorCode::Success;
 
   auto error = GetLastWinErrorCode();
   if (error.GetCode() == WinErrorCode::AlreadyExists) {
     // This error code doesn't indicate whether we were racing with someone
     // creating the same directory, or a file with the same path.
     if (Exists(path))
-      return ErrorCode();
+      return WinErrorCode::Success;
   }
   return error;
 }
 
-ErrorCode Directory::TryRemoveEmpty(const FilePath& path) {
+SystemErrorCode Directory::TryRemoveEmpty(const FilePath& path) {
   if (!::RemoveDirectoryW(ToNullTerminated(path)))
     return GetLastWinErrorCode();
-  return ErrorCode();
+  return WinErrorCode::Success;
 }
 
-ErrorCode Directory::TryGetDriveSpaceInfo(const FilePath& path, DriveSpaceInfo& out_space) {
+SystemErrorCode Directory::TryGetDriveSpaceInfo(const FilePath& path, DriveSpaceInfo& out_space) {
   ULARGE_INTEGER available, total, free;
   if (!::GetDiskFreeSpaceExW(ToNullTerminated(path), &available, &total, &free))
     return GetLastWinErrorCode();
@@ -46,7 +44,7 @@ ErrorCode Directory::TryGetDriveSpaceInfo(const FilePath& path, DriveSpaceInfo& 
   out_space.available = ULargeIntToInt64(available);
   out_space.total = ULargeIntToInt64(total);
   out_space.free = ULargeIntToInt64(free);
-  return ErrorCode();
+  return WinErrorCode::Success;
 }
 
 } // namespace stp

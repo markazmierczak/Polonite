@@ -36,12 +36,12 @@ class BASE_EXPORT FileStream final : public Stream {
       FileMode mode = FileMode::OpenExisting,
       FileAccess access = FileAccess::ReadWrite);
 
-  ErrorCode TryCreate(
+  SystemErrorCode TryCreate(
       const FilePath& path,
       FileMode mode = FileMode::Create,
       FileAccess access = FileAccess::ReadWrite);
 
-  ErrorCode TryOpen(
+  SystemErrorCode TryOpen(
       const FilePath& path,
       FileMode mode = FileMode::OpenExisting,
       FileAccess access = FileAccess::ReadWrite);
@@ -115,7 +115,7 @@ class BASE_EXPORT FileStream final : public Stream {
 
   FileStream(NativeFile native_file, FileAccess access);
 
-  ErrorCode TryOpenInternal(const FilePath& path, FileMode mode, FileAccess access);
+  SystemErrorCode TryOpenInternal(const FilePath& path, FileMode mode, FileAccess access);
 };
 
 inline void FileStream::SwapWith(FileStream& other) {

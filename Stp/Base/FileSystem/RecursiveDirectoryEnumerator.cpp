@@ -10,7 +10,7 @@ namespace stp {
 RecursiveDirectoryEnumerator::RecursiveDirectoryEnumerator() {}
 RecursiveDirectoryEnumerator::~RecursiveDirectoryEnumerator() {}
 
-ErrorCode RecursiveDirectoryEnumerator::TryOpen(FilePath root_path) {
+SystemErrorCode RecursiveDirectoryEnumerator::TryOpen(FilePath root_path) {
   ASSERT(!IsOpen());
   current_dir_path_ = Move(root_path);
   return base_.TryOpen(root_path);
@@ -29,7 +29,7 @@ void RecursiveDirectoryEnumerator::Close() {
   pending_dir_paths_.Clear();
 }
 
-bool RecursiveDirectoryEnumerator::TryMoveNext(ErrorCode& out_error_code) {
+bool RecursiveDirectoryEnumerator::TryMoveNext(SystemErrorCode& out_error_code) {
   ASSERT(IsOpen());
   while (true) {
     if (base_.IsOpen()) {
@@ -43,7 +43,7 @@ bool RecursiveDirectoryEnumerator::TryMoveNext(ErrorCode& out_error_code) {
         return false;
     }
     if (pending_dir_paths_.IsEmpty()) {
-      out_error_code = ErrorCode();
+      out_error_code = SystemErrorCode::Ok;
       break;
     }
     current_dir_path_ = pending_dir_paths_.Pop();
@@ -53,7 +53,7 @@ bool RecursiveDirectoryEnumerator::TryMoveNext(ErrorCode& out_error_code) {
 }
 
 bool RecursiveDirectoryEnumerator::MoveNext() {
-  ErrorCode error_code;
+  SystemErrorCode error_code;
   bool has_next = TryMoveNext(error_code);
   if (!has_next && !IsOk(error_code))
     throw FileSystemException(error_code, current_dir_path_);

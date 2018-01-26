@@ -21,7 +21,8 @@ static_assert(static_cast<int>(SeekOrigin::Begin) == SEEK_SET &&
               static_cast<int>(SeekOrigin::End) == SEEK_END,
               "SeekOrigin must match the system headers");
 
-ErrorCode FileStream::TryOpenInternal(const FilePath& path, FileMode mode, FileAccess access) {
+SystemErrorCode FileStream::TryOpenInternal(
+    const FilePath& path, FileMode mode, FileAccess access) {
   ASSERT(!IsOpen());
 
   int mode_flags = 0;
@@ -71,7 +72,7 @@ ErrorCode FileStream::TryOpenInternal(const FilePath& path, FileMode mode, FileA
   #if ASSERT_IS_ON()
   append_ = mode == FileMode::Append;
   #endif
-  return ErrorCode();
+  return SystemErrorCode::Ok;
 }
 
 void FileStream::CloseInternal(NativeFile fd) {

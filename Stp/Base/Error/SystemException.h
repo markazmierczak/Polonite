@@ -11,9 +11,9 @@ namespace stp {
 
 class BASE_EXPORT SystemException : public Exception {
  public:
-  explicit SystemException(ErrorCode error_code) noexcept : error_code_(error_code) {}
+  explicit SystemException(SystemErrorCode error_code) noexcept : error_code_(error_code) {}
 
-  const ErrorCode& GetErrorCode() const { return error_code_; }
+  SystemErrorCode GetErrorCode() const { return error_code_; }
 
   StringSpan GetName() const noexcept override;
 
@@ -21,7 +21,7 @@ class BASE_EXPORT SystemException : public Exception {
   void OnFormat(TextWriter& out) const override;
 
  private:
-  ErrorCode error_code_;
+  SystemErrorCode error_code_;
 };
 
 } // namespace stp

@@ -11,13 +11,13 @@ namespace stp {
 
 class BASE_EXPORT FileSystemException : public SystemException {
  public:
-  explicit FileSystemException(const ErrorCode& error_code) noexcept
+  explicit FileSystemException(SystemErrorCode error_code) noexcept
       : SystemException(error_code) {}
 
-  FileSystemException(const ErrorCode& error_code, FilePathSpan path)
+  FileSystemException(SystemErrorCode error_code, FilePathSpan path)
       : SystemException(error_code), path_(path) {}
 
-  FileSystemException(const ErrorCode& error_code, FilePathSpan path, FilePathSpan aux_path)
+  FileSystemException(SystemErrorCode error_code, FilePathSpan path, FilePathSpan aux_path)
       : SystemException(error_code), path_(path), aux_path_(aux_path) {}
 
   const FilePath& GetPath() const { return path_; }

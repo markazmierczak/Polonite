@@ -15,13 +15,13 @@ class RecursiveDirectoryEnumerator {
   ~RecursiveDirectoryEnumerator();
 
   void Open(FilePath root_path);
-  ErrorCode TryOpen(FilePath root_path);
+  SystemErrorCode TryOpen(FilePath root_path);
 
   bool IsOpen() const { return base_.IsOpen() || !pending_dir_paths_.IsEmpty(); }
 
   void Close();
 
-  bool TryMoveNext(ErrorCode& out_error_code);
+  bool TryMoveNext(SystemErrorCode& out_error_code);
   bool MoveNext();
 
   FilePath GetEntryFullPath() const;

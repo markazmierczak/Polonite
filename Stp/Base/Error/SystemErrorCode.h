@@ -14,7 +14,13 @@
 
 namespace stp {
 
-inline ErrorCode GetLastSystemErrorCode() {
+#if OS(WIN)
+using SystemErrorCode = WinErrorCode;
+#elif OS(POSIX)
+using SystemErrorCode = PosixErrorCode;
+#endif
+
+inline SystemErrorCode GetLastSystemErrorCode() {
   #if OS(WIN)
   return GetLastWinErrorCode();
   #elif OS(POSIX)
