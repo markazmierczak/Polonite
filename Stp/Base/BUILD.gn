@@ -91,6 +91,13 @@ component("Base") {
     "Containers/SpanFwd.h",
     "Containers/Stack.h",
 
+    "Crypto/Crc32.cpp",
+    "Crypto/Crc32.h",
+    "Crypto/Md5.cpp",
+    "Crypto/Md5.h",
+    "Crypto/Sha1.cpp",
+    "Crypto/Sha1.h",
+
     "Debug/Alias.cpp",
     "Debug/Alias.h",
     "Debug/Assert.cpp",
@@ -235,13 +242,6 @@ component("Base") {
 #    "Geometry/Xform2.h",
 #    "Geometry/Xform3.cpp",
 #    "Geometry/Xform3.h",
-
-    "Hash/Crc32.cpp",
-    "Hash/Crc32.h",
-    "Hash/Md5.cpp",
-    "Hash/Md5.h",
-    "Hash/Sha1.cpp",
-    "Hash/Sha1.h",
 
     "Io/Base64.cpp",
     "Io/Base64.h",

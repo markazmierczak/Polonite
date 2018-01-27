@@ -1,8 +1,8 @@
 // Copyright 2017 Polonite Authors. All rights reserved.
 // Distributed under MIT license that can be found in the LICENSE file.
 
-#ifndef STP_BASE_HASH_SHA1_H_
-#define STP_BASE_HASH_SHA1_H_
+#ifndef STP_BASE_CRYPTO_SHA1_H_
+#define STP_BASE_CRYPTO_SHA1_H_
 
 #include "Base/Containers/BufferSpan.h"
 
@@ -26,6 +26,13 @@ class Sha1Digest {
   byte_t& operator[](int pos) {
     ASSERT(0 <= pos && pos < Length);
     return raw_[pos];
+  }
+
+  friend bool operator==(const Sha1Digest& l, const Sha1Digest& r) {
+    return MakeSpan(l.raw_) == MakeSpan(r.raw_);
+  }
+  friend bool operator!=(const Sha1Digest& l, const Sha1Digest& r) {
+    return !operator==(l, r);
   }
 
  private:
@@ -69,4 +76,4 @@ class BASE_EXPORT Sha1Hasher {
 
 } // namespace stp
 
-#endif // STP_BASE_HASH_SHA1_H_
+#endif // STP_BASE_CRYPTO_SHA1_H_

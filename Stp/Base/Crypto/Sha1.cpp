@@ -1,7 +1,7 @@
 // Copyright 2017 Polonite Authors. All rights reserved.
 // Distributed under MIT license that can be found in the LICENSE file.
 
-#include "Base/Hash/Sha1.h"
+#include "Base/Crypto/Sha1.h"
 
 #include "Base/Containers/Array.h"
 #include "Base/Error/BasicExceptions.h"

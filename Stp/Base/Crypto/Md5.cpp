@@ -13,7 +13,7 @@
  * with every copy.
  */
 
-#include "Base/Hash/Md5.h"
+#include "Base/Crypto/Md5.h"
 
 #include "Base/Containers/Array.h"
 #include "Base/Error/BasicExceptions.h"

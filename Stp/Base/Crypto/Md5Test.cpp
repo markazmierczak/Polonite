@@ -3,7 +3,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "Base/Hash/Md5.h"
+#include "Base/Crypto/Md5.h"
 
 #include "Base/Mem/OwnPtr.h"
 #include "Base/Test/GTest.h"

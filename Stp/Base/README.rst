@@ -82,7 +82,7 @@ Infrastructure for paths management to enable fast retrieval of known locations 
 
 Basic math constructs (like angle, vector), affine and 3D transformations, shapes.
 
-``Hash/``
+``Crypto/``
 =========
 
 Introduce ``Hashable`` concept.

@@ -1,8 +1,8 @@
 // Copyright 2017 Polonite Authors. All rights reserved.
 // Distributed under MIT license that can be found in the LICENSE file.
 
-#ifndef STP_BASE_HASH_MD5_H_
-#define STP_BASE_HASH_MD5_H_
+#ifndef STP_BASE_CRYPTO_MD5_H_
+#define STP_BASE_CRYPTO_MD5_H_
 
 #include "Base/Containers/BufferSpan.h"
 
@@ -70,4 +70,4 @@ class BASE_EXPORT Md5Hasher {
 
 } // namespace stp
 
-#endif // STP_BASE_HASH_MD5_H_
+#endif // STP_BASE_CRYPTO_MD5_H_

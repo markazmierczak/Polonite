@@ -1,8 +1,8 @@
 // Copyright 2017 Polonite Authors. All rights reserved.
 // Distributed under MIT license that can be found in the LICENSE file.
 
-#ifndef STP_BASE_HASH_CRC32_H_
-#define STP_BASE_HASH_CRC32_H_
+#ifndef STP_BASE_CRYPTO_CRC32_H_
+#define STP_BASE_CRYPTO_CRC32_H_
 
 #include "Base/Containers/BufferSpan.h"
 #include "Base/Type/FormattableFwd.h"
@@ -38,4 +38,4 @@ class BASE_EXPORT Crc32Algorithm {
 
 } // namespace stp
 
-#endif // STP_BASE_HASH_CRC32_H_
+#endif // STP_BASE_CRYPTO_CRC32_H_
