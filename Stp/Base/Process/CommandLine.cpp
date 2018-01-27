@@ -189,7 +189,7 @@ void CommandLine::ParseFromArgv(int argc, char** argv) {
 
   bool parse_switches = true;
   for (int i = 1; i < argc; ++i) {
-    #if HAS_NATIVE_UTF8_ENCODING
+    #if HAVE_UTF8_NATIVE_VALIDATION
     auto arg = String(MakeSpanFromNullTerminated(argv[i]));
     ASSERT(Utf8::Validate(arg));
     #else

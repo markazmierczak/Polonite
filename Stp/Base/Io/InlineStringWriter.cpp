@@ -4,8 +4,8 @@
 #include "Base/Io/InlineStringWriter.h"
 
 #include "Base/Debug/Log.h"
-#include "Base/Text/Codec/TextDecoder.h"
 #include "Base/Text/StringUtfConversions.h"
+#include "Base/Text/TextDecoder.h"
 
 namespace stp {
 

@@ -5,7 +5,7 @@
 
 #include "Base/Error/BasicExceptions.h"
 #include "Base/Io/InlineStringWriter.h"
-#include "Base/Text/Codec/TextCodec.h"
+#include "Base/Text/TextEncoding.h"
 
 namespace stp {
 

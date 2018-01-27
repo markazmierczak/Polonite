@@ -7,8 +7,8 @@
 #include "Base/Containers/BufferSpan.h"
 #include "Base/Error/Exception.h"
 #include "Base/Text/AsciiChar.h"
-#include "Base/Text/Codec/TextCodecFwd.h"
 #include "Base/Text/StringSpan.h"
+#include "Base/Text/TextEncodingFwd.h"
 #include "Base/Text/Utf.h"
 #include "Base/Type/HashableFwd.h"
 
@@ -60,7 +60,8 @@ struct TextCodec {
 
 class BASE_EXPORT TextEncoding {
  public:
-  constexpr TextEncoding(const TextCodec* codec) : codec_(*codec) {}
+  constexpr TextEncoding() noexcept : codec_(UndefinedTextCodec) {}
+  constexpr TextEncoding(const TextCodec* codec) noexcept : codec_(*codec) {}
 
   // Name and aliases are specified in IANA character sets:
   // https://www.iana.org/assignments/character-sets/character-sets.xhtml
@@ -77,16 +78,20 @@ class BASE_EXPORT TextEncoding {
   // True if each unit takes single byte and ASCII compatible.
   bool IsSingleByte() const { return codec_.single_byte; }
 
+  bool IsValid() const { return &codec_ != &UndefinedTextCodec; }
+
   const TextCodecVtable& GetVtable() const { return *codec_.vtable; }
 
   friend bool operator==(const TextEncoding& l, const TextEncoding& r) { return &l == &r; }
   friend bool operator!=(const TextEncoding& l, const TextEncoding& r) { return !operator==(l, r); }
   friend HashCode Hash(const TextEncoding& codec) { return codec.HashImpl(); }
 
+  static bool AreNamesMatching(StringSpan lhs, StringSpan rhs) noexcept;
+
  private:
   const TextCodec& codec_;
 
-  HashCode HashImpl() const;
+  HashCode HashImpl() const noexcept;
 };
 
 BASE_EXPORT String ToString(BufferSpan buffer, TextEncoding codec);

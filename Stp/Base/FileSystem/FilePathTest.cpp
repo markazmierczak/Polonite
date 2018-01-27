@@ -679,7 +679,7 @@ TEST_F(FilePathTest, FromToString) {
     { FPL("\uFF21\uFF22\uFF23.txt"), "\xEF\xBC\xA1\xEF\xBC\xA2\xEF\xBC\xA3.txt" },
   };
 
-  #if !HAS_NATIVE_UTF8_ENCODING && OS(LINUX)
+  #if !HAVE_UTF8_NATIVE_VALIDATION && OS(LINUX)
   ScopedLocale locale("en_US.UTF-8");
   #endif
 

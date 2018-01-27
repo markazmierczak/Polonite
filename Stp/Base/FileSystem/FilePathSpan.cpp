@@ -260,7 +260,7 @@ void FilePathSpan::RemoveExtension() {
 }
 
 void FilePathSpan::FormatImpl(TextWriter& out) const {
-  #if HAS_NATIVE_UTF8_ENCODING
+  #if HAVE_UTF8_NATIVE_VALIDATION
   out.Write(chars_);
   #else
   WriteWtf(out, chars_);

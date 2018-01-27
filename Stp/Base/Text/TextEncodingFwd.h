@@ -1,8 +1,8 @@
 // Copyright 2017 Polonite Authors. All rights reserved.
 // Distributed under MIT license that can be found in the LICENSE file.
 
-#ifndef STP_BASE_TEXT_CODEC_TEXTCODECFWD_H_
-#define STP_BASE_TEXT_CODEC_TEXTCODECFWD_H_
+#ifndef STP_BASE_TEXT_TEXTENCODINGFWD_H_
+#define STP_BASE_TEXT_TEXTENCODINGFWD_H_
 
 #include "Base/Export.h"
 
@@ -10,6 +10,7 @@ namespace stp {
 
 class TextCodec;
 
+BASE_EXPORT extern const TextCodec UndefinedTextCodec;
 BASE_EXPORT extern const TextCodec AsciiCodec;
 BASE_EXPORT extern const TextCodec Cp1252Codec;
 BASE_EXPORT extern const TextCodec Latin1Codec;
@@ -26,4 +27,4 @@ BASE_EXPORT extern const TextCodec Utf8Codec;
 
 } // namespace stp
 
-#endif // STP_BASE_TEXT_CODEC_TEXTCODECFWD_H_
+#endif // STP_BASE_TEXT_TEXTENCODINGFWD_H_

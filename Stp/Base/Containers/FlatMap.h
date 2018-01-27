@@ -65,6 +65,47 @@ class FlatMap {
   template<typename U>
   T* TryGet(const U& key);
 
+  class ConstFindResult {
+   public:
+    ConstFindResult(const FlatMap& that, int index) : that_(that), index_(index) {}
+
+    explicit operator bool() const { return index_ >= 0; }
+
+    const K& GetKey() const { return that_.list_[index_].key(); }
+    T& Get() const { return that_.list_[index_].value(); }
+
+   private:
+    FlatMap& that_;
+    int index_;
+  };
+
+  template<typename U>
+  ConstFindResult Find(const U& key) const {
+    return ConstFindResult(*this, IndexOf(key));
+  }
+
+  class FindResult {
+   public:
+    FindResult(FlatMap& that, int index) : that_(that), index_(index) {}
+
+    explicit operator bool() const { return index_ >= 0; }
+
+    const K& GetKey() const { return that_.list_[index_].key(); }
+    T& Get() const { return that_.list_[index_].value(); }
+
+    template<typename U>
+    void Add(U&& key, T value) { that_.InsertAt(~index_, Forward<U>(key), Move(value)); }
+
+   private:
+    FlatMap& that_;
+    int index_;
+  };
+
+  template<typename U>
+  FindResult Find(const U& key) {
+    return FindResult(*this, IndexOf(key));
+  }
+
   template<typename U>
   void Set(U&& key, T value);
 

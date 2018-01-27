@@ -6,7 +6,7 @@
 #include "Base/FileSystem/KnownPaths.h"
 #include "Base/Io/FileStream.h"
 #include "Base/Process/CommandLine.h"
-#include "Base/Text/Codec/TextCodec.h"
+#include "Base/Text/TextEncoding.h"
 
 namespace stp {
 

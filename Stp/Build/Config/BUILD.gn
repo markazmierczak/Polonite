@@ -27,28 +27,28 @@ declare_args() {
 config("feature_flags") {
   defines = []
   if (assert_always_on) {
-    defines += [ "HAS_ASSERT_ALWAYS_ON=1" ]
+    defines += [ "HAVE_ASSERT_ALWAYS_ON=1" ]
   }
   if (is_official_build) {
     defines += [ "OFFICIAL_BUILD=1" ]
   }
   if (is_asan) {
-    defines += [ "HAS_ADDRESS_SANITIZER=1" ]
+    defines += [ "HAVE_ADDRESS_SANITIZER=1" ]
   }
   if (is_lsan) {
-    defines += [ "HAS_LEAK_SANITIZER=1" ]
+    defines += [ "HAVE_LEAK_SANITIZER=1" ]
   }
   if (is_tsan) {
-    defines += [ "HAS_THREAD_SANITIZER=1" ]
+    defines += [ "HAVE_THREAD_SANITIZER=1" ]
   }
   if (is_msan) {
-    defines += [ "HAS_MEMORY_SANITIZER=1" ]
+    defines += [ "HAVE_MEMORY_SANITIZER=1" ]
   }
   if (is_ubsan || is_ubsan_null || is_ubsan_vptr || is_ubsan_security) {
-    defines += [ "HAS_UNDEFINED_SANITIZER=1" ]
+    defines += [ "HAVE_UNDEFINED_SANITIZER=1" ]
   }
   if (is_syzyasan) {
-    defines += [ "HAS_SYZYASAN_SANITIZER=1" ]
+    defines += [ "HAVE_SYZYASAN_SANITIZER=1" ]
   }
 }
 

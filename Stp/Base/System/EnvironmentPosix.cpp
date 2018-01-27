@@ -18,7 +18,7 @@ bool Environment::TryGet(StringSpan name, String& out_value) {
 }
 
 bool Environment::TryGet(const char* name, String& out_value) {
-  #if HAS_NATIVE_UTF8_ENCODING
+  #if HAVE_UTF8_NATIVE_VALIDATION
   if (!TryGetNative(name, out_value))
     return false;
   ASSERT(Utf8::Validate(out_value));

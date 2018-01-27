@@ -31,11 +31,11 @@ class LinkedListNode {
   ALWAYS_INLINE LinkedListNode* prev() const { return prev_; }
   ALWAYS_INLINE LinkedListNode* next() const { return next_; }
 
- private:
-  friend class LinkedList<T>;
-
   ALWAYS_INLINE const T* that() const { return static_cast<const T*>(this); }
   ALWAYS_INLINE T* that() { return static_cast<T*>(this); }
+
+ private:
+  friend class LinkedList<T>;
 
   LinkedListNode* prev_;
   LinkedListNode* next_;
@@ -87,31 +87,6 @@ class LinkedList {
   // Really slow, that's because it's not named size().
   int Count() const;
 
-  class Iterator {
-   public:
-    explicit Iterator(NodeType* ptr) : ptr_(ptr) {}
-
-    T& operator*() const { return *ptr_->that(); }
-    T* operator->() const { return ptr_->that(); }
-
-    Iterator& operator++() {
-      ptr_ = ptr_->next();
-      return *this;
-    }
-
-    T* get() const { return ptr_->that(); }
-
-    bool operator==(const Iterator& other) const { return ptr_ == other.ptr_; }
-    bool operator!=(const Iterator& other) const { return !operator==(other); }
-
-   private:
-    NodeType* ptr_;
-  };
-
-  // Only for range-based for-loop.
-  ALWAYS_INLINE Iterator begin() const { return Iterator(root_.next()); }
-  ALWAYS_INLINE Iterator end() const { return Iterator(const_cast<NodeType*>(&root_)); }
-
   friend void Swap(LinkedList& lhs, LinkedList& rhs) {
     Swap(lhs.root_, rhs.root_);
   }
@@ -120,6 +95,26 @@ class LinkedList {
   NodeType root_;
 
   DISALLOW_COPY_AND_ASSIGN(LinkedList);
+};
+
+template<typename T>
+class LinkedListIterator {
+ public:
+  using NodeType = LinkedListNode<T>;
+
+  explicit LinkedListIterator(LinkedList<T>* list)
+      : ptr_(list->root()), root_(*list->root()) {}
+
+  T& operator*() const { return *ptr_->that(); }
+  T* operator->() const { return ptr_->that(); }
+  T* get() const { return ptr_->that(); }
+
+  void MoveNext() { ptr_ = ptr_->next(); }
+  bool HasNext() { return ptr_->next() != &root_; }
+
+ private:
+  NodeType* ptr_;
+  NodeType& root_;
 };
 
 template<typename T>

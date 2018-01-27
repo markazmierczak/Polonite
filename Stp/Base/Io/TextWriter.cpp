@@ -4,7 +4,7 @@
 #include "Base/Io/TextWriter.h"
 
 #include "Base/Dtoa/Dtoa.h"
-#include "Base/Text/Codec/TextCodec.h"
+#include "Base/Text/TextEncoding.h"
 
 namespace stp {
 

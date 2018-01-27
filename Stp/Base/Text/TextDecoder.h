@@ -1,10 +1,10 @@
 // Copyright 2017 Polonite Authors. All rights reserved.
 // Distributed under MIT license that can be found in the LICENSE file.
 
-#ifndef STP_BASE_TEXT_CODEC_TEXTDECODER_H_
-#define STP_BASE_TEXT_CODEC_TEXTDECODER_H_
+#ifndef STP_BASE_TEXT_TEXTDECODER_H_
+#define STP_BASE_TEXT_TEXTDECODER_H_
 
-#include "Base/Text/Codec/TextCodec.h"
+#include "Base/Text/TextEncoding.h"
 
 namespace stp {
 
@@ -58,4 +58,4 @@ void AppendEncoded(TOutput& output, BufferSpan text, TextEncoding encoding) {
 
 } // namespace stp
 
-#endif // STP_BASE_TEXT_CODEC_TEXTDECODER_H_
+#endif // STP_BASE_TEXT_TEXTDECODER_H_

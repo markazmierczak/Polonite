@@ -8,7 +8,7 @@
 
 namespace stp {
 
-#define HAS_NATIVE_UTF8_ENCODING (OS(ANDROID) || OS(DARWIN))
+#define HAVE_UTF8_NATIVE_VALIDATION (OS(ANDROID) || OS(DARWIN))
 
 // There are systems (POSIX, Windows) where filenames are not validated for specific encoding.
 // It may have any value in given representation (byte or wide).

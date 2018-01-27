@@ -10,7 +10,7 @@
 
 namespace stp {
 
-#if defined(NDEBUG) && !defined(HAS_ASSERT_ALWAYS_ON)
+#if defined(NDEBUG) && !defined(HAVE_ASSERT_ALWAYS_ON)
 # define ASSERT_IS_ON() 0
 #else
 # define ASSERT_IS_ON() 1

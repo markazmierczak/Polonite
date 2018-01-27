@@ -5,25 +5,21 @@
 
 #include "Base/Debug/Log.h"
 #include "Base/Text/AsciiChar.h"
-#include "Base/Text/Codec/TextCodec.h"
 #include "Base/Text/StringUtfConversions.h"
+#include "Base/Text/TextEncoding.h"
+#include "Base/Text/Wtf.h"
 
 namespace stp {
 
-static constexpr TextCodecVtable CodecVtable = {
-  nullptr, nullptr,
-  nullptr, nullptr,
-  nullptr, nullptr,
-  nullptr, nullptr,
-};
-
-static constexpr TextCodec FilePathCodec = BuildTextCodec("FilePath", CodecVtable);
-
 TextEncoding FilePathWriter::GetEncoding() const {
+  #if HAVE_UTF8_NATIVE_VALIDATION
+  return &Utf8Codec;
+  #else
   // Encoding is unknown for paths for most systems,
   // Linux and Windows does not validate them.
   // See also documentation for FilePath for more information.
-  return &FilePathCodec;
+  return TextEncoding();
+  #endif
 }
 
 void FilePathWriter::EnsureSeparator() {

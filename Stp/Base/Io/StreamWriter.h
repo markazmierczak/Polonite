@@ -6,7 +6,7 @@
 
 #include "Base/Io/Stream.h"
 #include "Base/Io/TextWriter.h"
-#include "Base/Text/Codec/TextEncoder.h"
+#include "Base/Text/TextEncoder.h"
 
 namespace stp {
 
