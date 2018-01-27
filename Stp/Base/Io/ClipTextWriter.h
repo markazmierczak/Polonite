@@ -15,7 +15,7 @@ class BASE_EXPORT ClipTextWriter final : public TextWriter {
   // Returns true if any write was cut off due the limit.
   bool ReachedLimit() const { return remaining_ < 0; }
 
-  const TextCodec& GetEncoding() const override;
+  TextEncoding GetEncoding() const override;
 
  protected:
   void OnWriteAsciiChar(char c) override;
@@ -23,7 +23,7 @@ class BASE_EXPORT ClipTextWriter final : public TextWriter {
   void OnWriteAscii(StringSpan text) override;
   void OnWriteUtf8(StringSpan text) override;
   void OnWriteUtf16(String16Span text) override;
-  void OnWriteEncoded(const BufferSpan& text, const TextCodec& encoding) override;
+  void OnWriteEncoded(const BufferSpan& text, TextEncoding encoding) override;
   void OnIndent(int count, char c) override;
 
  private:

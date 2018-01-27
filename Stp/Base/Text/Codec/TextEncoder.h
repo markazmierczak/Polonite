@@ -10,7 +10,7 @@ namespace stp {
 
 class BASE_EXPORT TextEncoder {
  public:
-  explicit TextEncoder(const TextCodec& codec);
+  explicit TextEncoder(TextEncoding codec);
 
   void SetExceptionFallback() { context_.exception_on_fallback = true; }
 
@@ -24,7 +24,7 @@ class BASE_EXPORT TextEncoder {
   TextConversionContext context_;
 };
 
-inline TextEncoder::TextEncoder(const TextCodec& codec)
+inline TextEncoder::TextEncoder(TextEncoding codec)
     : vtable_(codec.GetVtable()) {
 }
 

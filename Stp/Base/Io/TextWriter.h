@@ -12,7 +12,7 @@
 
 namespace stp {
 
-class TextCodec;
+class TextEncoding;
 
 struct EndOfLineTag {};
 BASE_EXPORT extern const EndOfLineTag EndOfLine;
@@ -37,13 +37,13 @@ class BASE_EXPORT TextWriter {
 
   void Write(StringSpan text) { OnWriteUtf8(text); }
   void Write(String16Span text) { OnWriteUtf16(text); }
-  void Write(const BufferSpan& text, const TextCodec& encoding) { OnWriteEncoded(text, encoding); }
+  void Write(const BufferSpan& text, TextEncoding encoding);
 
   void Indent(int count, char c = ' ');
 
   void Flush() { OnFlush(); }
 
-  virtual const TextCodec& GetEncoding() const = 0;
+  virtual TextEncoding GetEncoding() const = 0;
 
   // Simple RTTI:
   virtual bool IsConsoleWriter() const;
@@ -61,7 +61,7 @@ class BASE_EXPORT TextWriter {
   virtual void OnWriteUtf8(StringSpan text) = 0;
   virtual void OnWriteUtf16(String16Span text) = 0;
 
-  virtual void OnWriteEncoded(const BufferSpan& text, const TextCodec& encoding) = 0;
+  virtual void OnWriteEncoded(const BufferSpan& text, TextEncoding encoding) = 0;
 
   virtual void OnEndLine();
 

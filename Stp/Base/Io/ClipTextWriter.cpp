@@ -12,9 +12,9 @@ namespace stp {
 ClipTextWriter::ClipTextWriter(TextWriter& base, int limit)
     : base_(base), remaining_(limit) {
   ASSERT(limit >= 0);
-  if (base_.GetEncoding() == Utf8Codec)
+  if (base_.GetEncoding() == &Utf8Codec)
     encoding_ = OutputEncoding::Utf8;
-  else if (base_.GetEncoding() == Utf16Codec)
+  else if (base_.GetEncoding() == &Utf16Codec)
     encoding_ = OutputEncoding::Utf16;
   else
     throw NotSupportedException();
@@ -29,7 +29,7 @@ bool ClipTextWriter::Grow(int n) {
   return true;
 }
 
-const TextCodec& ClipTextWriter::GetEncoding() const {
+TextEncoding ClipTextWriter::GetEncoding() const {
   return base_.GetEncoding();
 }
 
@@ -159,14 +159,14 @@ void ClipTextWriter::OnWriteUtf16(String16Span text) {
 }
 
 template<typename T>
-static void Rewrite(TextWriter& out, const BufferSpan& text, const TextCodec& encoding) {
+static void Rewrite(TextWriter& out, const BufferSpan& text, TextEncoding encoding) {
   InlineList<T, 256> buffer;
   InlineStringTmplWriter<T> buffer_writer(&buffer);
   buffer_writer.Write(text, encoding);
   out.Write(buffer);
 }
 
-void ClipTextWriter::OnWriteEncoded(const BufferSpan& text, const TextCodec& encoding) {
+void ClipTextWriter::OnWriteEncoded(const BufferSpan& text, TextEncoding encoding) {
   if (remaining_ < 0)
     return;
   if (encoding_ == OutputEncoding::Utf8) {

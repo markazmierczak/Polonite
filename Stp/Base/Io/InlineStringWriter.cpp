@@ -9,11 +9,11 @@
 
 namespace stp {
 
-const TextCodec& InlineStringWriter::GetEncoding() const {
-  return Utf8Codec;
+TextEncoding InlineStringWriter::GetEncoding() const {
+  return &Utf8Codec;
 }
-const TextCodec& InlineString16Writer::GetEncoding() const {
-  return Utf16Codec;
+TextEncoding InlineString16Writer::GetEncoding() const {
+  return &Utf16Codec;
 }
 
 void InlineStringWriter::OnWriteAsciiChar(char c) {
@@ -69,10 +69,10 @@ static inline void OnIndentTmpl(InlineListBase<T>& string, int count, char c) {
 void InlineStringWriter::OnIndent(int count, char c) { OnIndentTmpl(string_, count, c); }
 void InlineString16Writer::OnIndent(int count, char c) { OnIndentTmpl(string_, count, c); }
 
-void InlineStringWriter::OnWriteEncoded(const BufferSpan& text, const TextCodec& encoding) {
+void InlineStringWriter::OnWriteEncoded(const BufferSpan& text, TextEncoding encoding) {
   AppendEncoded(string_, text, encoding);
 }
-void InlineString16Writer::OnWriteEncoded(const BufferSpan& text, const TextCodec& encoding) {
+void InlineString16Writer::OnWriteEncoded(const BufferSpan& text, TextEncoding encoding) {
   AppendEncoded(string_, text, encoding);
 }
 

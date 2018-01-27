@@ -19,11 +19,11 @@ static constexpr TextCodecVtable CodecVtable = {
 
 static constexpr TextCodec FilePathCodec = BuildTextCodec("FilePath", CodecVtable);
 
-const TextCodec& FilePathWriter::GetEncoding() const {
+TextEncoding FilePathWriter::GetEncoding() const {
   // Encoding is unknown for paths for most systems,
   // Linux and Windows does not validate them.
   // See also documentation for FilePath for more information.
-  return FilePathCodec;
+  return &FilePathCodec;
 }
 
 void FilePathWriter::EnsureSeparator() {
@@ -57,7 +57,7 @@ void FilePathWriter::OnWriteUtf16(String16Span text) {
     LOG(WARN, "ignored some illegal sequences from input to file path");
 }
 
-void FilePathWriter::OnWriteEncoded(const BufferSpan& text, const TextCodec& encoding) {
+void FilePathWriter::OnWriteEncoded(const BufferSpan& text, TextEncoding encoding) {
   throw NotSupportedException();
 }
 

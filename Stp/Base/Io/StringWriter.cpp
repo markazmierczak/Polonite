@@ -9,8 +9,8 @@
 
 namespace stp {
 
-const TextCodec& StringWriter::GetEncoding() const { return Utf8Codec; }
-const TextCodec& String16Writer::GetEncoding() const { return Utf16LECodec; }
+TextEncoding StringWriter::GetEncoding() const { return &Utf8Codec; }
+TextEncoding String16Writer::GetEncoding() const { return &Utf16LECodec; }
 
 void StringWriter::OnWriteAsciiChar(char c) { string_.Add(c); }
 void String16Writer::OnWriteAsciiChar(char c) { string_.Add(char_cast<char16_t>(c)); }
@@ -58,10 +58,10 @@ void String16Writer::OnWriteUtf16(String16Span text) {
   string_.Append(text);
 }
 
-void StringWriter::OnWriteEncoded(const BufferSpan& text, const TextCodec& encoding) {
+void StringWriter::OnWriteEncoded(const BufferSpan& text, TextEncoding encoding) {
   AppendEncoded(string_, text, encoding);
 }
-void String16Writer::OnWriteEncoded(const BufferSpan& text, const TextCodec& encoding) {
+void String16Writer::OnWriteEncoded(const BufferSpan& text, TextEncoding encoding) {
   AppendEncoded(string_, text, encoding);
 }
 

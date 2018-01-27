@@ -148,8 +148,8 @@ void Console::ClassFini() {
 ConsoleWriter* Console::g_out_ = nullptr;
 ConsoleWriter* Console::g_err_ = nullptr;
 
-const TextCodec& ConsoleWriter::GetEncoding() const {
-  return Utf8Codec;
+TextEncoding ConsoleWriter::GetEncoding() const {
+  return &Utf8Codec;
 }
 
 void ConsoleWriter::OnWriteAsciiChar(char c) {
@@ -174,7 +174,7 @@ void ConsoleWriter::OnWriteUtf16(String16Span text) {
   OnWriteUtf8(ToString(text));
 }
 
-void ConsoleWriter::OnWriteEncoded(const BufferSpan& text, const TextCodec& encoding) {
+void ConsoleWriter::OnWriteEncoded(const BufferSpan& text, TextEncoding encoding) {
   throw NotImplementedException();
 }
 

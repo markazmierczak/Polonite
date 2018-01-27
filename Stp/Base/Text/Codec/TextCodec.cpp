@@ -9,17 +9,17 @@
 namespace stp {
 
 template<typename T>
-static inline List<T> BytesToStringWithCodec(BufferSpan bytes, const TextCodec& codec) {
+static inline List<T> BytesToStringWithCodec(BufferSpan bytes, TextEncoding codec) {
   List<T> result;
   StringTmplWriter<T> writer(&result);
   writer.Write(bytes, codec);
   return result;
 }
 
-String ToString(BufferSpan bytes, const TextCodec& codec) {
+String ToString(BufferSpan bytes, TextEncoding codec) {
   return BytesToStringWithCodec<char>(bytes, codec);
 }
-String16 ToString16(BufferSpan bytes, const TextCodec& codec) {
+String16 ToString16(BufferSpan bytes, TextEncoding codec) {
   return BytesToStringWithCodec<char16_t>(bytes, codec);
 }
 
@@ -27,7 +27,7 @@ StringSpan TextConversionFallbackException::GetName() const noexcept {
   return "TextConversionFallbackException";
 }
 
-HashCode TextCodec::HashImpl() const {
+HashCode TextEncoding::HashImpl() const {
   return Hash(this);
 }
 

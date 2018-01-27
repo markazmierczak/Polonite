@@ -10,7 +10,7 @@ namespace stp {
 
 class BASE_EXPORT TextDecoder {
  public:
-  explicit TextDecoder(const TextCodec& codec);
+  explicit TextDecoder(TextEncoding codec);
 
   void SetExceptionFallback() { context_.exception_on_fallback = true; }
 
@@ -28,7 +28,7 @@ class BASE_EXPORT TextDecoder {
   TextConversionContext context_;
 };
 
-inline TextDecoder::TextDecoder(const TextCodec& codec)
+inline TextDecoder::TextDecoder(TextEncoding codec)
     : vtable_(codec.GetVtable()) {
 }
 
@@ -47,7 +47,7 @@ inline int TextDecoder::CountCharsImpl(BufferSpan input, char16_t) const {
 }
 
 template<typename TOutput, TEnableIf<TIsStringContainer<TOutput>>* = nullptr>
-void AppendEncoded(TOutput& output, BufferSpan text, const TextCodec& encoding) {
+void AppendEncoded(TOutput& output, BufferSpan text, TextEncoding encoding) {
   using CharType = typename TOutput::ItemType;
   TextDecoder decoder(encoding);
   int n = decoder.CountChars<CharType>(text);

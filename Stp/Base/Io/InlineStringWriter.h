@@ -13,7 +13,7 @@ class BASE_EXPORT InlineStringWriter final : public TextWriter {
  public:
   explicit InlineStringWriter(InlineListBase<char>* string) : string_(*string) {}
 
-  const TextCodec& GetEncoding() const override;
+  TextEncoding GetEncoding() const override;
 
  protected:
   void OnWriteAsciiChar(char c) override;
@@ -21,7 +21,7 @@ class BASE_EXPORT InlineStringWriter final : public TextWriter {
   void OnWriteAscii(StringSpan text) override;
   void OnWriteUtf8(StringSpan text) override;
   void OnWriteUtf16(String16Span text) override;
-  void OnWriteEncoded(const BufferSpan& text, const TextCodec& encoding) override;
+  void OnWriteEncoded(const BufferSpan& text, TextEncoding encoding) override;
   void OnIndent(int count, char c) override;
 
  private:
@@ -32,7 +32,7 @@ class BASE_EXPORT InlineString16Writer final : public TextWriter {
  public:
   explicit InlineString16Writer(InlineListBase<char16_t>* string) : string_(*string) {}
 
-  const TextCodec& GetEncoding() const override;
+  TextEncoding GetEncoding() const override;
 
  protected:
   void OnWriteAsciiChar(char c) override;
@@ -40,7 +40,7 @@ class BASE_EXPORT InlineString16Writer final : public TextWriter {
   void OnWriteAscii(StringSpan text) override;
   void OnWriteUtf8(StringSpan text) override;
   void OnWriteUtf16(String16Span text) override;
-  void OnWriteEncoded(const BufferSpan& text, const TextCodec& encoding) override;
+  void OnWriteEncoded(const BufferSpan& text, TextEncoding encoding) override;
   void OnIndent(int count, char c) override;
 
  private:

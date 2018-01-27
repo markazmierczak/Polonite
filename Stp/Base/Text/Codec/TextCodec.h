@@ -46,9 +46,7 @@ struct TextCodecVtable {
   int (*count_bytes16)(const Context&, String16Span);
 };
 
-namespace detail {
-
-struct TextCodecData {
+struct TextCodec {
   const TextCodecVtable* vtable = nullptr;
 
   StringSpan name;
@@ -60,61 +58,57 @@ struct TextCodecData {
   bool single_byte = false;
 };
 
-} // namespace detail
-
-class BASE_EXPORT TextCodec {
+class BASE_EXPORT TextEncoding {
  public:
-  constexpr explicit TextCodec(detail::TextCodecData d) : d_(d) {}
+  constexpr TextEncoding(const TextCodec* codec) : codec_(*codec) {}
 
   // Name and aliases are specified in IANA character sets:
   // https://www.iana.org/assignments/character-sets/character-sets.xhtml
   // |name| is standard IANA name for character set.
-  StringSpan GetName() const { return d_.name; }
-  Span<StringSpan> GetAliases() const { return d_.aliases; }
+  StringSpan GetName() const { return codec_.name; }
+  Span<StringSpan> GetAliases() const { return codec_.aliases; }
 
-  int GetIanaCodepage() { return d_.iana_codepage; }
-  int GetWindowsCodepage() const { return d_.windows_codepage; }
+  int GetIanaCodepage() { return codec_.iana_codepage; }
+  int GetWindowsCodepage() const { return codec_.windows_codepage; }
 
-  bool CanDecode() const { return d_.vtable->decode != nullptr; }
-  bool CanEncode() const { return d_.vtable->encode != nullptr; }
+  bool CanDecode() const { return codec_.vtable->decode != nullptr; }
+  bool CanEncode() const { return codec_.vtable->encode != nullptr; }
 
   // True if each unit takes single byte and ASCII compatible.
-  bool IsSingleByte() const { return d_.single_byte; }
+  bool IsSingleByte() const { return codec_.single_byte; }
 
-  const TextCodecVtable& GetVtable() const { return *d_.vtable; }
+  const TextCodecVtable& GetVtable() const { return *codec_.vtable; }
 
-  friend bool operator==(const TextCodec& l, const TextCodec& r) { return &l == &r; }
-  friend bool operator!=(const TextCodec& l, const TextCodec& r) { return !operator==(l, r); }
-  friend HashCode Hash(const TextCodec& codec) { return codec.HashImpl(); }
+  friend bool operator==(const TextEncoding& l, const TextEncoding& r) { return &l == &r; }
+  friend bool operator!=(const TextEncoding& l, const TextEncoding& r) { return !operator==(l, r); }
+  friend HashCode Hash(const TextEncoding& codec) { return codec.HashImpl(); }
 
  private:
-  detail::TextCodecData d_;
+  const TextCodec& codec_;
 
   HashCode HashImpl() const;
-
-  DISALLOW_COPY_AND_ASSIGN(TextCodec);
 };
 
-BASE_EXPORT String ToString(BufferSpan buffer, const TextCodec& codec);
-BASE_EXPORT String16 ToString16(BufferSpan buffer, const TextCodec& codec);
+BASE_EXPORT String ToString(BufferSpan buffer, TextEncoding codec);
+BASE_EXPORT String16 ToString16(BufferSpan buffer, TextEncoding codec);
 
 class TextCodecBuilder {
  public:
   constexpr TextCodecBuilder() = default;
 
   constexpr TextCodecBuilder(StringSpan name, const TextCodecVtable& vtable) {
-    d_.name = name;
-    d_.vtable = &vtable;
+    codec_.name = name;
+    codec_.vtable = &vtable;
   }
 
-  constexpr operator TextCodec() const { return TextCodec(d_); }
+  constexpr operator TextCodec() const { return codec_; }
 
-  constexpr void SetAliases(Span<StringSpan> aliases) { d_.aliases = aliases; }
-  constexpr void SetIanaCodepage(int cp) { d_.iana_codepage = cp; }
-  constexpr void SetWindowsCodepage(int cp) { d_.windows_codepage = cp; }
+  constexpr void SetAliases(Span<StringSpan> aliases) { codec_.aliases = aliases; }
+  constexpr void SetIanaCodepage(int cp) { codec_.iana_codepage = cp; }
+  constexpr void SetWindowsCodepage(int cp) { codec_.windows_codepage = cp; }
 
  private:
-  detail::TextCodecData d_;
+  TextCodec codec_;
 };
 
 constexpr TextCodecBuilder BuildTextCodec(StringSpan name, const TextCodecVtable& vtable) {
