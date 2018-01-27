@@ -225,9 +225,9 @@ void CommandLine::Fini() {
   g_for_current_process_ = nullptr;
 }
 
-#if OS(WIN)
-// Quote a string as necessary for CommandLineToArgvW compatibility *on Windows*.
-void CommandLine::ToFormatArgument(TextWriter& out, StringSpan arg) {
+static void FormatCommandLineArgument(TextWriter& out, StringSpan arg) {
+  #if OS(WIN)
+  // Quote a string as necessary for CommandLineToArgvW compatibility *on Windows*.
   // We follow the quoting rules of CommandLineToArgvW.
   // http://msdn.microsoft.com/en-us/library/17w5ykft.aspx
   StringSpan quotable_chars = " \\\"";
@@ -266,25 +266,23 @@ void CommandLine::ToFormatArgument(TextWriter& out, StringSpan arg) {
     }
   }
   out.Write('"');
+  #else
+  out.Write(arg);
+  #endif // OS(*)
 }
-#else
-void CommandLine::ToFormatArgument(TextWriter& out, StringSpan argument) {
-  out.Write(argument);
-}
-#endif // OS(*)
 
-void CommandLine::ToFormat(TextWriter& out, const StringSpan& opts) const {
+void CommandLine::FormatImpl(TextWriter& out, const StringSpan& opts) const {
   bool with_program = true;
   if (!opts.IsEmpty()) {
     if (opts[0] == 'L')
       with_program = false;
   }
   if (with_program)
-    ToFormatArgument(out, program_name_);
+    FormatCommandLineArgument(out, program_name_);
 
   for (const String& positional : positionals_) {
     out.Write(' ');
-    ToFormatArgument(out, positional);
+    FormatCommandLineArgument(out, positional);
   }
 
   for (const auto& pair : switches_) {
@@ -293,7 +291,7 @@ void CommandLine::ToFormat(TextWriter& out, const StringSpan& opts) const {
     out.Write(pair.key());
     out.Write(SwitchValueSeparator);
 
-    ToFormatArgument(out, pair.value());
+    FormatCommandLineArgument(out, pair.value());
   }
 }
 

@@ -8,7 +8,7 @@
 
 #include "Base/Compiler/Os.h"
 #include "Base/Math/Safe.h"
-#include "Base/Text/FormatFwd.h"
+#include "Base/Type/FormattableFwd.h"
 
 #if OS(WIN)
 #include "Base/Win/WindowsHeader.h"
@@ -121,8 +121,6 @@ class BASE_EXPORT TimeDelta {
   bool operator<=(TimeDelta other) const { return delta_ <= other.delta_; }
   bool operator> (TimeDelta other) const { return delta_ >  other.delta_; }
   bool operator>=(TimeDelta other) const { return delta_ >= other.delta_; }
-
-  void ToFormat(TextWriter& out, const StringSpan& opts) const;
 
   friend TimeDelta Abs(TimeDelta x) { return x.GetMagnitude(); }
 

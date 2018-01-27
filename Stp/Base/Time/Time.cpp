@@ -90,9 +90,9 @@ bool Time::ExplodedMostlyEquals(const Exploded& lhs, const Exploded& rhs) {
          lhs.millisecond == rhs.millisecond;
 }
 
-void Time::ToFormat(TextWriter& out, const StringSpan& opts) const {
+void Time::FormatImpl(TextWriter& out, Time x) {
   Exploded exploded;
-  UTCExplode(&exploded);
+  x.UTCExplode(&exploded);
   FormatMany(out,
       "{:04}-{:02}-{:02} "
       "{:02}:{:02}:{:02}.{:03} UTC",
@@ -100,8 +100,8 @@ void Time::ToFormat(TextWriter& out, const StringSpan& opts) const {
       exploded.hour, exploded.minute, exploded.second, exploded.millisecond);
 }
 
-void ThreadTicks::ToFormat(TextWriter& out, const StringSpan& opts) const {
-  out << us_;
+void ThreadTicks::FormatImpl(TextWriter& out, ThreadTicks x) {
+  out << x.us_;
   out.WriteAscii(" bogo-thread-microseconds");
 }
 

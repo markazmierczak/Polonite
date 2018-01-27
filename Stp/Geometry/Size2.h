@@ -26,8 +26,6 @@ struct BASE_EXPORT IntSize2 {
   bool operator==(const IntSize2& o) const { return width == o.width && height == o.height; }
   bool operator!=(const IntSize2& o) const { return !operator==(o); }
 
-  void ToFormat(TextWriter& out, const StringSpan& opts) const;
-
   int width;
   int height;
 };

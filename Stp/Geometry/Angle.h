@@ -57,8 +57,6 @@ struct BASE_EXPORT Angle {
 
   constexpr Angle(double value, Unit unit) : value(value), unit(unit) {}
 
-  void ToFormat(TextWriter& out, const StringSpan& opts) const;
-
   double InRadians() const;
   double InDegrees() const;
   double InTurns() const;

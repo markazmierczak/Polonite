@@ -214,7 +214,12 @@ class BASE_EXPORT Affine {
   bool operator==(const Affine& other) const;
   bool operator!=(const Affine& other) const { return !operator==(other); }
 
-  void ToFormat(TextWriter& out, const StringSpan& opts) const;
+  friend TextWriter& operator<<(TextWriter& out, const Affine& x) {
+    x.FormatImpl(out); return out;
+  }
+  friend void Format(TextWriter& out, const Affine& x, const StringSpan& opts) {
+    x.FormatImpl(out);
+  }
 
  private:
   static const MapPointsProc MapPointsProcs[];
@@ -231,6 +236,8 @@ class BASE_EXPORT Affine {
 
   void SetTransInternal(const Vector2& v);
   Vector2 GetTransInternal() const { return Vector2(d_[EntryTransX], d_[EntryTransY]); }
+
+  void FormatImpl(TextWriter& out) const;
 
   float d_[6]; // row-major
   mutable int type_mask_;

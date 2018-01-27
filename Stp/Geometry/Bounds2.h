@@ -54,8 +54,6 @@ struct BASE_EXPORT IntBounds2 {
   bool operator==(const IntBounds2& other) const { return min == other.min && max == other.max; }
   bool operator!=(const IntBounds2& other) const { return !operator==(other); }
 
-  void ToFormat(TextWriter& out, const StringSpan& opts) const;
-
   IntPoint2 min;
   IntPoint2 max;
 };
@@ -104,8 +102,6 @@ struct BASE_EXPORT Bounds2 {
 
   bool operator==(const Bounds2& other) const { return min == other.min && max == other.max; }
   bool operator!=(const Bounds2& other) const { return !operator==(other); }
-
-  void ToFormat(TextWriter& out, const StringSpan& opts) const;
 
   Point2 min;
   Point2 max;

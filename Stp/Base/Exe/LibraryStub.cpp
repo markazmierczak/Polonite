@@ -5,12 +5,12 @@
 
 namespace stp {
 
-void LibraryLoadError::ToFormat(TextWriter& out, const StringSpan& opts) const {
-  out.Write(message);
+void LibraryLoadError::FormatImpl(TextWriter& out) const {
+  out.Write(message_);
 }
 
 NativeLibrary Library::TryLoadNative(const FilePathChar* library_path, LibraryLoadError* out_error) {
-  out_error->message = "not supported";
+  out_error->message_ = "not supported";
   return nullptr;
 }
 

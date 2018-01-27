@@ -361,8 +361,6 @@ class BASE_EXPORT Xform3 {
   bool operator==(const Xform3& rhs) const;
   bool operator!=(const Xform3& rhs) const { return !operator==(rhs); }
 
-  void ToFormat(TextWriter& out, const StringSpan& opts) const;
-
  private:
   float d_[ColCount][RowCount];
   mutable unsigned type_mask_;
@@ -426,8 +424,6 @@ struct BASE_EXPORT DecomposedXform3 {
   void SetScaleTranslate(
       float sx, float sy, float sz,
       float tx, float ty, float tz);
-
-  void ToFormat(TextWriter& out, const StringSpan& opts) const;
 
   Vector3 translate;
   float scale[3];

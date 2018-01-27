@@ -87,8 +87,6 @@ struct BASE_EXPORT Quaternion {
   bool operator==(const Quaternion& o) const;
   bool operator!=(const Quaternion& o) const { return !operator==(o); }
 
-  void ToFormat(TextWriter& out, const StringSpan& opts) const;
-
   friend Quaternion operator*(double scale, const Quaternion& q) { return q * scale; }
 
   double w;

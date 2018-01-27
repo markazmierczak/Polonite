@@ -41,15 +41,27 @@ using NativeLibrary = void*;
 #endif // OS(*)
 constexpr NativeLibrary NullNativeLibrary = nullptr;
 
-struct BASE_EXPORT LibraryLoadError {
+class BASE_EXPORT LibraryLoadError {
+ public:
+  LibraryLoadError() = default;
+
+  friend TextWriter& operator<<(TextWriter& out, const LibraryLoadError& x) {
+    x.FormatImpl(out); return out;
+  }
+  friend void Format(TextWriter& out, const LibraryLoadError& x, const StringSpan& opts) {
+    x.FormatImpl(out);
+  }
+
+ private:
+  friend class Library;
+
   #if OS(WIN)
-  LibraryLoadError() : code(0) {}
-  DWORD code;
+  DWORD code_ = 0;
   #else
-  String message;
+  String message_;
   #endif // OS(*)
 
-  void ToFormat(TextWriter& out, const StringSpan& opts) const;
+  void FormatImpl(TextWriter& out) const;
 };
 
 // Platform-independent library type which represents a loadable module.

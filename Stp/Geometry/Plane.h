@@ -51,8 +51,6 @@ class BASE_EXPORT Plane {
   bool operator==(const Plane& o) const;
   bool operator!=(const Plane& o) const { return !operator==(o); }
 
-  void ToFormat(TextWriter& out, const StringSpan& opts) const;
-
   Vector3 normal; // this normal must be always normalized
   float distance;
 };

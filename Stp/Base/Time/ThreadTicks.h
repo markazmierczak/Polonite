@@ -52,7 +52,12 @@ class BASE_EXPORT ThreadTicks : public TimeBase<ThreadTicks> {
   static ThreadTicks GetForThread(HANDLE thread_handle);
   #endif
 
-  void ToFormat(TextWriter& out, const StringSpan& opts) const;
+  friend TextWriter& operator<<(TextWriter& out, const ThreadTicks& x) {
+    FormatImpl(out, x); return out;
+  }
+  friend void Format(TextWriter& out, const ThreadTicks& x, const StringSpan& opts) {
+    FormatImpl(out, x);
+  }
 
  private:
   friend class TimeBase<ThreadTicks>;
@@ -73,6 +78,8 @@ class BASE_EXPORT ThreadTicks : public TimeBase<ThreadTicks> {
   static bool IsSupportedWin();
   static void WaitUntilInitializedWin();
   #endif
+
+  static void FormatImpl(TextWriter& out, ThreadTicks x);
 };
 
 } // namespace stp

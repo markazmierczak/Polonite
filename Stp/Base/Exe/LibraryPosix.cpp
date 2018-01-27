@@ -15,15 +15,15 @@ static inline StringSpan DynamicLinkerErrorMessage() {
   return MakeSpanFromNullTerminated(dlerror());
 }
 
-void LibraryLoadError::ToFormat(TextWriter& out, const StringSpan& opts) const {
-  out.Write(message);
+void LibraryLoadError::FormatImpl(TextWriter& out) const {
+  out.Write(message_);
 }
 
 NativeLibrary Library::TryLoadNative(const FilePathChar* path, LibraryLoadError* out_error) {
   void* dl = dlopen(path, RTLD_LAZY);
   if (!dl) {
     if (out_error)
-      out_error->message = DynamicLinkerErrorMessage();
+      out_error->message_ = DynamicLinkerErrorMessage();
   }
   return dl;
 }

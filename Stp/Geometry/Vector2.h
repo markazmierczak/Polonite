@@ -47,8 +47,6 @@ struct BASE_EXPORT IntVector2 {
   bool operator==(const IntVector2& o) const { return x == o.x && y == o.y; }
   bool operator!=(const IntVector2& o) const { return !operator==(o); }
 
-  void ToFormat(TextWriter& out, const StringSpan& opts) const;
-
   int x;
   int y;
 };
@@ -101,8 +99,6 @@ struct BASE_EXPORT Vector2 {
 
   bool operator==(const Vector2& o) const { return x == o.x && y == o.y; }
   bool operator!=(const Vector2& o) const { return !operator==(o); }
-
-  void ToFormat(TextWriter& out, const StringSpan& opts) const;
 
   const float* AsFloats() const { return &x; }
   float* AsFloats() { return &x; }

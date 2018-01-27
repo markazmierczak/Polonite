@@ -41,8 +41,6 @@ struct BASE_EXPORT Ray3 {
   bool operator==(const Ray3& o) const;
   bool operator!=(const Ray3& rhs) const { return !operator==(rhs); }
 
-  void ToFormat(TextWriter& out, const StringSpan& opts) const;
-
   Point3 origin;
   Vector3 direction;
 };

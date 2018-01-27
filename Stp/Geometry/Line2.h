@@ -40,8 +40,6 @@ struct BASE_EXPORT IntLine2 {
   bool operator==(const IntLine2& o) const { return p1 == o.p1 && p2 == o.p2; }
   bool operator!=(const IntLine2& o) const { return !operator==(o); }
 
-  void ToFormat(TextWriter& out, const StringSpan& opts) const;
-
   IntPoint2 p1;
   IntPoint2 p2;
 };
@@ -101,8 +99,6 @@ struct BASE_EXPORT Line2 {
   bool operator!=(const Line2& o) const { return !operator==(o); }
 
   void Transform(const Affine& affine);
-
-  void ToFormat(TextWriter& out, const StringSpan& opts) const;
 
   double DistanceToSquared(Point2 p) const;
 

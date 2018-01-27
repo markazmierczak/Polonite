@@ -36,8 +36,6 @@ struct BASE_EXPORT JsonError {
   int line = 0;
   int column = 0;
 
-  void ToFormat(TextWriter& out, const StringSpan& opts) const;
-
   bool operator==(const JsonError& other) const;
   bool operator!=(const JsonError& other) const { return !operator==(other); }
 

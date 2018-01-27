@@ -42,8 +42,6 @@ struct BASE_EXPORT IntVector3 {
   bool operator==(const IntVector3& o) const { return x == o.x && y == o.y && z == o.z; }
   bool operator!=(const IntVector3& o) const { return !operator==(o); }
 
-  void ToFormat(TextWriter& out, const StringSpan& opts) const;
-
   int x;
   int y;
   int z;
@@ -96,8 +94,6 @@ struct BASE_EXPORT Vector3 {
 
   bool operator==(const Vector3& o) const { return x == o.x && y == o.y && z == o.z; }
   bool operator!=(const Vector3& o) const { return !operator==(o); }
-
-  void ToFormat(TextWriter& out, const StringSpan& opts) const;
 
   float x;
   float y;

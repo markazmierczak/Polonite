@@ -99,19 +99,4 @@ TEST(TimeDelta, NumericOperators) {
             2 * TimeDelta::FromMilliseconds(1000));
 }
 
-TEST(TimeDeltaLogging, EmptyIsZero) {
-  TimeDelta zero;
-  EXPECT_EQ(StringSpan("0s"), FormattableToString(zero));
-}
-
-TEST(TimeDeltaLogging, FiveHundredMs) {
-  TimeDelta five_hundred_ms = TimeDelta::FromMilliseconds(500);
-  EXPECT_EQ(StringSpan("0.5s"), FormattableToString(five_hundred_ms));
-}
-
-TEST(TimeDeltaLogging, MinusTenSeconds) {
-  TimeDelta minus_ten_seconds = TimeDelta::FromSeconds(-10);
-  EXPECT_EQ(StringSpan("-10s"), FormattableToString(minus_ten_seconds));
-}
-
 } // namespace stp

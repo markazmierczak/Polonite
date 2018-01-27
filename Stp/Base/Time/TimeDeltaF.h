@@ -122,8 +122,6 @@ class TimeDeltaF {
   bool operator> (TimeDeltaF other) const { return secs_ >  other.secs_; }
   bool operator>=(TimeDeltaF other) const { return secs_ >= other.secs_; }
 
-  void ToFormat(TextWriter& out, const StringSpan& opts) const;
-
   friend TimeDeltaF Abs(TimeDeltaF x) { return x.GetMagnitude(); }
 
  private:

@@ -58,10 +58,6 @@ class NamedFormatter final : public Formatter {
   const T& adapted_;
 };
 
-template<typename T>
-using ToFormatMember = decltype(declval<const T&>().ToFormat(
-    declval<TextWriter&>(), declval<const StringSpan&>()));
-
 template<typename T, TEnableIf<!TIsBaseOf<Formatter, T>>* = nullptr>
 inline DefaultFormatter<T> BuildFormatter(const T& x) {
   return DefaultFormatter<T>(x);
@@ -86,11 +82,6 @@ inline void FormatMany(TextWriter& out, StringSpan fmt, const Ts&... args) {
 template<typename T>
 inline detail::NamedFormatter<T> FormatArg(StringSpan name, const T& value) {
   return detail::NamedFormatter<T>(name, value);
-}
-
-template<typename T, TEnableIf<THasDetected<detail::ToFormatMember, T>>* = nullptr>
-inline void Format(TextWriter& out, const T& s, const StringSpan& opts) {
-  s.ToFormat(out, opts);
 }
 
 template<typename... Ts>

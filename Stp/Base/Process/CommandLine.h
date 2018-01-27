@@ -80,7 +80,6 @@ class BASE_EXPORT CommandLine {
 
   void Parse(const Arguments& arguments);
 
-  void ToFormat(TextWriter& out, const StringSpan& opts) const;
 
   static void Init(const Arguments& arguments);
   static void Fini();
@@ -96,7 +95,18 @@ class BASE_EXPORT CommandLine {
   void SetSlashIsNotASwitch();
   #endif
 
+  friend TextWriter& operator<<(TextWriter& out, const CommandLine& x) {
+    x.FormatImpl(out, StringSpan()); return out;
+  }
+  friend void Format(TextWriter& out, const CommandLine& x, const StringSpan& opts) {
+    x.FormatImpl(out, opts);
+  }
+
  private:
+  String program_name_;
+  FlatMap<String, String> switches_;
+  List<String> positionals_;
+
   #if OS(WIN)
   void ParseFromArgv(int argc, wchar_t** argv);
   void ParseFromArgs(const wchar_t* args);
@@ -104,14 +114,11 @@ class BASE_EXPORT CommandLine {
   void ParseFromArgv(int argc, char** argv);
   #endif
 
-  String program_name_;
-  FlatMap<String, String> switches_;
-  List<String> positionals_;
+  void FormatImpl(TextWriter& out, const StringSpan& opts) const;
 
   static CommandLine* g_for_current_process_;
 
   static bool ParseSwitch(StringSpan argument, String& out_name, String& out_value);
-  static void ToFormatArgument(TextWriter& out, StringSpan argument);
 
   DISALLOW_COPY_AND_ASSIGN(CommandLine);
 };

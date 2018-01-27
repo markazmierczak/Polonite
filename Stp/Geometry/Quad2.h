@@ -52,8 +52,6 @@ struct BASE_EXPORT Quad2 {
   bool operator==(const Quad2& o) const;
   bool operator!=(const Quad2& o) const { return !operator==(o); }
 
-  void ToFormat(TextWriter& out, const StringSpan& opts) const;
-
   Point2 p[4];
 };
 

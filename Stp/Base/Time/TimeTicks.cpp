@@ -27,13 +27,13 @@ TimeTicks TimeTicks::SnappedToNextTick(TimeTicks tick_phase, TimeDelta tick_inte
   return *this + interval_offset;
 }
 
-void TimeTicks::ToFormat(TextWriter& out, const StringSpan& opts) const {
+void TimeTicks::FormatImpl(TextWriter& out, TimeTicks x) {
   // This function formats a TimeTicks object as "bogo-microseconds".
   // The origin and granularity of the count are platform-specific, and may very
   // from run to run. Although bogo-microseconds usually roughly correspond to
   // real microseconds, the only real guarantee is that the number never goes
   // down during a single run.
-  out << us_;
+  out << x.us_;
   out.WriteAscii(" bogo-microseconds");
 }
 

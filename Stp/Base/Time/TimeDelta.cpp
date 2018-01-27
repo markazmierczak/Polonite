@@ -8,12 +8,4 @@
 
 namespace stp {
 
-void TimeDelta::ToFormat(TextWriter& out, const StringSpan& opts) const {
-  out << InSecondsF() << 's';
-}
-
-void TimeDeltaF::ToFormat(TextWriter& out, const StringSpan& opts) const {
-  out << InSecondsF() << 's';
-}
-
 } // namespace stp

@@ -105,9 +105,6 @@ class BASE_EXPORT JsonValue {
       JsonValue& output,
       const JsonOptions& options = JsonOptions());
 
-  void ToFormat(TextWriter& out, const StringSpan& opts) const;
-
-  HashCode GetHashCode() const;
   // TODO EqualsTo
   // TODO CompareTo
 

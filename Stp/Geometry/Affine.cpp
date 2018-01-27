@@ -760,12 +760,12 @@ bool Affine::operator==(const Affine& other) const {
   return true;
 }
 
-void Affine::ToFormat(TextWriter& out, const StringSpan& opts) const {
+void Affine::FormatImpl(TextWriter& out) const {
   out.Write('[');
   for (int i = 0; i < EntryCount; ++i) {
     if (i != 0)
       out.Write(' ');
-    out.WriteFloat(d_[i]);
+    out << d_[i];
   }
   out.Write(']');
 }

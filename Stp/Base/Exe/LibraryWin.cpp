@@ -4,11 +4,12 @@
 #include "Base/Exe/Library.h"
 
 #include "Base/Io/TextWriter.h"
+#include "Base/Win/WinErrorCode.h"
 
 namespace stp {
 
-void LibraryLoadError::ToFormat(TextWriter& out, const StringSpan& opts) const {
-  out.Write(code);
+void LibraryLoadError::FormatImpl(TextWriter& out) const {
+  out << static_cast<WinErrorCode>(code_);
 }
 
 static inline bool AreSearchFlagsAvailable() {
@@ -44,7 +45,7 @@ NativeLibrary Library::TryLoadNative(const FilePathChar* path, LibraryLoadError*
 
   if (!module) {
     if (out_error)
-      out_error->code = ::GetLastError();
+      out_error->code_ = ::GetLastError();
   }
   return module;
 }

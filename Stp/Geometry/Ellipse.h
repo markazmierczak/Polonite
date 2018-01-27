@@ -44,8 +44,6 @@ struct BASE_EXPORT Ellipse {
   Ellipse operator+(const Vector2& d) const { return Ellipse(center + d, radii); }
   Ellipse operator-(const Vector2& d) const { return Ellipse(center - d, radii); }
 
-  void ToFormat(TextWriter& out, const StringSpan& opts) const;
-
   Point2 center;
   Vector2 radii;
 };

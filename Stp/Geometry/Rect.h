@@ -78,8 +78,6 @@ struct BASE_EXPORT IntRect {
   bool operator==(const IntRect& o) const { return position == o.position && size == o.size; }
   bool operator!=(const IntRect& other) const { return !operator==(other); }
 
-  void ToFormat(TextWriter& out, const StringSpan& opts) const;
-
   IntPoint2 position;
   IntSize2 size;
 };
@@ -113,8 +111,6 @@ struct BASE_EXPORT IntRectExtents {
 
   int GetWidth() const { return lt.x + rb.x; }
   int GetHeight() const { return lt.y + rb.y; }
-
-  void ToFormat(TextWriter& out, const StringSpan& opts) const;
 
   IntVector2 lt;
   IntVector2 rb;

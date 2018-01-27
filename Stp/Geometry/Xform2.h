@@ -209,8 +209,6 @@ class BASE_EXPORT Xform2 {
   bool operator==(const Xform2& o) const;
   bool operator!=(const Xform2& other) const { return !operator==(other); }
 
-  void ToFormat(TextWriter& out, const StringSpan& opts) const;
-
  private:
   float d_[EntryCount]; // row-major
   mutable unsigned type_mask_;
