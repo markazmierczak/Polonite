@@ -1,0 +1,21 @@
+
+component("Json") {
+  sources = [
+    "JsonArray.cpp",
+    "JsonArray.h",
+    "JsonError.cpp",
+    "JsonError.h",
+    "JsonFormatter.cpp",
+    "JsonFormatter.h",
+    "JsonObject.cpp",
+    "JsonObject.h",
+    "JsonOptions.cpp",
+    "JsonOptions.h",
+    "JsonParser.cpp",
+    "JsonParser.h",
+    "JsonStringBuilder.cpp",
+    "JsonStringBuilder.h",
+    "JsonValue.cpp",
+    "JsonValue.h",
+  ]
+}
