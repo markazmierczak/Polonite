@@ -41,3 +41,23 @@ component("Geometry") {
     "Xform3.h",
   ]
 }
+
+test("GeometryUnitTests") {
+  sources = [
+    "AffineTest.cpp",
+    "CubicBezierTest.cpp",
+    "Line2Test.cpp",
+    "PlaneTest.cpp",
+    "Quad2Test.cpp",
+    "QuaternionTest.cpp",
+    "RectTest.cpp",
+    "Size2Test.cpp",
+    "Vector2Test.cpp",
+    "Vector3Test.cpp",
+    "Xform3Test.cpp",
+  ]
+  
+  deps = [
+    ":Geometry",
+  ]
+}

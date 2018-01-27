@@ -3,7 +3,7 @@
 
 #include "Base/Math/Bits.h"
 
-#include "Base/Random/CryptoRandom.h"
+#include "Base/Crypto/CryptoRandom.h"
 #include "Base/Test/GTest.h"
 
 namespace stp {
@@ -27,8 +27,9 @@ TEST(BitsTest, ExtractFirstOneBit32) {
   for (auto x : input)
     EXPECT_EQ(slow(x), ExtractFirstOneBit(x));
 
+  CryptoRandom rng;
   for (int i = 0; i < 100; ++i) {
-    uint32_t x = CryptoRandom::NextUInt32();
+    uint32_t x = rng.NextUInt32();
     EXPECT_EQ(slow(x), ExtractFirstOneBit(x));
   }
 }
@@ -52,8 +53,9 @@ TEST(BitsTest, ExtractFirstOneBit64) {
   for (auto x : input)
     EXPECT_EQ(slow(x), ExtractFirstOneBit(x));
 
+  CryptoRandom rng;
   for (int i = 0; i < 100; ++i) {
-    uint64_t x = CryptoRandom::NextUInt64();
+    uint64_t x = rng.NextUInt64();
     EXPECT_EQ(slow(x), ExtractFirstOneBit(x));
   }
 }
@@ -77,8 +79,9 @@ TEST(BitsTest, ExtractLastOneBit32) {
   for (auto x : input)
     EXPECT_EQ(slow(x), ExtractLastOneBit(x));
 
+  CryptoRandom rng;
   for (int i = 0; i < 100; ++i) {
-    uint32_t x = CryptoRandom::NextUInt32();
+    uint32_t x = rng.NextUInt32();
     EXPECT_EQ(slow(x), ExtractLastOneBit(x));
   }
 }
@@ -102,8 +105,9 @@ TEST(BitsTest, ExtractLastOneBit64) {
   for (auto x : input)
     EXPECT_EQ(slow(x), ExtractLastOneBit(x));
 
+  CryptoRandom rng;
   for (int i = 0; i < 100; ++i) {
-    uint64_t x = CryptoRandom::NextUInt64();
+    uint64_t x = rng.NextUInt64();
     EXPECT_EQ(slow(x), ExtractLastOneBit(x));
   }
 }
@@ -127,8 +131,9 @@ TEST(BitsTest, CountBitsPopulation32) {
   for (auto x : input)
     EXPECT_EQ(slow(x), CountBitsPopulation(x));
 
+  CryptoRandom rng;
   for (int i = 0; i < 100; ++i) {
-    uint32_t x = CryptoRandom::NextUInt32();
+    uint32_t x = rng.NextUInt32();
     EXPECT_EQ(slow(x), CountBitsPopulation(x));
   }
 }
@@ -152,8 +157,9 @@ TEST(BitsTest, CountBitsPopulation64) {
   for (auto x : input)
     EXPECT_EQ(slow(x), CountBitsPopulation(x));
 
+  CryptoRandom rng;
   for (int i = 0; i < 100; ++i) {
-    uint64_t x = CryptoRandom::NextUInt64();
+    uint64_t x = rng.NextUInt64();
     EXPECT_EQ(slow(x), CountBitsPopulation(x));
   }
 }
@@ -177,8 +183,9 @@ TEST(BitsTest, GetBitsParity32) {
   for (auto x : input)
     EXPECT_EQ(slow(x), GetBitsParity(x));
 
+  CryptoRandom rng;
   for (int i = 0; i < 100; ++i) {
-    uint32_t x = CryptoRandom::NextUInt32();
+    uint32_t x = rng.NextUInt32();
     EXPECT_EQ(slow(x), GetBitsParity(x));
   }
 }
@@ -202,8 +209,9 @@ TEST(BitsTest, GetBitsParity64) {
   for (auto x : input)
     EXPECT_EQ(slow(x), GetBitsParity(x));
 
+  CryptoRandom rng;
   for (int i = 0; i < 100; ++i) {
-    uint64_t x = CryptoRandom::NextUInt64();
+    uint64_t x = rng.NextUInt64();
     EXPECT_EQ(slow(x), GetBitsParity(x));
   }
 }
@@ -228,8 +236,9 @@ TEST(BitsTest, FindFirstOneBit32) {
   for (auto x : input)
     EXPECT_EQ(slow(x), FindFirstOneBit(x));
 
+  CryptoRandom rng;
   for (int i = 0; i < 100; ++i) {
-    uint32_t x = CryptoRandom::NextUInt32();
+    uint32_t x = rng.NextUInt32();
     if (!x)
       continue;
     EXPECT_EQ(slow(x), FindFirstOneBit(x));
@@ -256,8 +265,9 @@ TEST(BitsTest, FindFirstOneBit64) {
   for (auto x : input)
     EXPECT_EQ(slow(x), FindFirstOneBit(x)) << x;
 
+  CryptoRandom rng;
   for (int i = 0; i < 100; ++i) {
-    uint64_t x = CryptoRandom::NextUInt64();
+    uint64_t x = rng.NextUInt64();
     if (!x)
       continue;
     EXPECT_EQ(slow(x), FindFirstOneBit(x));
@@ -284,8 +294,9 @@ TEST(BitsTest, FindLastOneBit32) {
   for (auto x : input)
     EXPECT_EQ(slow(x), FindLastOneBit(x));
 
+  CryptoRandom rng;
   for (int i = 0; i < 100; ++i) {
-    uint32_t x = CryptoRandom::NextUInt32();
+    uint32_t x = rng.NextUInt32();
     if (!x)
       continue;
     EXPECT_EQ(slow(x), FindLastOneBit(x));
@@ -312,8 +323,9 @@ TEST(BitsTest, FindLastOneBit64) {
   for (auto x : input)
     EXPECT_EQ(slow(x), FindLastOneBit(x)) << x;
 
+  CryptoRandom rng;
   for (int i = 0; i < 100; ++i) {
-    uint64_t x = CryptoRandom::NextUInt64();
+    uint64_t x = rng.NextUInt64();
     if (!x)
       continue;
     EXPECT_EQ(slow(x), FindLastOneBit(x));
@@ -340,8 +352,9 @@ TEST(BitsTest, CountTrailingZeroBits32) {
   for (auto x : input)
     EXPECT_EQ(slow(x), CountTrailingZeroBits(x));
 
+  CryptoRandom rng;
   for (int i = 0; i < 100; ++i) {
-    uint32_t x = CryptoRandom::NextUInt32();
+    uint32_t x = rng.NextUInt32();
     EXPECT_EQ(slow(x), CountTrailingZeroBits(x));
   }
 }
@@ -366,8 +379,9 @@ TEST(BitsTest, CountTrailingZeroBits64) {
   for (auto x : input)
     EXPECT_EQ(slow(x), CountTrailingZeroBits(x)) << x;
 
+  CryptoRandom rng;
   for (int i = 0; i < 100; ++i) {
-    uint64_t x = CryptoRandom::NextUInt64();
+    uint64_t x = rng.NextUInt64();
     EXPECT_EQ(slow(x), CountTrailingZeroBits(x));
   }
 }
@@ -413,8 +427,9 @@ TEST(BitsTest, CountLeadingZeroBits32) {
   for (auto x : input)
     EXPECT_EQ(slow(x), CountLeadingZeroBits(x));
 
+  CryptoRandom rng;
   for (int i = 0; i < 100; ++i) {
-    uint32_t x = CryptoRandom::NextUInt32();
+    uint32_t x = rng.NextUInt32();
     EXPECT_EQ(slow(x), CountLeadingZeroBits(x));
   }
 }
@@ -439,8 +454,9 @@ TEST(BitsTest, CountLeadingZeroBits64) {
   for (auto x : input)
     EXPECT_EQ(slow(x), CountLeadingZeroBits(x)) << x;
 
+  CryptoRandom rng;
   for (int i = 0; i < 100; ++i) {
-    uint64_t x = CryptoRandom::NextUInt64();
+    uint64_t x = rng.NextUInt64();
     EXPECT_EQ(slow(x), CountLeadingZeroBits(x));
   }
 }
@@ -519,8 +535,9 @@ TEST(BitsTest, Reverse16) {
   for (auto x : input)
     EXPECT_EQ(slow(x), ReverseBits(x));
 
+  CryptoRandom rng;
   for (int i = 0; i < 100; ++i) {
-    uint16_t x = static_cast<uint16_t>(CryptoRandom::NextUInt32());
+    uint16_t x = static_cast<uint16_t>(rng.NextUInt32());
     EXPECT_EQ(slow(x), ReverseBits(x));
   }
 }
@@ -547,8 +564,9 @@ TEST(BitsTest, Reverse32) {
   for (uint32_t x : input)
     EXPECT_EQ(slow(x), ReverseBits(x));
 
+  CryptoRandom rng;
   for (int i = 0; i < 100; ++i) {
-    uint32_t x = CryptoRandom::NextUInt32();
+    uint32_t x = rng.NextUInt32();
     EXPECT_EQ(slow(x), ReverseBits(x));
   }
 }
@@ -575,8 +593,9 @@ TEST(BitsTest, Reverse64) {
   for (uint64_t x : input)
     EXPECT_EQ(slow(x), ReverseBits(x));
 
+  CryptoRandom rng;
   for (int i = 0; i < 100; ++i) {
-    uint64_t x = CryptoRandom::NextUInt64();
+    uint64_t x = rng.NextUInt64();
     EXPECT_EQ(slow(x), ReverseBits(x));
   }
 }

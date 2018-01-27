@@ -3,7 +3,7 @@
 
 #include "Base/Type/Hashable.h"
 
-#include "Base/Random/Random.h"
+#include "Base/Util/Random.h"
 #include "Base/Test/GTest.h"
 #include "Base/Type/Limits.h"
 
@@ -37,7 +37,7 @@ TYPED_TEST_CASE(HashableTest, FunctionalTypes);
 
 TYPED_TEST(HashableTest, EqualToImpliesSameHashCode) {
   TypeParam values[32];
-  this->rng.NextBytes(values, sizeof(values));
+  this->rng.Fill(MakeBufferSpan(values));
   for (TypeParam v1: values) {
     for (TypeParam v2: values) {
       if (v1 == v2) {
@@ -49,7 +49,7 @@ TYPED_TEST(HashableTest, EqualToImpliesSameHashCode) {
 
 TYPED_TEST(HashableTest, HashValueArrayUsesHashRange) {
   TypeParam values[128];
-  this->rng.NextBytes(&values, sizeof(values));
+  this->rng.Fill(MakeBufferSpan(values));
   EXPECT_EQ(HashContiguous(values, 128), Hash(values));
 }
 

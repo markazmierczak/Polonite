@@ -3,7 +3,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "Base/Random/CryptoRandom.h"
+#include "Base/Crypto/CryptoRandom.h"
 
 #include "Base/Io/FileStream.h"
 #include "Base/Util/LazyInstance.h"
@@ -22,7 +22,7 @@ class URandom {
         FileMode::OpenExisting, FileAccess::ReadOnly);
   }
 
-  void Read(byte_t* dst, int n) { stream_.Read(dst, n); }
+  void Read(MutableBufferSpan buffer) { stream_.Read(buffer); }
 
  private:
   FileStream stream_;
@@ -32,8 +32,8 @@ LazyInstance<URandom>::LeakAtExit g_urandom_fd_instance = LAZY_INSTANCE_INITIALI
 
 } // namespace
 
-void CryptoRandom::NextBytes(byte_t* output, int output_length) {
-  g_urandom_fd_instance->Read(output, output_length);
+void CryptoRandom::Fill(MutableBufferSpan buffer) noexcept {
+  g_urandom_fd_instance->Read(buffer);
 }
 
 } // namespace stp

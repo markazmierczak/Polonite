@@ -3,7 +3,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "Base/Random/CryptoRandom.h"
+#include "Base/Crypto/CryptoRandom.h"
 
 #include "Base/Debug/Assert.h"
 
@@ -18,8 +18,8 @@
 
 namespace stp {
 
-void CryptoRandom::NextBytes(byte_t* output, int size) {
-  bool success = RtlGenRandom(output, size) != FALSE;
+void CryptoRandom::Fill(MutableBufferSpan buffer) noexcept {
+  bool success = RtlGenRandom(buffer.data(), ToUnsigned(buffer.size())) != FALSE;
   ASSERT_UNUSED(success, success);
 }
 

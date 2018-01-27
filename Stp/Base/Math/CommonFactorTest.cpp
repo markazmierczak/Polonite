@@ -3,7 +3,7 @@
 
 #include "Base/Math/CommonFactor.h"
 
-#include "Base/Random/CryptoRandom.h"
+#include "Base/Crypto/CryptoRandom.h"
 #include "Base/Test/GTest.h"
 
 namespace stp {
@@ -29,9 +29,10 @@ TEST(GcdTest, Gcd32) {
   for (Pair p : input)
     EXPECT_EQ(GcdRecursive32(p.x, p.y), GreatestCommonDivisor(p.x, p.y));
 
+  CryptoRandom rng;
   for (int i = 0; i < 100; ++i) {
-    uint32_t x = CryptoRandom::NextUInt32();
-    uint32_t y = CryptoRandom::NextUInt32();
+    uint32_t x = rng.NextUInt32();
+    uint32_t y = rng.NextUInt32();
     EXPECT_EQ(GcdRecursive32(x, y), GreatestCommonDivisor(x, y));
   }
 }
@@ -57,9 +58,10 @@ TEST(GcdTest, Gcd64) {
   for (Pair p : input)
     EXPECT_EQ(GcdRecursive64(p.x, p.y), GreatestCommonDivisor(p.x, p.y));
 
+  CryptoRandom rng;
   for (int i = 0; i < 100; ++i) {
-    uint32_t x = CryptoRandom::NextUInt64();
-    uint32_t y = CryptoRandom::NextUInt64();
+    uint32_t x = rng.NextUInt64();
+    uint32_t y = rng.NextUInt64();
     EXPECT_EQ(GcdRecursive64(x, y), GreatestCommonDivisor(x, y));
   }
 }

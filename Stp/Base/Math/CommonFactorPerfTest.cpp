@@ -4,7 +4,7 @@
 #include "Base/Math/CommonFactor.h"
 
 #include "Base/Containers/List.h"
-#include "Base/Random/CryptoRandom.h"
+#include "Base/Crypto/CryptoRandom.h"
 #include "Base/Test/GTest.h"
 #include "Base/Test/PerfTest.h"
 #include "Base/Time/TimeTicks.h"
@@ -18,8 +18,9 @@ static List<T> GenerateTable() {
   int size = GcdBenchmarkIterations + 1;
   List<T> list;
   T* dst = list.AppendUninitialized(size);
+  CryptoRandom rng;
   for (int i = 0; i < size; ++i)
-    dst[i] = static_cast<T>(CryptoRandom::NextUInt64());
+    dst[i] = static_cast<T>(rng.NextUInt64());
   return list;
 }
 

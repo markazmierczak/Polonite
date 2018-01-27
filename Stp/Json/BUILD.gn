@@ -19,3 +19,15 @@ component("Json") {
     "JsonValue.h",
   ]
 }
+
+test("JsonUnitTests") {
+  sources = [
+    "JsonParserTest.cpp",
+    "JsonValueTest.cpp",
+    "JsonFormatterTest.cpp",
+  ]
+  
+  deps = [
+    ":Json",
+  ]
+}

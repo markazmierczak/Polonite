@@ -3,7 +3,7 @@
 
 #include "Base/Math/FloatToInteger.h"
 
-#include "Base/Random/CryptoRandom.h"
+#include "Base/Crypto/CryptoRandom.h"
 #include "Base/Test/GTest.h"
 
 namespace stp {

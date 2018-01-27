@@ -3,7 +3,7 @@
 
 #include "Base/Math/PowerOfTwo.h"
 
-#include "Base/Random/CryptoRandom.h"
+#include "Base/Crypto/CryptoRandom.h"
 #include "Base/Test/GTest.h"
 
 namespace stp {
@@ -26,8 +26,9 @@ TEST(BitsTest, Log2Floor32) {
   for (uint32_t x : input)
     EXPECT_EQ(slow(x), Log2Floor(x));
 
+  CryptoRandom rng;
   for (int i = 0; i < 100; ++i) {
-    uint32_t x = CryptoRandom::NextUInt32();
+    uint32_t x = rng.NextUInt32();
     if (!x)
       continue;
     EXPECT_EQ(slow(x), Log2Floor(x));
@@ -53,8 +54,9 @@ TEST(BitsTest, Log2Floor64) {
   for (uint64_t x : input)
     EXPECT_EQ(slow(x), Log2Floor(x));
 
+  CryptoRandom rng;
   for (int i = 0; i < 100; ++i) {
-    uint64_t x = CryptoRandom::NextUInt64();
+    uint64_t x = rng.NextUInt64();
     if (!x)
       continue;
     EXPECT_EQ(slow(x), Log2Floor(x));
@@ -80,8 +82,9 @@ TEST(BitsTest, Log2Ceil32) {
   for (uint32_t x : input)
     EXPECT_EQ(slow(x), Log2Ceil(x));
 
+  CryptoRandom rng;
   for (int i = 0; i < 100; ++i) {
-    uint32_t x = CryptoRandom::NextUInt32();
+    uint32_t x = rng.NextUInt32();
     if (!x)
       continue;
     EXPECT_EQ(slow(x), Log2Ceil(x));
@@ -108,8 +111,9 @@ TEST(BitsTest, Log2Ceil64) {
   for (uint64_t x : input)
     EXPECT_EQ(slow(x), Log2Ceil(x));
 
+  CryptoRandom rng;
   for (int i = 0; i < 100; ++i) {
-    uint64_t x = CryptoRandom::NextUInt64();
+    uint64_t x = rng.NextUInt64();
     if (!x)
       continue;
     EXPECT_EQ(slow(x), Log2Ceil(x));
@@ -136,8 +140,9 @@ TEST(BitsTest, IsPowerOfTwo) {
   for (uint32_t x : input)
     EXPECT_EQ(slow(x), IsPowerOfTwo(x));
 
+  CryptoRandom rng;
   for (int i = 0; i < 100; ++i) {
-    uint32_t x = CryptoRandom::NextUInt32();
+    uint32_t x = rng.NextUInt32();
     if (!x)
       continue;
     EXPECT_EQ(slow(x), IsPowerOfTwo(x));
@@ -173,8 +178,9 @@ TEST(BitsTest, RoundDownToPowerOfTwo32) {
   for (uint32_t x : input)
     EXPECT_EQ(slow(x), RoundDownToPowerOfTwo(x));
 
+  CryptoRandom rng;
   for (int i = 0; i < 100; ++i) {
-    uint32_t x = CryptoRandom::NextUInt32();
+    uint32_t x = rng.NextUInt32();
     EXPECT_EQ(slow(x), RoundDownToPowerOfTwo(x));
   }
 }
@@ -203,8 +209,9 @@ TEST(BitsTest, RoundDownToPowerOfTwo64) {
   for (uint64_t x : input)
     EXPECT_EQ(slow(x), RoundDownToPowerOfTwo(x)) << x;
 
+  CryptoRandom rng;
   for (int i = 0; i < 100; ++i) {
-    uint64_t x = CryptoRandom::NextUInt64();
+    uint64_t x = rng.NextUInt64();
     EXPECT_EQ(slow(x), RoundDownToPowerOfTwo(x));
   }
 }
@@ -226,9 +233,10 @@ TEST(BitsTest, RoundUpToPowerOfTwo32) {
   for (uint32_t x : input)
     EXPECT_EQ(slow(x), RoundUpToPowerOfTwo(x));
 
+  CryptoRandom rng;
   for (int i = 0; i < 100; ++i) {
     // Shift one right to have last bit cleared.
-    uint32_t x = CryptoRandom::NextUInt32() >> 1;
+    uint32_t x = rng.NextUInt32() >> 1;
     EXPECT_EQ(slow(x), RoundUpToPowerOfTwo(x));
   }
 }
@@ -250,9 +258,10 @@ TEST(BitsTest, RoundUpToPowerOfTwo64) {
   for (uint64_t x : input)
     EXPECT_EQ(slow(x), RoundUpToPowerOfTwo(x)) << x;
 
+  CryptoRandom rng;
   for (int i = 0; i < 100; ++i) {
     // Shift one right to have last bit cleared.
-    uint64_t x = CryptoRandom::NextUInt64() >> 1;
+    uint64_t x = rng.NextUInt64() >> 1;
     EXPECT_EQ(slow(x), RoundUpToPowerOfTwo(x));
   }
 }

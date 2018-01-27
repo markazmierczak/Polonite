@@ -12,7 +12,7 @@
 #include "Base/FileSystem/KnownPaths.h"
 #include "Base/Io/StringWriter.h"
 #include "Base/Process/NativeProcess.h"
-#include "Base/Random/CryptoRandom.h"
+#include "Base/Crypto/CryptoRandom.h"
 #include "Base/Text/Format.h"
 
 #if OS(POSIX)
@@ -68,6 +68,7 @@ void TemporaryDirectory::Remove() {
 void TemporaryDirectory::CreateInternal(FilePathSpan base_dir, StringSpan prefix) {
   FilePath sub_dir = base_dir;
 
+  CryptoRandom rng;
   for (int count = 0; count < 50; ++count) {
     // Try create a new temporary directory with random generated name.
     // If the one exists, keep trying another path name until we reach some limit.
@@ -75,9 +76,9 @@ void TemporaryDirectory::CreateInternal(FilePathSpan base_dir, StringSpan prefix
 
     writer.EnsureSeparator();
     writer.WriteAscii(prefix);
-    writer.Write(NativeProcess::GetCurrentId());
-    writer.Write('_');
-    writer.Write(CryptoRandom::Next(0, INT16_MAX));
+    writer << NativeProcess::GetCurrentId();
+    writer << '_';
+    writer << rng.NextUInt32();
 
     if (::CreateDirectoryW(ToNullTerminated(sub_dir), NULL)) {
       path_ = Move(sub_dir);

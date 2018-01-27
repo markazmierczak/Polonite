@@ -7,7 +7,7 @@
 #include "Base/Simd/Vnx.h"
 
 #include "Base/Compiler/Sanitizer.h"
-#include "Base/Random/Random.h"
+#include "Base/Util/Random.h"
 #include "Base/Test/GTest.h"
 
 namespace stp {
@@ -231,10 +231,11 @@ TEST(VnxTest, UInt16FloatConversion) {
   // starting with any u16 value, we should be able to have a perfect round-trip
   // in/out of floats
   Random rand;
+  auto NextUInt16 = [&rand]() { return static_cast<uint16_t>(rand.NextUInt32()); };
   for (int i = 0; i < 10000; ++i) {
     const uint16_t s16[4] {
-      rand.NextUInt16(), rand.NextUInt16(),
-      rand.NextUInt16(), rand.NextUInt16(),
+      NextUInt16(), NextUInt16(),
+      NextUInt16(), NextUInt16(),
     };
     Vec4h u4_0 = Vec4h::Load(s16);
     Vec4f f4 = vnx_cast<float>(u4_0);

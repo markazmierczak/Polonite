@@ -1,11 +1,10 @@
 // Copyright 2017 Polonite Authors. All rights reserved.
 // Distributed under MIT license that can be found in the LICENSE file.
 
-#ifndef STP_BASE_RANDOM_RANDOM_H_
-#define STP_BASE_RANDOM_RANDOM_H_
+#ifndef STP_BASE_UTIL_RANDOM_H_
+#define STP_BASE_UTIL_RANDOM_H_
 
-#include "Base/Export.h"
-#include "Base/Type/Basic.h"
+#include "Base/Containers/BufferSpan.h"
 
 namespace stp {
 
@@ -15,33 +14,13 @@ namespace stp {
 // This is NOT cryptographically secure random number generator, nor is thread-safe.
 class BASE_EXPORT BasicRandom {
  public:
-  // Returns a pseudo-random number in range [INT32_MIN, INT32_MAX].
-  int Next();
-
-  // Returns a pseudo-random number in range [0, UINT8_MAX].
-  uint8_t NextUInt8();
-
-  // Returns a pseudo-random number in range [0, UINT16_MAX].
-  uint16_t NextUInt16();
+  void Fill(MutableBufferSpan buffer);
 
   // Returns a pseudo-random number in range [0, UINT32_MAX].
   uint32_t NextUInt32();
 
   // Returns a pseudo-random number in range [0, UINT64_MAX].
   uint64_t NextUInt64();
-
-  // Returns a pseudo-random number in range [0, range).
-  //
-  // Note that this can be used as an adapter for RandomShuffle():
-  // Given a pre-populated |List<int> myvector|, shuffle it as
-  //   RandomShuffle(myvector.begin(), myvector.end(), CryptoRandom::NextUInt64);
-  uint64_t NextUInt64(uint64_t range);
-
-  // Returns a random floating-point number in range [0, 1). Thread-safe.
-  float NextFloat();
-  double NextDouble();
-
-  void NextBytes(void* buffer, int length);
 
   // Reset the random object.
   void Seed(uint32_t seed);
@@ -75,4 +54,4 @@ class Random : public BasicRandom {
 
 } // namespace stp
 
-#endif // STP_BASE_RANDOM_RANDOM_H_
+#endif // STP_BASE_UTIL_RANDOM_H_
