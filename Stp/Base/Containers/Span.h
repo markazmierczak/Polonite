@@ -218,6 +218,9 @@ constexpr Span<T> MakeSpan(const T (&array)[N]) { return array; }
 template<typename T, int N>
 constexpr MutableSpan<T> MakeSpan(T (&array)[N]) { return array; }
 
+template<typename T>
+constexpr Span<T> MakeSpan(const InitializerList<T>& ilist) { return Span<T>(ilist); }
+
 template<typename T, int N, TEnableIf<TIsCharacter<T>>* = nullptr>
 inline const T* ToNullTerminated(const T (&array)[N]) {
   ASSERT(array[N - 1] == '\0');

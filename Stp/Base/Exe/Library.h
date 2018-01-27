@@ -72,8 +72,8 @@ class BASE_EXPORT Library {
 
   ALWAYS_INLINE NativeLibrary get() const { return native_; }
 
-  void* Resolve(const char* function_name) const {
-    return ResolveNative(native_, function_name);
+  void* TryResolve(const char* function_name) const {
+    return TryResolveNative(native_, function_name);
   }
 
   // Returns true if there's a valid library loaded.
@@ -95,7 +95,7 @@ class BASE_EXPORT Library {
 
   static NativeLibrary TryLoadNative(const FilePathChar* path, LibraryLoadError* error);
   static void UnloadNative(NativeLibrary library);
-  static void* ResolveNative(NativeLibrary library, const char* function_name);
+  static void* TryResolveNative(NativeLibrary library, const char* function_name);
 
   DISALLOW_COPY_AND_ASSIGN(Library);
 };

@@ -3,6 +3,7 @@
 
 #include "Base/Exe/Library.h"
 
+#include "Base/Containers/Join.h"
 #include "Base/FileSystem/FilePath.h"
 #include "Base/Text/Format.h"
 
@@ -33,13 +34,13 @@ void Library::UnloadNative(NativeLibrary library) {
     ASSERT(false, "failed to unload library: {}", DynamicLinkerErrorMessage());
 }
 
-void* Library::ResolveNative(NativeLibrary library, const char* name) {
+void* Library::TryResolveNative(NativeLibrary library, const char* name) {
   return dlsym(library, name);
 }
 
 String Library::DecorateName(StringSpan name) {
   ASSERT(IsAscii(name));
-  return String::ConcatArgs("lib", name, ".so");
+  return ConcatMany<String>("lib", name, ".so");
 }
 
 } // namespace stp

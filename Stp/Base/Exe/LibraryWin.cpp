@@ -53,7 +53,7 @@ void Library::UnloadNative(NativeLibrary library) {
   ::FreeLibrary(library);
 }
 
-void* Library::ResolveNative(NativeLibrary library, const char* name) {
+void* Library::TryResolveNative(NativeLibrary library, const char* name) {
   return ::GetProcAddress(library, name);
 }
 

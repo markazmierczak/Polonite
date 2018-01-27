@@ -18,7 +18,7 @@ void Library::UnloadNative(NativeLibrary library) {
   ASSERT(false, "not implemented");
 }
 
-void* Library::ResolveNative(NativeLibrary library, const char* name) {
+void* Library::TryResolveNative(NativeLibrary library, const char* name) {
   ASSERT(false, "not implemented");
   return nullptr;
 }
