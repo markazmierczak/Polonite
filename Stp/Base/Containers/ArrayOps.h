@@ -23,13 +23,13 @@ constexpr bool TIsCopyInitializableWithMemset =
 } // namespace detail
 
 template<typename T, typename U>
-constexpr bool AreOverlapping(const T* lhs, int lhs_count, const U* rhs, int rhs_count) {
+constexpr bool AreOverlapping(const T* lhs, int lhs_count, const U* rhs, int rhs_count) noexcept {
   return (rhs <= lhs && lhs < rhs + rhs_count) ||
          (lhs <= rhs && rhs < lhs + lhs_count);
 }
 
 template<typename T>
-constexpr bool AreOverlapping(const T* lhs, const T* rhs, int count) {
+constexpr bool AreOverlapping(const T* lhs, const T* rhs, int count) noexcept {
   return AreOverlapping(lhs, count, rhs, count);
 }
 
@@ -178,7 +178,7 @@ inline void Fill(T* items, int count, const U& value) noexcept(TIsNoexceptCopyAs
 }
 
 template<typename T>
-inline bool Equals(const T* lhs, const T* rhs, int count) {
+inline bool Equals(const T* lhs, const T* rhs, int count) noexcept {
   ASSERT(count >= 0);
   if constexpr (TIsTriviallyEqualityComparable<T>) {
     if (count == 0)
@@ -194,7 +194,7 @@ inline bool Equals(const T* lhs, const T* rhs, int count) {
 }
 
 template<typename T>
-inline void Copy(T* dst, const T* src, int count) noexcept(TIsTriviallyCopyAssignable<T>) {
+inline void Copy(T* dst, const T* src, int count) noexcept(TIsNoexceptCopyAssignable<T>) {
   ASSERT(count >= 0);
   // Destination and source may overlap.
   if constexpr (TIsTriviallyCopyAssignable<T>) {
@@ -212,7 +212,7 @@ inline void Copy(T* dst, const T* src, int count) noexcept(TIsTriviallyCopyAssig
 }
 
 template<typename T>
-inline void CopyNonOverlapping(T* dst, const T* src, int count) noexcept(TIsTriviallyCopyAssignable<T>) {
+inline void CopyNonOverlapping(T* dst, const T* src, int count) noexcept(TIsNoexceptCopyAssignable<T>) {
   ASSERT(count >= 0);
   ASSERT(!AreOverlapping(dst, src, count));
   if constexpr (TIsTriviallyCopyAssignable<T>) {
@@ -225,7 +225,7 @@ inline void CopyNonOverlapping(T* dst, const T* src, int count) noexcept(TIsTriv
 }
 
 template<typename T, typename U>
-inline int IndexOfItem(const T* items, int size, const U& item) {
+inline int IndexOfItem(const T* items, int size, const U& item) noexcept {
   ASSERT(size >= 0);
   for (int i = 0; i < size; ++i) {
     if (items[i] == item)
@@ -235,7 +235,7 @@ inline int IndexOfItem(const T* items, int size, const U& item) {
 }
 
 template<typename T, typename U>
-inline int LastIndexOfItem(const T* items, int size, const U& item) {
+inline int LastIndexOfItem(const T* items, int size, const U& item) noexcept {
   ASSERT(size >= 0);
   for (int i = size - 1; i >= 0; --i) {
     if (items[i] == item)
@@ -245,7 +245,7 @@ inline int LastIndexOfItem(const T* items, int size, const U& item) {
 }
 
 template<typename T, typename U>
-int Count(const T* items, int size, const U& item) {
+int Count(const T* items, int size, const U& item) noexcept {
   ASSERT(size >= 0);
   int count = 0;
   while (size > 0) {

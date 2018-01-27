@@ -32,8 +32,8 @@ class Sha1Digest {
   byte_t raw_[Length];
 };
 
-BASE_EXPORT Sha1Digest ComputeSha1Digest(BufferSpan input);
-BASE_EXPORT bool TryParse(StringSpan s, Sha1Digest& out_digest);
+BASE_EXPORT Sha1Digest ComputeSha1Digest(BufferSpan input) noexcept;
+BASE_EXPORT bool TryParse(StringSpan s, Sha1Digest& out_digest) noexcept;
 
 BASE_EXPORT void Format(TextWriter& out, const Sha1Digest& digest, const StringSpan& opts);
 BASE_EXPORT void Format(TextWriter& out, const Sha1Digest& digest);
@@ -44,17 +44,15 @@ inline TextWriter& operator<<(TextWriter& out, const Sha1Digest& digest) {
 
 class BASE_EXPORT Sha1Hasher {
  public:
-  typedef Sha1Digest Digest;
+  Sha1Hasher() noexcept { Reset(); }
 
-  Sha1Hasher() { Reset(); }
-
-  void Reset();
-  void Update(BufferSpan input);
-  void Finish(Digest& out_digest);
+  void Reset() noexcept;
+  void Update(BufferSpan input) noexcept;
+  void Finish(Sha1Digest& out_digest) noexcept;
 
  private:
-  void Pad();
-  void Process();
+  void Pad() noexcept;
+  void Process() noexcept;
 
   uint32_t a_, b_, c_, d_, e_;
 

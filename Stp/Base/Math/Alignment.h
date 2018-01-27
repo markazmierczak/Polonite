@@ -50,11 +50,11 @@ inline TPointer* AlignForward(
     TPointer* pointer, TInteger alignment,
     TInteger* out_padding = nullptr) {
   ASSERT(IsPowerOfTwo(alignment));
-  uintptr_t ptr = reinterpret_cast<uintptr_t>(pointer);
-  uintptr_t aligned_ptr = AlignForward<uintptr_t>(ptr, ToUnsigned(alignment));
+  uintptr_t uptr = reinterpret_cast<uintptr_t>(pointer);
+  uintptr_t aligned_uptr = AlignForward<uintptr_t>(uptr, ToUnsigned(alignment));
   if (out_padding)
-    *out_padding = static_cast<TInteger>(aligned_ptr - ptr);
-  return reinterpret_cast<TPointer*>(aligned_ptr);
+    *out_padding = static_cast<TInteger>(aligned_uptr - uptr);
+  return reinterpret_cast<TPointer*>(aligned_uptr);
 }
 
 // C++11 std::align implementation.

@@ -115,8 +115,13 @@ void FormatChar(TextWriter& out, char32_t c, const StringSpan& opts) {
 
 template<typename T>
 static inline void FormatIntTmpl(TextWriter& out, T x) {
-  FormatIntegerBuffer<T> buffer;
-  out.WriteAscii(FormatInteger(x, buffer));
+  if constexpr (TIsUnsigned<T>) {
+    FormatHexIntegerBuffer<T> buffer;
+    out.WriteAscii(FormatHexInteger(x, buffer));
+  } else {
+    FormatIntegerBuffer<T> buffer;
+    out.WriteAscii(FormatInteger(x, buffer));
+  }
 }
 
 void FormatSInt32(TextWriter& out,  int32_t x) { FormatIntTmpl(out, x); }

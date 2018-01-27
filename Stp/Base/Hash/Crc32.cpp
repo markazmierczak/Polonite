@@ -10,7 +10,7 @@
 
 namespace stp {
 
-bool TryParse(StringSpan input, Crc32Digest& out) {
+bool TryParse(StringSpan input, Crc32Value& out) noexcept {
   constexpr int NibbleCount = 8;
   if (input.size() < NibbleCount)
     return false;
@@ -22,14 +22,14 @@ bool TryParse(StringSpan input, Crc32Digest& out) {
       return false;
     raw = (raw << 4) | nibble;
   }
-  out = Crc32Digest(raw);
+  out = Crc32Value(raw);
   return true;
 }
 
-static void Format(TextWriter& out, Crc32Digest digest, bool uppercase) {
+static void Format(TextWriter& out, Crc32Value value, bool uppercase) {
   constexpr int NibbleCount = 8;
 
-  auto raw = ToUnderlying(digest);
+  auto raw = ToUnderlying(value);
   Array<char, NibbleCount> text;
   for (int i = 0; i < NibbleCount; ++i) {
     text[i] = NibbleToHexDigit(raw >> (28 - 4 * i), uppercase);
@@ -37,11 +37,11 @@ static void Format(TextWriter& out, Crc32Digest digest, bool uppercase) {
   out.WriteAscii(text);
 }
 
-void Format(TextWriter& out, Crc32Digest digest) {
-  Format(out, digest, false);
+void Format(TextWriter& out, Crc32Value value) {
+  Format(out, value, false);
 }
 
-void Format(TextWriter& out, Crc32Digest digest, const StringSpan& opts) {
+void Format(TextWriter& out, Crc32Value value, const StringSpan& opts) {
   bool uppercase = false;
   for (int i = 0; i < opts.size(); ++i) {
     char c = opts[i];
@@ -52,13 +52,13 @@ void Format(TextWriter& out, Crc32Digest digest, const StringSpan& opts) {
         break;
 
       default:
-        throw FormatException("Crc32Digest");
+        throw FormatException("Crc32Value");
     }
   }
-  Format(out, digest, uppercase);
+  Format(out, value, uppercase);
 }
 
-const uint32_t Crc32Hasher::Table_[256] = {
+static const uint32_t Crc32Table[256] = {
   0x00000000u, 0x77073096u, 0xEE0E612Cu, 0x990951BAu, 0x076DC419u,
   0x706AF48Fu, 0xE963A535u, 0x9E6495A3u, 0x0EDB8832u, 0x79DCB8A4u,
   0xE0D5E91Eu, 0x97D2D988u, 0x09B64C2Bu, 0x7EB17CBDu, 0xE7B82D07u,
@@ -113,23 +113,21 @@ const uint32_t Crc32Hasher::Table_[256] = {
   0x2D02EF8Du
 };
 
-void Crc32Hasher::Update(BufferSpan input) {
-  uint32_t c = ~context_;
+void Crc32Algorithm::Update(BufferSpan input) noexcept {
+  uint32_t c = residue_;
 
   auto* input_bytes = static_cast<const byte_t*>(input.data());
 
   for (int i = 0; i < input.size(); ++i)
-    c = Table_[(c ^ input_bytes[i]) & 0xFF] ^ (c >> 8);
+    c = Crc32Table[(c ^ input_bytes[i]) & 0xFF] ^ (c >> 8);
 
-  context_ = ~c;
+  residue_ = c;
 }
 
-Crc32Digest ComputeCrc32Digest(BufferSpan input) {
-  Crc32Digest digest;
-  Crc32Hasher hasher;
-  hasher.Update(input);
-  hasher.Finish(digest);
-  return digest;
+Crc32Value ComputeCrc32(BufferSpan input) noexcept {
+  Crc32Algorithm algorithm;
+  algorithm.Update(input);
+  return algorithm.GetChecksum();
 }
 
 } // namespace stp

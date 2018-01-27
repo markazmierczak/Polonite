@@ -39,8 +39,8 @@ class Md5Digest {
   byte_t raw_[Length];
 };
 
-BASE_EXPORT Md5Digest ComputeMd5Digest(BufferSpan input);
-BASE_EXPORT bool TryParse(StringSpan s, Md5Digest& out_digest);
+BASE_EXPORT Md5Digest ComputeMd5Digest(BufferSpan input) noexcept;
+BASE_EXPORT bool TryParse(StringSpan s, Md5Digest& out_digest) noexcept;
 
 BASE_EXPORT void Format(TextWriter& out, const Md5Digest& digest, const StringSpan& opts);
 BASE_EXPORT void Format(TextWriter& out, const Md5Digest& digest);
@@ -51,14 +51,14 @@ inline TextWriter& operator<<(TextWriter& out, const Md5Digest& digest) {
 
 class BASE_EXPORT Md5Hasher {
  public:
-  Md5Hasher() { Reset(); }
+  Md5Hasher() noexcept { Reset(); }
 
-  void Reset();
-  void Update(BufferSpan input);
-  void Finish(Md5Digest& out_digest);
+  void Reset() noexcept;
+  void Update(BufferSpan input) noexcept;
+  void Finish(Md5Digest& out_digest) noexcept;
 
  private:
-  void Transform();
+  void Transform() noexcept;
 
   uint32_t buf_[4];
   uint32_t bits_[2];

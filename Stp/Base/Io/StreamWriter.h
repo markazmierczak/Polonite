@@ -32,8 +32,7 @@ class BASE_EXPORT StreamWriter final : public TextWriter {
   void OnWriteAscii(StringSpan text) override;
   void OnWriteUtf8(StringSpan text) override;
   void OnWriteUtf16(String16Span text) override;
-  void OnWriteBytes(const BufferSpan& text) override;
-  void OnWriteCustom(const BufferSpan& text, TextCodec encoding) override;
+  void OnWriteEncoded(BufferSpan text, TextCodec encoding) override;
   void OnFlush() override;
 
  private:

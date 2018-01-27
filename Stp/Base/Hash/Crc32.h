@@ -9,33 +9,31 @@
 
 namespace stp {
 
-enum class Crc32Digest : uint32_t {};
+enum class Crc32Value : uint32_t {};
 
-BASE_EXPORT Crc32Digest ComputeCrc32Digest(BufferSpan input);
+BASE_EXPORT Crc32Value ComputeCrc32(BufferSpan input) noexcept;
 
-BASE_EXPORT bool TryParse(StringSpan s, Crc32Digest& out_digest);
+BASE_EXPORT bool TryParse(StringSpan s, Crc32Value& out_checksum) noexcept;
 
-BASE_EXPORT void Format(TextWriter& out, Crc32Digest digest, const StringSpan& opts);
-BASE_EXPORT void Format(TextWriter& out, Crc32Digest digest);
+BASE_EXPORT void Format(TextWriter& out, Crc32Value checksum, const StringSpan& opts);
+BASE_EXPORT void Format(TextWriter& out, Crc32Value checksum);
 
-inline TextWriter& operator<<(TextWriter& out, Crc32Digest digest) {
-  Format(out, digest); return out;
+inline TextWriter& operator<<(TextWriter& out, Crc32Value checksum) {
+  Format(out, checksum); return out;
 }
 
-class BASE_EXPORT Crc32Hasher {
+class BASE_EXPORT Crc32Algorithm {
  public:
-  typedef Crc32Digest Digest;
+  Crc32Algorithm() = default;
 
-  Crc32Hasher() { Reset(); }
-
-  void Reset() { context_ = 0; }
-  void Update(BufferSpan input);
-  void Finish(Digest& output) { output = static_cast<Crc32Digest>(context_); }
+  void Reset() { residue_ = InitialResidue; }
+  void Update(BufferSpan input) noexcept;
+  Crc32Value GetChecksum() const { return static_cast<Crc32Value>(~residue_); }
 
  private:
-  uint32_t context_;
+  static const uint32_t InitialResidue = 0xFFFFFFFF;
 
-  static const uint32_t Table_[256];
+  uint32_t residue_ = InitialResidue;
 };
 
 } // namespace stp
