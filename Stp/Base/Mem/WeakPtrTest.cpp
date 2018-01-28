@@ -5,7 +5,7 @@
 
 #include "Base/Mem/WeakPtr.h"
 
-#include "Base/Call/Bind.h"
+#include "Base/Util/Bind.h"
 #include "Base/Compiler/Lsan.h"
 #include "Base/Mem/OwnPtr.h"
 #include "Base/Debug/SourceLocation.h"

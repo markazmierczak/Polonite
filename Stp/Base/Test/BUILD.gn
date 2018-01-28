@@ -152,7 +152,7 @@ source_set("PerfTestMain") {
 
 test("BasePerfTests") {
   sources = [
-    "../Call/DelegatePerfTest.cpp",
+    "../Util/DelegatePerfTest.cpp",
     "../Math/CommonFactorPerfTest.cpp",
   ]
   deps = [
@@ -167,9 +167,6 @@ test("BasePerfTests") {
 test("BaseUnitTests") {
   sources = [
     "../App/AtExitTest.cpp",
-    "../Call/DelegateTest.cpp",
-    "../Call/FunctionTest.cpp",
-    "../Call/ObserverListTest.cpp",
     "../Containers/ArrayTest.cpp",
     "../Containers/BinarySearchTest.cpp",
     "../Containers/BitArrayTest.cpp",
@@ -245,9 +242,12 @@ test("BaseUnitTests") {
     "../Type/VariableTest.cpp",
 
     "../Util/AutoResetTest.cpp",
+    "../Util/DelegateTest.cpp",
     "../Util/FinallyTest.cpp",
     "../Util/FlagsTest.cpp",
+    "../Util/FunctionTest.cpp",
     "../Util/LazyInstanceTest.cpp",
+    "../Util/ObserverListTest.cpp",
     "../Util/RandomTest.cpp",
     "../Util/RandomUtilTest.cpp",
     "../Util/SwapBytesTest.cpp",

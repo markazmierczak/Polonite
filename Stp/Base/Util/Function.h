@@ -1,10 +1,10 @@
 // Copyright 2017 Polonite Authors. All rights reserved.
 // Distributed under MIT license that can be found in the LICENSE file.
 
-#ifndef STP_BASE_CALL_FUNCTION_H_
-#define STP_BASE_CALL_FUNCTION_H_
+#ifndef STP_BASE_UTIL_FUNCTION_H_
+#define STP_BASE_UTIL_FUNCTION_H_
 
-#include "Base/Call/FunctionFwd.h"
+#include "Base/Util/FunctionFwd.h"
 #include "Base/Debug/Assert.h"
 #include "Base/Test/GTestProd.h"
 #include "Base/Type/Variable.h"
@@ -219,4 +219,4 @@ inline Function<TResult(TArgs...)>& Function<TResult(TArgs...)>::operator=(
 
 } // namespace stp
 
-#endif // STP_BASE_CALL_FUNCTION_H_
+#endif // STP_BASE_UTIL_FUNCTION_H_

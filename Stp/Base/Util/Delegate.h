@@ -1,10 +1,10 @@
 // Copyright 2017 Polonite Authors. All rights reserved.
 // Distributed under MIT license that can be found in the LICENSE file.
 
-#ifndef STP_BASE_CALL_DELEGATE_H_
-#define STP_BASE_CALL_DELEGATE_H_
+#ifndef STP_BASE_UTIL_DELEGATE_H_
+#define STP_BASE_UTIL_DELEGATE_H_
 
-#include "Base/Call/DelegateFwd.h"
+#include "Base/Util/DelegateFwd.h"
 #include "Base/Compiler/Cpu.h"
 #include "Base/Debug/Assert.h"
 #include "Base/Type/HashableFwd.h"
@@ -253,4 +253,4 @@ inline Delegate<TResult(TArgs...)> MakeDelegate(TResult(TClass::*method)(TArgs..
 
 } // namespace stp
 
-#endif // STP_BASE_CALL_DELEGATE_H_
+#endif // STP_BASE_UTIL_DELEGATE_H_

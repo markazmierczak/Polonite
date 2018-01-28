@@ -1,7 +1,7 @@
 // Copyright 2017 Polonite Authors. All rights reserved.
 // Distributed under MIT license that can be found in the LICENSE file.
 
-#include "Base/Call/Delegate.h"
+#include "Base/Util/Delegate.h"
 
 #include "Base/Debug/StackTrace.h"
 #include "Base/Error/BasicExceptions.h"

@@ -3,8 +3,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef STP_BASE_CALL_OBSERVERLIST_H_
-#define STP_BASE_CALL_OBSERVERLIST_H_
+#ifndef STP_BASE_UTIL_OBSERVERLIST_H_
+#define STP_BASE_UTIL_OBSERVERLIST_H_
 
 #include "Base/Containers/List.h"
 #include "Base/Mem/WeakPtr.h"
@@ -173,4 +173,4 @@ class ObserverList : public ObserverListBase<TObserverType> {
 
 } // namespace stp
 
-#endif // STP_BASE_CALL_OBSERVERLIST_H_
+#endif // STP_BASE_UTIL_OBSERVERLIST_H_

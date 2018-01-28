@@ -7,7 +7,7 @@ Base
    :hidden:
 
    App/Application.rst
-   Call/Call.rst
+   Util/Call.rst
    Containers/Containers.rst
    Compiler/Attributes.rst
    Compiler/TargetDetection.rst
@@ -22,7 +22,7 @@ Application lifetime management. ``ApplicationPart`` enables interconnecting sev
 
 See :ref:`stp-base-app` for details.
 
-``Call/``
+``Util/``
 =========
 
 With ``Delegate`` one can create a direct function call to class member with devirtualization support. Especially usable in performance-wise problems.

@@ -1,8 +1,8 @@
 // Copyright 2017 Polonite Authors. All rights reserved.
 // Distributed under MIT license that can be found in the LICENSE file.
 
-#ifndef STP_BASE_CALL_DELEGATEFWD_H_
-#define STP_BASE_CALL_DELEGATEFWD_H_
+#ifndef STP_BASE_UTIL_DELEGATEFWD_H_
+#define STP_BASE_UTIL_DELEGATEFWD_H_
 
 namespace stp {
 
@@ -11,4 +11,4 @@ class Delegate;
 
 } // namespace stp
 
-#endif // STP_BASE_CALL_DELEGATEFWD_H_
+#endif // STP_BASE_UTIL_DELEGATEFWD_H_
