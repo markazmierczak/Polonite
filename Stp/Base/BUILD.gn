@@ -280,7 +280,6 @@ component("Base") {
     "Mem/Allocate.h",
     "Mem/LinearAllocator.cpp",
     "Mem/LinearAllocator.h",
-    "Mem/New.h",
     "Mem/OwnPtr.h",
     "Mem/RefCounted.h",
     "Mem/RefCountedThreadSafe.h",
