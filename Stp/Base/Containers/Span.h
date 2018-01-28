@@ -12,15 +12,6 @@
 
 namespace stp {
 
-namespace detail {
-
-constexpr int GetMiddleIndex(int lower, int upper) {
-  ASSERT(lower <= upper);
-  return lower + ((upper - lower) >> 1);
-}
-
-} // namespace detail
-
 template<typename T>
 class Span {
  public:

@@ -10,6 +10,15 @@
 
 namespace stp {
 
+namespace detail {
+
+constexpr int GetMiddleIndex(int lower, int upper) {
+  ASSERT(lower <= upper);
+  return lower + ((upper - lower) >> 1);
+}
+
+} // namespace detail
+
 template<typename TContainer, typename TComparer = DefaultComparer,
          TEnableIf<TIsContiguousContainer<TContainer>>* = nullptr>
 constexpr bool IsSorted(TContainer& sequence, TComparer&& comparer = DefaultComparer()) {

@@ -106,7 +106,7 @@ void File::WriteAtomically(const FilePath& path, BufferSpan input) {
   } catch (...) {
     if (stream.IsOpen())
       stream.Close();
-    Delete(temp_file_path);
+    IgnoreResult(TryDelete(temp_file_path));
     throw;
   }
 }
