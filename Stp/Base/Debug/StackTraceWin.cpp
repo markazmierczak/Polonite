@@ -8,8 +8,8 @@
 #include "Base/Debug/Log.h"
 #include "Base/FileSystem/KnownPaths.h"
 #include "Base/Mem/OwnPtr.h"
-#include "Base/Sync/Lock.h"
 #include "Base/Text/Format.h"
+#include "Base/Thread/Lock.h"
 
 #include <windows.h>
 #include <dbghelp.h>

@@ -3,7 +3,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "Base/Sync/SpinLock.h"
+#include "Base/Thread/SpinLock.h"
 
 #include "Base/Thread/NativeThread.h"
 

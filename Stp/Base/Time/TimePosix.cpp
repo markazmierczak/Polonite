@@ -22,7 +22,7 @@
 #endif
 
 #if !OS(DARWIN)
-#include "Base/Sync/Lock.h"
+#include "Base/Thread/Lock.h"
 #include "Base/Util/LazyInstance.h"
 #endif
 

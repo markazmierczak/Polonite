@@ -7,7 +7,7 @@
 #define STP_BASE_THREAD_THREADCHECKER_H_
 
 #include "Base/Debug/Assert.h"
-#include "Base/Sync/Lock.h"
+#include "Base/Thread/Lock.h"
 #include "Base/Thread/NativeThread.h"
 
 // ThreadChecker is a helper class used to help verify that some methods of a

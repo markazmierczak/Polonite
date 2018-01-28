@@ -3,7 +3,7 @@
 
 #include "Base/Thread/Thread.h"
 
-#include "Base/Sync/Lock.h"
+#include "Base/Thread/Lock.h"
 #include "Base/Thread/ThreadLocal.h"
 
 namespace stp {

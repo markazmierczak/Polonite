@@ -3,8 +3,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef STP_BASE_SYNC_READWRITELOCK_H_
-#define STP_BASE_SYNC_READWRITELOCK_H_
+#ifndef STP_BASE_THREAD_READWRITELOCK_H_
+#define STP_BASE_THREAD_READWRITELOCK_H_
 
 #include "Base/Compiler/Os.h"
 #include "Base/Debug/Assert.h"
@@ -149,4 +149,4 @@ inline void BasicReadWriteLock::WriteRelease() {
 
 } // namespace stp
 
-#endif // STP_BASE_SYNC_READWRITELOCK_H_
+#endif // STP_BASE_THREAD_READWRITELOCK_H_

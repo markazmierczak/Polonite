@@ -9,10 +9,10 @@
 #include "Base/Compiler/Lsan.h"
 #include "Base/Mem/OwnPtr.h"
 #include "Base/Debug/SourceLocation.h"
-#include "Base/Sync/WaitableEvent.h"
 #include "Base/task/task_runner.h"
 #include "Base/Test/GTestUtil.h"
 #include "Base/Thread/TaskThread.h"
+#include "Base/Thread/WaitableEvent.h"
 
 namespace stp {
 namespace {

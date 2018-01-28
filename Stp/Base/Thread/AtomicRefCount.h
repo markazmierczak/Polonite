@@ -6,10 +6,10 @@
 // This is a low level implementation of atomic semantics for reference
 // counting.  Please use base/memory/ref_counted.h directly instead.
 
-#ifndef STP_BASE_SYNC_ATOMICREFCOUNT_H_
-#define STP_BASE_SYNC_ATOMICREFCOUNT_H_
+#ifndef STP_BASE_THREAD_ATOMICREFCOUNT_H_
+#define STP_BASE_THREAD_ATOMICREFCOUNT_H_
 
-#include "Base/Sync/AtomicOps.h"
+#include "Base/Thread/AtomicOps.h"
 
 namespace stp {
 
@@ -64,4 +64,4 @@ inline bool AtomicRefCountIsZero(volatile AtomicRefCount *ptr) {
 
 } // namespace stp
 
-#endif // STP_BASE_SYNC_ATOMICREFCOUNT_H_
+#endif // STP_BASE_THREAD_ATOMICREFCOUNT_H_

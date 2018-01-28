@@ -3,10 +3,10 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef STP_BASE_SYNC_LOCK_H_
-#define STP_BASE_SYNC_LOCK_H_
+#ifndef STP_BASE_THREAD_LOCK_H_
+#define STP_BASE_THREAD_LOCK_H_
 
-#include "Base/Sync/NativeLock.h"
+#include "Base/Thread/NativeLock.h"
 #include "Base/Thread/NativeThread.h"
 
 namespace stp {
@@ -137,4 +137,4 @@ inline void BasicLock::AssertAcquired() const {}
 
 } // namespace stp
 
-#endif // STP_BASE_SYNC_LOCK_H_
+#endif // STP_BASE_THREAD_LOCK_H_

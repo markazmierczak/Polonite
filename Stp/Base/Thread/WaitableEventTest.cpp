@@ -3,7 +3,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "Base/Sync/WaitableEvent.h"
+#include "Base/Thread/WaitableEvent.h"
 
 #include "Base/Test/GTest.h"
 #include "Base/Thread/Thread.h"

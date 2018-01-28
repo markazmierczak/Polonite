@@ -4,8 +4,8 @@
 #include "Base/System/Environment.h"
 
 #include "Base/FileSystem/FilePath.h"
-#include "Base/Sync/Lock.h"
 #include "Base/Text/Wtf.h"
+#include "Base/Thread/Lock.h"
 
 #include <stdlib.h>
 

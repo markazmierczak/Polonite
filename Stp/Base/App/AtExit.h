@@ -8,7 +8,7 @@
 
 #include "Base/Call/FunctionFwd.h"
 #include "Base/Containers/Stack.h"
-#include "Base/Sync/Lock.h"
+#include "Base/Thread/Lock.h"
 
 namespace stp {
 

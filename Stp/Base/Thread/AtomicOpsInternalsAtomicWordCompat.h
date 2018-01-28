@@ -5,8 +5,8 @@
 
 // This file is an internal atomic implementation, use base/atomicops.h instead.
 
-#ifndef STP_BASE_SYNC_ATOMICOPSINTERNALSATOMICWORDCOMPAT_H_
-#define STP_BASE_SYNC_ATOMICOPSINTERNALSATOMICWORDCOMPAT_H_
+#ifndef STP_BASE_THREAD_ATOMICOPSINTERNALSATOMICWORDCOMPAT_H_
+#define STP_BASE_THREAD_ATOMICOPSINTERNALSATOMICWORDCOMPAT_H_
 
 #include "Base/Compiler/Cpu.h"
 #include "Base/Type/Basic.h"
@@ -101,4 +101,4 @@ inline AtomicWord Release_Load(volatile const AtomicWord* ptr) {
 
 #endif // !CPU(64BIT)
 
-#endif // STP_BASE_SYNC_ATOMICOPSINTERNALSATOMICWORDCOMPAT_H_
+#endif // STP_BASE_THREAD_ATOMICOPSINTERNALSATOMICWORDCOMPAT_H_

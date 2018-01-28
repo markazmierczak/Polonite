@@ -6,8 +6,8 @@
 #include "Base/Util/LazyInstance.h"
 
 #include "Base/App/AtExit.h"
-#include "Base/Sync/AtomicSequenceNum.h"
 #include "Base/Test/GTest.h"
+#include "Base/Thread/AtomicSequenceNum.h"
 #include "Base/Thread/Thread.h"
 
 namespace stp {

@@ -3,7 +3,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "Base/Sync/ConditionVariable.h"
+#include "Base/Thread/ConditionVariable.h"
 
 #include "Base/Time/TimeDelta.h"
 

@@ -56,12 +56,12 @@
 // For a discussion of the many very subtle implementation details, see the FAQ
 // at the end of ConditionVariableWin.cpp.
 
-#ifndef STP_BASE_SYNC_CONDITIONVARIABLE_H_
-#define STP_BASE_SYNC_CONDITIONVARIABLE_H_
+#ifndef STP_BASE_THREAD_CONDITIONVARIABLE_H_
+#define STP_BASE_THREAD_CONDITIONVARIABLE_H_
 
 #include "Base/Compiler/Os.h"
 #include "Base/Export.h"
-#include "Base/Sync/Lock.h"
+#include "Base/Thread/Lock.h"
 
 #if OS(WIN)
 #include "Base/Win/WindowsHeader.h"
@@ -111,4 +111,4 @@ class BASE_EXPORT ConditionVariable {
 
 } // namespace stp
 
-#endif // STP_BASE_SYNC_CONDITIONVARIABLE_H_
+#endif // STP_BASE_THREAD_CONDITIONVARIABLE_H_

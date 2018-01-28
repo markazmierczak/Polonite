@@ -5,7 +5,7 @@
 #define STP_BASE_MEM_REFCOUNTEDTHREADSAFE_H_
 
 #include "Base/Mem/RefPtr.h"
-#include "Base/Sync/AtomicRefCount.h"
+#include "Base/Thread/AtomicRefCount.h"
 
 namespace stp {
 

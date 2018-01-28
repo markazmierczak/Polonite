@@ -3,13 +3,13 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "Base/Sync/ConditionVariable.h"
+#include "Base/Thread/ConditionVariable.h"
 
 #include "Base/Debug/Log.h"
 #include "Base/Mem/OwnPtr.h"
-#include "Base/Sync/Lock.h"
 #include "Base/Test/GTest.h"
 #include "Base/Test/PlatformTest.h"
+#include "Base/Thread/Lock.h"
 #include "Base/Thread/Thread.h"
 #include "Base/Time/Time.h"
 #include "Base/Time/TimeTicks.h"

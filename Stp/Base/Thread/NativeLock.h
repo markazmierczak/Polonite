@@ -1,8 +1,8 @@
 // Copyright 2017 Polonite Authors. All rights reserved.
 // Distributed under MIT license that can be found in the LICENSE file.
 
-#ifndef STP_BASE_SYNC_NATIVELOCK_H_
-#define STP_BASE_SYNC_NATIVELOCK_H_
+#ifndef STP_BASE_THREAD_NATIVELOCK_H_
+#define STP_BASE_THREAD_NATIVELOCK_H_
 
 #include "Base/Compiler/Os.h"
 #include "Base/Debug/Assert.h"
@@ -105,4 +105,4 @@ inline void NativeLock::Release(NativeLockObject* object) {
 
 } // namespace stp
 
-#endif // STP_BASE_SYNC_NATIVELOCK_H_
+#endif // STP_BASE_THREAD_NATIVELOCK_H_

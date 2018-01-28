@@ -4,7 +4,7 @@
 #ifndef STP_BASE_UTIL_CALLONCE_H_
 #define STP_BASE_UTIL_CALLONCE_H_
 
-#include "Base/Sync/AtomicOps.h"
+#include "Base/Thread/AtomicOps.h"
 #include "Base/Type/CVRef.h"
 
 namespace stp {

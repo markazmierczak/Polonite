@@ -5,8 +5,8 @@
 
 // This file is an internal atomic implementation, use base/atomicops.h instead.
 
-#ifndef STP_BASE_SYNC_ATOMICOPSINTERNALSX86MSVC_H_
-#define STP_BASE_SYNC_ATOMICOPSINTERNALSX86MSVC_H_
+#ifndef STP_BASE_THREAD_ATOMICOPSINTERNALSX86MSVC_H_
+#define STP_BASE_THREAD_ATOMICOPSINTERNALSX86MSVC_H_
 
 #include "Base/Compiler/Cpu.h"
 #include "Base/Win/WindowsHeader.h"
@@ -192,4 +192,4 @@ inline Atomic64 Release_CompareAndSwap(volatile Atomic64* ptr,
 } // namespace subtle
 } // namespace stp
 
-#endif // STP_BASE_SYNC_ATOMICOPSINTERNALSX86MSVC_H_
+#endif // STP_BASE_THREAD_ATOMICOPSINTERNALSX86MSVC_H_

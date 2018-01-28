@@ -9,7 +9,7 @@
 #include "Base/Compiler/Lsan.h"
 #include "Base/Debug/Assert.h"
 #include "Base/Mem/Allocate.h"
-#include "Base/Sync/AtomicOps.h"
+#include "Base/Thread/AtomicOps.h"
 #include "Base/Type/Variable.h"
 
 namespace stp {

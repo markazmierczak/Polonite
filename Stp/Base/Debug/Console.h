@@ -7,7 +7,7 @@
 #include "Base/Containers/List.h"
 #include "Base/Debug/Log.h"
 #include "Base/Io/TextWriter.h"
-#include "Base/Sync/Lock.h"
+#include "Base/Thread/Lock.h"
 
 namespace stp {
 

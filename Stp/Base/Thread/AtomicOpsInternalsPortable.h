@@ -30,8 +30,8 @@
 //    needs to increment twice (which the compiler should be able to detect and
 //    optimize).
 
-#ifndef STP_BASE_SYNC_ATOMICOPSINTERNALSPORTABLE_H_
-#define STP_BASE_SYNC_ATOMICOPSINTERNALSPORTABLE_H_
+#ifndef STP_BASE_THREAD_ATOMICOPSINTERNALSPORTABLE_H_
+#define STP_BASE_THREAD_ATOMICOPSINTERNALSPORTABLE_H_
 
 #include "Base/Compiler/Cpu.h"
 
@@ -227,4 +227,4 @@ inline Atomic64 Release_Load(volatile const Atomic64* ptr) {
 } // namespace subtle
 } // namespace stp
 
-#endif // STP_BASE_SYNC_ATOMICOPSINTERNALSPORTABLE_H_
+#endif // STP_BASE_THREAD_ATOMICOPSINTERNALSPORTABLE_H_

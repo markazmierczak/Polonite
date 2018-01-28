@@ -6,7 +6,7 @@
 // This file is used for debugging assertion support.
 // The BasicLock class is functionally a wrapper around the NativeLock class.
 
-#include "Base/Sync/Lock.h"
+#include "Base/Thread/Lock.h"
 
 #if ASSERT_IS_ON()
 

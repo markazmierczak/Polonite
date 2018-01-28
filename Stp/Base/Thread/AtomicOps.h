@@ -26,8 +26,8 @@
 // to use these.
 //
 
-#ifndef STP_BASE_SYNC_ATOMICOPS_H_
-#define STP_BASE_SYNC_ATOMICOPS_H_
+#ifndef STP_BASE_THREAD_ATOMICOPS_H_
+#define STP_BASE_THREAD_ATOMICOPS_H_
 
 #include "Base/Compiler/Cpu.h"
 #include "Base/Compiler/Os.h"
@@ -138,15 +138,15 @@ Atomic64 Release_Load(volatile const Atomic64* ptr);
 } // namespace stp
 
 #if OS(WIN)
-# include "Base/Sync/AtomicOpsInternalsX86Msvc.h"
+# include "Base/Thread/AtomicOpsInternalsX86Msvc.h"
 #else
-# include "Base/Sync/AtomicOpsInternalsPortable.h"
+# include "Base/Thread/AtomicOpsInternalsPortable.h"
 #endif
 
 // On some platforms we need additional declarations to make
 // AtomicWord compatible with our other Atomic* types.
 #if OS(DARWIN)
-# include "Base/Sync/AtomicOpsInternalsAtomicWordCompat.h"
+# include "Base/Thread/AtomicOpsInternalsAtomicWordCompat.h"
 #endif
 
-#endif // STP_BASE_SYNC_ATOMICOPS_H_
+#endif // STP_BASE_THREAD_ATOMICOPS_H_

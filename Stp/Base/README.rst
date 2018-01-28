@@ -136,7 +136,7 @@ Right now ``NativeProcess`` only, but in future full process management: launchi
 
 Pseudo and cryptographic-safe random generators.
 
-``Sync/``
+``Thread/``
 =========
 
 Atomic operations.

@@ -7,7 +7,7 @@
 #include "Base/Containers/HashMap.h"
 #include "Base/FileSystem/Directory.h"
 #include "Base/FileSystem/File.h"
-#include "Base/Sync/Lock.h"
+#include "Base/Thread/Lock.h"
 #include "Base/Type/Hashable.h"
 
 namespace stp {

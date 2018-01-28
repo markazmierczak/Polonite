@@ -3,11 +3,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef STP_BASE_SYNC_ATOMICFLAG_H_
-#define STP_BASE_SYNC_ATOMICFLAG_H_
+#ifndef STP_BASE_THREAD_ATOMICFLAG_H_
+#define STP_BASE_THREAD_ATOMICFLAG_H_
 
 #include "Base/Export.h"
-#include "Base/Sync/AtomicOps.h"
+#include "Base/Thread/AtomicOps.h"
 
 namespace stp {
 
@@ -46,4 +46,4 @@ inline void AtomicFlag::UnsafeResetForTesting() {
 
 } // namespace stp
 
-#endif // STP_BASE_SYNC_ATOMICFLAG_H_
+#endif // STP_BASE_THREAD_ATOMICFLAG_H_

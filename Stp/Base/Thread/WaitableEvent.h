@@ -3,8 +3,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef STP_BASE_SYNC_WAITABLEEVENT_H_
-#define STP_BASE_SYNC_WAITABLEEVENT_H_
+#ifndef STP_BASE_THREAD_WAITABLEEVENT_H_
+#define STP_BASE_THREAD_WAITABLEEVENT_H_
 
 #include "Base/Compiler/Os.h"
 #include "Base/Export.h"
@@ -16,7 +16,7 @@
 #if OS(POSIX)
 # include "Base/Containers/InlineList.h"
 # include "Base/Mem/RefCountedThreadSafe.h"
-# include "Base/Sync/Lock.h"
+# include "Base/Thread/Lock.h"
 #endif
 
 namespace stp {
@@ -200,4 +200,4 @@ class BASE_EXPORT WaitableEvent {
 
 } // namespace stp
 
-#endif // STP_BASE_SYNC_WAITABLEEVENT_H_
+#endif // STP_BASE_THREAD_WAITABLEEVENT_H_

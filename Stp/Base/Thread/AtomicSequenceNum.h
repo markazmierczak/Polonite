@@ -2,10 +2,10 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef STP_BASE_SYNC_ATOMICSEQUENCENUM_H_
-#define STP_BASE_SYNC_ATOMICSEQUENCENUM_H_
+#ifndef STP_BASE_THREAD_ATOMICSEQUENCENUM_H_
+#define STP_BASE_THREAD_ATOMICSEQUENCENUM_H_
 
-#include "Base/Sync/AtomicOps.h"
+#include "Base/Thread/AtomicOps.h"
 
 namespace stp {
 
@@ -49,4 +49,4 @@ class AtomicSequenceNumber {
 
 } // namespace stp
 
-#endif // STP_BASE_SYNC_ATOMICSEQUENCENUM_H_
+#endif // STP_BASE_THREAD_ATOMICSEQUENCENUM_H_

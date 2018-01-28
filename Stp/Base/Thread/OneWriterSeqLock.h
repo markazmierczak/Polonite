@@ -3,10 +3,10 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef STP_BASE_SYNC_ONEWRITERSEQLOCK_H_
-#define STP_BASE_SYNC_ONEWRITERSEQLOCK_H_
+#ifndef STP_BASE_THREAD_ONEWRITERSEQLOCK_H_
+#define STP_BASE_THREAD_ONEWRITERSEQLOCK_H_
 
-#include "Base/Sync/AtomicOps.h"
+#include "Base/Thread/AtomicOps.h"
 #include "Base/Thread/NativeThread.h"
 
 namespace stp {
@@ -49,4 +49,4 @@ class OneWriterSeqLock : public BasicOneWriterSeqLock {
 
 } // namespace stp
 
-#endif // STP_BASE_SYNC_ONEWRITERSEQLOCK_H_
+#endif // STP_BASE_THREAD_ONEWRITERSEQLOCK_H_

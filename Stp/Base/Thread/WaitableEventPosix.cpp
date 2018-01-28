@@ -3,10 +3,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "Base/Sync/WaitableEvent.h"
+#include "Base/Thread/WaitableEvent.h"
 
-#include "Base/Sync/ConditionVariable.h"
-#include "Base/Sync/Lock.h"
+#include "Base/Containers/Sorting.h"
+#include "Base/Thread/ConditionVariable.h"
+#include "Base/Thread/Lock.h"
 #include "Base/Time/TimeTicks.h"
 
 // A WaitableEvent on POSIX is implemented as a wait-list. Currently we don't
@@ -205,7 +206,7 @@ int WaitableEvent::WaitMany(WaitableEvent** raw_waitables, int count) {
   // We need to acquire the locks in a globally consistent order. Thus we sort
   // the array of waitables by address. We actually sort a pairs so that we can
   // map back to the original index values later.
-  StackList<WaiterAndIndex, 8> waitables;
+  InlineList<WaiterAndIndex, 8> waitables;
   waitables.EnsureCapacity(count);
 
   for (int i = 0; i < count; ++i)
@@ -213,8 +214,8 @@ int WaitableEvent::WaitMany(WaitableEvent** raw_waitables, int count) {
 
   ASSERT(count == waitables.size());
 
-  waitables.Sort([](const WaiterAndIndex& lhs, const WaiterAndIndex& rhs) {
-    return lhs.waitable < rhs.waitable;
+  Sort(waitables, [](const WaiterAndIndex& lhs, const WaiterAndIndex& rhs) {
+    return Signum(reinterpret_cast<intptr_t>(lhs.waitable) - reinterpret_cast<intptr_t>(rhs.waitable));
   });
 
   // The set of waitables must be distinct. Since we have just sorted by

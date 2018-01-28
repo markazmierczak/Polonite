@@ -3,11 +3,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef STP_BASE_SYNC_SPINLOCK_H_
-#define STP_BASE_SYNC_SPINLOCK_H_
+#ifndef STP_BASE_THREAD_SPINLOCK_H_
+#define STP_BASE_THREAD_SPINLOCK_H_
 
 #include "Base/Debug/Assert.h"
-#include "Base/Sync/AtomicOps.h"
+#include "Base/Thread/AtomicOps.h"
 
 // Spinlock is a simple spinlock class based on the standard CPU primitive of
 // atomic increment and decrement of an int at a given memory address.
@@ -94,4 +94,4 @@ class AutoSpinLock {
 
 } // namespace stp
 
-#endif // STP_BASE_SYNC_SPINLOCK_H_
+#endif // STP_BASE_THREAD_SPINLOCK_H_

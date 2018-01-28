@@ -5,8 +5,8 @@
 
 #include "Base/Time/Time.h"
 
-#include "Base/Sync/Lock.h"
 #include "Base/System/CpuInfo.h"
+#include "Base/Thread/Lock.h"
 #include "Base/Thread/NativeThread.h"
 #include "Base/Time/ThreadTicks.h"
 #include "Base/Time/TimeTicks.h"

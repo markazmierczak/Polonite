@@ -3,10 +3,10 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "Base/Sync/OneWriterSeqLock.h"
+#include "Base/Thread/OneWriterSeqLock.h"
 
-#include "Base/Sync/AtomicRefCount.h"
 #include "Base/Test/GTest.h"
+#include "Base/Thread/AtomicRefCount.h"
 #include "Base/Thread/Thread.h"
 
 namespace stp {
