@@ -4,10 +4,10 @@
 #ifndef STP_BASE_THREAD_THREAD_H_
 #define STP_BASE_THREAD_THREAD_H_
 
-#include "Base/Util/Function.h"
 #include "Base/Containers/List.h"
 #include "Base/Thread/NativeThread.h"
 #include "Base/Thread/NativeThreadLocal.h"
+#include "Base/Util/Function.h"
 
 namespace stp {
 

@@ -4,7 +4,7 @@
 #include "Json/JsonStringBuilder.h"
 
 #include "Base/Containers/ArrayOps.h"
-#include "Base/Mem/Allocate.h"
+#include "Base/Memory/Allocate.h"
 #include "Base/Text/Utf.h"
 
 namespace stp {

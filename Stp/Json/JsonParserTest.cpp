@@ -5,7 +5,7 @@
 
 #include "Json/JsonParser.h"
 
-#include "Base/Mem/OwnPtr.h"
+#include "Base/Memory/OwnPtr.h"
 #include "Base/Test/GTest.h"
 #include "Base/Text/Format.h"
 

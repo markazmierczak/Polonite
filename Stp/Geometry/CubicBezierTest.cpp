@@ -4,7 +4,7 @@
 
 #include "Geometry/CubicBezier.h"
 
-#include "Base/Mem/OwnPtr.h"
+#include "Base/Memory/OwnPtr.h"
 #include "Base/Test/GTest.h"
 
 namespace stp {

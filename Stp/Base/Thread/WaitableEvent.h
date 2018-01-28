@@ -15,7 +15,7 @@
 
 #if OS(POSIX)
 # include "Base/Containers/InlineList.h"
-# include "Base/Mem/RefCountedThreadSafe.h"
+# include "Base/Memory/RefCountedThreadSafe.h"
 # include "Base/Thread/Lock.h"
 #endif
 

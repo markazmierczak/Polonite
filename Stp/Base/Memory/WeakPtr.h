@@ -1,12 +1,10 @@
 // Copyright 2017 Polonite Authors. All rights reserved.
-// Copyright (c) 2012 The Chromium Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
+// Distributed under MIT license that can be found in the LICENSE file.
 
-#ifndef STP_BASE_MEM_WEAKPTR_H_
-#define STP_BASE_MEM_WEAKPTR_H_
+#ifndef STP_BASE_MEMORY_WEAKPTR_H_
+#define STP_BASE_MEMORY_WEAKPTR_H_
 
-#include "Base/Mem/RefCountedThreadSafe.h"
+#include "Base/Memory/RefCountedThreadSafe.h"
 #include "Base/Thread/ThreadChecker.h"
 
 namespace stp {
@@ -323,4 +321,4 @@ WeakPtr<TDerived> AsWeakPtr(TDerived* t) {
 
 } // namespace stp
 
-#endif // STP_BASE_MEM_WEAKPTR_H_
+#endif // STP_BASE_MEMORY_WEAKPTR_H_

@@ -5,7 +5,7 @@
 #define STP_BASE_IO_BUFFEREDSTREAM_H_
 
 #include "Base/Io/Stream.h"
-#include "Base/Mem/OwnPtr.h"
+#include "Base/Memory/OwnPtr.h"
 
 namespace stp {
 

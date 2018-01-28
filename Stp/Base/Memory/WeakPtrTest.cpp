@@ -1,17 +1,12 @@
 // Copyright 2017 Polonite Authors. All rights reserved.
-// Copyright (c) 2012 The Chromium Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
+// Distributed under MIT license that can be found in the LICENSE file.
 
-#include "Base/Mem/WeakPtr.h"
+#include "Base/Memory/WeakPtr.h"
 
-#include "Base/Util/Bind.h"
 #include "Base/Compiler/Lsan.h"
-#include "Base/Mem/OwnPtr.h"
+#include "Base/Memory/OwnPtr.h"
 #include "Base/Debug/SourceLocation.h"
-#include "Base/task/task_runner.h"
 #include "Base/Test/GTestUtil.h"
-#include "Base/Thread/TaskThread.h"
 #include "Base/Thread/WaitableEvent.h"
 
 namespace stp {
@@ -42,7 +37,7 @@ class OffThreadObjectCreator {
 };
 
 struct Base {
-  std::string member;
+  String member;
 };
 struct Derived : public Base {};
 

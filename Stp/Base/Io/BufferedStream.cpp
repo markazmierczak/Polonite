@@ -4,7 +4,7 @@
 #include "Base/Io/BufferedStream.h"
 
 #include "Base/Containers/ArrayOps.h"
-#include "Base/Mem/Allocate.h"
+#include "Base/Memory/Allocate.h"
 
 namespace stp {
 

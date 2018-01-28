@@ -13,7 +13,7 @@ Base
    Compiler/TargetDetection.rst
    Io/Format.rst
    Json/Json.rst
-   Mem/WeakPtr.rst
+   Memory/WeakPtr.rst
 
 ``App/``
 ========
@@ -117,7 +117,7 @@ Safe conversions between numeric types.
 
 Checked/overflow/saturated mathematics.
 
-``Mem/``
+``Memory/``
 ========
 
 Smart pointers: ``OwnPtr<>``, ``RefPtr<>`` and :ref:`WeakPtr <stp-base-weak-ptr>`.

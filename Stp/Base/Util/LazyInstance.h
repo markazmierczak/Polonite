@@ -8,7 +8,7 @@
 
 #include "Base/Compiler/Lsan.h"
 #include "Base/Debug/Assert.h"
-#include "Base/Mem/Allocate.h"
+#include "Base/Memory/Allocate.h"
 #include "Base/Thread/AtomicOps.h"
 #include "Base/Type/Variable.h"
 

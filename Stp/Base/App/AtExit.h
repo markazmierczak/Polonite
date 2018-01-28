@@ -6,9 +6,9 @@
 #ifndef STP_BASE_APP_ATEXIT_H_
 #define STP_BASE_APP_ATEXIT_H_
 
-#include "Base/Util/FunctionFwd.h"
 #include "Base/Containers/Stack.h"
 #include "Base/Thread/Lock.h"
+#include "Base/Util/FunctionFwd.h"
 
 namespace stp {
 

@@ -4,7 +4,7 @@
 #include "Base/Util/Function.h"
 
 #include "Base/Containers/Array.h"
-#include "Base/Mem/OwnPtr.h"
+#include "Base/Memory/OwnPtr.h"
 #include "Base/Test/GTest.h"
 
 #include <stdarg.h>

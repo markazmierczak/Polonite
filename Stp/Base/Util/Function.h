@@ -4,10 +4,10 @@
 #ifndef STP_BASE_UTIL_FUNCTION_H_
 #define STP_BASE_UTIL_FUNCTION_H_
 
-#include "Base/Util/FunctionFwd.h"
 #include "Base/Debug/Assert.h"
 #include "Base/Test/GTestProd.h"
 #include "Base/Type/Variable.h"
+#include "Base/Util/FunctionFwd.h"
 
 namespace stp {
 

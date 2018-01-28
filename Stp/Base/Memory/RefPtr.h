@@ -1,8 +1,8 @@
 // Copyright 2017 Polonite Authors. All rights reserved.
 // Distributed under MIT license that can be found in the LICENSE file.
 
-#ifndef STP_BASE_MEM_REFPTR_H_
-#define STP_BASE_MEM_REFPTR_H_
+#ifndef STP_BASE_MEMORY_REFPTR_H_
+#define STP_BASE_MEMORY_REFPTR_H_
 
 #include "Base/Debug/Assert.h"
 #include "Base/Type/ComparableFwd.h"
@@ -114,4 +114,4 @@ RefPtr<T> AdoptRef(T* ptr) {
 
 } // namespace stp
 
-#endif // STP_BASE_MEM_REFPTR_H_
+#endif // STP_BASE_MEMORY_REFPTR_H_

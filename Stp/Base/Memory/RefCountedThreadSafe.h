@@ -1,10 +1,10 @@
 // Copyright 2017 Polonite Authors. All rights reserved.
 // Distributed under MIT license that can be found in the LICENSE file.
 
-#ifndef STP_BASE_MEM_REFCOUNTEDTHREADSAFE_H_
-#define STP_BASE_MEM_REFCOUNTEDTHREADSAFE_H_
+#ifndef STP_BASE_MEMORY_REFCOUNTEDTHREADSAFE_H_
+#define STP_BASE_MEMORY_REFCOUNTEDTHREADSAFE_H_
 
-#include "Base/Mem/RefPtr.h"
+#include "Base/Memory/RefPtr.h"
 #include "Base/Thread/AtomicRefCount.h"
 
 namespace stp {
@@ -73,4 +73,4 @@ class RefCountedThreadSafe : public RefCountedThreadSafeBase {
 
 } // namespace stp
 
-#endif // STP_BASE_MEM_REFCOUNTEDTHREADSAFE_H_
+#endif // STP_BASE_MEMORY_REFCOUNTEDTHREADSAFE_H_

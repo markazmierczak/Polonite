@@ -7,7 +7,7 @@
 #define STP_BASE_UTIL_OBSERVERLIST_H_
 
 #include "Base/Containers/List.h"
-#include "Base/Mem/WeakPtr.h"
+#include "Base/Memory/WeakPtr.h"
 #include "Base/Type/Limits.h"
 
 namespace stp {

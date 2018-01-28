@@ -4,12 +4,12 @@
 #ifndef STP_BASE_UTIL_DELEGATE_H_
 #define STP_BASE_UTIL_DELEGATE_H_
 
-#include "Base/Util/DelegateFwd.h"
 #include "Base/Compiler/Cpu.h"
 #include "Base/Debug/Assert.h"
 #include "Base/Type/HashableFwd.h"
 #include "Base/Type/NullableFwd.h"
 #include "Base/Type/Variable.h"
+#include "Base/Util/DelegateFwd.h"
 
 namespace stp {
 

@@ -3,7 +3,7 @@
 
 #include "Base/Util/Delegate.h"
 
-#include "Base/Mem/OwnPtr.h"
+#include "Base/Memory/OwnPtr.h"
 #include "Base/Test/GTest.h"
 #include "Base/Test/PerfTest.h"
 #include "Base/Time/TimeTicks.h"

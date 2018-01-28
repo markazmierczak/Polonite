@@ -1,10 +1,10 @@
 // Copyright 2017 Polonite Authors. All rights reserved.
 // Distributed under MIT license that can be found in the LICENSE file.
 
-#include "Base/Mem/LinearAllocator.h"
+#include "Base/Memory/LinearAllocator.h"
 
 #include "Base/Math/Alignment.h"
-#include "Base/Mem/Allocate.h"
+#include "Base/Memory/Allocate.h"
 #include "Base/Type/Sign.h"
 
 #include <stdlib.h>

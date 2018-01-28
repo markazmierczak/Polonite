@@ -6,7 +6,7 @@
 
 #include "Base/Containers/MapFwd.h"
 #include "Base/Debug/Assert.h"
-#include "Base/Mem/Allocate.h"
+#include "Base/Memory/Allocate.h"
 #include "Base/Text/FormatFwd.h"
 #include "Base/Type/Hashable.h"
 #include "Base/Type/Variable.h"

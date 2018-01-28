@@ -1,8 +1,8 @@
 // Copyright 2017 Polonite Authors. All rights reserved.
 // Distributed under MIT license that can be found in the LICENSE file.
 
-#ifndef STP_BASE_MEM_PREFETCH_H_
-#define STP_BASE_MEM_PREFETCH_H_
+#ifndef STP_BASE_MEMORY_PREFETCH_H_
+#define STP_BASE_MEMORY_PREFETCH_H_
 
 #include "Base/Compiler/Simd.h"
 
@@ -18,4 +18,4 @@
 # define WRITE_PREFETCH(ptr)
 #endif
 
-#endif // STP_BASE_MEM_PREFETCH_H_
+#endif // STP_BASE_MEMORY_PREFETCH_H_

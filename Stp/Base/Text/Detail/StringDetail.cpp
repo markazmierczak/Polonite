@@ -7,7 +7,7 @@
 #include "Base/Containers/BitArray.h"
 #include "Base/Io/TextWriter.h"
 #include "Base/Math/Alignment.h"
-#include "Base/Mem/Allocate.h"
+#include "Base/Memory/Allocate.h"
 
 namespace stp {
 namespace detail {

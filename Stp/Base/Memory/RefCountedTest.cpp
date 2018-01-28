@@ -1,7 +1,7 @@
 // Copyright 2017 Polonite Authors. All rights reserved.
 // Distributed under MIT license that can be found in the LICENSE file.
 
-#include "Base/Mem/RefCounted.h"
+#include "Base/Memory/RefCounted.h"
 
 #include "Base/Test/GTest.h"
 

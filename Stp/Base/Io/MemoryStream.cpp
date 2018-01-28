@@ -5,7 +5,7 @@
 
 #include "Base/Containers/ArrayOps.h"
 #include "Base/Io/IoException.h"
-#include "Base/Mem/Allocate.h"
+#include "Base/Memory/Allocate.h"
 #include "Base/Type/Variable.h"
 
 namespace stp {

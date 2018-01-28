@@ -5,7 +5,7 @@
 #define STP_BASE_ERROR_EXCEPTIONPTR_H_
 
 #include "Base/Error/Exception.h"
-#include "Base/Mem/AddressOf.h"
+#include "Base/Memory/AddressOf.h"
 #include "Base/Type/Variable.h"
 
 #include <cstdlib>

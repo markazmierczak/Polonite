@@ -1,7 +1,7 @@
 // Copyright 2017 Polonite Authors. All rights reserved.
 // Distributed under MIT license that can be found in the LICENSE file.
 
-#include "Base/Mem/AlignedMalloc.h"
+#include "Base/Memory/AlignedMalloc.h"
 
 #include "Base/Math/Alignment.h"
 

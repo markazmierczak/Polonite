@@ -6,7 +6,7 @@
 #include "Base/Thread/ConditionVariable.h"
 
 #include "Base/Debug/Log.h"
-#include "Base/Mem/OwnPtr.h"
+#include "Base/Memory/OwnPtr.h"
 #include "Base/Test/GTest.h"
 #include "Base/Test/PlatformTest.h"
 #include "Base/Thread/Lock.h"

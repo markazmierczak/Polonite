@@ -4,7 +4,7 @@
 #include "Base/Error/Exception.h"
 
 #include "Base/Io/TextWriter.h"
-#include "Base/Mem/Allocate.h"
+#include "Base/Memory/Allocate.h"
 #include "Base/Text/StringSpan.h"
 
 #include <exception>

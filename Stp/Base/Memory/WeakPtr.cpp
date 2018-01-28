@@ -1,7 +1,7 @@
 // Copyright 2017 Polonite Authors. All rights reserved.
 // Distributed under MIT license that can be found in the LICENSE file.
 
-#include "Base/Mem/WeakPtr.h"
+#include "Base/Memory/WeakPtr.h"
 
 #include "Base/Compiler/Lsan.h"
 

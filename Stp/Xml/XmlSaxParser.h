@@ -4,7 +4,7 @@
 #ifndef STP_XML_XMLSAXPARSER_H_
 #define STP_XML_XMLSAXPARSER_H_
 
-#include "Base/Mem/OwnPtr.h"
+#include "Base/Memory/OwnPtr.h"
 #include "Xml/XmlAttributes.h"
 #include "Xml/XmlReader.h"
 

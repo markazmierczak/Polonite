@@ -8,8 +8,8 @@
 #include "Base/Debug/Console.h"
 #include "Base/Debug/Debugger.h"
 #include "Base/Debug/Log.h"
-#include "Base/Mem/Allocate.h"
-#include "Base/Mem/OwnPtr.h"
+#include "Base/Memory/Allocate.h"
+#include "Base/Memory/OwnPtr.h"
 #include "Base/Posix/EintrWrapper.h"
 #include "Base/Text/Format.h"
 
