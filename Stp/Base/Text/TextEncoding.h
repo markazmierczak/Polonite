@@ -115,8 +115,8 @@ class BASE_EXPORT TextEncoding {
 BASE_EXPORT String ToString(BufferSpan buffer, TextEncoding codec);
 BASE_EXPORT String16 ToString16(BufferSpan buffer, TextEncoding codec);
 
-class BuiltinTextEncoding {
-  STATIC_ONLY(BuiltinTextEncoding);
+class BuiltinTextEncodings {
+  STATIC_ONLY(BuiltinTextEncodings);
  public:
   static TextEncoding Ascii() { return &detail::AsciiCodec; }
   static TextEncoding Cp1252() { return &detail::Cp1252Codec; }

@@ -12,9 +12,9 @@ namespace stp {
 ClipTextWriter::ClipTextWriter(TextWriter& base, int limit)
     : base_(base), remaining_(limit) {
   ASSERT(limit >= 0);
-  if (base_.GetEncoding() == BuiltinTextEncoding::Utf8())
+  if (base_.GetEncoding() == BuiltinTextEncodings::Utf8())
     encoding_ = OutputEncoding::Utf8;
-  else if (base_.GetEncoding() == BuiltinTextEncoding::Utf16())
+  else if (base_.GetEncoding() == BuiltinTextEncodings::Utf16())
     encoding_ = OutputEncoding::Utf16;
   else
     throw NotSupportedException();

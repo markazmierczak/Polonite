@@ -9,8 +9,8 @@
 
 namespace stp {
 
-TextEncoding StringWriter::GetEncoding() const { return BuiltinTextEncoding::Utf8(); }
-TextEncoding String16Writer::GetEncoding() const { return BuiltinTextEncoding::Utf16LE(); }
+TextEncoding StringWriter::GetEncoding() const { return BuiltinTextEncodings::Utf8(); }
+TextEncoding String16Writer::GetEncoding() const { return BuiltinTextEncodings::Utf16LE(); }
 
 void StringWriter::OnWriteAsciiChar(char c) { string_.Add(c); }
 void String16Writer::OnWriteAsciiChar(char c) { string_.Add(char_cast<char16_t>(c)); }

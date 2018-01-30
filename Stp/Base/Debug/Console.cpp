@@ -149,7 +149,7 @@ ConsoleWriter* Console::g_out_ = nullptr;
 ConsoleWriter* Console::g_err_ = nullptr;
 
 TextEncoding ConsoleWriter::GetEncoding() const {
-  return BuiltinTextEncoding::Utf8();
+  return BuiltinTextEncodings::Utf8();
 }
 
 void ConsoleWriter::OnWriteAsciiChar(char c) {
