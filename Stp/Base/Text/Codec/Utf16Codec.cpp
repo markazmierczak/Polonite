@@ -8,6 +8,7 @@
 // TODO Faster encode/decode between char16_t (only validation)
 
 namespace stp {
+namespace detail {
 
 using Context = TextConversionContext;
 
@@ -307,4 +308,5 @@ constexpr const TextCodec Utf16LECodec = BuildLE();
 constexpr const TextCodec Utf16BECodec = BuildBE();
 constexpr const TextCodec Utf16Codec = Build();
 
+} // namespace detail
 } // namespace stp

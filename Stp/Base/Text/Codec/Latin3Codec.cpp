@@ -4,6 +4,7 @@
 #include "Base/Text/TextEncoding.h"
 
 namespace stp {
+namespace detail {
 
 namespace {
 
@@ -193,4 +194,5 @@ constexpr auto Build() {
 
 constexpr const TextCodec Latin3Codec = Build();
 
+} // namespace detail
 } // namespace stp

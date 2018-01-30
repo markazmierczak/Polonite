@@ -31,6 +31,8 @@ HashCode TextEncoding::HashImpl() const noexcept {
   return Hash(this);
 }
 
+namespace detail {
+
 static constexpr TextCodecVtable UndefinedVtable = {
   nullptr, nullptr,
   nullptr, nullptr,
@@ -39,6 +41,8 @@ static constexpr TextCodecVtable UndefinedVtable = {
 };
 
 constexpr const TextCodec UndefinedTextCodec = BuildTextCodec("undefined", UndefinedVtable);
+
+} // namespace detail
 
 static inline StringSpan RemoveNonAlphaNumericPrefix(StringSpan s) {
   while (!s.IsEmpty() && !IsAlphaNumericAscii(s.GetFirst()))

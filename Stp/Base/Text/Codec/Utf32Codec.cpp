@@ -6,6 +6,7 @@
 #include "Base/Compiler/ByteOrder.h"
 
 namespace stp {
+namespace detail {
 
 namespace {
 
@@ -277,4 +278,5 @@ constexpr const TextCodec Utf32LECodec = BuildLE();
 constexpr const TextCodec Utf32BECodec = BuildBE();
 constexpr const TextCodec Utf32Codec = Build();
 
+} // namespace detail
 } // namespace stp

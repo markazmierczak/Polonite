@@ -329,7 +329,6 @@ component("Base") {
     "Text/TextEncoder.h",
     "Text/TextEncoding.cpp",
     "Text/TextEncoding.h",
-    "Text/TextEncodingFwd.h",
     "Text/TextEncodingRegistry.cpp",
     "Text/TextEncodingRegistry.h",
     "Text/Utf.cpp",

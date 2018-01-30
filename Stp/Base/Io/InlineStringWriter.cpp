@@ -10,10 +10,10 @@
 namespace stp {
 
 TextEncoding InlineStringWriter::GetEncoding() const {
-  return &Utf8Codec;
+  return BuiltinTextEncoding::Utf8();
 }
 TextEncoding InlineString16Writer::GetEncoding() const {
-  return &Utf16Codec;
+  return BuiltinTextEncoding::Utf16();
 }
 
 void InlineStringWriter::OnWriteAsciiChar(char c) {

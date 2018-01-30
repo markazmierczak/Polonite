@@ -8,6 +8,7 @@
 #include "Base/Text/Utf.h"
 
 namespace stp {
+namespace detail {
 
 namespace {
 
@@ -326,4 +327,5 @@ constexpr auto Build() {
 
 constexpr const TextCodec Utf8Codec = Build();
 
+} // namespace detail
 } // namespace stp

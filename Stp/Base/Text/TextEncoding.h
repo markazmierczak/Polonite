@@ -8,7 +8,6 @@
 #include "Base/Error/Exception.h"
 #include "Base/Text/AsciiChar.h"
 #include "Base/Text/StringSpan.h"
-#include "Base/Text/TextEncodingFwd.h"
 #include "Base/Text/Utf.h"
 #include "Base/Type/HashableFwd.h"
 
@@ -58,9 +57,28 @@ struct TextCodec {
   bool single_byte = false;
 };
 
+namespace detail {
+
+BASE_EXPORT extern const TextCodec UndefinedTextCodec;
+BASE_EXPORT extern const TextCodec AsciiCodec;
+BASE_EXPORT extern const TextCodec Cp1252Codec;
+BASE_EXPORT extern const TextCodec Latin1Codec;
+BASE_EXPORT extern const TextCodec Latin2Codec;
+BASE_EXPORT extern const TextCodec Latin3Codec;
+BASE_EXPORT extern const TextCodec Latin4Codec;
+BASE_EXPORT extern const TextCodec Utf16BECodec;
+BASE_EXPORT extern const TextCodec Utf16LECodec;
+BASE_EXPORT extern const TextCodec Utf16Codec;
+BASE_EXPORT extern const TextCodec Utf32BECodec;
+BASE_EXPORT extern const TextCodec Utf32LECodec;
+BASE_EXPORT extern const TextCodec Utf32Codec;
+BASE_EXPORT extern const TextCodec Utf8Codec;
+
+} // namespace detail
+
 class BASE_EXPORT TextEncoding {
  public:
-  constexpr TextEncoding() noexcept : codec_(UndefinedTextCodec) {}
+  constexpr TextEncoding() noexcept : codec_(detail::UndefinedTextCodec) {}
   constexpr TextEncoding(const TextCodec* codec) noexcept : codec_(*codec) {}
 
   // Name and aliases are specified in IANA character sets:
@@ -78,7 +96,7 @@ class BASE_EXPORT TextEncoding {
   // True if each unit takes single byte and ASCII compatible.
   bool IsSingleByte() const { return codec_.single_byte; }
 
-  bool IsValid() const { return &codec_ != &UndefinedTextCodec; }
+  bool IsValid() const { return &codec_ != &detail::UndefinedTextCodec; }
 
   const TextCodecVtable& GetVtable() const { return *codec_.vtable; }
 
@@ -96,6 +114,25 @@ class BASE_EXPORT TextEncoding {
 
 BASE_EXPORT String ToString(BufferSpan buffer, TextEncoding codec);
 BASE_EXPORT String16 ToString16(BufferSpan buffer, TextEncoding codec);
+
+class BuiltinTextEncoding {
+  STATIC_ONLY(BuiltinTextEncoding);
+ public:
+  static TextEncoding Ascii() { return &detail::AsciiCodec; }
+  static TextEncoding Cp1252() { return &detail::Cp1252Codec; }
+  static TextEncoding Latin1() { return &detail::Latin1Codec; }
+  static TextEncoding Latin2() { return &detail::Latin2Codec; }
+  static TextEncoding Latin3() { return &detail::Latin3Codec; }
+  static TextEncoding Latin4() { return &detail::Latin4Codec; }
+
+  static TextEncoding Utf8() { return &detail::Utf8Codec; }
+  static TextEncoding Utf16() { return &detail::Utf16Codec; }
+  static TextEncoding Utf16BE() { return &detail::Utf16BECodec; }
+  static TextEncoding Utf16LE() { return &detail::Utf16LECodec; }
+  static TextEncoding Utf32() { return &detail::Utf32Codec; }
+  static TextEncoding Utf32BE() { return &detail::Utf32BECodec; }
+  static TextEncoding Utf32LE() { return &detail::Utf32LECodec; }
+};
 
 class TextCodecBuilder {
  public:

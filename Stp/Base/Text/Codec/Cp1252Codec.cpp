@@ -4,6 +4,7 @@
 #include "Base/Text/TextEncoding.h"
 
 namespace stp {
+namespace detail {
 
 namespace {
 
@@ -129,7 +130,7 @@ const byte_t Cp1252Page20[48] = {
 };
 
 NEVER_INLINE byte_t EncodeExtra(char32_t c) {
-  ASSERT(!IsAscii(c));
+  ASSERT(!stp::IsAscii(c));
   ASSERT(!(0x00A0 <= c && c < 0x0100));
 
   if (0x0150 <= c && c < 0x0198)
@@ -209,4 +210,5 @@ constexpr auto Build() {
 
 constexpr const TextCodec Cp1252Codec = Build();
 
+} // namespace detail
 } // namespace stp

@@ -13,19 +13,19 @@ namespace {
 
 static const TextCodec* const BuiltinCodecs[] = {
   // Sort this array by frequency of usage.
-  &Utf8Codec,
-  &Utf16Codec,
-  &Utf16BECodec,
-  &Utf16LECodec,
-  &Utf32Codec,
-  &Utf32BECodec,
-  &Utf32LECodec,
-  &AsciiCodec,
-  &Cp1252Codec,
-  &Latin1Codec,
-  &Latin2Codec,
-  &Latin3Codec,
-  &Latin4Codec,
+  &detail::Utf8Codec,
+  &detail::Utf16Codec,
+  &detail::Utf16BECodec,
+  &detail::Utf16LECodec,
+  &detail::Utf32Codec,
+  &detail::Utf32BECodec,
+  &detail::Utf32LECodec,
+  &detail::AsciiCodec,
+  &detail::Cp1252Codec,
+  &detail::Latin1Codec,
+  &detail::Latin2Codec,
+  &detail::Latin3Codec,
+  &detail::Latin4Codec,
   nullptr
 };
 
