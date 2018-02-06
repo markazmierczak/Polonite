@@ -55,7 +55,6 @@ class ConsoleWriter : public TextWriter {
   void OnWriteAscii(StringSpan text) override;
   void OnWriteUtf8(StringSpan text) override;
   void OnWriteUtf16(String16Span text) override;
-  void OnWriteEncoded(const BufferSpan& text, TextEncoding encoding) override;
   void OnFlush() override;
 
   String buffer_;

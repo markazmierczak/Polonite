@@ -7,6 +7,7 @@
 #include "Base/Io/FileStream.h"
 #include "Base/Process/CommandLine.h"
 #include "Base/Text/TextEncoding.h"
+#include "Base/Text/Utf.h"
 
 namespace stp {
 
@@ -149,7 +150,7 @@ ConsoleWriter* Console::g_out_ = nullptr;
 ConsoleWriter* Console::g_err_ = nullptr;
 
 TextEncoding ConsoleWriter::GetEncoding() const {
-  return BuiltinTextEncodings::Utf8();
+  return TextEncoding::BuiltinUtf8();
 }
 
 void ConsoleWriter::OnWriteAsciiChar(char c) {
@@ -172,10 +173,6 @@ void ConsoleWriter::OnWriteUtf8(StringSpan text) {
 
 void ConsoleWriter::OnWriteUtf16(String16Span text) {
   OnWriteUtf8(ToString(text));
-}
-
-void ConsoleWriter::OnWriteEncoded(const BufferSpan& text, TextEncoding encoding) {
-  throw NotImplementedException();
 }
 
 } // namespace stp

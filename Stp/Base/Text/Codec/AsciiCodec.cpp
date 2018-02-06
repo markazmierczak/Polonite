@@ -3,83 +3,73 @@
 
 #include "Base/Text/TextEncoding.h"
 
+#include "Base/Text/Utf.h"
+
 namespace stp {
-namespace detail {
 
 namespace {
 
-using Context = TextConversionContext;
-
 template<typename T>
-int DecodeTmpl(Context& context, BufferSpan input, MutableSpan<T> output, bool flush) {
-  auto* iptr = static_cast<const byte_t*>(input.data());
-  const int isize = input.size();
-  auto* optr = output.data();
-  int oi = 0;
-  bool saw_error = false;
+inline TextConversionResult DecodeTmpl(
+    TextConversionContext* context, BufferSpan input, MutableSpan<T> output, bool flush) {
+  auto* input_data = static_cast<const byte_t*>(input.data());
+  int num_read = 0;
+  int num_wrote = 0;
+  bool did_fallback = false;
 
-  for (int ii = 0; ii < isize; ++ii) {
-    byte_t b = iptr[ii];
+  while (num_read < input.size() && num_wrote < output.size()) {
+    byte_t b = input_data[num_read];
     if (LIKELY(b < 0x80)) {
-      optr[oi++] = static_cast<T>(b);
+      output[num_wrote++] = static_cast<T>(b);
     } else {
-      optr[oi++] = Unicode::FallbackUnit<T>;
-      saw_error = true;
+      int encoded = TryEncodeUtf(output.GetSlice(num_wrote), unicode::ReplacementCodepoint);
+      if (encoded == 0)
+        break;
+      num_wrote += encoded;
+      did_fallback = true;
     }
+    ++num_read;
   }
-  context.MaybeThrow(saw_error);
-  ASSERT(oi <= output.size());
-  return oi;
+  return TextConversionResult(num_read, num_wrote, did_fallback);
 }
 
-int Decode(Context& context, BufferSpan input, MutableStringSpan output, bool flush) {
+TextConversionResult Decode(
+    TextConversionContext* context, BufferSpan input, MutableStringSpan output, bool flush) {
   return DecodeTmpl(context, input, output, flush);
 }
-int Decode16(Context& context, BufferSpan input, MutableString16Span output, bool flush) {
+TextConversionResult Decode16(
+    TextConversionContext* context, BufferSpan input, MutableString16Span output, bool flush) {
   return DecodeTmpl(context, input, output, flush);
-}
-
-int CountChars(const Context& context, BufferSpan input) {
-  return input.size();
-}
-int CountChars16(const Context& context, BufferSpan input) {
-  return input.size();
 }
 
 template<typename T>
-int EncodeTmpl(Context& context, Span<T> input, MutableBufferSpan output) {
+inline TextConversionResult EncodeTmpl(
+    TextConversionContext* context, Span<T> input, MutableBufferSpan output) {
   auto* iptr = begin(input);
   auto* const iptr_end = end(input);
-  auto* optr = static_cast<byte_t*>(output.data());
-  int oi = 0;
-  bool saw_error = false;
+  auto* output_data = static_cast<byte_t*>(output.data());
+  int num_wrote = 0;
+  bool did_fallback = false;
 
-  while (iptr < iptr_end) {
+  while (iptr < iptr_end && num_wrote < output.size()) {
     char32_t c = DecodeUtf(iptr, iptr_end);
-    if (LIKELY(c <= 0x7F)) {
-      optr[oi++] = static_cast<byte_t>(c);
+    if (LIKELY(IsAscii(c))) {
+      output_data[num_wrote++] = static_cast<byte_t>(c);
     } else {
-      optr[oi++] = Unicode::FallbackUnit<char>;
-      saw_error = true;
+      output_data[num_wrote++] = '?';
+      did_fallback = true;
     }
   }
-  context.MaybeThrow(saw_error);
-  ASSERT(oi <= output.size());
-  return oi;
+  return TextConversionResult(iptr - input.data(), num_wrote, did_fallback);
 }
 
-int Encode(Context& context, StringSpan input, MutableBufferSpan output) {
+TextConversionResult Encode(
+    TextConversionContext* context, StringSpan input, MutableBufferSpan output) {
   return EncodeTmpl(context, input, output);
 }
-int Encode16(Context& context, String16Span input, MutableBufferSpan output) {
+TextConversionResult Encode16(
+    TextConversionContext* context, String16Span input, MutableBufferSpan output) {
   return EncodeTmpl(context, input, output);
-}
-
-int CountBytes(const Context& context, StringSpan input) {
-  return input.size();
-}
-int CountBytes16(const Context& context, String16Span input) {
-  return input.size();
 }
 
 constexpr StringSpan Aliases[] = {
@@ -96,9 +86,7 @@ constexpr StringSpan Aliases[] = {
 
 constexpr TextCodecVtable Vtable = {
   Decode, Decode16,
-  CountChars, CountChars16,
   Encode, Encode16,
-  CountBytes, CountBytes16,
 };
 
 constexpr auto Build() {
@@ -111,7 +99,8 @@ constexpr auto Build() {
 
 } // namespace
 
+namespace detail {
 constexpr const TextCodec AsciiCodec = Build();
+}
 
-} // namespace detail
 } // namespace stp

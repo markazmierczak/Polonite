@@ -3,12 +3,11 @@
 
 #include "Base/Text/TextEncoding.h"
 
+#include "Base/Text/Utf.h"
+
 namespace stp {
-namespace detail {
 
 namespace {
-
-using Context = TextConversionContext;
 
 // 0xA0..0xFF
 const char16_t Latin3ToUnicode[96] = {
@@ -26,55 +25,56 @@ const char16_t Latin3ToUnicode[96] = {
   0x011D, 0x00F9, 0x00FA, 0x00FB, 0x00FC, 0x016D, 0x015D, 0x02D9,
 };
 
-int Decode(Context& context, BufferSpan input, MutableStringSpan output, bool flush) {
-  auto* iptr = static_cast<const byte_t*>(input.data());
-  const int isize = input.size();
-  auto* optr = output.data();
-  int oi = 0;
+TextConversionResult Decode(
+    TextConversionContext* context, BufferSpan input, MutableStringSpan output, bool flush) {
+  auto* input_data = static_cast<const byte_t*>(input.data());
+  int num_read = 0;
+  int num_wrote = 0;
+  bool did_fallback = false;
 
-  for (int ii = 0; ii < isize; ++ii) {
-    byte_t b = iptr[ii];
+  while (num_read < input.size() && num_wrote < output.size()) {
+    byte_t b = input_data[num_read];
     if (b < 0x80) {
-      optr[oi++] = static_cast<char>(b);
+      output[num_wrote++] = static_cast<char>(b);
     } else {
       char16_t c = b < 0xA0 ? static_cast<char16_t>(b) : Latin3ToUnicode[b - 0xA0];
-      oi += Utf8::EncodeInTwoUnits(optr + oi, c);
+      if (!c) {
+        c = unicode::ReplacementCodepoint;
+        did_fallback = true;
+      }
+      int encoded = TryEncodeUtf(output.GetSlice(num_wrote), c);
+      if (encoded == 0)
+        break;
+      num_wrote += encoded;
     }
+    ++num_read;
   }
-  ASSERT(oi <= output.size());
-  return oi;
+  return TextConversionResult(num_read, num_wrote, did_fallback);
 }
 
-int Decode16(Context& context, BufferSpan input, MutableString16Span output, bool flush) {
-  auto* iptr = static_cast<const byte_t*>(input.data());
-  const int isize = input.size();
-  auto* optr = output.data();
-  int oi = 0;
+TextConversionResult Decode16(
+    TextConversionContext* context, BufferSpan input, MutableString16Span output, bool flush) {
+  auto* input_data = static_cast<const byte_t*>(input.data());
+  int num_read = 0;
+  int num_wrote = 0;
+  bool did_fallback = false;
 
-  for (int ii = 0; ii < isize; ++ii) {
-    byte_t b = iptr[ii];
-    if (b < 0xA0)
-      optr[oi++] = static_cast<char16_t>(b);
-    else
-      optr[oi++] = Latin3ToUnicode[b - 0xA0];
+  while (num_read < input.size() && num_wrote < output.size()) {
+    byte_t b = input_data[num_read];
+    char16_t c;
+    if (b < 0xA0) {
+      c = static_cast<char16_t>(b);
+    } else {
+      c = Latin3ToUnicode[b - 0xA0];
+      if (!c) {
+        c = unicode::ReplacementCodepoint;
+        did_fallback = true;
+      }
+    }
+    output[num_wrote++] = c;
+    ++num_read;
   }
-  ASSERT(oi <= output.size());
-  return oi;
-}
-
-int CountChars(const Context& context, BufferSpan input) {
-  auto* iptr = static_cast<const byte_t*>(input.data());
-  const int isize = input.size();
-  int oi = 0;
-
-  for (int i = 0; i < isize; ++i) {
-    oi += iptr[i] < 0x80 ? 1 : 2;
-  }
-  return oi;
-}
-
-int CountChars16(const Context& context, BufferSpan input) {
-  return input.size();
+  return TextConversionResult(num_read, num_wrote, did_fallback);
 }
 
 // 0x00A0..0x00FF
@@ -115,7 +115,7 @@ const byte_t Latin3Page02[8] = {
   0xA2, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 };
 
-NEVER_INLINE byte_t EncodeExtra(char32_t c) {
+byte_t EncodeExtra(char32_t c) {
   ASSERT(c >= 0xA0);
 
   if (c < 0x0100)
@@ -129,44 +129,37 @@ NEVER_INLINE byte_t EncodeExtra(char32_t c) {
 }
 
 template<typename T>
-int EncodeTmpl(Context& context, Span<T> input, MutableBufferSpan output) {
+inline TextConversionResult EncodeTmpl(
+    TextConversionContext* context, Span<T> input, MutableBufferSpan output) {
   auto* iptr = begin(input);
   auto* const iptr_end = end(input);
-  auto* optr = static_cast<byte_t*>(output.data());
-  int oi = 0;
-  bool saw_error = false;
+  auto* output_data = static_cast<byte_t*>(output.data());
+  int num_wrote = 0;
+  bool did_fallback = false;
 
   while (iptr < iptr_end) {
     char32_t c = DecodeUtf(iptr, iptr_end);
     if (c < 0xA0) {
-      optr[oi++] = static_cast<byte_t>(c);
+      output_data[num_wrote++] = static_cast<byte_t>(c);
     } else  {
       byte_t b = EncodeExtra(c);
-      if (b != 0) {
-        optr[oi++] = b;
-      } else {
-        optr[oi++] = Unicode::FallbackUnit<char>;
-        saw_error = true;
+      if (b == 0) {
+        b = '?';
+        did_fallback = true;
       }
+      output_data[num_wrote++] = b;
     }
   }
-  context.MaybeThrow(saw_error);
-  ASSERT(oi <= output.size());
-  return oi;
+  return TextConversionResult(iptr - input.data(), num_wrote, did_fallback);
 }
 
-int Encode(Context& context, StringSpan input, MutableBufferSpan output) {
+TextConversionResult Encode(
+    TextConversionContext* context, StringSpan input, MutableBufferSpan output) {
   return EncodeTmpl(context, input, output);
 }
-int Encode16(Context& context, String16Span input, MutableBufferSpan output) {
+TextConversionResult Encode16(
+    TextConversionContext* context, String16Span input, MutableBufferSpan output) {
   return EncodeTmpl(context, input, output);
-}
-
-int CountBytes(const Context& context, StringSpan input) {
-  return input.size();
-}
-int CountBytes16(const Context& context, String16Span input) {
-  return input.size();
 }
 
 constexpr StringSpan Aliases[] = {
@@ -177,9 +170,7 @@ constexpr StringSpan Aliases[] = {
 
 constexpr TextCodecVtable Vtable = {
   Decode, Decode16,
-  CountChars, CountChars16,
   Encode, Encode16,
-  CountBytes, CountBytes16,
 };
 
 constexpr auto Build() {
@@ -192,7 +183,8 @@ constexpr auto Build() {
 
 } // namespace
 
+namespace detail {
 constexpr const TextCodec Latin3Codec = Build();
+}
 
-} // namespace detail
 } // namespace stp

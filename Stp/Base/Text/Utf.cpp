@@ -66,7 +66,7 @@ char32_t Utf8::DecodeSlow(const char*& it, const char* end, char32_t c) {
       c &= 0x0F;
       illegal = DecodeOneInUtf8Sequence(it, c);
       illegal |= DecodeOneInUtf8Sequence(it, c);
-      if (illegal || c < 0x800 || IsSurrogate(c)) {
+      if (illegal || c < 0x800 || unicode::IsSurrogate(c)) {
         it = start;
         SkipUtf8Trail(it, end);
         return InvalidSequenceError;
@@ -110,19 +110,19 @@ char32_t Utf16::DecodeSlow(const char16_t*& it, const char16_t* end, char32_t le
   if (it >= end)
     return EndOfStreamError;
 
-  if (!SurrogateIsLeading(lead))
+  if (!unicode::SurrogateIsLeading(lead))
     return InvalidSequenceError;
 
   char16_t trail = *it++;
 
-  if (!IsTrailSurrogate(trail)) {
+  if (!unicode::IsTrailSurrogate(trail)) {
     // Invalid surrogate pair.
     return InvalidSequenceError;
   }
 
   // Valid surrogate pair.
-  char32_t decoded = DecodeSurrogatePair(lead, trail);
-  ASSERT(IsValidCodepoint(decoded));
+  char32_t decoded = unicode::DecodeSurrogatePair(lead, trail);
+  ASSERT(unicode::IsValidCodepoint(decoded));
   return decoded;
 }
 
@@ -132,7 +132,7 @@ bool Utf8::Validate(StringSpan input) {
 
   while (src < end) {
     char32_t c = Utf8::Decode(src, end);
-    if (!Utf8::IsValidCodepoint(c))
+    if (!unicode::IsValidCodepoint(c))
       return false;
   }
   return true;
@@ -146,11 +146,11 @@ bool Utf16::Validate(String16Span input) {
   while (src < end) {
     char16_t c = *src++;
     if (expects_trail) {
-      if (!Utf16::IsTrailSurrogate(c))
+      if (!unicode::IsTrailSurrogate(c))
         return false;
     } else {
-      if (Utf16::IsSurrogate(c)) {
-        if (!Utf16::SurrogateIsLeading(c))
+      if (unicode::IsSurrogate(c)) {
+        if (!unicode::SurrogateIsLeading(c))
           return false;
         expects_trail = true;
       }

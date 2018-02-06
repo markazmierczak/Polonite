@@ -10,10 +10,6 @@ namespace stp {
 
 const EndOfLineTag EndOfLine;
 
-void TextWriter::Write(const BufferSpan& text, TextEncoding encoding) {
-  OnWriteEncoded(text, encoding);
-}
-
 void TextWriter::OnEndLine() {
   Write('\n');
 }
@@ -56,13 +52,12 @@ namespace {
 
 class NullTextWriter final : public TextWriter {
  public:
-  TextEncoding GetEncoding() const { return BuiltinTextEncodings::Utf8(); }
+  TextEncoding GetEncoding() const { return TextEncoding::BuiltinUtf8(); }
   void OnWriteAsciiChar(char c) override {}
   void OnWriteUnicodeChar(char32_t c) override {}
   void OnWriteAscii(StringSpan text) override {}
   void OnWriteUtf8(StringSpan text) override {}
   void OnWriteUtf16(String16Span text) override {}
-  void OnWriteEncoded(const BufferSpan& text, TextEncoding encoding) override {}
   void OnIndent(int count, char c) override {}
 };
 

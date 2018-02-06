@@ -76,25 +76,25 @@ char32_t Wtf8::DecodeSlow(const char*& it, const char* end, char32_t c) {
 }
 
 char32_t Wtf16::DecodeSlow(const char16_t*& it, const char16_t* end, char32_t lead) {
-  ASSERT(lead <= MaxCodepoint);
+  ASSERT(lead <= unicode::MaxCodepoint);
 
   // check for end of stream.
   if (it >= end)
     return lead;
 
-  if (!SurrogateIsLeading(lead))
+  if (!unicode::SurrogateIsLeading(lead))
     return lead; // unpaired trail surrogate
 
   char16_t trail = *it++;
 
-  if (!IsTrailSurrogate(trail)) {
+  if (!unicode::IsTrailSurrogate(trail)) {
     // unpaired surrogate
     --it;
     return lead;
   }
   // valid surrogate pair
-  char32_t decoded = DecodeSurrogatePair(lead, trail);
-  ASSERT(IsValidCodepoint(decoded));
+  char32_t decoded = unicode::DecodeSurrogatePair(lead, trail);
+  ASSERT(unicode::IsValidCodepoint(decoded));
   return decoded;
 }
 
@@ -118,7 +118,7 @@ static inline void WriteWtfTmpl(TextWriter& out, Span<T> wtf) {
       out.Write(MakeSpan(valid_begin, valid_end - valid_begin));
 
     if (valid_end != it_end)
-      out.Write(Unicode::ReplacementCharacter);
+      out.Write(unicode::ReplacementCodepoint);
   }
 }
 

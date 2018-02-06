@@ -8,7 +8,7 @@
 #include "Base/Text/AsciiChar.h"
 #include "Base/Text/FormatFwd.h"
 #include "Base/Text/StringSpan.h"
-#include "Base/Text/Utf.h"
+#include "Base/Text/Unicode.h"
 
 namespace stp {
 
@@ -37,7 +37,6 @@ class BASE_EXPORT TextWriter {
 
   void Write(StringSpan text) { OnWriteUtf8(text); }
   void Write(String16Span text) { OnWriteUtf16(text); }
-  void Write(const BufferSpan& text, TextEncoding encoding);
 
   void Indent(int count, char c = ' ');
 
@@ -61,8 +60,6 @@ class BASE_EXPORT TextWriter {
   virtual void OnWriteUtf8(StringSpan text) = 0;
   virtual void OnWriteUtf16(String16Span text) = 0;
 
-  virtual void OnWriteEncoded(const BufferSpan& text, TextEncoding encoding) = 0;
-
   virtual void OnEndLine();
 
   virtual void OnIndent(int count, char c);
@@ -78,7 +75,7 @@ inline void TextWriter::Write(char c) {
 }
 
 inline void TextWriter::Write(char32_t c) {
-  ASSERT(Unicode::IsValidCodepoint(c));
+  ASSERT(unicode::IsValidCodepoint(c));
   OnWriteUnicodeChar(c);
 }
 

@@ -18,7 +18,7 @@ namespace stp {
 //
 // https://simonsapin.github.io/wtf-8
 
-class BASE_EXPORT Wtf8 : public Unicode {
+class BASE_EXPORT Wtf8 : public UtfBase {
  public:
   // Maximum number of units needed to encode a single code-point in UTF-8.
   static constexpr int MaxEncodedCodepointLength = 4;
@@ -44,7 +44,7 @@ class BASE_EXPORT Wtf8 : public Unicode {
   static char32_t DecodeSlow(const char*& it, const char* end, char32_t c);
 };
 
-class BASE_EXPORT Wtf16 : public Unicode {
+class BASE_EXPORT Wtf16 : public UtfBase {
  public:
   static constexpr int MaxEncodedCodepointLength = 2;
 
@@ -68,12 +68,12 @@ BASE_EXPORT void AppendWtf(String& output, StringSpan wtf);
 BASE_EXPORT void AppendWtf(String& output, String16Span wtf);
 
 inline int Wtf8::EncodedLength(char32_t c) {
-  ASSERT(c <= MaxCodepoint);
+  ASSERT(c <= unicode::MaxCodepoint);
   return c <= 0x7F ? 1 : (c <= 0x7FF ? 2 : (c <= 0xFFFF ? 3 : 4));
 }
 
 inline int Wtf8::Encode(char* out, char32_t c) {
-  ASSERT(c <= MaxCodepoint);
+  ASSERT(c <= unicode::MaxCodepoint);
   int i = 0;
   if (c <= 0x7F) {
     out[i++] = static_cast<uint8_t>(c);
@@ -101,12 +101,12 @@ inline char32_t Wtf8::Decode(const char*& it, const char* end) {
 }
 
 inline int Wtf16::EncodedLength(char32_t c) {
-  ASSERT(c <= MaxCodepoint);
+  ASSERT(c <= unicode::MaxCodepoint);
   return c <= 0xFFFF ? 1 : 2;
 }
 
 inline int Wtf16::Encode(char16_t* s, char32_t c) {
-  ASSERT(c <= MaxCodepoint);
+  ASSERT(c <= unicode::MaxCodepoint);
   int i = 0;
   if (c <= 0xFFFF) {
     // This code point is in the Basic Multilingual Plane (BMP) or surrogate.
@@ -122,7 +122,7 @@ inline int Wtf16::Encode(char16_t* s, char32_t c) {
 inline char32_t Wtf16::Decode(const char16_t*& it, const char16_t* end) {
   ASSERT(it != end);
   char32_t c = *it++;
-  return IsSurrogate(c) ? DecodeSlow(it, end, c) : static_cast<char32_t>(c);
+  return unicode::IsSurrogate(c) ? DecodeSlow(it, end, c) : static_cast<char32_t>(c);
 }
 
 } // namespace stp

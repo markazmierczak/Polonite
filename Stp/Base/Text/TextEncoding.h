@@ -8,22 +8,19 @@
 #include "Base/Error/Exception.h"
 #include "Base/Text/AsciiChar.h"
 #include "Base/Text/StringSpan.h"
-#include "Base/Text/Utf.h"
 #include "Base/Type/HashableFwd.h"
 
 namespace stp {
 
-struct TextConversionContext {
-  union State {
-    State() { memset(this, 0, sizeof(TextConversionContext)); }
-    void* ptr;
-    byte_t bytes[8];
-  };
-  State state;
-  bool exception_on_fallback = false;
-  bool did_fallback = false;
+class TextConversionContext {};
 
-  void MaybeThrow(bool saw_error);
+struct TextConversionResult {
+  TextConversionResult(int num_read, int num_wrote, bool did_fallback)
+      : num_read(num_read), num_wrote(num_wrote), did_fallback(did_fallback) {}
+
+  int num_read;
+  int num_wrote;
+  bool did_fallback;
 };
 
 class BASE_EXPORT TextConversionFallbackException final : public Exception {
@@ -32,17 +29,10 @@ class BASE_EXPORT TextConversionFallbackException final : public Exception {
 };
 
 struct TextCodecVtable {
-  using Context = TextConversionContext;
-
-  int (*decode)(Context&, BufferSpan, MutableStringSpan, bool);
-  int (*decode16)(Context&, BufferSpan, MutableString16Span, bool);
-  int (*count_chars)(const Context&, BufferSpan);
-  int (*count_chars16)(const Context&, BufferSpan);
-
-  int (*encode)(Context&, StringSpan, MutableBufferSpan);
-  int (*encode16)(Context&, String16Span, MutableBufferSpan);
-  int (*count_bytes)(const Context&, StringSpan);
-  int (*count_bytes16)(const Context&, String16Span);
+  TextConversionResult (*decode)(TextConversionContext*, BufferSpan, MutableStringSpan, bool);
+  TextConversionResult (*decode16)(TextConversionContext*, BufferSpan, MutableString16Span, bool);
+  TextConversionResult (*encode)(TextConversionContext*, StringSpan, MutableBufferSpan);
+  TextConversionResult (*encode16)(TextConversionContext*, String16Span, MutableBufferSpan);
 };
 
 struct TextCodec {
@@ -53,6 +43,8 @@ struct TextCodec {
 
   int iana_codepage = 0;
   int windows_codepage = 0;
+
+  int context_size = 0;
 
   bool single_byte = false;
 };
@@ -106,6 +98,21 @@ class BASE_EXPORT TextEncoding {
 
   static bool AreNamesMatching(StringSpan lhs, StringSpan rhs) noexcept;
 
+  static TextEncoding BuiltinAscii() { return &detail::AsciiCodec; }
+  static TextEncoding BuiltinCp1252() { return &detail::Cp1252Codec; }
+  static TextEncoding BuiltinLatin1() { return &detail::Latin1Codec; }
+  static TextEncoding BuiltinLatin2() { return &detail::Latin2Codec; }
+  static TextEncoding BuiltinLatin3() { return &detail::Latin3Codec; }
+  static TextEncoding BuiltinLatin4() { return &detail::Latin4Codec; }
+
+  static TextEncoding BuiltinUtf8() { return &detail::Utf8Codec; }
+  static TextEncoding BuiltinUtf16() { return &detail::Utf16Codec; }
+  static TextEncoding BuiltinUtf16BE() { return &detail::Utf16BECodec; }
+  static TextEncoding BuiltinUtf16LE() { return &detail::Utf16LECodec; }
+  static TextEncoding BuiltinUtf32() { return &detail::Utf32Codec; }
+  static TextEncoding BuiltinUtf32BE() { return &detail::Utf32BECodec; }
+  static TextEncoding BuiltinUtf32LE() { return &detail::Utf32LECodec; }
+
  private:
   const TextCodec& codec_;
 
@@ -114,25 +121,6 @@ class BASE_EXPORT TextEncoding {
 
 BASE_EXPORT String ToString(BufferSpan buffer, TextEncoding codec);
 BASE_EXPORT String16 ToString16(BufferSpan buffer, TextEncoding codec);
-
-class BuiltinTextEncodings {
-  STATIC_ONLY(BuiltinTextEncodings);
- public:
-  static TextEncoding Ascii() { return &detail::AsciiCodec; }
-  static TextEncoding Cp1252() { return &detail::Cp1252Codec; }
-  static TextEncoding Latin1() { return &detail::Latin1Codec; }
-  static TextEncoding Latin2() { return &detail::Latin2Codec; }
-  static TextEncoding Latin3() { return &detail::Latin3Codec; }
-  static TextEncoding Latin4() { return &detail::Latin4Codec; }
-
-  static TextEncoding Utf8() { return &detail::Utf8Codec; }
-  static TextEncoding Utf16() { return &detail::Utf16Codec; }
-  static TextEncoding Utf16BE() { return &detail::Utf16BECodec; }
-  static TextEncoding Utf16LE() { return &detail::Utf16LECodec; }
-  static TextEncoding Utf32() { return &detail::Utf32Codec; }
-  static TextEncoding Utf32BE() { return &detail::Utf32BECodec; }
-  static TextEncoding Utf32LE() { return &detail::Utf32LECodec; }
-};
 
 class TextCodecBuilder {
  public:
@@ -155,14 +143,6 @@ class TextCodecBuilder {
 
 constexpr TextCodecBuilder BuildTextCodec(StringSpan name, const TextCodecVtable& vtable) {
   return TextCodecBuilder(name, vtable);
-}
-
-inline void TextConversionContext::MaybeThrow(bool saw_error) {
-  if (saw_error) {
-    did_fallback = true;
-    if (exception_on_fallback)
-      throw TextConversionFallbackException();
-  }
 }
 
 } // namespace stp

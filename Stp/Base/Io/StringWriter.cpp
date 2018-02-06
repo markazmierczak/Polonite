@@ -9,8 +9,8 @@
 
 namespace stp {
 
-TextEncoding StringWriter::GetEncoding() const { return BuiltinTextEncodings::Utf8(); }
-TextEncoding String16Writer::GetEncoding() const { return BuiltinTextEncodings::Utf16LE(); }
+TextEncoding StringWriter::GetEncoding() const { return TextEncoding::BuiltinUtf8(); }
+TextEncoding String16Writer::GetEncoding() const { return TextEncoding::BuiltinUtf16LE(); }
 
 void StringWriter::OnWriteAsciiChar(char c) { string_.Add(c); }
 void String16Writer::OnWriteAsciiChar(char c) { string_.Add(char_cast<char16_t>(c)); }
@@ -56,13 +56,6 @@ void StringWriter::OnWriteUtf16(String16Span text) {
 
 void String16Writer::OnWriteUtf16(String16Span text) {
   string_.Append(text);
-}
-
-void StringWriter::OnWriteEncoded(const BufferSpan& text, TextEncoding encoding) {
-  AppendEncoded(string_, text, encoding);
-}
-void String16Writer::OnWriteEncoded(const BufferSpan& text, TextEncoding encoding) {
-  AppendEncoded(string_, text, encoding);
 }
 
 } // namespace stp

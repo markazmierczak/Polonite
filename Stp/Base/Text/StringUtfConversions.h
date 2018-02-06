@@ -64,10 +64,10 @@ bool AppendUnicodeNonAscii(TOutput& output, const TInput& input) {
   auto* src_end = src + input.size();
   while (src < src_end) {
     char32_t codepoint = UtfTmpl<SrcCharType>::Decode(src, src_end);
-    if (LIKELY(!Unicode::IsDecodeError(codepoint))) {
+    if (LIKELY(!UtfBase::IsDecodeError(codepoint))) {
       AppendUnicodeCharacter(output, codepoint);
     } else {
-      AppendUnicodeCharacter(output, Unicode::ReplacementCharacter);
+      AppendUnicodeCharacter(output, unicode::ReplacementCodepoint);
       all_valid = false;
     }
   }

@@ -53,10 +53,6 @@ void FilePathWriter::OnWriteUtf16(String16Span text) {
     LOG(WARN, "ignored some illegal sequences from input to file path");
 }
 
-void FilePathWriter::OnWriteEncoded(const BufferSpan& text, TextEncoding encoding) {
-  throw NotSupportedException();
-}
-
 void FilePathWriter::OnEndLine() {
   // unable to add new line to FilePath
   throw NotSupportedException();

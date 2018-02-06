@@ -3,12 +3,11 @@
 
 #include "Base/Text/TextEncoding.h"
 
+#include "Base/Text/Utf.h"
+
 namespace stp {
-namespace detail {
 
 namespace {
-
-using Context = TextConversionContext;
 
 // 0x80 - 0x9F
 const char16_t Cp1252ToUnicode[32] = {
@@ -18,86 +17,47 @@ const char16_t Cp1252ToUnicode[32] = {
   0x02DC, 0x2122, 0x0161, 0x203A, 0x0153, 0x0000, 0x017E, 0x0178,
 };
 
-int Decode(Context& context, BufferSpan input, MutableStringSpan output, bool flush) {
-  auto* iptr = static_cast<const byte_t*>(input.data());
-  const int isize = input.size();
-  auto* optr = output.data();
-  int oi = 0;
-  bool saw_error = false;
-
-  for (int ii = 0; ii < isize; ++ii) {
-    byte_t b = iptr[ii];
-    if (LIKELY(b < 0x80)) {
-      optr[oi++] = static_cast<char>(b);
-    } else if (b >= 0xA0) {
-      oi += Utf8::EncodeInTwoUnits(optr + oi, b);
-    } else {
-      char16_t c = Cp1252ToUnicode[b - 0x80];
-      if (c) {
-        oi += EncodeUtf(optr + oi, c);
-      } else {
-        optr[oi++] = Unicode::FallbackUnit<char>;
-        saw_error = true;
-      }
-    }
-  }
-  context.MaybeThrow(saw_error);
-  ASSERT(oi <= output.size());
-  return oi;
-}
-
-int Decode16(Context& context, BufferSpan input, MutableString16Span output, bool flush) {
-  auto* iptr = static_cast<const byte_t*>(input.data());
-  const int isize = input.size();
-  auto* optr = output.data();
-  int oi = 0;
-  bool saw_error = false;
-
-  for (int ii = 0; ii < isize; ++ii) {
-    byte_t b = iptr[ii];
-    if (LIKELY(b < 0x80 || b >= 0xA0)) {
-      optr[oi++] = static_cast<char16_t>(b);
-    } else {
-      char16_t c = Cp1252ToUnicode[b - 0x80];
-      if (c) {
-        optr[oi++] = static_cast<char16_t>(c);
-      } else {
-        optr[oi++] = Unicode::FallbackUnit<char16_t>;
-        saw_error = true;
-      }
-    }
-  }
-  context.MaybeThrow(saw_error);
-  ASSERT(oi <= output.size());
-  return oi;
-}
-
 template<typename T>
-int CountCharsTmpl(const Context& context, BufferSpan input) {
-  auto* iptr = static_cast<const byte_t*>(input.data());
-  const int isize = input.size();
-  int oi = 0;
+inline TextConversionResult DecodeTmpl(
+    TextConversionContext* context, BufferSpan input, MutableSpan<T> output, bool flush) {
+  auto* input_data = static_cast<const byte_t*>(input.data());
+  int num_read = 0;
+  int num_wrote = 0;
+  bool did_fallback = false;
 
-  for (int i = 0, len = isize; i < len; ++i) {
-    byte_t b = iptr[i];
+  while (num_read < input.size() && num_wrote < output.size()) {
+    byte_t b = input_data[num_read];
     if (LIKELY(b < 0x80)) {
-      oi += 1;
+      output[num_wrote++] = static_cast<char>(b);
     } else {
-      char16_t c = b >= 0xA0 ? static_cast<char16_t>(b) : Cp1252ToUnicode[b - 0x80];
-      if (c)
-        oi += UtfTmpl<T>::EncodedLength(c);
-      else
-        oi += 1;
+      char16_t c;
+      if (b >= 0xA0) {
+        c = static_cast<char16_t>(b);
+      } else {
+        c = Cp1252ToUnicode[b - 0x80];
+        if (!c) {
+          c = unicode::ReplacementCodepoint;
+          did_fallback = true;
+        }
+      }
+      int encoded = TryEncodeUtf(output.GetSlice(num_wrote), c);
+      if (encoded == 0)
+        break;
+      num_wrote += encoded;
     }
+    ++num_read;
   }
-  return oi;
+  return TextConversionResult(num_read, num_wrote, did_fallback);
 }
 
-int CountChars(const Context& context, BufferSpan input) {
-  return CountCharsTmpl<char>(context, input);
+TextConversionResult Decode(
+    TextConversionContext* context, BufferSpan input, MutableStringSpan output, bool flush) {
+  return DecodeTmpl(context, input, output, flush);
 }
-int CountChars16(const Context& context, BufferSpan input) {
-  return CountCharsTmpl<char16_t>(context, input);
+
+TextConversionResult Decode16(
+    TextConversionContext* context, BufferSpan input, MutableString16Span output, bool flush) {
+  return DecodeTmpl(context, input, output, flush);
 }
 
 // 0x0150..0x0197
@@ -129,8 +89,8 @@ const byte_t Cp1252Page20[48] = {
   0x00, 0x8B, 0x9B, 0x00, 0x00, 0x00, 0x00, 0x00,
 };
 
-NEVER_INLINE byte_t EncodeExtra(char32_t c) {
-  ASSERT(!stp::IsAscii(c));
+byte_t EncodeExtra(char32_t c) {
+  ASSERT(!IsAscii(c));
   ASSERT(!(0x00A0 <= c && c < 0x0100));
 
   if (0x0150 <= c && c < 0x0198)
@@ -147,44 +107,38 @@ NEVER_INLINE byte_t EncodeExtra(char32_t c) {
 }
 
 template<typename T>
-int EncodeTmpl(Context& context, Span<T> input, MutableBufferSpan output) {
+inline TextConversionResult EncodeTmpl(
+    TextConversionContext* context, Span<T> input, MutableBufferSpan output) {
   auto* iptr = begin(input);
   auto* const iptr_end = end(input);
-  int oi = 0;
+  int num_wrote = 0;
   auto* optr = static_cast<byte_t*>(output.data());
-  bool saw_error = false;
+  bool did_fallback = false;
 
   while (iptr < iptr_end) {
     char32_t c = DecodeUtf(iptr, iptr_end);
     if ((c < 0x80) || (0x00A0 <= c && c < 0x0100)) {
-      optr[oi++] = static_cast<byte_t>(c);
+      optr[num_wrote++] = static_cast<byte_t>(c);
     } else {
       byte_t b = EncodeExtra(c);
       if (b != 0) {
-        optr[oi++] = b;
+        optr[num_wrote++] = b;
       } else {
-        optr[oi++] = Unicode::FallbackUnit<char>;
-        saw_error = true;
+        optr[num_wrote++] = '?';
+        did_fallback = true;
       }
     }
   }
-  context.MaybeThrow(saw_error);
-  ASSERT(oi <= output.size());
-  return oi;
+  return TextConversionResult(iptr - input.data(), num_wrote, did_fallback);
 }
 
-int Encode(Context& context, StringSpan input, MutableBufferSpan output) {
+TextConversionResult Encode(
+    TextConversionContext* context, StringSpan input, MutableBufferSpan output) {
   return EncodeTmpl(context, input, output);
 }
-int Encode16(Context& context, String16Span input, MutableBufferSpan output) {
+TextConversionResult Encode16(
+    TextConversionContext* context, String16Span input, MutableBufferSpan output) {
   return EncodeTmpl(context, input, output);
-}
-
-int CountBytes(const Context& context, StringSpan input) {
-  return input.size();
-}
-int CountBytes16(const Context& context, String16Span input) {
-  return input.size();
 }
 
 constexpr StringSpan Aliases[] = {
@@ -193,9 +147,7 @@ constexpr StringSpan Aliases[] = {
 
 constexpr TextCodecVtable Vtable = {
   Decode, Decode16,
-  CountChars, CountChars16,
   Encode, Encode16,
-  CountBytes, CountBytes16,
 };
 
 constexpr auto Build() {
@@ -208,7 +160,8 @@ constexpr auto Build() {
 
 } // namespace
 
+namespace detail {
 constexpr const TextCodec Cp1252Codec = Build();
+}
 
-} // namespace detail
 } // namespace stp

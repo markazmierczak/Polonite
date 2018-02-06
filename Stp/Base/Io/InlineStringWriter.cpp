@@ -10,10 +10,10 @@
 namespace stp {
 
 TextEncoding InlineStringWriter::GetEncoding() const {
-  return BuiltinTextEncodings::Utf8();
+  return TextEncoding::BuiltinUtf8();
 }
 TextEncoding InlineString16Writer::GetEncoding() const {
-  return BuiltinTextEncodings::Utf16();
+  return TextEncoding::BuiltinUtf16();
 }
 
 void InlineStringWriter::OnWriteAsciiChar(char c) {
@@ -68,12 +68,5 @@ static inline void OnIndentTmpl(InlineListBase<T>& string, int count, char c) {
 
 void InlineStringWriter::OnIndent(int count, char c) { OnIndentTmpl(string_, count, c); }
 void InlineString16Writer::OnIndent(int count, char c) { OnIndentTmpl(string_, count, c); }
-
-void InlineStringWriter::OnWriteEncoded(const BufferSpan& text, TextEncoding encoding) {
-  AppendEncoded(string_, text, encoding);
-}
-void InlineString16Writer::OnWriteEncoded(const BufferSpan& text, TextEncoding encoding) {
-  AppendEncoded(string_, text, encoding);
-}
 
 } // namespace stp

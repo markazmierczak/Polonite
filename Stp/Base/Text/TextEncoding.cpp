@@ -8,20 +8,21 @@
 
 namespace stp {
 
-template<typename T>
-static inline List<T> BytesToStringWithCodec(BufferSpan bytes, TextEncoding codec) {
-  List<T> result;
-  StringTmplWriter<T> writer(&result);
-  writer.Write(bytes, codec);
-  return result;
-}
-
-String ToString(BufferSpan bytes, TextEncoding codec) {
-  return BytesToStringWithCodec<char>(bytes, codec);
-}
-String16 ToString16(BufferSpan bytes, TextEncoding codec) {
-  return BytesToStringWithCodec<char16_t>(bytes, codec);
-}
+// FIXME
+//template<typename T>
+//static inline List<T> BytesToStringWithCodec(BufferSpan bytes, TextEncoding codec) {
+//  List<T> result;
+//  StringTmplWriter<T> writer(&result);
+//  writer.Write(bytes, codec);
+//  return result;
+//}
+//
+//String ToString(BufferSpan bytes, TextEncoding codec) {
+//  return BytesToStringWithCodec<char>(bytes, codec);
+//}
+//String16 ToString16(BufferSpan bytes, TextEncoding codec) {
+//  return BytesToStringWithCodec<char16_t>(bytes, codec);
+//}
 
 StringSpan TextConversionFallbackException::GetName() const noexcept {
   return "TextConversionFallbackException";
@@ -34,8 +35,6 @@ HashCode TextEncoding::HashImpl() const noexcept {
 namespace detail {
 
 static constexpr TextCodecVtable UndefinedVtable = {
-  nullptr, nullptr,
-  nullptr, nullptr,
   nullptr, nullptr,
   nullptr, nullptr,
 };

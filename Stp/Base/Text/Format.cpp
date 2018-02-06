@@ -186,7 +186,7 @@ static void FormatAndLayoutReplacement(
   // Write replacement into temporary buffer.
   InlineList<char, 512> buffer;
   InlineStringWriter base_writer(&buffer);
-  ClipTextWriter writer(base_writer, width);
+  ClipTextWriter writer(&base_writer, width);
   formatter->Execute(writer, opts);
 
   int pad_length = width - buffer.size();
