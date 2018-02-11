@@ -49,21 +49,8 @@ void ConsoleWriter::OnFlush() {
 }
 
 void ConsoleWriter::PrintBuffer(int ready_size) {
-  Print(buffer_.GetSlice(0, ready_size));
+  Write(buffer_.GetSlice(0, ready_size));
   buffer_.RemovePrefix(ready_size);
-}
-
-void ConsoleWriter::Print(StringSpan text) {
-  auto data = BufferSpan(text);
-
-  if (active_destinations_ & StandardOutputDestination)
-    std_->Write(data);
-  if (active_destinations_ & SystemDebugLogDestination) {
-    if (log_level_ != LogLevelUSER)
-      PrintToSystemDebugLog(text);
-  }
-  if (active_destinations_ & FileDestination)
-    g_log_file->Write(data);
 }
 
 #if OS(LINUX)
@@ -153,26 +140,17 @@ TextEncoding ConsoleWriter::GetEncoding() const {
   return BuiltinTextEncodings::Utf8();
 }
 
-void ConsoleWriter::OnWriteAsciiChar(char c) {
-  OnWriteAscii(StringSpan(&c, 1));
-}
+void ConsoleWriter::OnWriteString(StringSpan text) {
+  auto data = BufferSpan(text);
 
-void ConsoleWriter::OnWriteUnicodeChar(char32_t c) {
-  char buffer[Utf8::MaxEncodedCodepointLength];
-  int n = EncodeUtf(buffer, c);
-  OnWriteUtf8(StringSpan(buffer, n));
-}
-
-void ConsoleWriter::OnWriteAscii(StringSpan text) {
-  Print(text);
-}
-
-void ConsoleWriter::OnWriteUtf8(StringSpan text) {
-  Print(text);
-}
-
-void ConsoleWriter::OnWriteUtf16(String16Span text) {
-  OnWriteUtf8(ToString(text));
+  if (active_destinations_ & StandardOutputDestination)
+    std_->Write(data);
+  if (active_destinations_ & SystemDebugLogDestination) {
+    if (log_level_ != LogLevelUSER)
+      PrintToSystemDebugLog(text);
+  }
+  if (active_destinations_ & FileDestination)
+    g_log_file->Write(data);
 }
 
 } // namespace stp

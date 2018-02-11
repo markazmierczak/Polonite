@@ -5,6 +5,7 @@
 #define STP_BASE_TEXT_FORMAT_H_
 
 #include "Base/Containers/Array.h"
+#include "Base/Io/StringWriter.h"
 #include "Base/Type/Formattable.h"
 #include "Base/Util/Tuple.h"
 
@@ -12,7 +13,7 @@ namespace stp {
 
 namespace detail {
 
-class Formatter {
+class BASE_EXPORT Formatter {
  public:
   virtual void Execute(TextWriter& out, const StringSpan& opts) const = 0;
   virtual StringSpan GetArgName() const;

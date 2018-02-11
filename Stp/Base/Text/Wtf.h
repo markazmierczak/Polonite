@@ -59,13 +59,10 @@ class BASE_EXPORT Wtf16 : public UtfBase {
 // Converts WTF to strict UTF and writes to the output.
 // This conversion is lossy.
 BASE_EXPORT void WriteWtf(TextWriter& out, StringSpan wtf8);
-BASE_EXPORT void WriteWtf(TextWriter& out, String16Span wtf16);
 
 BASE_EXPORT String WtfToUtf8(StringSpan wtf8);
-BASE_EXPORT String WtfToUtf8(String16Span wtf16);
 
 BASE_EXPORT void AppendWtf(String& output, StringSpan wtf);
-BASE_EXPORT void AppendWtf(String& output, String16Span wtf);
 
 inline int Wtf8::EncodedLength(char32_t c) {
   ASSERT(c <= unicode::MaxCodepoint);

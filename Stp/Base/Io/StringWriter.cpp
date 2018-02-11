@@ -13,31 +13,22 @@ TextEncoding StringWriter::GetEncoding() const {
   return BuiltinTextEncodings::Utf8();
 }
 
-void StringWriter::OnWriteAsciiChar(char c) {
+void StringWriter::OnWriteChar(char c) {
   string_.Add(c);
 }
 
-void StringWriter::OnWriteAscii(StringSpan text) {
-  AppendAscii(string_, text);
+void StringWriter::OnWriteRune(char32_t codepoint) {
+  AppendUnicodeCharacter(string_, codepoint);
+}
+
+void StringWriter::OnWriteString(StringSpan text) {
+  string_.Append(text);
 }
 
 void StringWriter::OnIndent(int count, char c) {
   ASSERT(count >= 0);
   ASSERT(IsAscii(c));
   string_.AddRepeat(c, count);
-}
-
-void StringWriter::OnWriteUnicodeChar(char32_t codepoint) {
-  AppendUnicodeCharacter(string_, codepoint);
-}
-
-void StringWriter::OnWriteUtf8(StringSpan text) {
-  string_.Append(text);
-}
-
-void StringWriter::OnWriteUtf16(String16Span text) {
-  if (!AppendUnicode(string_, text))
-    LOG(WARN, "replaced illegal sequence with replacement");
 }
 
 } // namespace stp

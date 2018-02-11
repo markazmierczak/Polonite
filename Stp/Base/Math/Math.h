@@ -108,6 +108,10 @@ inline float Cos(float x) { return ::cosf(x); }
 inline double Cos(double x) { return ::cos(x); }
 inline long double Cos(long double x) { return ::cosl(x); }
 
+inline float SignBit(float x) { return signbit(x); }
+inline double SignBit(double x) { return signbit(x); }
+inline long double SignBit(long double x) { return signbit(x); }
+
 namespace detail {
 template<typename T>
 struct SinCosResult {

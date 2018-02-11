@@ -4,7 +4,7 @@
 #include "Base/FileSystem/FileSystemException.h"
 
 #include "Base/Posix/PosixErrorCode.h"
-#include "Base/Io/TextWriter.h"
+#include "Base/Type/Formattable.h"
 
 namespace stp {
 
@@ -15,12 +15,10 @@ StringSpan FileSystemException::GetName() const noexcept {
 void FileSystemException::OnFormat(TextWriter& out) const {
   out << GetErrorCode();
   if (!path_.IsEmpty()) {
-    out.WriteAscii(", path=");
-    out << path_;
+    out << ", path=" << path_;
   }
   if (!aux_path_.IsEmpty()) {
-    out.WriteAscii(", aux_path=");
-    out << aux_path_;
+    out << ", aux_path=" << aux_path_;
   }
 }
 

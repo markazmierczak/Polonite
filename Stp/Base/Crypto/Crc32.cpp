@@ -5,8 +5,8 @@
 
 #include "Base/Containers/Array.h"
 #include "Base/Error/BasicExceptions.h"
-#include "Base/Io/TextWriter.h"
 #include "Base/Text/AsciiChar.h"
+#include "Base/Type/Formattable.h"
 
 namespace stp {
 
@@ -34,7 +34,7 @@ static void Format(TextWriter& out, Crc32Value value, bool uppercase) {
   for (int i = 0; i < NibbleCount; ++i) {
     text[i] = NibbleToHexDigit(raw >> (28 - 4 * i), uppercase);
   }
-  out.WriteAscii(text);
+  out << text;
 }
 
 void Format(TextWriter& out, Crc32Value value) {

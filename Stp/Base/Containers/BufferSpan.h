@@ -113,7 +113,7 @@ class MutableBufferSpan {
 
   template<typename T, int N, TEnableIf<TIsTrivial<T> && !TIsConst<T>>* = nullptr>
   explicit constexpr MutableBufferSpan(T (&array)[N]) noexcept
-      : MutableBufferSpan(array, N) {
+      : MutableBufferSpan(array, N - TIsCharacter<T>) {
     if constexpr (TIsCharacter<T>)
       ASSERT(array[N - 1] == '\0');
   }

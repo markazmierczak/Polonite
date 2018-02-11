@@ -485,8 +485,7 @@ static NEVER_INLINE void FormatSymbolImpl(TextWriter& out, void* pc) {
 
   auto filename = MakeSpanFromNullTerminated(filename_cstr);
   if (!filename.IsEmpty()) {
-    out.WriteAscii(" at ");
-    out.Write(filename);
+    out << " at " << filename;
   }
 }*/
 
@@ -494,7 +493,7 @@ void FormatSymbol(TextWriter& out, void *pc) {
 //  try {
 //    FormatSymbolImpl(out, pc);
 //  } catch (Exception& exception) {
-    out.WriteAscii("symbol ");
+      out << "symbol ";
 //    Format(out, pc);
 //  }
 }

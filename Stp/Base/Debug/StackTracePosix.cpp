@@ -154,8 +154,7 @@ static void StackDumpSignalHandler(int signal, siginfo_t* info, void* void_conte
     Debugger::Break();
 
   ConsoleWriter& out = Console::Err();
-  out.WriteAscii("Received signal ");
-  out.Write(signal);
+  out << "Received signal " << signal;
 
   out.Write(GetSignalName(signal, info->si_code));
 
@@ -163,14 +162,14 @@ static void StackDumpSignalHandler(int signal, siginfo_t* info, void* void_conte
       signal == SIGILL || signal == SIGSEGV) {
     Format(out, info->si_addr);
   }
-  out.WriteLine();
+  out << EndOfLine;
 
   #if defined(CFI_ENFORCEMENT)
   if (signal == SIGILL && info->si_code == ILL_ILLOPN) {
-    out.WriteAscii(
+    out <<
         "CFI: Most likely a control flow integrity violation; for more "
-        "information see:\n");
-    out.WriteAscii("https://www.chromium.org/developers/testing/control-flow-integrity\n");
+        "information see:\n"
+        "https://www.chromium.org/developers/testing/control-flow-integrity\n";
   }
   #endif
 
@@ -218,7 +217,7 @@ void StackTrace::FormatSymbols(TextWriter& out) const {
     for (int i = 0; i < count_; ++i) {
       auto trace_symbol = MakeSpanFromNullTerminated(trace_symbols.get()[i]);
       DemangleSymbols(out, trace_symbol);
-      out.WriteLine();
+      out << EndOfLine;
     }
   }
 }

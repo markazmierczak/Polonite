@@ -30,25 +30,15 @@ void FilePathWriter::EnsureSeparator() {
   path_.chars().Add(FilePathSeparator);
 }
 
-void FilePathWriter::OnWriteAsciiChar(char c) {
-  ASSERT(IsAscii(c));
+void FilePathWriter::OnWriteChar(char c) {
   path_.chars().Add(char_cast<FilePathChar>(c));
 }
 
-void FilePathWriter::OnWriteUnicodeChar(char32_t codepoint) {
+void FilePathWriter::OnWriteRune(char32_t codepoint) {
   AppendUnicodeCharacter(path_.chars(), codepoint);
 }
 
-void FilePathWriter::OnWriteAscii(StringSpan text) {
-  AppendAscii(path_.chars(), text);
-}
-
-void FilePathWriter::OnWriteUtf8(StringSpan text) {
-  if (!AppendUnicode(path_.chars(), text))
-    LOG(WARN, "ignored some illegal sequences from input to file path");
-}
-
-void FilePathWriter::OnWriteUtf16(String16Span text) {
+void FilePathWriter::OnWriteString(StringSpan text) {
   if (!AppendUnicode(path_.chars(), text))
     LOG(WARN, "ignored some illegal sequences from input to file path");
 }

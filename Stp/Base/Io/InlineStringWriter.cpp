@@ -13,26 +13,16 @@ TextEncoding InlineStringWriter::GetEncoding() const {
   return BuiltinTextEncodings::Utf8();
 }
 
-void InlineStringWriter::OnWriteAsciiChar(char c) {
-  ASSERT(IsAscii(c));
+void InlineStringWriter::OnWriteChar(char c) {
   string_.Add(c);
 }
 
-void InlineStringWriter::OnWriteUnicodeChar(char32_t codepoint) {
-  AppendUnicodeCharacter(string_, codepoint);
+void InlineStringWriter::OnWriteRune(char32_t rune) {
+  AppendUnicodeCharacter(string_, rune);
 }
 
-void InlineStringWriter::OnWriteAscii(StringSpan text) {
-  AppendAscii(string_, text);
-}
-
-void InlineStringWriter::OnWriteUtf8(StringSpan text) {
+void InlineStringWriter::OnWriteString(StringSpan text) {
   string_.Append(text);
-}
-
-void InlineStringWriter::OnWriteUtf16(String16Span text) {
-  if (!AppendUnicode(string_, text))
-    LOG(WARN, "replaced illegal sequence with replacement");
 }
 
 void InlineStringWriter::OnIndent(int count, char c) {

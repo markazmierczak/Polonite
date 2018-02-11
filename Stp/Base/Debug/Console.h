@@ -44,17 +44,12 @@ class ConsoleWriter : public TextWriter {
   bool IsConsoleWriter() const override;
 
  private:
-  void Print(StringSpan text);
   void PrintBuffer(int ready_size);
   void PrintToSystemDebugLog(StringSpan text);
 
   void FetchDefaultColors();
 
-  void OnWriteAsciiChar(char c) override;
-  void OnWriteUnicodeChar(char32_t c) override;
-  void OnWriteAscii(StringSpan text) override;
-  void OnWriteUtf8(StringSpan text) override;
-  void OnWriteUtf16(String16Span text) override;
+  void OnWriteString(StringSpan text) override;
   void OnFlush() override;
 
   String buffer_;

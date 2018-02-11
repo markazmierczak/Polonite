@@ -10,6 +10,7 @@
 #include "Base/App/Application.h"
 #include "Base/Posix/EintrWrapper.h"
 #include "Base/Posix/StatWrapper.h"
+#include "Base/Type/Formattable.h"
 
 #include <errno.h>
 #include <fcntl.h>
@@ -56,9 +57,7 @@ SystemErrorCode File::TryCreateTemporaryIn(const FilePath& dir, FilePath& output
 
   FilePathWriter writer(output_path);
   writer.EnsureSeparator();
-  writer.WriteAscii(".stp.");
-  writer.WriteAscii(Application::Instance().GetName());
-  writer.WriteAscii(".XXXXXX");
+  writer << ".stp." << Application::Instance().GetName() << ".XXXXXX";
 
   // this should be OK since mkstemp just replaces characters in place
   char* buffer = const_cast<char*>(ToNullTerminated(output_path));

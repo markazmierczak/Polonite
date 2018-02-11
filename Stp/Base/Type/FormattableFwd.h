@@ -35,11 +35,11 @@ inline void FormatContiguous(TextWriter& out, const T* data, int size);
 
 template<typename T, int N, TEnableIf<TIsFormattable<T>>* = nullptr>
 inline void Format(TextWriter& out, const T (&array)[N], const StringSpan& opts) {
-  FormatContiguous(out, static_cast<const T*>(array), N, opts);
+  FormatContiguous(out, static_cast<const T*>(array), N - TIsCharacter<T>, opts);
 }
 template<typename T, int N, TEnableIf<TIsFormattable<T>>* = nullptr>
 inline TextWriter& operator<<(TextWriter& out, const T (&array)[N]) {
-  FormatContiguous(out, static_cast<const T*>(array), N); return out;
+  FormatContiguous(out, static_cast<const T*>(array), N - TIsCharacter<T>); return out;
 }
 
 BASE_EXPORT void FormatBuffer(TextWriter& out, const void* data, int size, const StringSpan& opts);

@@ -101,8 +101,7 @@ void Time::FormatImpl(TextWriter& out, Time x) {
 }
 
 void ThreadTicks::FormatImpl(TextWriter& out, ThreadTicks x) {
-  out << x.us_;
-  out.WriteAscii(" bogo-thread-microseconds");
+  out << x.us_ << " bogo-thread-microseconds";
 }
 
 // Time::Exploded -------------------------------------------------------------

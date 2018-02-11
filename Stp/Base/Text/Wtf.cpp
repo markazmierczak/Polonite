@@ -123,7 +123,6 @@ static inline void WriteWtfTmpl(TextWriter& out, Span<T> wtf) {
 }
 
 void WriteWtf(TextWriter& out, StringSpan wtf) { WriteWtfTmpl(out, wtf); }
-void WriteWtf(TextWriter& out, String16Span wtf) { WriteWtfTmpl(out, wtf); }
 
 template<typename T>
 static inline String WtfToUtf8Tmpl(Span<T> wtf) {
@@ -136,7 +135,6 @@ static inline String WtfToUtf8Tmpl(Span<T> wtf) {
 }
 
 String WtfToUtf8(StringSpan wtf) { return WtfToUtf8Tmpl(wtf); }
-String WtfToUtf8(String16Span wtf) { return WtfToUtf8Tmpl(wtf); }
 
 template<typename TOutput, typename TInput>
 static inline void AppendWtfTmpl(List<TOutput>& output, Span<TInput> wtf) {
@@ -148,6 +146,5 @@ static inline void AppendWtfTmpl(List<TOutput>& output, Span<TInput> wtf) {
 }
 
 void AppendWtf(String& output, StringSpan wtf) { AppendWtfTmpl(output, wtf); }
-void AppendWtf(String& output, String16Span wtf) { AppendWtfTmpl(output, wtf); }
 
 } // namespace stp

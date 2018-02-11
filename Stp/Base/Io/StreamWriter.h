@@ -7,7 +7,6 @@
 #include "Base/Containers/Buffer.h"
 #include "Base/Io/Stream.h"
 #include "Base/Io/TextWriter.h"
-#include "Base/Text/TextEncoder.h"
 
 namespace stp {
 
@@ -32,7 +31,6 @@ class BASE_EXPORT StreamWriter final : public TextWriter {
   void OnWriteUnicodeChar(char32_t c) override;
   void OnWriteAscii(StringSpan text) override;
   void OnWriteUtf8(StringSpan text) override;
-  void OnWriteUtf16(String16Span text) override;
   void OnFlush() override;
 
  private:
@@ -57,8 +55,7 @@ class BASE_EXPORT StreamWriter final : public TextWriter {
   void WriteToBuffer(BufferSpan input);
   void FlushBuffer();
 
-  void WriteUnicodeCharAsUtf8(char32_t codepoint);
-  void WriteUnicodeCharAsUtf16(char32_t codepoint);
+  void WriteRune(char32_t codepoint);
 
   template<typename TDst, typename TSrc>
   void OnWriteAsciiTmpl(const TSrc* text, int length);

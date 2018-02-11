@@ -4,6 +4,7 @@
 #include "Base/Text/TextEncoding.h"
 
 #include "Base/Io/StringWriter.h"
+#include "Base/Text/AsciiChar.h"
 #include "Base/Type/Hashable.h"
 
 namespace stp {

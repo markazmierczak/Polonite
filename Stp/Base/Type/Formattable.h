@@ -1,7 +1,7 @@
 // Copyright 2017 Polonite Authors. All rights reserved.
 // Distributed under MIT license that can be found in the LICENSE file.
 
-#include "Base/Io/StringWriter.h"
+#include "Base/Io/TextWriter.h"
 #include "Base/Text/FormatFwd.h"
 #include "Base/Text/StringSpan.h"
 #include "Base/Type/FormattableFwd.h"

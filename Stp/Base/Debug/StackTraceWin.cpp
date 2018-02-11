@@ -123,14 +123,13 @@ void FormatSymbol(TextWriter& out, void* pc) {
   BOOL has_line = ::SymGetLineFromAddrW64(current_process_handle, frame, &line_displacement, &line);
 
   if (has_symbol) {
-    out.Write(MakeSpanFromNullTerminated(symbol.info.Name));
-    out.Write('+');
-    out.Write(sym_displacement);
+    out << MakeSpanFromNullTerminated(symbol.info.Name);
+    out << '+' << sym_displacement;
   } else {
-    out.WriteAscii("(no symbol)");
+    out << "(no symbol)";
   }
   if (has_line) {
-    out.Format(" ({}:{})", MakeSpanFromNullTerminated(line.FileName), line.LineNumber);
+    out << " (" << MakeSpanFromNullTerminated(line.FileName) << ':' << line.LineNumber << ")";
   }
 }
 

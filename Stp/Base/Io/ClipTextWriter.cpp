@@ -29,28 +29,18 @@ TextEncoding ClipTextWriter::GetEncoding() const {
   return base_.GetEncoding();
 }
 
-void ClipTextWriter::OnWriteAsciiChar(char c) {
-  ASSERT(IsAscii(c));
+void ClipTextWriter::OnWriteChar(char c) {
   if (Grow(1) > 0)
     base_.Write(c);
 }
 
-void ClipTextWriter::OnWriteUnicodeChar(char32_t codepoint) {
+void ClipTextWriter::OnWriteRune(char32_t rune) {
   if (Grow(1) > 0)
-    base_.Write(codepoint);
-}
-
-void ClipTextWriter::OnWriteAscii(StringSpan text) {
-  int n = Grow(text.size());
-  if (n > 0)
-    base_.WriteAscii(text.GetSlice(0, n));
+    base_.Write(rune);
 }
 
 static bool SplitsCharacterAt(StringSpan text, int at) {
   return Utf8::IsEncodedTrail(text[at]);
-}
-static bool SplitsCharacterAt(String16Span text, int at) {
-  return unicode::IsTrailSurrogate(text[at]);
 }
 
 static void TrimLastCharacter(StringSpan& text) {
@@ -61,38 +51,22 @@ static void TrimLastCharacter(StringSpan& text) {
   }
 }
 
-static void TrimLastCharacter(String16Span& text) {
-  if (!text.IsEmpty() && unicode::IsLeadSurrogate(text.GetLast()))
-    text.RemoveSuffix(1);
-}
-
-template<typename T>
-static void CutText(Span<T>& text, int at) {
+static void CutText(StringSpan& text, int at) {
   bool splits = SplitsCharacterAt(text, at);
   text.Truncate(at);
   if (splits)
     TrimLastCharacter(text);
 }
 
-template<typename T>
-static void OnWriteUtfTmpl(TextWriter& base, Span<T> text, int n) {
+void ClipTextWriter::OnWriteString(StringSpan text) {
+  int n = Grow(text.size());
   if (n < text.size()) {
     if (n > 0)
       CutText(text, n);
     if (n <= 0)
       return;
   }
-  base.Write(text);
-}
-
-void ClipTextWriter::OnWriteUtf8(StringSpan text) {
-  int n = Grow(text.size());
-  OnWriteUtfTmpl(base_, text, n);
-}
-
-void ClipTextWriter::OnWriteUtf16(String16Span text) {
-  int n = Grow(text.size());
-  OnWriteUtfTmpl(base_, text, n);
+  base_.Write(text);
 }
 
 void ClipTextWriter::OnIndent(int count, char c) {

@@ -5,6 +5,7 @@
 #define STP_BASE_TYPE_ARRAY_H_
 
 #include "Base/Type/CVRef.h"
+#include "Base/Type/Scalar.h"
 
 namespace stp {
 
@@ -95,7 +96,7 @@ constexpr int TExtent = detail::TExtentHelper<T, N>::Value;
 template<typename T, int N>
 constexpr T* begin(T (&array)[N]) { return array; }
 template<typename T, int N>
-constexpr T* end(T (&array)[N]) { return array + N; }
+constexpr T* end(T (&array)[N]) { return array + N - TIsCharacter<T>; }
 
 } // namespace stp
 

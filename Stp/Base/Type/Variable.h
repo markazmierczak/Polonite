@@ -5,7 +5,6 @@
 #define STP_BASE_TYPE_VARIABLE_H_
 
 #include "Base/Type/Array.h"
-#include "Base/Type/Scalar.h"
 
 namespace stp {
 

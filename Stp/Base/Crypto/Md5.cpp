@@ -17,8 +17,8 @@
 
 #include "Base/Containers/Array.h"
 #include "Base/Error/BasicExceptions.h"
-#include "Base/Io/TextWriter.h"
 #include "Base/Text/AsciiChar.h"
+#include "Base/Type/Formattable.h"
 
 namespace stp {
 
@@ -45,7 +45,7 @@ static void Format(TextWriter& out, const Md5Digest& digest, bool uppercase) {
     text[i * 2 + 0] = NibbleToHexDigit((digest[i] >> 4) & 0xF, uppercase);
     text[i * 2 + 1] = NibbleToHexDigit((digest[i] >> 0) & 0xF, uppercase);
   }
-  out.WriteAscii(text);
+  out << text;
 }
 
 void Format(TextWriter& out, const Md5Digest& digest) {

@@ -24,11 +24,9 @@ class BASE_EXPORT ClipTextWriter final : public TextWriter {
   TextEncoding GetEncoding() const override;
 
  protected:
-  void OnWriteAsciiChar(char c) override;
-  void OnWriteUnicodeChar(char32_t c) override;
-  void OnWriteAscii(StringSpan text) override;
-  void OnWriteUtf8(StringSpan text) override;
-  void OnWriteUtf16(String16Span text) override;
+  void OnWriteChar(char c) override;
+  void OnWriteRune(char32_t rune) override;
+  void OnWriteString(StringSpan text) override;
   void OnIndent(int count, char c) override;
 
  private:

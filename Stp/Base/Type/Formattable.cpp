@@ -14,11 +14,14 @@ namespace stp {
 namespace detail {
 
 void FormatNull(TextWriter& out) {
-  out.WriteAscii("null");
+  out << "null";
 }
 
 void FormatBool(TextWriter& out, bool b) {
-  out.WriteAscii(b ? StringSpan("true") : StringSpan("false"));
+  if (b)
+    out << "true";
+  else
+    out << "false";
 }
 
 void FormatBool(TextWriter& out, bool b, const StringSpan& opts) {
@@ -30,19 +33,19 @@ void FormatBool(TextWriter& out, bool b, const StringSpan& opts) {
   char variant = opts[0];
   switch (variant) {
     case 't':
-      out.WriteAscii(b ? StringSpan("true") : StringSpan("false"));
+      out << (b ? StringSpan("true") : StringSpan("false"));
       break;
 
     case 'T':
-      out.WriteAscii(b ? StringSpan("TRUE") : StringSpan("FALSE"));
+      out << (b ? StringSpan("TRUE") : StringSpan("FALSE"));
       break;
 
     case 'y':
-      out.WriteAscii(b ? StringSpan("yes") : StringSpan("no"));
+      out << (b ? StringSpan("yes") : StringSpan("no"));
       break;
 
     case 'Y':
-      out.WriteAscii(b ? StringSpan("YES") : StringSpan("NO"));
+      out << (b ? StringSpan("YES") : StringSpan("NO"));
       break;
 
     case 'd':
@@ -96,14 +99,14 @@ void FormatChar(TextWriter& out, char32_t c, const StringSpan& opts) {
 
   switch (variant) {
     case Variant::Unicode:
-      out.WriteAscii("U+");
+      out << "U+";
       // no break
     case Variant::Hex: {
       FormatHexIntegerBuffer<uint32_t> buffer;
       StringSpan hex = FormatHexInteger(static_cast<uint32_t>(c), buffer, uppercase);
       if (hex.size() < size)
         out.Indent(size - hex.size(), '0');
-      out.WriteAscii(hex);
+      out << hex;
       break;
     }
 
@@ -117,10 +120,10 @@ template<typename T>
 static inline void FormatIntTmpl(TextWriter& out, T x) {
   if constexpr (TIsUnsigned<T>) {
     FormatHexIntegerBuffer<T> buffer;
-    out.WriteAscii(FormatHexInteger(x, buffer));
+    out << FormatHexInteger(x, buffer);
   } else {
     FormatIntegerBuffer<T> buffer;
-    out.WriteAscii(FormatInteger(x, buffer));
+    out << FormatInteger(x, buffer);
   }
 }
 
@@ -207,7 +210,7 @@ static inline void FormatIntTmpl(TextWriter& out, T x, const StringSpan& opts) {
   if (converted.size() < precision)
     out.Indent(precision - converted.size(), '0');
 
-  out.WriteAscii(converted);
+  out << converted;
 }
 
 void FormatSInt32(TextWriter& out,  int32_t x, const StringSpan& opts) { FormatIntTmpl(out, x, opts); }
@@ -313,7 +316,7 @@ void FormatFloat(TextWriter& out, double x, const StringSpan& opts) {
       out.Write(sign == '+' ? '+' : ' ');
   }
 
-  out.WriteAscii(converted);
+  out << converted;
 
   if (variant == Variant::Percent) {
     if (IsFinite(x))
@@ -324,14 +327,14 @@ void FormatFloat(TextWriter& out, double x, const StringSpan& opts) {
 void FormatRawPointer(TextWriter& out, const void* ptr) {
   constexpr int AddressDigitCount = sizeof(ptr) * 2;
 
-  out.WriteAscii("0x");
+  out << "0x";
 
   FormatHexIntegerBuffer<uintptr_t> buffer;
   StringSpan hex = FormatHexInteger(reinterpret_cast<uintptr_t>(ptr), buffer);
   if (hex.size() < AddressDigitCount)
     out.Indent(AddressDigitCount - hex.size(), '0');
 
-  out.WriteAscii(hex);
+  out << hex;
 }
 
 
@@ -343,7 +346,7 @@ void FormatContiguousGenericExt(
   out.Write('[');
   for (int i = 0; i < size; ++i) {
     if (i != 0)
-      out.WriteAscii(", ");
+      out << ", ";
     item_format(out, static_cast<const byte_t*>(data) + i * item_size, opts);
   }
   out.Write(']');
@@ -362,7 +365,7 @@ static void FormatBufferSimple(TextWriter& out, const void* data, int size, bool
     int chars_to_print = bytes_to_print * 2;
 
     FormatBuffer(MutableStringSpan(out_buffer, chars_to_print), bytes, bytes_to_print, uppercase);
-    out.WriteAscii(StringSpan(out_buffer, chars_to_print));
+    out << StringSpan(out_buffer, chars_to_print);
     bytes += bytes_to_print;
     size -= bytes_to_print;
   }
@@ -377,7 +380,7 @@ static void FormatByte(TextWriter& out, byte_t b) {
   string[0] = NibbleToHexDigitUpper((b >> 4) & 0x0F);
   string[1] = NibbleToHexDigitUpper((b >> 0) & 0x0F);
   string[2] = '\0';
-  out.WriteAscii(string);
+  out << string;
 }
 
 void FormatBuffer(TextWriter& out, const void* data, int size, const StringSpan& opts) {
@@ -417,7 +420,7 @@ void FormatBuffer(TextWriter& out, const void* data, int size, const StringSpan&
       if (i < size) {
         FormatByte(out, bytes[i]);
       } else {
-        out.WriteAscii("  ");
+        out << "  ";
       }
       out << ' ';
     }

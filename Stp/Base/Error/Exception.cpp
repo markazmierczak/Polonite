@@ -3,9 +3,9 @@
 
 #include "Base/Error/Exception.h"
 
-#include "Base/Io/TextWriter.h"
 #include "Base/Memory/Allocate.h"
 #include "Base/Text/StringSpan.h"
+#include "Base/Type/Formattable.h"
 
 #include <exception>
 
@@ -94,8 +94,7 @@ void Exception::AddMessage(const char* msg, int msg_size, bool literal) {
 }
 
 void Exception::FormatImpl(TextWriter& out) const {
-  out.Write(GetName());
-  out.WriteAscii(": ");
+  out << GetName() << ": ";
 
   OnFormat(out);
 

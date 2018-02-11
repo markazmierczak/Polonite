@@ -33,8 +33,7 @@ void TimeTicks::FormatImpl(TextWriter& out, TimeTicks x) {
   // from run to run. Although bogo-microseconds usually roughly correspond to
   // real microseconds, the only real guarantee is that the number never goes
   // down during a single run.
-  out << x.us_;
-  out.WriteAscii(" bogo-microseconds");
+  out << x.us_ << " bogo-microseconds";
 }
 
 } // namespace stp

@@ -40,8 +40,7 @@ TextWriter& AssertPrint(const char* file, int line, const char* expr) {
   // Include a stack trace on a fatal, unless a debugger is attached.
   bool being_debugged = Debugger::IsPresent();
   if (!being_debugged) {
-    out.WriteAscii("Stack Trace: ");
-    out << EndOfLine;
+    out << "Stack Trace: " << EndOfLine;
     // FIXME Format(out, StackTrace());
   }
   #endif
@@ -52,7 +51,7 @@ TextWriter& AssertPrint(const char* file, int line, const char* expr) {
 
   out << '"';
   out << MakeSpanFromNullTerminated(expr);
-  out.WriteAscii("\" at ");
+  out << "\" at ";
   out << MakeSpanFromNullTerminated(file) << ':'  << line << EndOfLine;
 
   out.SetForegroundColor(ConsoleColor::Red);

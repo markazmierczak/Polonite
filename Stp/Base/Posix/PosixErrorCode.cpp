@@ -106,8 +106,7 @@ void Format(TextWriter& out, PosixErrorCode code) {
   char buf[256];
   safe_strerror_r(ToUnderlying(code), buf, sizeof(buf));
   out << MakeSpanFromNullTerminated(buf);
-  out.WriteAscii(", code=");
-  out << code;
+  out << ", code=" << code;
 }
 
 } // namespace detail

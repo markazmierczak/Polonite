@@ -3,7 +3,7 @@
 
 #include "Base/Io/IoException.h"
 
-#include "Base/Io/TextWriter.h"
+#include "Base/Type/Formattable.h"
 
 namespace stp {
 
@@ -16,7 +16,7 @@ StringSpan EndOfStreamException::GetName() const noexcept {
 }
 
 void EndOfStreamException::OnFormat(TextWriter& out) const {
-  out.WriteAscii("failed due operation past end of stream");
+  out << "failed due operation past end of stream";
 }
 
 } // namespace stp

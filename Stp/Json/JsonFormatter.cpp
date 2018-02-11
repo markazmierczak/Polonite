@@ -21,15 +21,15 @@ bool JsonFormatter::Write(const JsonValue& node, int depth) {
   bool result;
   switch (node.type()) {
     case JsonValue::Type::Null:
-      out_.WriteAscii("null");
+      out_ << "null";
       result = true;
       break;
 
     case JsonValue::Type::Boolean:
       if (node.AsBool())
-        out_.WriteAscii("true");
+        out_ << "true";
       else
-        out_.WriteAscii("false");
+        out_ << "false";
       result = true;
       break;
 
@@ -101,10 +101,14 @@ bool JsonFormatter::WriteDouble(const JsonValue& node) {
         return false;
       out_.Write(0);
     } else {
-      if (IsNaN(d))
-        out_.WriteAscii("NaN");
-      else
-        out_.WriteAscii(d < 0 ? StringSpan("-Infinity") : StringSpan("Infinity"));
+      if (IsNaN(d)) {
+        out_ << "NaN";
+      } else {
+        if (d < 0) {
+          out_ << '-';
+        }
+        out_ << "Infinity";
+      }
     }
   } else {
     bool wrote = false;

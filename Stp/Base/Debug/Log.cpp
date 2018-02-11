@@ -44,7 +44,7 @@ void LogWrapUp(TextWriter& out_base) {
 
 static void PrintLogLevel(ConsoleWriter& out, StringSpan name, ConsoleColor color) {
   out.SetForegroundColor(color);
-  out.WriteAscii(name);
+  out << name;
   out.ResetColors();
 }
 
@@ -78,7 +78,7 @@ TextWriter* LogPrintCommon(LogLevel level, const char* file, unsigned line) {
       UNREACHABLE();
   }
 
-  out.WriteAscii("] ");
+  out << "] ";
 
   if (g_location_is_printed) {
     out << MakeSpanFromNullTerminated(file) << ':' << line << ' ';
@@ -209,9 +209,7 @@ static void ParseMatchers(StringSpan input) {
     if (!parsed) {
       TextWriter* out = LogPrintCommon(LogLevelERROR, "", 0);
       if (out) {
-        out->WriteAscii("unable to parse vmodule: ");
-        out->Write(pair);
-        *out << EndOfLine;
+        *out << "unable to parse vmodule: " << pair << EndOfLine;
         LogWrapUp(*out);
       }
     }

@@ -5,10 +5,8 @@
 #define STP_BASE_IO_TEXTWRITER_H_
 
 #include "Base/Containers/BufferSpanFwd.h"
-#include "Base/Text/AsciiChar.h"
 #include "Base/Text/FormatFwd.h"
 #include "Base/Text/StringSpan.h"
-#include "Base/Text/Unicode.h"
 
 namespace stp {
 
@@ -31,12 +29,9 @@ class BASE_EXPORT TextWriter {
   void Write(char c);
   void Write(char16_t c) { Write(static_cast<char32_t>(c)); }
   void Write(wchar_t c) { Write(char_cast<char32_t>(c)); }
-  void Write(char32_t c);
+  void Write(char32_t rune);
 
-  void WriteAscii(StringSpan text);
-
-  void Write(StringSpan text) { OnWriteUtf8(text); }
-  void Write(String16Span text) { OnWriteUtf16(text); }
+  void Write(StringSpan text) { OnWriteString(text); }
 
   void Indent(int count, char c = ' ');
 
@@ -53,12 +48,9 @@ class BASE_EXPORT TextWriter {
   }
 
  protected:
-  virtual void OnWriteAsciiChar(char c) = 0;
-  virtual void OnWriteUnicodeChar(char32_t c) = 0;
-
-  virtual void OnWriteAscii(StringSpan text) = 0;
-  virtual void OnWriteUtf8(StringSpan text) = 0;
-  virtual void OnWriteUtf16(String16Span text) = 0;
+  virtual void OnWriteChar(char c);
+  virtual void OnWriteRune(char32_t c);
+  virtual void OnWriteString(StringSpan text) = 0;
 
   virtual void OnEndLine();
 
@@ -66,26 +58,20 @@ class BASE_EXPORT TextWriter {
 
   virtual void OnFlush();
 
+  #if ASSERT_IS_ON()
+  bool IsValidChar(char c);
+  #endif
+
   DISALLOW_COPY_AND_ASSIGN(TextWriter);
 };
 
 inline void TextWriter::Write(char c) {
-  ASSERT(IsAscii(c));
-  OnWriteAsciiChar(c);
-}
-
-inline void TextWriter::Write(char32_t c) {
-  ASSERT(unicode::IsValidCodepoint(c));
-  OnWriteUnicodeChar(c);
-}
-
-inline void TextWriter::WriteAscii(StringSpan text) {
-  ASSERT(IsAscii(text));
-  OnWriteAscii(text);
+  ASSERT(IsValidChar(c));
+  OnWriteChar(c);
 }
 
 inline void TextWriter::Indent(int count, char c) {
-  ASSERT(IsAscii(c));
+  ASSERT(IsValidChar(c));
   OnIndent(count, c);
 }
 

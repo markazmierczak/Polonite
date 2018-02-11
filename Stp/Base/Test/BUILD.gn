@@ -190,7 +190,6 @@ test("BaseUnitTests") {
     # FIXME "FileSystem/MemoryMappedFileTest.cpp",
     # FIXME "FileSystem/TemporaryDirectoryTest.cpp",
     "../Io/Base64Test.cpp",
-    "../Io/TextWriterTest.cpp",
 
     # FIXME "Linux/ProcMapsTest.cpp",
 

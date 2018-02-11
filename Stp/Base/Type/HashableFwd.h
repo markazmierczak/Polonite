@@ -28,7 +28,7 @@ template<typename T>
 inline HashCode HashContiguous(const T* data, int size);
 
 template<typename T, int N, TEnableIf<TIsHashable<T>>* = nullptr>
-inline HashCode Hash(T (&array)[N]) { return HashContiguous(array, N); }
+inline HashCode Hash(T (&array)[N]) { return HashContiguous(array, N - TIsCharacter<T>); }
 
 } // namespace stp
 

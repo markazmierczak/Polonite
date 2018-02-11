@@ -4,7 +4,9 @@
 #include "Base/Io/TextWriter.h"
 
 #include "Base/Dtoa/Dtoa.h"
+#include "Base/Text/AsciiChar.h"
 #include "Base/Text/TextEncoding.h"
+#include "Base/Text/Utf.h"
 
 namespace stp {
 
@@ -18,6 +20,15 @@ void TextWriter::OnFlush() {}
 
 bool TextWriter::IsConsoleWriter() const {
   return false;
+}
+
+void TextWriter::Write(char32_t rune) {
+  ASSERT(unicode::IsValidCodepoint(rune));
+  if (IsAscii(rune)) {
+    OnWriteChar(static_cast<char>(rune));
+  } else {
+    OnWriteRune(rune);
+  }
 }
 
 void TextWriter::OnIndent(int count, char c) {
@@ -43,21 +54,35 @@ void TextWriter::OnIndent(int count, char c) {
 
   while (count > 0) {
     int chunk_size = Min(count, ChunkSize);
-    WriteAscii(StringSpan(templ, chunk_size));
+    Write(StringSpan(templ, chunk_size));
     count -= chunk_size;
   }
 }
+
+void TextWriter::OnWriteChar(char c) {
+  OnWriteString(StringSpan(&c, 1));
+}
+
+void TextWriter::OnWriteRune(char32_t c) {
+  char buffer[Utf8::MaxEncodedCodepointLength];
+  int n = EncodeUtf(buffer, c);
+  OnWriteString(StringSpan(buffer, n));
+}
+
+#if ASSERT_IS_ON()
+bool TextWriter::IsValidChar(char c) {
+  return IsAscii(c);
+}
+#endif
 
 namespace {
 
 class NullTextWriter final : public TextWriter {
  public:
   TextEncoding GetEncoding() const { return TextEncoding(); }
-  void OnWriteAsciiChar(char c) override {}
-  void OnWriteUnicodeChar(char32_t c) override {}
-  void OnWriteAscii(StringSpan text) override {}
-  void OnWriteUtf8(StringSpan text) override {}
-  void OnWriteUtf16(String16Span text) override {}
+  void OnWriteChar(char c) override {}
+  void OnWriteRune(char32_t c) override {}
+  void OnWriteString(StringSpan text) override {}
   void OnIndent(int count, char c) override {}
 };
 

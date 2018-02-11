@@ -10,7 +10,7 @@ void FormatSymbol(TextWriter& out, void *pc) {
   if (dladdr(pc, &info))
     DemangleSymbols(out, MakeSpanFromNullTerminated(info.dli_sname));
   else
-    out.WriteAscii("(no symbol)");
+    out << "(no symbol)";
 }
 
 } // namespace stp

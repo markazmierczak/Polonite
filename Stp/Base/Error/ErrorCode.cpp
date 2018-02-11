@@ -25,7 +25,7 @@ namespace detail {
 
 void Format(TextWriter& out, const ErrorCode& x) {
   if (IsOk(x)) {
-    out.WriteAscii("no error");
+    out << "no error";
   } else {
     x.GetCategory().FormatMessage(out, x.GetCode());
   }
@@ -36,7 +36,7 @@ StringSpan SuccessErrorCategory::GetName() const noexcept {
 }
 
 void SuccessErrorCategory::FormatMessage(TextWriter& out, int code) const {
-  out.WriteAscii("success");
+  out << "success";
 }
 
 const SuccessErrorCategory SuccessErrorCategoryInstance;
