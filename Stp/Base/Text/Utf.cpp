@@ -106,6 +106,36 @@ int Utf8::EncodeSlow(char* out, char32_t c) {
   return i;
 }
 
+int TryEncodeUtf(char32_t c, MutableStringSpan out) {
+  ASSERT(unicode::IsValidCodepoint(c));
+  if (out.IsEmpty())
+    return 0;
+  int i = 0;
+  if (IsAscii(c)) {
+    out[i++] = static_cast<char>(c);
+  } else {
+    if (out.size() < 2)
+      return 0;
+    if (c <= 0x7FF) {
+      out[i++] = static_cast<char>((c >> 6) | 0xC0);
+    } else {
+      if (out.size() < 3)
+        return 0;
+      if (c <= 0xFFFF) {
+        out[i++] = static_cast<char>((c >> 12) | 0xE0);
+      } else {
+        if (out.size() < 4)
+          return 0;
+        out[i++] = static_cast<char>((c >> 18) | 0xF0);
+        out[i++] = static_cast<char>(((c >> 12) & 0x3F) | 0x80);
+      }
+      out[i++] = static_cast<char>(((c >> 6) & 0x3F) | 0x80);
+    }
+    out[i++] = static_cast<char>((c & 0x3F) | 0x80);
+  }
+  return i;
+}
+
 char32_t Utf16::DecodeSlow(const char16_t*& it, const char16_t* end, char32_t lead) {
   if (it >= end)
     return EndOfStreamError;

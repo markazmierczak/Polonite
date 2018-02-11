@@ -18,14 +18,17 @@ const char16_t Cp1252ToUnicode[32] = {
 };
 
 template<typename T>
-inline TextConversionResult DecodeTmpl(
-    TextConversionContext* context, BufferSpan input, MutableSpan<T> output, bool flush) {
+inline TextDecoder::Result DecodeTmpl(BufferSpan input, MutableSpan<T> output, bool flush) {
   auto* input_data = static_cast<const byte_t*>(input.data());
   int num_read = 0;
   int num_wrote = 0;
-  bool did_fallback = false;
+  bool more_output = false;
 
-  while (num_read < input.size() && num_wrote < output.size()) {
+  while (num_read < input.size()) {
+    if (!(num_wrote < output.size())) {
+      more_output = true;
+      break;
+    }
     byte_t b = input_data[num_read];
     if (LIKELY(b < 0x80)) {
       output[num_wrote++] = static_cast<char>(b);
@@ -35,19 +38,20 @@ inline TextConversionResult DecodeTmpl(
         c = static_cast<char16_t>(b);
       } else {
         c = Cp1252ToUnicode[b - 0x80];
-        if (!c) {
+        if (UNLIKELY(c == 0)) {
           c = unicode::ReplacementCodepoint;
-          did_fallback = true;
         }
       }
-      int encoded = TryEncodeUtf(output.GetSlice(num_wrote), c);
-      if (encoded == 0)
+      int num_encoded = TryEncodeUtf(c, output.GetSlice(num_wrote));
+      if (num_encoded == 0) {
+        more_output = true;
         break;
-      num_wrote += encoded;
+      }
+      num_wrote += num_encoded;
     }
     ++num_read;
   }
-  return TextConversionResult(num_read, num_wrote, did_fallback);
+  return TextDecoder::Result(num_read, num_wrote, more_output);
 }
 
 TextConversionResult Decode(
@@ -89,7 +93,7 @@ const byte_t Cp1252Page20[48] = {
   0x00, 0x8B, 0x9B, 0x00, 0x00, 0x00, 0x00, 0x00,
 };
 
-byte_t EncodeExtra(char32_t c) {
+byte_t TryEncodeExtra(char32_t c) {
   ASSERT(!IsAscii(c));
   ASSERT(!(0x00A0 <= c && c < 0x0100));
 
@@ -111,22 +115,21 @@ inline TextConversionResult EncodeTmpl(
     TextConversionContext* context, Span<T> input, MutableBufferSpan output) {
   auto* iptr = begin(input);
   auto* const iptr_end = end(input);
+  auto* output_data = static_cast<byte_t*>(output.data());
   int num_wrote = 0;
-  auto* optr = static_cast<byte_t*>(output.data());
   bool did_fallback = false;
 
   while (iptr < iptr_end) {
     char32_t c = DecodeUtf(iptr, iptr_end);
     if ((c < 0x80) || (0x00A0 <= c && c < 0x0100)) {
-      optr[num_wrote++] = static_cast<byte_t>(c);
+      output_data[num_wrote++] = static_cast<byte_t>(c);
     } else {
-      byte_t b = EncodeExtra(c);
-      if (b != 0) {
-        optr[num_wrote++] = b;
-      } else {
-        optr[num_wrote++] = '?';
+      byte_t b = TryEncodeExtra(c);
+      if (UNLIKELY(b == 0)) {
+        b = '?';
         did_fallback = true;
       }
+      output_data[num_wrote++] = b;
     }
   }
   return TextConversionResult(iptr - input.data(), num_wrote, did_fallback);

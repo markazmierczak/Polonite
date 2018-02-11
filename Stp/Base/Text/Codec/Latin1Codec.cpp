@@ -9,21 +9,20 @@ namespace stp {
 
 namespace {
 
-TextConversionResult Decode(
+TextDecoder::Result Decode(
     TextConversionContext* context, BufferSpan input, MutableStringSpan output, bool flush) {
   auto* input_data = static_cast<const byte_t*>(input.data());
-  auto* output_data = output.data();
   int num_read = 0;
   int num_wrote = 0;
 
   while (num_read < input.size() && num_wrote < output.size()) {
     byte_t b = input_data[num_read];
-    if (b < 0x80) {
-      output_data[num_wrote++] = static_cast<char>(b);
+    if (LIKELY(b < 0x80)) {
+      output[num_wrote++] = static_cast<char>(b);
     } else {
       if (output.size() - num_wrote < 2)
         break;
-      num_wrote += Utf8::EncodeInTwoUnits(output_data + num_wrote, static_cast<char16_t>(b));
+      num_wrote += Utf8::EncodeInTwoUnits(output.data() + num_wrote, static_cast<char16_t>(b));
     }
     ++num_read;
   }
@@ -33,12 +32,11 @@ TextConversionResult Decode(
 TextConversionResult Decode16(
     TextConversionContext* context, BufferSpan input, MutableString16Span output, bool flush) {
   auto* input_data = static_cast<const byte_t*>(input.data());
-  auto* output_data = output.data();
   int num_read = 0;
   int num_wrote = 0;
 
   while (num_read < input.size() && num_wrote < output.size()) {
-    output_data[num_wrote++] = static_cast<char16_t>(input_data[num_read++]);
+    output[num_wrote++] = static_cast<char16_t>(input_data[num_read++]);
   }
   return TextConversionResult(num_read, num_wrote, false);
 }
@@ -54,12 +52,11 @@ inline TextConversionResult EncodeTmpl(
 
   while (iptr < iptr_end && num_wrote < output.size()) {
     char32_t c = DecodeUtf(iptr, iptr_end);
-    if (LIKELY(c < 0x100)) {
-      output_data[num_wrote++] = static_cast<byte_t>(c);
-    } else {
-      output_data[num_wrote++] = '?';
+    if (UNLIKELY(c >= 0x100)) {
+      c = '?';
       did_fallback = true;
     }
+    output_data[num_wrote++] = static_cast<byte_t>(c);
   }
   return TextConversionResult(iptr - input.data(), num_wrote, did_fallback);
 }

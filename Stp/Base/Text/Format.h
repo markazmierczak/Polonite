@@ -93,34 +93,20 @@ inline void AssertFail(
   AssertWrapUp(out);
 }
 
-template<typename T, typename... TArgs>
-inline List<T> StringTmplFormatMany(StringSpan fmt, const TArgs&... args) {
-  List<T> result;
-  StringTmplWriter<T> writer(&result);
+template<typename... TArgs>
+inline String StringFormatMany(StringSpan fmt, const TArgs&... args) {
+  String result;
+  StringWriter writer(&result);
   FormatMany(writer, fmt, args...);
   return result;
 }
 
-template<typename... TArgs>
-inline String StringFormatMany(StringSpan fmt, const TArgs&... args) {
-  return StringTmplFormatMany<char>(fmt, args...);
-}
-
-template<typename T, typename TValue>
-inline List<T> FormattableToStringTmpl(const TValue& value, const StringSpan& opts = StringSpan()) {
-  List<T> result;
-  StringTmplWriter<T> writer(&result);
+template<typename TValue>
+inline String FormattableToString(const TValue& value, const StringSpan& opts = StringSpan()) {
+  String result;
+  StringWriter writer(&result);
   Format(writer, value, opts);
   return result;
-}
-
-template<typename T>
-inline String FormattableToString(const T& value, const StringSpan& opts = StringSpan()) {
-  return FormattableToStringTmpl<char>(value, opts);
-}
-template<typename T>
-inline String16 FormattableToString16(const T& value, const StringSpan& opts) {
-  return FormattableToStringTmpl<char16_t>(value, opts);
 }
 
 } // namespace stp

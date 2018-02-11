@@ -92,16 +92,7 @@ template<> struct UtfTmplHelperTmpl<char16_t> { typedef Utf16 Type; };
 template<typename T>
 using UtfTmpl = typename detail::UtfTmplHelperTmpl<T>::Type;
 
-inline int TryEncodeUtf(MutableString16Span out, char16_t c) {
-  if (!out.IsEmpty()) {
-    out[0] = c;
-    return 1;
-  }
-  return 0;
-}
-
-BASE_EXPORT int TryEncodeUtf(MutableStringSpan out, char32_t c);
-BASE_EXPORT int TryEncodeUtf(MutableString16Span out, char32_t c);
+BASE_EXPORT int TryEncodeUtf(char32_t c, MutableStringSpan out);
 
 inline int Utf8::EncodedLength(char32_t c) {
   ASSERT(unicode::IsValidCodepoint(c));

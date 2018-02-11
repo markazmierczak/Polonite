@@ -6,7 +6,7 @@
 #include "Base/FileSystem/KnownPaths.h"
 #include "Base/Io/FileStream.h"
 #include "Base/Process/CommandLine.h"
-#include "Base/Text/TextEncoding.h"
+#include "Base/Text/Codec/Utf8Encoding.h"
 #include "Base/Text/Utf.h"
 
 namespace stp {
@@ -150,7 +150,7 @@ ConsoleWriter* Console::g_out_ = nullptr;
 ConsoleWriter* Console::g_err_ = nullptr;
 
 TextEncoding ConsoleWriter::GetEncoding() const {
-  return TextEncoding::BuiltinUtf8();
+  return BuiltinTextEncodings::Utf8();
 }
 
 void ConsoleWriter::OnWriteAsciiChar(char c) {

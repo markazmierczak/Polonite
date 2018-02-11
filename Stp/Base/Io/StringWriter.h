@@ -27,37 +27,6 @@ class BASE_EXPORT StringWriter final : public TextWriter {
   String& string_;
 };
 
-class BASE_EXPORT String16Writer : public TextWriter {
- public:
-  explicit String16Writer(String16* string) : string_(*string) {}
-
-  TextEncoding GetEncoding() const override;
-
- protected:
-  void OnWriteAsciiChar(char c) override;
-  void OnWriteUnicodeChar(char32_t c) override;
-  void OnWriteAscii(StringSpan text) override;
-  void OnWriteUtf8(StringSpan text) override;
-  void OnWriteUtf16(String16Span text) override;
-  void OnIndent(int count, char c) override;
-
- private:
-  String16& string_;
-};
-
-namespace detail {
-
-template<typename T>
-struct StringTmplWriterTmpl;
-
-template<> struct StringTmplWriterTmpl<char> { typedef StringWriter Type; };
-template<> struct StringTmplWriterTmpl<char16_t> { typedef String16Writer Type; };
-
-} // namespace detail
-
-template<typename T>
-using StringTmplWriter = typename detail::StringTmplWriterTmpl<T>::Type;
-
 } // namespace stp
 
 #endif // STP_BASE_IO_STRINGWRITER_H_

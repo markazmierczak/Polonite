@@ -80,7 +80,6 @@ class BASE_EXPORT CommandLine {
 
   void Parse(const Arguments& arguments);
 
-
   static void Init(const Arguments& arguments);
   static void Fini();
 

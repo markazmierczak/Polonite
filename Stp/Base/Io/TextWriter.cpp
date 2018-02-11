@@ -52,7 +52,7 @@ namespace {
 
 class NullTextWriter final : public TextWriter {
  public:
-  TextEncoding GetEncoding() const { return TextEncoding::BuiltinUtf8(); }
+  TextEncoding GetEncoding() const { return TextEncoding(); }
   void OnWriteAsciiChar(char c) override {}
   void OnWriteUnicodeChar(char32_t c) override {}
   void OnWriteAscii(StringSpan text) override {}

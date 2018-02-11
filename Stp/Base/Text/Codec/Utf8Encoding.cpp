@@ -1,7 +1,7 @@
 // Copyright 2017 Polonite Authors. All rights reserved.
 // Distributed under MIT license that can be found in the LICENSE file.
 
-#include "Base/Text/TextEncoding.h"
+#include "Base/Text/Codec/Utf8Encoding.h"
 
 #include "Base/Containers/ContiguousAlgo.h"
 #include "Base/Math/Alignment.h"
@@ -9,10 +9,8 @@
 
 namespace stp {
 namespace detail {
-
+/*
 namespace {
-
-using Context = TextConversionContext;
 
 inline char32_t DecodeTrails(char32_t c) { return c; }
 
@@ -246,16 +244,6 @@ int Decode16(Context& context, BufferSpan input, MutableString16Span output, boo
   return DecodeTmpl(context, input, output, flush);
 }
 
-int CountChars(const Context& context, BufferSpan input) {
-  Utf8ReaderState state(context.state.bytes);
-  return input.size() + state.CountChars();
-}
-
-int CountChars16(const Context& context, BufferSpan input) {
-  Utf8ReaderState state(context.state.bytes);
-  return input.size() + state.CountChars();
-}
-
 int Encode(Context& context, StringSpan input, MutableBufferSpan output) {
   auto* iptr = reinterpret_cast<const byte_t*>(input.data());
   int isize = input.size();
@@ -287,35 +275,6 @@ int Encode16(Context& context, String16Span input, MutableBufferSpan output) {
   return oi;
 }
 
-int CountBytes(const Context& context, StringSpan input) {
-  return input.size();
-}
-
-int CountBytes16(const Context& context, String16Span input) {
-  auto* iptr = input.data();
-  int isize = input.size();
-  int oi = 0;
-
-  for (int ii = 0; ii < isize; ++ii) {
-    char16_t c = iptr[ii];
-    if (c < 0x80) {
-      oi += 1;
-    } else if (c < 0x800) {
-      oi += 2;
-    } else {
-      oi += 3;
-    }
-  }
-  return oi;
-}
-
-constexpr TextCodecVtable Vtable = {
-  Decode, Decode16,
-  CountChars, CountChars16,
-  Encode, Encode16,
-  CountBytes, CountBytes16,
-};
-
 constexpr auto Build() {
   auto builder = BuildTextCodec("UTF-8", Vtable);
   builder.SetIanaCodepage(106);
@@ -324,8 +283,9 @@ constexpr auto Build() {
 }
 
 } // namespace
+*/
 
-constexpr const TextCodec Utf8Codec = Build();
+constexpr const TextEncodingData Utf8EncodingData;
 
 } // namespace detail
 } // namespace stp
