@@ -233,11 +233,11 @@ static void FormatCommandLineArgument(TextWriter& out, StringSpan arg) {
   StringSpan quotable_chars = " \\\"";
   if (arg.IndexOfAny(quotable_chars) < 0) {
     // No quoting necessary.
-    out.Write(arg);
+    out << arg;
     return;
   }
 
-  out.Write('"');
+  out << '"';
   for (int i = 0; i < arg.size(); ++i) {
     if (arg[i] == '\\') {
       // Find the extent of this run of backslashes.
@@ -255,19 +255,19 @@ static void FormatCommandLineArgument(TextWriter& out, StringSpan arg) {
         backslash_count *= 2;
       }
       for (int j = 0; j < backslash_count; ++j)
-        out.Write('\\');
+        out << '\\';
 
       // Advance i to one before the end to balance i++ in loop.
       i = end - 1;
     } else if (arg[i] == '"') {
-      out.WriteAscii("\\\"");
+      out << "\\\"";
     } else {
-      out.Write(arg[i]);
+      out << arg[i];
     }
   }
-  out.Write('"');
+  out << '"';
   #else
-  out.Write(arg);
+  out << arg;
   #endif // OS(*)
 }
 
@@ -281,15 +281,15 @@ void CommandLine::FormatImpl(TextWriter& out, const StringSpan& opts) const {
     FormatCommandLineArgument(out, program_name_);
 
   for (const String& positional : positionals_) {
-    out.Write(' ');
+    out << ' ';
     FormatCommandLineArgument(out, positional);
   }
 
   for (const auto& pair : switches_) {
-    out.Write(' ');
-    out.Write(SwitchPrefixes[0]);
-    out.Write(pair.key());
-    out.Write(SwitchValueSeparator);
+    out << ' ';
+    out << SwitchPrefixes[0];
+    out << pair.key();
+    out << SwitchValueSeparator;
 
     FormatCommandLineArgument(out, pair.value());
   }

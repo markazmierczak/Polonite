@@ -215,7 +215,7 @@ component("Base") {
     "Io/MemoryStream.h",
     "Io/Stream.cpp",
     "Io/Stream.h",
-#    "Io/StreamWriter.cpp",
+    "Io/StreamWriter.cpp",
     "Io/StreamWriter.h",
 #    "Io/StringReader.cpp",
 #    "Io/StringReader.h",

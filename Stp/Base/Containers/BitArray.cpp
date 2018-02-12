@@ -29,7 +29,7 @@ static void FormatBitArrayAsBinary(
       *--begin = (word & 1) + '0';
       word >>= 1;
     }
-    writer.Write(StringSpan(begin, end - begin));
+    writer << StringSpan(begin, end - begin);
 
     valid_bit_count = BitCountInWord;
   }
@@ -54,7 +54,7 @@ static void FormatBitArrayAsHex(
       *--begin = NibbleToHexDigitUpper(word & 0xF);
       word >>= 4;
     }
-    writer.Write(StringSpan(begin, end - begin));
+    writer << StringSpan(begin, end - begin);
 
     valid_bit_count = BitCountInWord;
   }

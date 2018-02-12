@@ -71,7 +71,7 @@ bool JsonFormatter::WriteInteger(int64_t x) {
         return false;
     }
   }
-  out_.WriteInteger(x);
+  out_ << x;
   return true;
 }
 
@@ -99,7 +99,7 @@ bool JsonFormatter::WriteDouble(const JsonValue& node) {
     if (!options_.Has(JsonOptions::EnableInfNaN)) {
       if (RaiseError(JsonError::InvalidNumber))
         return false;
-      out_.Write(0);
+      out_ << 0;
     } else {
       if (IsNaN(d)) {
         out_ << "NaN";
@@ -116,20 +116,20 @@ bool JsonFormatter::WriteDouble(const JsonValue& node) {
       if (d < 0) {
         int64_t x;
         if (node.TryCastTo(x)) {
-          out_.Write(x);
+          out_ << x;
           wrote = true;
         }
       } else {
         uint64_t x;
         if (node.TryCastTo(x)) {
-          out_.Write(x);
+          out_ << x;
           wrote = true;
         }
       }
     }
     if (!wrote) {
       FloatToStringBuffer buffer;
-      out_.Write(JSONFloatToString(d, buffer));
+      out_ << JSONFloatToString(d, buffer);
     }
   }
   return true;
@@ -171,25 +171,26 @@ void JsonFormatter::EscapeSimple(TextWriter& out, StringSpan str) {
     char replacement;
     if (EscapeSpecialCharacter(str[i], replacement)) {
       if (i > 0)
-        out.Write(str.GetSlice(0, i));
+        out << str.GetSlice(0, i);
       str.RemovePrefix(i + 1);
       char escaped[2] = { '\\', replacement };
-      out.WriteAscii(escaped);
+      out << escaped;
     }
   }
-  if (!str.IsEmpty())
-    out.Write(str);
+  if (!str.IsEmpty()) {
+    out << str;
+  }
 }
 
 static void WriteEscapedUnicode(TextWriter& out, char32_t codepoint) {
-  out.WriteAscii("\\u");
+  out << "\\u";
 
   FormatHexIntegerBuffer<uint32_t> buffer;
   StringSpan hex = FormatHexInteger(static_cast<uint32_t>(codepoint), buffer);
   if (hex.size() < 4)
     out.Indent(4 - hex.size(), '0');
 
-  out.WriteAscii(hex);
+  out << hex;
 }
 
 bool JsonFormatter::EscapeReplaceUnicode(TextWriter& out, StringSpan str) {
@@ -201,19 +202,19 @@ bool JsonFormatter::EscapeReplaceUnicode(TextWriter& out, StringSpan str) {
     char32_t codepoint = Utf8::Decode(it, end);
     bool local_error = Utf8::IsDecodeError(codepoint);
     if (local_error) {
-      codepoint = Unicode::ReplacementCharacter;
+      codepoint = unicode::ReplacementCodepoint;
       total_error = true;
     }
 
     char replacement;
     if (EscapeSpecialCharacter(codepoint, replacement)) {
       char escaped[2] = { '\\', replacement };
-      out.WriteAscii(MakeSpan(escaped, 2));
+      out << MakeSpan(escaped, 2);
       continue;
     }
 
     if (IsAscii(codepoint) && codepoint >= 32) {
-      out.Write(static_cast<char>(static_cast<uint8_t>(codepoint)));
+      out << char_cast<char>(codepoint);
       continue;
     }
 
@@ -241,26 +242,28 @@ bool JsonFormatter::Escape(TextWriter& out, StringSpan str, bool escape_unicode)
 bool JsonFormatter::WriteString(StringSpan str) {
   bool escape_unicode = options_.Has(JsonOptions::EscapeUnicode);
 
-  out_.Write('"');
+  out_ << '"';
   if (!Escape(out_, str, escape_unicode)) {
     if (RaiseError(JsonError::UnsupportedEncoding))
       return false;
   }
-  out_.Write('"');
+  out_ << '"';
   return true;
 }
 
 bool JsonFormatter::WriteArray(const JsonArray& array, int depth) {
-  out_.Write('[');
-  if (PrintsPretty())
-    out_.Write(' ');
+  out_ << '[';
+  if (PrintsPretty()) {
+    out_ << ' ';
+  }
 
   bool first_value_has_been_output = false;
   for (const auto& value : array) {
     if (first_value_has_been_output) {
-      out_.Write(',');
-      if (PrintsPretty())
-        out_.Write(' ');
+      out_ << ',';
+      if (PrintsPretty()) {
+        out_ << ' ';
+      }
     }
 
     if (!Write(value, depth))
@@ -269,23 +272,26 @@ bool JsonFormatter::WriteArray(const JsonArray& array, int depth) {
     first_value_has_been_output = true;
   }
 
-  if (PrintsPretty())
-    out_.Write(' ');
-  out_.Write(']');
+  if (PrintsPretty()) {
+    out_ << ' ';
+  }
+  out_ << ']';
   return true;
 }
 
 bool JsonFormatter::WriteObject(const JsonObject& object, int depth) {
-  out_.Write('{');
-  if (PrintsPretty())
-    out_.WriteLine();
+  out_ << '{';
+  if (PrintsPretty()) {
+    out_ << '\n';
+  }
 
   bool first_value_has_been_output = false;
   for (const auto& iter : object) {
     if (first_value_has_been_output) {
-      out_.Write(',');
-      if (PrintsPretty())
-        out_.WriteLine();
+      out_ << ',';
+      if (PrintsPretty()) {
+        out_ << '\n';
+      }
     }
 
     if (PrintsPretty())
@@ -294,9 +300,10 @@ bool JsonFormatter::WriteObject(const JsonObject& object, int depth) {
     if (!WriteString(iter.key))
       return false;
 
-    out_.Write(':');
-    if (PrintsPretty())
-      out_.Write(' ');
+    out_ << ':';
+    if (PrintsPretty()) {
+      out_ << ' ';
+    }
 
     if (!Write(iter.value, depth + 1))
       return false;
@@ -306,12 +313,13 @@ bool JsonFormatter::WriteObject(const JsonObject& object, int depth) {
 
   if (PrintsPretty()) {
     bool emit_trailing_commas = options_.Has(JsonOptions::EmitTrailingCommas);
-    if (emit_trailing_commas && first_value_has_been_output)
-      out_.Write(',');
-    out_.WriteLine();
+    if (emit_trailing_commas && first_value_has_been_output) {
+      out_ << ',';
+    }
+    out_ << '\n';
     IndentLine(depth);
   }
-  out_.Write('}');
+  out_ << '}';
   return true;
 }
 

@@ -99,7 +99,11 @@ inline TextWriter& operator<<(TextWriter& out, const T& x) {
   } else if constexpr (TIsFloatingPoint<T>) {
     detail::FormatFloat(out, static_cast<double>(x));
   } else if constexpr (TIsCharacter<T>) {
-    out.Write(x);
+    if constexpr (sizeof(T) == 1) {
+      out << char_cast<char>(x);
+    } else {
+      out << char_cast<char32_t>(x);
+    }
   } else if constexpr (TIsEnum<T>) {
     if constexpr (TIsNamedEnum<T>) {
       out << GetEnumName(x);
@@ -141,7 +145,7 @@ inline void FormatContiguousGeneric(
 template<typename T>
 inline void FormatContiguous(TextWriter& out, const T* data, int size, const StringSpan& opts) {
   if constexpr (TIsCharacter<T>) {
-    out.Write(MakeSpan(data, size));
+    out << MakeSpan(data, size);
   } else if constexpr(THasDetected<detail::CustomContiguousFormattableConcept, T>) {
     Format(out, data, size, opts);
   } else {
@@ -152,7 +156,7 @@ inline void FormatContiguous(TextWriter& out, const T* data, int size, const Str
 template<typename T>
 inline void FormatContiguous(TextWriter& out, const T* data, int size) {
   if constexpr (TIsCharacter<T>) {
-    out.Write(MakeSpan(data, size));
+    out << MakeSpan(data, size);
   } else if constexpr(THasDetected<detail::CustomContiguousFormattableConcept, T>) {
     Format(out, data, size);
   } else {

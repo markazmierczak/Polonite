@@ -50,7 +50,7 @@ void FormatBool(TextWriter& out, bool b, const StringSpan& opts) {
 
     case 'd':
     case 'D':
-      out.Write(b ? '1' : '0');
+      out << (b ? '1' : '0');
       break;
 
     default:
@@ -111,7 +111,7 @@ void FormatChar(TextWriter& out, char32_t c, const StringSpan& opts) {
     }
 
     case Variant::Print:
-      out.Write(c);
+      out << c;
       break;
   }
 }
@@ -201,10 +201,11 @@ static inline void FormatIntTmpl(TextWriter& out, T x, const StringSpan& opts) {
     // Write the sign and remove from converter's output.
     ASSERT(converted[0] == '-');
     converted.RemovePrefix(1);
-    out.Write('-');
+    out << '-';
   } else {
-    if (sign)
-      out.Write(sign == '+' ? '+' : ' ');
+    if (sign) {
+      out << (sign == '+' ? '+' : ' ');
+    }
   }
 
   if (converted.size() < precision)
@@ -310,17 +311,19 @@ void FormatFloat(TextWriter& out, double x, const StringSpan& opts) {
     // Write the sign and remove from converter's output.
     ASSERT(converted[0] == '-');
     converted.RemovePrefix(1);
-    out.Write('-');
+    out << '-';
   } else {
-    if (sign)
-      out.Write(sign == '+' ? '+' : ' ');
+    if (sign) {
+      out << (sign == '+' ? '+' : ' ');
+    }
   }
 
   out << converted;
 
   if (variant == Variant::Percent) {
-    if (IsFinite(x))
-      out.Write('%');
+    if (IsFinite(x)) {
+      out << '%';
+    }
   }
 }
 
@@ -343,13 +346,13 @@ void FormatContiguousGenericExt(
     const void* data, int size, int item_size,
     const StringSpan& opts,
     void (*item_format)(TextWriter& out, const void* item, const StringSpan& opts)) {
-  out.Write('[');
+  out << '[';
   for (int i = 0; i < size; ++i) {
     if (i != 0)
       out << ", ";
     item_format(out, static_cast<const byte_t*>(data) + i * item_size, opts);
   }
-  out.Write(']');
+  out << ']';
 }
 
 } // namespace detail
@@ -432,7 +435,7 @@ void FormatBuffer(TextWriter& out, const void* data, int size, const StringSpan&
         c = '.';
       out << c;
     }
-    out << EndOfLine;
+    out << '\n';
 
     bytes += BytesPerLine;
     size -= BytesPerLine;

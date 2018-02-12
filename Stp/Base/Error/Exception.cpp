@@ -100,8 +100,7 @@ void Exception::FormatImpl(TextWriter& out) const {
 
   auto msg = GetMessage();
   if (!msg.IsEmpty()) {
-    out << EndOfLine;
-    out.Write(msg);
+    out << '\n' << msg;
   }
 }
 

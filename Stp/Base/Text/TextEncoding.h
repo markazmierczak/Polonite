@@ -74,6 +74,9 @@ class BASE_EXPORT TextEncoding {
   bool CanDecode() const { return codec_.create_decoder != nullptr; }
   bool CanEncode() const { return codec_.create_encoder != nullptr; }
 
+  TextDecoder* CreateDecoder(PolymorphicAllocator& allocator);
+  TextEncoder* CreateEncoder(PolymorphicAllocator& allocator);
+
   bool IsValid() const { return &codec_ != &detail::UndefinedTextEncodingData; }
 
   friend bool operator==(const TextEncoding& l, const TextEncoding& r) { return &l == &r; }
@@ -89,7 +92,16 @@ class BASE_EXPORT TextEncoding {
 };
 
 BASE_EXPORT String ToString(BufferSpan buffer, TextEncoding codec);
-BASE_EXPORT String16 ToString16(BufferSpan buffer, TextEncoding codec);
+
+inline TextDecoder* TextEncoding::CreateDecoder(PolymorphicAllocator& allocator) {
+  ASSERT(CanDecode());
+  return (*codec_.create_decoder)(allocator, codec_.config);
+}
+
+inline TextEncoder* TextEncoding::CreateEncoder(PolymorphicAllocator& allocator) {
+  ASSERT(CanEncode());
+  return (*codec_.create_encoder)(allocator, codec_.config);
+}
 
 } // namespace stp
 

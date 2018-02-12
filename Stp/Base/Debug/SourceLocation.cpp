@@ -28,11 +28,7 @@ HashCode SourceLocation::HashImpl() const {
 }
 
 TextWriter& operator<<(TextWriter& out, const SourceLocation& x) {
-  out.Write(x.GetFunctionName());
-  out.Write('@');
-  out.Write(x.GetFileName());
-  out.Write(':');
-  return out << x.GetLineNumber();
+  return out << x.GetFunctionName() << '@' << x.GetFileName() << ':' << x.GetLineNumber();
 }
 
 } // namespace stp

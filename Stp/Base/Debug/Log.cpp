@@ -38,7 +38,7 @@ static LazyInstance<List<VmoduleMatcher>>::LeakAtExit g_verbose_matchers = LAZY_
 
 void LogWrapUp(TextWriter& out_base) {
   ConsoleWriter& out = static_cast<ConsoleWriter&>(out_base);
-  out << EndOfLine;
+  out << '\n';
   out.SetLogLevel(LogLevelUSER);
 }
 
@@ -57,7 +57,7 @@ TextWriter* LogPrintCommon(LogLevel level, const char* file, unsigned line) {
 
   ConsoleWriter& out = level <= LogLevelERROR ? Console::Err() : Console::Out();
 
-  out.Write('[');
+  out << '[';
 
   switch (level) {
     case LogLevelERROR:
@@ -209,7 +209,7 @@ static void ParseMatchers(StringSpan input) {
     if (!parsed) {
       TextWriter* out = LogPrintCommon(LogLevelERROR, "", 0);
       if (out) {
-        *out << "unable to parse vmodule: " << pair << EndOfLine;
+        *out << "unable to parse vmodule: " << pair << '\n';
         LogWrapUp(*out);
       }
     }

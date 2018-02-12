@@ -16,7 +16,7 @@ static inline StringSpan DynamicLinkerErrorMessage() {
 }
 
 void LibraryLoadError::FormatImpl(TextWriter& out) const {
-  out.Write(message_);
+  out << message_;
 }
 
 NativeLibrary Library::TryLoadNative(const FilePathChar* path, LibraryLoadError* out_error) {

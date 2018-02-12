@@ -4,6 +4,7 @@
 #include "Base/Text/Wtf.h"
 
 #include "Base/Io/StringWriter.h"
+#include "Base/Type/Formattable.h"
 
 namespace stp {
 
@@ -114,11 +115,13 @@ static inline void WriteWtfTmpl(TextWriter& out, Span<T> wtf) {
       valid_end = it;
     } while (it < it_end);
 
-    if (valid_begin != valid_end)
-      out.Write(MakeSpan(valid_begin, valid_end - valid_begin));
+    if (valid_begin != valid_end) {
+      out << MakeSpan(valid_begin, valid_end - valid_begin);
+    }
 
-    if (valid_end != it_end)
-      out.Write(unicode::ReplacementCodepoint);
+    if (valid_end != it_end) {
+      out << unicode::ReplacementCodepoint;
+    }
   }
 }
 

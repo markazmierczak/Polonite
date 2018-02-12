@@ -62,11 +62,11 @@ void DemangleSymbols(TextWriter& out, StringSpan mangled) {
     // Look for the start of a mangled symbol, from search_from.
     int mangled_start = mangled.IndexOf(MangledSymbolPrefix);
     if (mangled_start < 0) {
-      out.Write(mangled);
+      out << mangled;
       break; // Mangled symbol not found.
     }
     if (mangled_start > 0) {
-      out.Write(mangled.GetSlice(0, mangled_start));
+      out << mangled.GetSlice(0, mangled_start);
       mangled.RemovePrefix(mangled_start);
     }
 
@@ -83,7 +83,7 @@ void DemangleSymbols(TextWriter& out, StringSpan mangled) {
         abi::__cxa_demangle(ToNullTerminated(mangled_symbol), nullptr, 0, &status));
     if (status == 0) {  // Demangling is successful.
       auto demangled_symbol = MakeSpanFromNullTerminated(demangled_symbol_cstr.get());
-      out.Write(demangled_symbol);
+      out << demangled_symbol;
 
       mangled.RemovePrefix(mangled_end);
     } else {
@@ -154,15 +154,13 @@ static void StackDumpSignalHandler(int signal, siginfo_t* info, void* void_conte
     Debugger::Break();
 
   ConsoleWriter& out = Console::Err();
-  out << "Received signal " << signal;
-
-  out.Write(GetSignalName(signal, info->si_code));
+  out << "Received signal " << GetSignalName(signal, info->si_code) << '(' << signal << ')';
 
   if (signal == SIGBUS || signal == SIGFPE ||
       signal == SIGILL || signal == SIGSEGV) {
-    Format(out, info->si_addr);
+    out << info->si_addr;
   }
-  out << EndOfLine;
+  out << '\n';
 
   #if defined(CFI_ENFORCEMENT)
   if (signal == SIGILL && info->si_code == ILL_ILLOPN) {
@@ -217,7 +215,7 @@ void StackTrace::FormatSymbols(TextWriter& out) const {
     for (int i = 0; i < count_; ++i) {
       auto trace_symbol = MakeSpanFromNullTerminated(trace_symbols.get()[i]);
       DemangleSymbols(out, trace_symbol);
-      out << EndOfLine;
+      out << '\n';
     }
   }
 }

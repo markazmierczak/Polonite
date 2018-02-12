@@ -75,7 +75,7 @@ void TemporaryDirectory::CreateInternal(FilePathSpan base_dir, StringSpan prefix
     FilePathWriter writer(sub_dir);
 
     writer.EnsureSeparator();
-    writer.WriteAscii(prefix);
+    writer << prefix;
     writer << NativeProcess::GetCurrentId();
     writer << '_';
     writer << rng.NextUInt32();
@@ -102,7 +102,7 @@ void TemporaryDirectory::CreateInternal(FilePathSpan base_dir, StringSpan prefix
 
   FilePathWriter writer(sub_dir);
   writer.EnsureSeparator();
-  writer.WriteAscii(tmpl);
+  writer << tmpl;
 
   // this should be OK since mkdtemp just replaces characters in place
   char* buffer = const_cast<char*>(ToNullTerminated(sub_dir));

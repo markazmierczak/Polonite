@@ -10,10 +10,8 @@
 
 namespace stp {
 
-const EndOfLineTag EndOfLine;
-
 void TextWriter::OnEndLine() {
-  Write('\n');
+  OnWriteChar('\n');
 }
 
 void TextWriter::OnFlush() {}
@@ -22,7 +20,7 @@ bool TextWriter::IsConsoleWriter() const {
   return false;
 }
 
-void TextWriter::Write(char32_t rune) {
+void TextWriter::WriteRune(char32_t rune) {
   ASSERT(unicode::IsValidCodepoint(rune));
   if (IsAscii(rune)) {
     OnWriteChar(static_cast<char>(rune));
@@ -32,15 +30,14 @@ void TextWriter::Write(char32_t rune) {
 }
 
 void TextWriter::OnIndent(int count, char c) {
-  ASSERT(count >= 0);
-
   constexpr StringSpan SpacePadding = "                    ";
   constexpr int ChunkSize = SpacePadding.size();
   char custom_padding[ChunkSize];
 
   if (count <= 1) {
-    if (count == 1)
-      Write(c);
+    if (count == 1) {
+      OnWriteChar(c);
+    }
     return;
   }
 
@@ -54,7 +51,7 @@ void TextWriter::OnIndent(int count, char c) {
 
   while (count > 0) {
     int chunk_size = Min(count, ChunkSize);
-    Write(StringSpan(templ, chunk_size));
+    OnWriteString(StringSpan(templ, chunk_size));
     count -= chunk_size;
   }
 }

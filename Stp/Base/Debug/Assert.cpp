@@ -15,7 +15,7 @@ namespace stp {
 
 void AssertWrapUp(TextWriter& out_base) {
   ConsoleWriter& out = static_cast<ConsoleWriter&>(out_base);
-  out << EndOfLine;
+  out << '\n';
   out.ResetColors();
   AssertCrash();
 }
@@ -40,19 +40,19 @@ TextWriter& AssertPrint(const char* file, int line, const char* expr) {
   // Include a stack trace on a fatal, unless a debugger is attached.
   bool being_debugged = Debugger::IsPresent();
   if (!being_debugged) {
-    out << "Stack Trace: " << EndOfLine;
+    out << "Stack Trace: \n";
     // FIXME Format(out, StackTrace());
   }
   #endif
 
   out.SetForegroundColor(ConsoleColor::Red);
-  out.Write("Assertion failed: ");
+  out << "Assertion failed: ";
   out.ResetColors();
 
   out << '"';
   out << MakeSpanFromNullTerminated(expr);
   out << "\" at ";
-  out << MakeSpanFromNullTerminated(file) << ':'  << line << EndOfLine;
+  out << MakeSpanFromNullTerminated(file) << ':'  << line << '\n';
 
   out.SetForegroundColor(ConsoleColor::Red);
   return out;

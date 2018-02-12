@@ -9,15 +9,15 @@ namespace stp {
 
 void JsonError::ToFormat(TextWriter& out, const StringSpan& opts) const {
   if (line > 0) {
-    out.Write('[');
-    out.Write(line);
+    out << '[';
+    out << line;
     if (column > 0) {
-      out.Write(':');
-      out.Write(column);
+      out << ':';
+      out << column;
     }
-    out.WriteAscii("] ");
+    out << "] ";
   }
-  out.WriteAscii(CodeToMessage(code));
+  out << CodeToMessage(code);
 }
 
 static constexpr StringSpan Messages[] = {

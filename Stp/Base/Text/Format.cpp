@@ -204,7 +204,7 @@ static void FormatAndLayoutReplacement(
   }
 
   // Forward temporary buffer to the output.
-  out.Write(buffer);
+  out << buffer;
 
   // Insert padding on the right side.
   if (pad_length > 0)
@@ -217,15 +217,15 @@ void FormatManyImpl(TextWriter& out, StringSpan fmt, Span<Formatter*> args) {
   while (!fmt.IsEmpty()) {
     int brace = fmt.IndexOf('{');
     if (brace < 0) {
-      out.Write(fmt);
+      out << fmt;
       break;
     }
     if (fmt[brace + 1] == '{') {
       // handle double braces
-      out.Write(fmt.GetSlice(0, brace + 1));
+      out << fmt.GetSlice(0, brace + 1);
       fmt.RemovePrefix(brace + 2);
     } else { // handle replacement
-      out.Write(fmt.GetSlice(0, brace));
+      out << fmt.GetSlice(0, brace);
       fmt.RemovePrefix(brace + 1);
 
       // Find replacement boundaries.

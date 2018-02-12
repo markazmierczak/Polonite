@@ -31,12 +31,12 @@ TextEncoding ClipTextWriter::GetEncoding() const {
 
 void ClipTextWriter::OnWriteChar(char c) {
   if (Grow(1) > 0)
-    base_.Write(c);
+    base_ << c;
 }
 
 void ClipTextWriter::OnWriteRune(char32_t rune) {
   if (Grow(1) > 0)
-    base_.Write(rune);
+    base_ << rune;
 }
 
 static bool SplitsCharacterAt(StringSpan text, int at) {
@@ -66,7 +66,7 @@ void ClipTextWriter::OnWriteString(StringSpan text) {
     if (n <= 0)
       return;
   }
-  base_.Write(text);
+  base_ << text;
 }
 
 void ClipTextWriter::OnIndent(int count, char c) {

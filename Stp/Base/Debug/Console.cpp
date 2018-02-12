@@ -8,6 +8,7 @@
 #include "Base/Process/CommandLine.h"
 #include "Base/Text/Codec/Utf8Encoding.h"
 #include "Base/Text/Utf.h"
+#include "Base/Type/Formattable.h"
 
 namespace stp {
 
@@ -49,7 +50,7 @@ void ConsoleWriter::OnFlush() {
 }
 
 void ConsoleWriter::PrintBuffer(int ready_size) {
-  Write(buffer_.GetSlice(0, ready_size));
+  *this << buffer_.GetSlice(0, ready_size);
   buffer_.RemovePrefix(ready_size);
 }
 

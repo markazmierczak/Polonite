@@ -20,7 +20,7 @@ In general you should stick to ``TextStream::Format()`` though. Above examples a
 
    void OutputJson(TextWriter& out, JsonObject& json) {
      out.Format("JSON formatting with ease:\n {:PC}", json);
-     out.WriteAscii("# end of file");
+     out << "# end of file";
    }
 
 To see more examples just scroll down to the :ref:`end of page <stp-base-formattable-more-examples>`.
