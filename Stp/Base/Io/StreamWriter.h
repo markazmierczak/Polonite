@@ -5,10 +5,12 @@
 #define STP_BASE_IO_STREAMWRITER_H_
 
 #include "Base/Containers/Buffer.h"
-#include "Base/Io/Stream.h"
 #include "Base/Io/TextWriter.h"
+#include "Base/Text/TextEncoding.h"
 
 namespace stp {
+
+class Stream;
 
 class BASE_EXPORT StreamWriter final : public TextWriter {
  public:
@@ -17,55 +19,45 @@ class BASE_EXPORT StreamWriter final : public TextWriter {
   explicit StreamWriter(Stream* stream, TextEncoding encoding, int buffer_capacity);
   ~StreamWriter();
 
-  ALWAYS_INLINE Stream* stream() const { return stream_; }
+  void ForceValidation();
 
   int GetBufferCapacity() const { return buffer_.capacity(); }
 
   void SetAutoFlush(bool auto_flush);
   bool GetAutoFlush() const { return auto_flush_; }
 
+  Stream& GetStream() const { return stream_; }
   TextEncoding GetEncoding() const override;
 
  protected:
-  void OnWriteAsciiChar(char c) override;
-  void OnWriteUnicodeChar(char32_t c) override;
-  void OnWriteAscii(StringSpan text) override;
-  void OnWriteUtf8(StringSpan text) override;
+  void OnWriteChar(char c) override;
+  void OnWriteRune(char32_t c) override;
+  void OnWriteString(StringSpan text) override;
   void OnFlush() override;
 
  private:
-  enum class CodecClass : unsigned char {
-    Utf8,
-    Utf16,
-    None,
-  };
+  Stream& stream_;
 
-  Stream* stream_;
   Buffer buffer_;
 
   TextEncoding encoding_;
-  TextEncoder encoder_;
+  TextEncoder* encoder_ = nullptr;
 
-  CodecClass codec_class_;
   bool auto_flush_ = false;
+
+  Buffer encoder_memory_;
 
   static constexpr int MinBufferCapacity = 1024;
   static constexpr int MaxLengthForFastPath_ = 8;
 
+  bool IsDirect() const { return encoder_ == nullptr; }
+  void WriteIndirect(StringSpan input);
+
   void WriteToBuffer(BufferSpan input);
   void FlushBuffer();
 
-  void WriteRune(char32_t codepoint);
-
-  template<typename TDst, typename TSrc>
-  void OnWriteAsciiTmpl(const TSrc* text, int length);
-
-  template<typename TDst, typename TSrc>
-  void ConvertUnicode(const TSrc* text, int length);
-  template<typename TDst, typename TSrc>
-  void ConvertAsciiOrUnicode(const TSrc* text, int length);
-
-  static CodecClass SelectCodecClass(TextEncoding encoding);
+  void CreateEncoder();
+  void DestroyEncoder();
 };
 
 } // namespace stp
