@@ -316,7 +316,7 @@ bool JsonParser::ConsumeStringRaw(JsonStringBuilder& out) {
   while (pos_ < end_pos_) {
     const char* iter_pos = pos_;
     char32_t next_char = Utf8::Decode(pos_, end_pos_);
-    if (!Unicode::IsValidCharacter(next_char))
+    if (!unicode::IsValidCharacter(next_char))
       return ReportError(JsonError::UnsupportedEncoding, 1);
 
     if (next_char == '"') {
@@ -351,7 +351,7 @@ bool JsonParser::ConsumeStringRaw(JsonStringBuilder& out) {
 
           uint32_t hex_digit = 0;
           if (!TryParseHex(StringSpan(pos_, 2), hex_digit) ||
-              !Unicode::IsValidCharacter(hex_digit)) {
+              !unicode::IsValidCharacter(hex_digit)) {
             return ReportError(JsonError::InvalidEscape, 0);
           }
           pos_ += 2;
@@ -430,9 +430,9 @@ bool JsonParser::DecodeUtf16(JsonStringBuilder& out) {
 
   // If this is a high surrogate, consume the next code unit to get the
   // low surrogate.
-  if (Utf16::IsSurrogate(code_unit16_high)) {
+  if (unicode::IsSurrogate(code_unit16_high)) {
     // Make sure this is the high surrogate. If not, it's an encoding error.
-    if (!Utf16::SurrogateIsLeading(code_unit16_high))
+    if (!unicode::SurrogateIsLeading(code_unit16_high))
       return false;
 
     // Make sure that the token has more characters to consume the
@@ -450,16 +450,16 @@ bool JsonParser::DecodeUtf16(JsonStringBuilder& out) {
 
     pos_ += 4;
 
-    if (!Utf16::IsTrailSurrogate(code_unit16_low))
+    if (!unicode::IsTrailSurrogate(code_unit16_low))
       return false;
 
-    char32_t codepoint = Utf16::DecodeSurrogatePair(code_unit16_high, code_unit16_low);
-    if (!Unicode::IsValidCharacter(codepoint))
+    char32_t rune = unicode::DecodeSurrogatePair(code_unit16_high, code_unit16_low);
+    if (!unicode::IsValidCharacter(rune))
       return false;
 
-    offset = Utf8::Encode(code_unit8, codepoint);
+    offset = Utf8::Encode(code_unit8, rune);
   } else {
-    if (!Unicode::IsValidCharacter(code_unit16_high))
+    if (!unicode::IsValidCharacter(code_unit16_high))
       return false;
 
     offset = Utf8::Encode(code_unit8, code_unit16_high);
@@ -470,7 +470,7 @@ bool JsonParser::DecodeUtf16(JsonStringBuilder& out) {
 }
 
 void JsonParser::DecodeUtf8(char32_t point, JsonStringBuilder& dest) {
-  ASSERT(Unicode::IsValidCharacter(point));
+  ASSERT(unicode::IsValidCharacter(point));
 
   // Anything outside of the basic ASCII plane will need to be decoded from
   // int32_t to a multi-byte sequence.

@@ -11,17 +11,17 @@
 namespace stp {
 
 template<typename TOutput, TEnableIf<TIsStringContainer<TOutput>>* = nullptr>
-inline int AppendUnicodeCharacter(TOutput& output, char32_t codepoint) {
+inline int AppendRune(TOutput& output, char32_t rune) {
   using CharType = typename TOutput::ItemType;
   using UtfType = UtfTmpl<CharType>;
-  if (sizeof(CharType) == 1 && IsAscii(codepoint)) {
+  if (sizeof(CharType) == 1 && IsAscii(rune)) {
     // Fast path the common case of one byte.
-    output.Add(static_cast<char>(codepoint));
+    output.Add(static_cast<char>(rune));
     return 1;
   }
-  int count = UtfType::EncodedLength(codepoint);
+  int count = UtfType::EncodedLength(rune);
   auto* dst = output.AppendUninitialized(count);
-  UtfType::Encode(dst, codepoint);
+  UtfType::Encode(dst, rune);
   return count;
 }
 
@@ -63,11 +63,11 @@ bool AppendUnicodeNonAscii(TOutput& output, const TInput& input) {
   auto* src = input.data();
   auto* src_end = src + input.size();
   while (src < src_end) {
-    char32_t codepoint = UtfTmpl<SrcCharType>::Decode(src, src_end);
-    if (LIKELY(!UtfBase::IsDecodeError(codepoint))) {
-      AppendUnicodeCharacter(output, codepoint);
+    char32_t rune = UtfTmpl<SrcCharType>::Decode(src, src_end);
+    if (LIKELY(!UtfBase::IsDecodeError(rune))) {
+      AppendRune(output, rune);
     } else {
-      AppendUnicodeCharacter(output, unicode::ReplacementCodepoint);
+      AppendRune(output, unicode::ReplacementRune);
       all_valid = false;
     }
   }

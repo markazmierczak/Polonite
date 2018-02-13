@@ -17,8 +17,8 @@ void StringWriter::OnWriteChar(char c) {
   string_.Add(c);
 }
 
-void StringWriter::OnWriteRune(char32_t codepoint) {
-  AppendUnicodeCharacter(string_, codepoint);
+void StringWriter::OnWriteRune(char32_t rune) {
+  AppendRune(string_, rune);
 }
 
 void StringWriter::OnWriteString(StringSpan text) {

@@ -39,7 +39,7 @@ inline TextDecoder::Result DecodeTmpl(BufferSpan input, MutableSpan<T> output, b
       } else {
         c = Cp1252ToUnicode[b - 0x80];
         if (UNLIKELY(c == 0)) {
-          c = unicode::ReplacementCodepoint;
+          c = unicode::ReplacementRune;
         }
       }
       int num_encoded = TryEncodeUtf(c, output.GetSlice(num_wrote));

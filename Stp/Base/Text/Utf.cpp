@@ -107,7 +107,7 @@ int Utf8::EncodeSlow(char* out, char32_t c) {
 }
 
 int TryEncodeUtf(char32_t c, MutableStringSpan out) {
-  ASSERT(unicode::IsValidCodepoint(c));
+  ASSERT(unicode::IsValidRune(c));
   if (out.IsEmpty())
     return 0;
   int i = 0;
@@ -152,7 +152,7 @@ char32_t Utf16::DecodeSlow(const char16_t*& it, const char16_t* end, char32_t le
 
   // Valid surrogate pair.
   char32_t decoded = unicode::DecodeSurrogatePair(lead, trail);
-  ASSERT(unicode::IsValidCodepoint(decoded));
+  ASSERT(unicode::IsValidRune(decoded));
   return decoded;
 }
 
@@ -162,7 +162,7 @@ bool Utf8::Validate(StringSpan input) {
 
   while (src < end) {
     char32_t c = Utf8::Decode(src, end);
-    if (!unicode::IsValidCodepoint(c))
+    if (!unicode::IsValidRune(c))
       return false;
   }
   return true;

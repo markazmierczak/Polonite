@@ -139,13 +139,13 @@ void StreamWriter::OnWriteChar(char c) {
   WriteIndirect(StringSpan(&c, 1));
 }
 
-void StreamWriter::OnWriteRune(char32_t codepoint) {
-  char code_units[Utf8::MaxEncodedCodepointLength];
-  int length = Utf8::Encode(code_units, codepoint);
+void StreamWriter::OnWriteRune(char32_t rune) {
+  char units[Utf8::MaxEncodedRuneLength];
+  int length = Utf8::Encode(units, rune);
   if (IsDirect()) {
-    WriteToBuffer(BufferSpan(code_units, length));
+    WriteToBuffer(BufferSpan(units, length));
   } else {
-    WriteIndirect(StringSpan(code_units, length));
+    WriteIndirect(StringSpan(units, length));
   }
 }
 

@@ -182,11 +182,11 @@ void JsonFormatter::EscapeSimple(TextWriter& out, StringSpan str) {
   }
 }
 
-static void WriteEscapedUnicode(TextWriter& out, char32_t codepoint) {
+static void WriteEscapedRune(TextWriter& out, char32_t rune) {
   out << "\\u";
 
   FormatHexIntegerBuffer<uint32_t> buffer;
-  StringSpan hex = FormatHexInteger(static_cast<uint32_t>(codepoint), buffer);
+  StringSpan hex = FormatHexInteger(static_cast<uint32_t>(rune), buffer);
   if (hex.size() < 4)
     out.Indent(4 - hex.size(), '0');
 
@@ -199,34 +199,34 @@ bool JsonFormatter::EscapeReplaceUnicode(TextWriter& out, StringSpan str) {
 
   bool total_error = false;
   while (it < end) {
-    char32_t codepoint = Utf8::Decode(it, end);
-    bool local_error = Utf8::IsDecodeError(codepoint);
+    char32_t rune = Utf8::Decode(it, end);
+    bool local_error = Utf8::IsDecodeError(rune);
     if (local_error) {
-      codepoint = unicode::ReplacementCodepoint;
+      rune = unicode::ReplacementRune;
       total_error = true;
     }
 
     char replacement;
-    if (EscapeSpecialCharacter(codepoint, replacement)) {
+    if (EscapeSpecialCharacter(rune, replacement)) {
       char escaped[2] = { '\\', replacement };
       out << MakeSpan(escaped, 2);
       continue;
     }
 
-    if (IsAscii(codepoint) && codepoint >= 32) {
-      out << char_cast<char>(codepoint);
+    if (IsAscii(rune) && rune >= 32) {
+      out << char_cast<char>(rune);
       continue;
     }
 
-    if (codepoint <= 0xFFFF) {
-      WriteEscapedUnicode(out, codepoint);
+    if (rune <= 0xFFFF) {
+      WriteEscapedRune(out, rune);
     } else {
       char16_t surrogate_pair[2];
-      int pair_count = Utf16::Encode(surrogate_pair, codepoint);
+      int pair_count = Utf16::Encode(surrogate_pair, rune);
       ASSERT_UNUSED(pair_count == 2, pair_count);
 
-      WriteEscapedUnicode(out, surrogate_pair[0]);
-      WriteEscapedUnicode(out, surrogate_pair[1]);
+      WriteEscapedRune(out, surrogate_pair[0]);
+      WriteEscapedRune(out, surrogate_pair[1]);
     }
   }
   return total_error;

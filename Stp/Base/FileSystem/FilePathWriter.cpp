@@ -34,8 +34,8 @@ void FilePathWriter::OnWriteChar(char c) {
   path_.chars().Add(char_cast<FilePathChar>(c));
 }
 
-void FilePathWriter::OnWriteRune(char32_t codepoint) {
-  AppendUnicodeCharacter(path_.chars(), codepoint);
+void FilePathWriter::OnWriteRune(char32_t rune) {
+  AppendRune(path_.chars(), rune);
 }
 
 void FilePathWriter::OnWriteString(StringSpan text) {

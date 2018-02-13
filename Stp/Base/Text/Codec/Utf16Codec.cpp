@@ -26,7 +26,7 @@ inline TextConversionResult DecodeTmpl(
   auto* input_data = static_cast<const byte_t*>(input.data());
   int num_read = 0;
   auto* output_data = output.data();
-  int max_output_size = output.size() - UtfTmpl<T>::MaxEncodedCodepointLength;
+  int max_output_size = output.size() - UtfTmpl<T>::MaxEncodedRuneLength;
   int num_wrote = 0;
   bool did_fallback = false;
 
@@ -104,14 +104,14 @@ TextConversionResult EncodeTmpl(
 
   auto* output_data = static_cast<byte_t*>(output.data());
   int num_wrote = 0;
-  int max_output_size = output.size() - Utf16::MaxEncodedCodepointLength * isizeof(char16_t);
+  int max_output_size = output.size() - Utf16::MaxEncodedRuneLength * isizeof(char16_t);
 
   bool did_fallback = false;
 
   while (iptr < iptr_end && num_wrote < max_output_size) {
     char32_t c = DecodeUtf(iptr, iptr_end);
     if (UtfTmpl<T>::IsDecodeError(c)) {
-      c = unicode::ReplacementCodepoint;
+      c = unicode::ReplacementRune;
       did_fallback = true;
     }
     char16_t h[2];

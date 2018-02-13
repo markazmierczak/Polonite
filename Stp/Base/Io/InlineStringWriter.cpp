@@ -18,7 +18,7 @@ void InlineStringWriter::OnWriteChar(char c) {
 }
 
 void InlineStringWriter::OnWriteRune(char32_t rune) {
-  AppendUnicodeCharacter(string_, rune);
+  AppendRune(string_, rune);
 }
 
 void InlineStringWriter::OnWriteString(StringSpan text) {

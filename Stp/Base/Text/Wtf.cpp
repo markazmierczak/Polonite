@@ -77,7 +77,7 @@ char32_t Wtf8::DecodeSlow(const char*& it, const char* end, char32_t c) {
 }
 
 char32_t Wtf16::DecodeSlow(const char16_t*& it, const char16_t* end, char32_t lead) {
-  ASSERT(lead <= unicode::MaxCodepoint);
+  ASSERT(lead <= unicode::MaxRune);
 
   // check for end of stream.
   if (it >= end)
@@ -95,7 +95,7 @@ char32_t Wtf16::DecodeSlow(const char16_t*& it, const char16_t* end, char32_t le
   }
   // valid surrogate pair
   char32_t decoded = unicode::DecodeSurrogatePair(lead, trail);
-  ASSERT(unicode::IsValidCodepoint(decoded));
+  ASSERT(unicode::IsValidRune(decoded));
   return decoded;
 }
 
@@ -120,7 +120,7 @@ static inline void WriteWtfTmpl(TextWriter& out, Span<T> wtf) {
     }
 
     if (valid_end != it_end) {
-      out << unicode::ReplacementCodepoint;
+      out << unicode::ReplacementRune;
     }
   }
 }

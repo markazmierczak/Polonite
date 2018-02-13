@@ -21,7 +21,7 @@ class UtfBase {
 class BASE_EXPORT Utf8 : public UtfBase {
  public:
   // Maximum number of units needed to encode a single code-point in UTF-8.
-  static constexpr int MaxEncodedCodepointLength = 4;
+  static constexpr int MaxEncodedRuneLength = 4;
 
   static bool IsEncodedLead(unsigned char c) { return (c - 0xC0) < 0x3E; }
   static bool IsEncodedTrail(unsigned char c) { return (c & 0xC0) == 0x80; }
@@ -31,7 +31,7 @@ class BASE_EXPORT Utf8 : public UtfBase {
 
   // Encodes given code-point as UTF-8 sequence.
   // |out| must be big enough to hold encoded sequence.
-  // Use MaxEncodedCodepointLength or EncodedLength() to select buffer size.
+  // Use MaxEncodedRuneLength or EncodedLength() to select buffer size.
   // Returns the number of units written to the output.
   static int Encode(char* out, char32_t c);
 
@@ -53,7 +53,7 @@ class BASE_EXPORT Utf8 : public UtfBase {
 
 class BASE_EXPORT Utf16 : public UtfBase {
  public:
-  static constexpr int MaxEncodedCodepointLength = 2;
+  static constexpr int MaxEncodedRuneLength = 2;
 
   static int EncodedLength(char32_t c);
   static int Encode(char16_t* s, char32_t c);
@@ -95,12 +95,12 @@ using UtfTmpl = typename detail::UtfTmplHelperTmpl<T>::Type;
 BASE_EXPORT int TryEncodeUtf(char32_t c, MutableStringSpan out);
 
 inline int Utf8::EncodedLength(char32_t c) {
-  ASSERT(unicode::IsValidCodepoint(c));
+  ASSERT(unicode::IsValidRune(c));
   return c <= 0x7F ? 1 : (c <= 0x7FF ? 2 : (c <= 0xFFFF ? 3 : 4));
 }
 
 inline int Utf8::Encode(char* out, char32_t c) {
-  ASSERT(unicode::IsValidCodepoint(c));
+  ASSERT(unicode::IsValidRune(c));
   if (c <= 0x7F) {
     *out = static_cast<char>(c);
     return 1;
@@ -122,12 +122,12 @@ inline char32_t Utf8::Decode(const char*& it, const char* end) {
 }
 
 inline int Utf16::EncodedLength(char32_t c) {
-  ASSERT(unicode::IsValidCodepoint(c));
+  ASSERT(unicode::IsValidRune(c));
   return c <= 0xFFFF ? 1 : 2;
 }
 
 inline int Utf16::Encode(char16_t* s, char32_t c) {
-  ASSERT(unicode::IsValidCodepoint(c));
+  ASSERT(unicode::IsValidRune(c));
   int i = 0;
   if (c <= 0xFFFF) {
     // This code point is in the Basic Multilingual Plane (BMP).

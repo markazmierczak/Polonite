@@ -9,8 +9,8 @@
 namespace stp {
 namespace unicode {
 
-constexpr char16_t ReplacementCodepoint = 0xFFFD;
-constexpr char32_t MaxCodepoint = 0x10FFFFu;
+constexpr char16_t ReplacementRune = 0xFFFD;
+constexpr char32_t MaxRune = 0x10FFFFu;
 
 constexpr char16_t MinLeadSurrogate = 0xD800u;
 constexpr char16_t MaxLeadSurrogate = 0xDBFFu;
@@ -21,32 +21,32 @@ constexpr char32_t SurrogateOffset = (MinLeadSurrogate << 10u) + MinTrailSurroga
 // Excludes the surrogate code units [0xD800, 0xDFFF] and
 // code-points larger than 0x10FFFF (the highest code-point allowed).
 // Non-characters and unassigned code-points are allowed.
-inline bool IsValidCodepoint(char32_t codepoint) {
-  return codepoint < MinLeadSurrogate ||
-        (codepoint > MaxTrailSurrogate && codepoint <= MaxCodepoint);
+inline bool IsValidRune(char32_t rune) {
+  return rune < MinLeadSurrogate ||
+        (rune > MaxTrailSurrogate && rune <= MaxRune);
 }
 
 // Excludes non-characters [U+FDD0..U+FDEF], and all code-points ending in
 // 0xFFFE or 0xFFFF) from the set of valid characters.
-inline bool IsValidCharacter(char32_t codepoint) {
-  return codepoint < MinLeadSurrogate ||
-        (codepoint > MaxTrailSurrogate && codepoint < 0xFDD0u) ||
-        (codepoint > 0xFDEFu && codepoint <= MaxCodepoint && (codepoint & 0xFFFEu) != 0xFFFEu);
+inline bool IsValidCharacter(char32_t rune) {
+  return rune < MinLeadSurrogate ||
+        (rune > MaxTrailSurrogate && rune < 0xFDD0u) ||
+        (rune > 0xFDEFu && rune <= MaxRune && (rune & 0xFFFEu) != 0xFFFEu);
 }
 
 // Accepts code units in [U+D8000..U+DFFF] range.
-inline bool IsSurrogate(char32_t code_unit) {
-  return (code_unit & 0xFFFFF800) == 0xD800;
+inline bool IsSurrogate(char32_t code) {
+  return (code & 0xFFFFF800) == 0xD800;
 }
 
 // Accepts code units in [U+D8000..U+DBFF] range.
-inline bool IsLeadSurrogate(char32_t code_unit) {
-  return (code_unit & 0xFFFFFC00) == 0xD800;
+inline bool IsLeadSurrogate(char32_t code) {
+  return (code & 0xFFFFFC00) == 0xD800;
 }
 
 // Accepts code units in [U+DC000..U+DFFF] range.
-inline bool IsTrailSurrogate(char32_t code_unit) {
-  return (code_unit & 0xFFFFFC00) == 0xDC00;
+inline bool IsTrailSurrogate(char32_t code) {
+  return (code & 0xFFFFFC00) == 0xDC00;
 }
 
 // Checks whether given surrogate is leading.

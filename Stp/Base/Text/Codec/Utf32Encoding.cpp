@@ -37,8 +37,8 @@ TextDecoder::Result Utf32Decoder::Decode(
       break;
     }
     char32_t c = DecodeUtf32Unit(endianness, input_data + num_read);
-    if (!unicode::IsValidCodepoint(c)) {
-      c = unicode::ReplacementCodepoint;
+    if (!unicode::IsValidRune(c)) {
+      c = unicode::ReplacementRune;
     }
     int encoded_size = TryEncodeUtf(c, output.GetSlice(num_wrote));
     if (encoded_size == 0)
@@ -46,7 +46,7 @@ TextDecoder::Result Utf32Decoder::Decode(
     num_wrote += encoded_size;
   }
   if (flush && leftover != 0) {
-    int encoded = TryEncodeUtf(unicode::ReplacementCodepoint, output.GetSlice(num_wrote));
+    int encoded = TryEncodeUtf(unicode::ReplacementRune, output.GetSlice(num_wrote));
     if (encoded != 0) {
       more_output = true;
       num_read += leftover;
@@ -88,7 +88,7 @@ TextEncoder::Result Utf32Encoder::Encode(StringSpan input, MutableBufferSpan out
     }
     char32_t c = DecodeUtf(iptr, iptr_end);
     if (UtfBase::IsDecodeError(c)) {
-      c = unicode::ReplacementCodepoint;
+      c = unicode::ReplacementRune;
     }
     num_wrote += EncodeUtf32Unit(endianness, c, output_data + num_wrote);
   }

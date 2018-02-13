@@ -21,7 +21,7 @@ bool TextWriter::IsConsoleWriter() const {
 }
 
 void TextWriter::WriteRune(char32_t rune) {
-  ASSERT(unicode::IsValidCodepoint(rune));
+  ASSERT(unicode::IsValidRune(rune));
   if (IsAscii(rune)) {
     OnWriteChar(static_cast<char>(rune));
   } else {
@@ -60,10 +60,10 @@ void TextWriter::OnWriteChar(char c) {
   OnWriteString(StringSpan(&c, 1));
 }
 
-void TextWriter::OnWriteRune(char32_t c) {
-  char buffer[Utf8::MaxEncodedCodepointLength];
-  int n = EncodeUtf(buffer, c);
-  OnWriteString(StringSpan(buffer, n));
+void TextWriter::OnWriteRune(char32_t rune) {
+  char units[Utf8::MaxEncodedRuneLength];
+  int n = EncodeUtf(units, rune);
+  OnWriteString(StringSpan(units, n));
 }
 
 #if ASSERT_IS_ON()
