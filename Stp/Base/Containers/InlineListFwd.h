@@ -22,8 +22,6 @@ struct TIsContiguousContainerTmpl<InlineList<T, N>> : TTrue {};
 
 template<int N>
 using InlineString = InlineList<char, N>;
-template<int N>
-using InlineString16 = InlineList<char16_t, N>;
 
 } // namespace stp
 

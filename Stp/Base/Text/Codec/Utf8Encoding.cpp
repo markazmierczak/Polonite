@@ -236,14 +236,6 @@ inline int DecodeTmpl(Context& context, BufferSpan input, MutableSpan<T> output,
   return oi;
 }
 
-int Decode(Context& context, BufferSpan input, MutableStringSpan output, bool flush) {
-  return DecodeTmpl(context, input, output, flush);
-}
-
-int Decode16(Context& context, BufferSpan input, MutableString16Span output, bool flush) {
-  return DecodeTmpl(context, input, output, flush);
-}
-
 int Encode(Context& context, StringSpan input, MutableBufferSpan output) {
   auto* iptr = reinterpret_cast<const byte_t*>(input.data());
   int isize = input.size();
@@ -252,27 +244,6 @@ int Encode(Context& context, StringSpan input, MutableBufferSpan output) {
 
   context.state.bytes[0] = 0;
   return DecodeTmpl(context, BufferSpan(iptr, isize), MutableStringSpan(optr, osize), true);
-}
-
-int Encode16(Context& context, String16Span input, MutableBufferSpan output) {
-  auto* iptr = input.data();
-  auto* iptr_end = iptr + input.size();
-  auto* optr = reinterpret_cast<char*>(output.data());
-  int oi = 0;
-  bool saw_error = false;
-
-  while (iptr < iptr_end) {
-    char32_t c = DecodeUtf(iptr, iptr_end);
-    if (!Unicode::IsDecodeError(c)) {
-      oi += EncodeUtf(optr + oi, c);
-    } else {
-      optr[oi++] = Unicode::FallbackUnit<char>;
-      saw_error = true;
-    }
-  }
-  context.MaybeThrow(saw_error);
-  ASSERT(oi <= output.size());
-  return oi;
 }
 
 constexpr auto Build() {

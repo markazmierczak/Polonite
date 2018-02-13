@@ -29,18 +29,6 @@ TextDecoder::Result Decode(
   return TextConversionResult(num_read, num_wrote, false);
 }
 
-TextConversionResult Decode16(
-    TextConversionContext* context, BufferSpan input, MutableString16Span output, bool flush) {
-  auto* input_data = static_cast<const byte_t*>(input.data());
-  int num_read = 0;
-  int num_wrote = 0;
-
-  while (num_read < input.size() && num_wrote < output.size()) {
-    output[num_wrote++] = static_cast<char16_t>(input_data[num_read++]);
-  }
-  return TextConversionResult(num_read, num_wrote, false);
-}
-
 template<typename T>
 inline TextConversionResult EncodeTmpl(
     TextConversionContext* context, Span<T> input, MutableBufferSpan output) {
@@ -61,26 +49,12 @@ inline TextConversionResult EncodeTmpl(
   return TextConversionResult(iptr - input.data(), num_wrote, did_fallback);
 }
 
-TextConversionResult Encode(
-    TextConversionContext* context, StringSpan input, MutableBufferSpan output) {
-  return EncodeTmpl(context, input, output);
-}
-TextConversionResult Encode16(
-    TextConversionContext* context, String16Span input, MutableBufferSpan output) {
-  return EncodeTmpl(context, input, output);
-}
-
 constexpr StringSpan Aliases[] = {
   "iso-ir-100",
   "latin1",
   "L1",
   "IBM819",
   "CP819",
-};
-
-constexpr TextCodecVtable Vtable = {
-  Decode, Decode16,
-  Encode, Encode16,
 };
 
 constexpr auto Build() {

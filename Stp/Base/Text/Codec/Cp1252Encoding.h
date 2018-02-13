@@ -19,13 +19,11 @@ inline TextEncoding Cp1252() { return TextEncoding(&detail::Cp1252EncodingData);
 class Cp1252Decoder : public TextDecoder {
  public:
   Result Decode(BufferSpan input, MutableStringSpan output, bool flush) override;
-  Result Decode16(BufferSpan input, MutableString16Span output, bool flush) override;
 };
 
 class Cp1252Encoder : public TextEncoder {
  public:
   Result Encode(StringSpan input, MutableBufferSpan output) override;
-  Result Encode16(String16Span input, MutableBufferSpan output) override;
 };
 
 } // namespace stp

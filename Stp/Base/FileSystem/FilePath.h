@@ -86,10 +86,6 @@ class BASE_EXPORT FilePath {
 
   // Returns a FilePath object from a path name in UTF encoding.
   static FilePath FromString(StringSpan string);
-  static FilePath FromString(String16Span string);
-  #if OS(WIN)
-  static FilePath FromString(WStringSpan string);
-  #endif
 
   void AddComponent(SpanType component);
   void AddComponentAscii(StringSpan component);

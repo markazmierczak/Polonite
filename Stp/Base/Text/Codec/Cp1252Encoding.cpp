@@ -54,16 +54,6 @@ inline TextDecoder::Result DecodeTmpl(BufferSpan input, MutableSpan<T> output, b
   return TextDecoder::Result(num_read, num_wrote, more_output);
 }
 
-TextConversionResult Decode(
-    TextConversionContext* context, BufferSpan input, MutableStringSpan output, bool flush) {
-  return DecodeTmpl(context, input, output, flush);
-}
-
-TextConversionResult Decode16(
-    TextConversionContext* context, BufferSpan input, MutableString16Span output, bool flush) {
-  return DecodeTmpl(context, input, output, flush);
-}
-
 // 0x0150..0x0197
 const byte_t Cp1252Page01[72] = {
   0x00, 0x00, 0x8C, 0x9C, 0x00, 0x00, 0x00, 0x00,
@@ -135,22 +125,8 @@ inline TextConversionResult EncodeTmpl(
   return TextConversionResult(iptr - input.data(), num_wrote, did_fallback);
 }
 
-TextConversionResult Encode(
-    TextConversionContext* context, StringSpan input, MutableBufferSpan output) {
-  return EncodeTmpl(context, input, output);
-}
-TextConversionResult Encode16(
-    TextConversionContext* context, String16Span input, MutableBufferSpan output) {
-  return EncodeTmpl(context, input, output);
-}
-
 constexpr StringSpan Aliases[] = {
   "windows-1252",
-};
-
-constexpr TextCodecVtable Vtable = {
-  Decode, Decode16,
-  Encode, Encode16,
 };
 
 constexpr auto Build() {

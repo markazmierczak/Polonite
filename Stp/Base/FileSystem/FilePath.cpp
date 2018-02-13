@@ -93,16 +93,10 @@ void FilePath::NormalizeSeparatorsTo(CharType separator) {
 FilePath FilePath::FromString(StringSpan string) {
   #if OS(POSIX)
   return FilePath(string.data(), string.size());
-  #else
+  #elif OS(WIN)
   return FromStringTmpl(string);
   #endif
 }
-
-#if OS(WIN)
-FilePath FilePath::FromString(WStringSpan string) {
-  return FilePath(string.data(), string.size());
-}
-#endif
 
 void FilePath::AddComponent(FilePathSpan component) {
   ASSERT(!component.IsAbsolute());

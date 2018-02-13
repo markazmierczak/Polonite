@@ -323,8 +323,6 @@ component("Base") {
     "Text/String.h",
     "Text/StringSpan.h",
     "Text/StringUtfConversions.h",
-    "Text/SystemString.h",
-    "Text/SystemStringWin.cpp",
     "Text/TextDecoder.h",
     "Text/TextEncoder.h",
     "Text/TextEncoding.cpp",

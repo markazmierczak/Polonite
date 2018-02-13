@@ -72,16 +72,8 @@ TextConversionResult DecodeLE(
     TextConversionContext* context, BufferSpan input, MutableStringSpan output, bool flush) {
   return DecodeTmpl<Endianness::Little>(context, input, output, flush);
 }
-TextConversionResult Decode16LE(
-    TextConversionContext* context, BufferSpan input, MutableString16Span output, bool flush) {
-  return DecodeTmpl<Endianness::Little>(context, input, output, flush);
-}
 TextConversionResult DecodeBE(
     TextConversionContext* context, BufferSpan input, MutableStringSpan output, bool flush) {
-  return DecodeTmpl<Endianness::Big>(context, input, output, flush);
-}
-TextConversionResult Decode16BE(
-    TextConversionContext* context, BufferSpan input, MutableString16Span output, bool flush) {
   return DecodeTmpl<Endianness::Big>(context, input, output, flush);
 }
 
@@ -129,28 +121,10 @@ TextConversionResult EncodeLE(
     TextConversionContext* context, StringSpan input, MutableBufferSpan output) {
   return EncodeTmpl<Endianness::Little>(context, input, output);
 }
-TextConversionResult Encode16LE(
-    TextConversionContext* context, String16Span input, MutableBufferSpan output) {
-  return EncodeTmpl<Endianness::Little>(context, input, output);
-}
 TextConversionResult EncodeBE(
     TextConversionContext* context, StringSpan input, MutableBufferSpan output) {
   return EncodeTmpl<Endianness::Big>(context, input, output);
 }
-TextConversionResult Encode16BE(
-    TextConversionContext* context, String16Span input, MutableBufferSpan output) {
-  return EncodeTmpl<Endianness::Big>(context, input, output);
-}
-
-constexpr TextCodecVtable VtableLE = {
-  DecodeLE, Decode16LE,
-  EncodeLE, Encode16LE,
-};
-
-constexpr TextCodecVtable VtableBE = {
-  DecodeBE, Decode16BE,
-  EncodeBE, Encode16BE,
-};
 
 constexpr auto BuildLE() {
   auto builder = BuildTextCodec("UTF-16LE", VtableLE);
