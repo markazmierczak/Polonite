@@ -13,8 +13,6 @@ namespace stp {
 //       be seekable.
 class BASE_EXPORT BufferedStream final : public Stream {
  public:
-  static constexpr int DefaultBufferSize = 4096;
-
   BufferedStream();
   ~BufferedStream() override;
 
@@ -48,6 +46,8 @@ class BASE_EXPORT BufferedStream final : public Stream {
   int64_t GetPosition() override;
 
  private:
+  static constexpr int DefaultBufferSize = 4096;
+
   void OpenInternal(Stream* underlying, bool owned);
 
   bool HasPendingWrite() const { return write_pos_ > 0; }
