@@ -3,14 +3,14 @@
 
 #include "Base/Text/Codec/Utf32Encoding.h"
 
-#include "Base/Compiler/ByteOrder.h"
+#include "Base/Compiler/Endianness.h"
 #include "Base/Text/TextEncodingDataBuilder.h"
 #include "Base/Text/Utf.h"
 
 namespace stp {
 
-static char32_t DecodeUtf32Unit(ByteOrder endianness, const byte_t* b) {
-  if (endianness == ByteOrder::LittleEndian)
+static char32_t DecodeUtf32Unit(Endianness endianness, const byte_t* b) {
+  if (endianness == Endianness::Little)
     return b[0] | (b[1] << 8) | (b[2] << 16) | (b[3] << 24);
   else
     return b[3] | (b[2] << 8) | (b[1] << 16) | (b[0] << 24);
@@ -56,8 +56,8 @@ TextDecoder::Result Utf32Decoder::Decode(
   return Result(num_read, num_wrote, more_output);
 }
 
-static int EncodeUtf32Unit(ByteOrder endianness, char32_t c, byte_t* out) {
-  if (endianness == ByteOrder::LittleEndian) {
+static int EncodeUtf32Unit(Endianness endianness, char32_t c, byte_t* out) {
+  if (endianness == Endianness::Little) {
     out[0] = static_cast<byte_t>((c >> 0) & 0xFF);
     out[1] = static_cast<byte_t>((c >> 8) & 0xFF);
     out[2] = static_cast<byte_t>((c >> 16) & 0xFF);
@@ -95,7 +95,7 @@ TextEncoder::Result Utf32Encoder::Encode(StringSpan input, MutableBufferSpan out
   return Result(iptr - input.data(), num_wrote, more_output);
 }
 
-static constexpr Utf32EncodingConfig BuildUtf32Config(ByteOrder endianness, bool ignore_bom) {
+static constexpr Utf32EncodingConfig BuildUtf32Config(Endianness endianness, bool ignore_bom) {
   Utf32EncodingConfig config;
   config.endianness = endianness;
   config.writes_bom = !ignore_bom;
@@ -104,11 +104,11 @@ static constexpr Utf32EncodingConfig BuildUtf32Config(ByteOrder endianness, bool
 }
 
 static constexpr Utf32EncodingConfig Utf32Config =
-    BuildUtf32Config(ByteOrder::BigEndian, false);
+    BuildUtf32Config(Endianness::Big, false);
 static constexpr Utf32EncodingConfig Utf32BEConfig =
-    BuildUtf32Config(ByteOrder::BigEndian, true);
+    BuildUtf32Config(Endianness::Big, true);
 static constexpr Utf32EncodingConfig Utf32LEConfig =
-    BuildUtf32Config(ByteOrder::LittleEndian, true);
+    BuildUtf32Config(Endianness::Little, true);
 
 constexpr auto Build(StringSpan name, const Utf32EncodingConfig* config) {
   auto builder = BuildTextEncodingData<Utf32Decoder, Utf32Encoder>(name);

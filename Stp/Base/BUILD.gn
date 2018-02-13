@@ -39,10 +39,10 @@ component("Base") {
     "App/BaseApplicationPart.cpp",
     "App/BaseApplicationPart.h",
 
-    "Compiler/ByteOrder.h",
     "Compiler/Config.h",
     "Compiler/Control.h",
     "Compiler/Cpu.h",
+    "Compiler/Endianness.h",
     "Compiler/Lsan.h",
     "Compiler/Msan.h",
     "Compiler/Os.h",

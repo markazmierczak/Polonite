@@ -3,7 +3,7 @@
 
 #include "Base/Text/TextEncoding.h"
 
-#include "Base/Compiler/ByteOrder.h"
+#include "Base/Compiler/Endianness.h"
 #include "Base/Text/Utf.h"
 
 // TODO Faster encode/decode between char16_t (only validation)
@@ -12,15 +12,15 @@ namespace stp {
 
 namespace {
 
-template<ByteOrder TOrder>
+template<Endianness TOrder>
 inline char16_t DecodeOne(const byte_t* b) {
-  if (TOrder == ByteOrder::LittleEndian)
+  if (TOrder == Endianness::Little)
     return b[0] | (b[1] << 8);
   else
     return b[1] | (b[0] << 8);
 }
 
-template<ByteOrder TOrder, typename T>
+template<Endianness TOrder, typename T>
 inline TextConversionResult DecodeTmpl(
     TextConversionContext* context, BufferSpan input, MutableSpan<T> output, bool flush) {
   auto* input_data = static_cast<const byte_t*>(input.data());
@@ -70,24 +70,24 @@ inline TextConversionResult DecodeTmpl(
 
 TextConversionResult DecodeLE(
     TextConversionContext* context, BufferSpan input, MutableStringSpan output, bool flush) {
-  return DecodeTmpl<ByteOrder::LittleEndian>(context, input, output, flush);
+  return DecodeTmpl<Endianness::Little>(context, input, output, flush);
 }
 TextConversionResult Decode16LE(
     TextConversionContext* context, BufferSpan input, MutableString16Span output, bool flush) {
-  return DecodeTmpl<ByteOrder::LittleEndian>(context, input, output, flush);
+  return DecodeTmpl<Endianness::Little>(context, input, output, flush);
 }
 TextConversionResult DecodeBE(
     TextConversionContext* context, BufferSpan input, MutableStringSpan output, bool flush) {
-  return DecodeTmpl<ByteOrder::BigEndian>(context, input, output, flush);
+  return DecodeTmpl<Endianness::Big>(context, input, output, flush);
 }
 TextConversionResult Decode16BE(
     TextConversionContext* context, BufferSpan input, MutableString16Span output, bool flush) {
-  return DecodeTmpl<ByteOrder::BigEndian>(context, input, output, flush);
+  return DecodeTmpl<Endianness::Big>(context, input, output, flush);
 }
 
-template<ByteOrder TOrder>
+template<Endianness TOrder>
 inline void EncodeOne(char16_t c, byte_t* out) {
-  if (TOrder == ByteOrder::LittleEndian) {
+  if (TOrder == Endianness::Little) {
     out[0] = static_cast<byte_t>((c >> 0) & 0xFF);
     out[1] = static_cast<byte_t>((c >> 8) & 0xFF);
   } else {
@@ -96,7 +96,7 @@ inline void EncodeOne(char16_t c, byte_t* out) {
   }
 }
 
-template<ByteOrder TOrder, typename T>
+template<Endianness TOrder, typename T>
 TextConversionResult EncodeTmpl(
     TextConversionContext* context, Span<T> input, MutableBufferSpan output) {
   auto* iptr = begin(input);
@@ -127,19 +127,19 @@ TextConversionResult EncodeTmpl(
 
 TextConversionResult EncodeLE(
     TextConversionContext* context, StringSpan input, MutableBufferSpan output) {
-  return EncodeTmpl<ByteOrder::LittleEndian>(context, input, output);
+  return EncodeTmpl<Endianness::Little>(context, input, output);
 }
 TextConversionResult Encode16LE(
     TextConversionContext* context, String16Span input, MutableBufferSpan output) {
-  return EncodeTmpl<ByteOrder::LittleEndian>(context, input, output);
+  return EncodeTmpl<Endianness::Little>(context, input, output);
 }
 TextConversionResult EncodeBE(
     TextConversionContext* context, StringSpan input, MutableBufferSpan output) {
-  return EncodeTmpl<ByteOrder::BigEndian>(context, input, output);
+  return EncodeTmpl<Endianness::Big>(context, input, output);
 }
 TextConversionResult Encode16BE(
     TextConversionContext* context, String16Span input, MutableBufferSpan output) {
-  return EncodeTmpl<ByteOrder::BigEndian>(context, input, output);
+  return EncodeTmpl<Endianness::Big>(context, input, output);
 }
 
 constexpr TextCodecVtable VtableLE = {

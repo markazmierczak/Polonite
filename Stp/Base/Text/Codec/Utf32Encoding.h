@@ -4,7 +4,7 @@
 #ifndef STP_BASE_TEXT_CODEC_UTF32ENCODING_H_
 #define STP_BASE_TEXT_CODEC_UTF32ENCODING_H_
 
-#include "Base/Compiler/ByteOrder.h"
+#include "Base/Compiler/Endianness.h"
 #include "Base/Text/TextEncoding.h"
 
 namespace stp {
@@ -22,7 +22,7 @@ inline TextEncoding Utf32LE() { return TextEncoding(&detail::Utf32EncodingDataLE
 }
 
 struct Utf32EncodingConfig : public TextEncodingConfig {
-  ByteOrder endianness = ByteOrder::BigEndian;
+  Endianness endianness = Endianness::Big;
   bool writes_bom = false;
   bool accepts_bom = false;
   bool requires_bom = false;

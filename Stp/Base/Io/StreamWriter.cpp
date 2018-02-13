@@ -3,7 +3,7 @@
 
 #include "Base/Io/StreamWriter.h"
 
-#include "Base/Compiler/ByteOrder.h"
+#include "Base/Compiler/Endianness.h"
 #include "Base/Io/Stream.h"
 #include "Base/Math/Alignment.h"
 #include "Base/Memory/PolymorphicAllocator.h"
