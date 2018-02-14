@@ -5,7 +5,7 @@
 
 #include "Base/Containers/Join.h"
 #include "Base/FileSystem/FilePath.h"
-#include "Base/Text/Format.h"
+#include "Base/Text/FormatMany.h"
 
 #include <dlfcn.h>
 

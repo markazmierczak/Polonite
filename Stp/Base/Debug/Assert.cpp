@@ -7,7 +7,7 @@
 #include "Base/Debug/Console.h"
 #include "Base/Debug/Debugger.h"
 #include "Base/Debug/StackTrace.h"
-#include "Base/Text/Format.h"
+#include "Base/Text/FormatMany.h"
 
 #include <stdlib.h>
 

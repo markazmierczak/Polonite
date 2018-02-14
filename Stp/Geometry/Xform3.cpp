@@ -6,7 +6,7 @@
 #include "Geometry/Xform3.h"
 
 #include "Base/Containers/ArrayOps.h"
-#include "Base/Text/Format.h"
+#include "Base/Text/FormatMany.h"
 #include "Geometry/Affine.h"
 #include "Geometry/Bounds2.h"
 #include "Geometry/Quad2.h"

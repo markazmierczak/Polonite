@@ -4,7 +4,7 @@
 #include "Geometry/Rect.h"
 
 #include "Base/Debug/Assert.h"
-#include "Base/Text/Format.h"
+#include "Base/Text/FormatMany.h"
 
 namespace stp {
 

@@ -4,7 +4,7 @@
 #include "Geometry/Line2.h"
 
 #include "Base/Math/Math.h"
-#include "Base/Text/Format.h"
+#include "Base/Text/FormatMany.h"
 #include "Geometry/Affine.h"
 #include "Geometry/Bounds2.h"
 

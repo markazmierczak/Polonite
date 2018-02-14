@@ -5,7 +5,7 @@
 #define STP_BASE_IO_TEXTWRITER_H_
 
 #include "Base/Containers/BufferSpanFwd.h"
-#include "Base/Text/FormatFwd.h"
+#include "Base/Text/FormatManyFwd.h"
 #include "Base/Text/StringSpan.h"
 
 namespace stp {

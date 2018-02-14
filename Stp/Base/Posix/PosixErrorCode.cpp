@@ -12,7 +12,7 @@
 #include "Base/Posix/PosixErrorCode.h"
 
 #include "Base/Debug/Assert.h"
-#include "Base/Text/Format.h"
+#include "Base/Text/FormatMany.h"
 
 #include <stdio.h>
 

@@ -5,7 +5,7 @@
 #define STP_BASE_TEXT_STRINGFORMATMANY_H_
 
 #include "Base/Io/StringWriter.h"
-#include "Base/Text/Format.h"
+#include "Base/Text/FormatMany.h"
 
 namespace stp {
 

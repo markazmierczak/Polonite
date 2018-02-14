@@ -5,7 +5,7 @@
 
 #include "Base/Debug/Log.h"
 #include "Base/Error/SystemException.h"
-#include "Base/Text/Format.h"
+#include "Base/Text/FormatMany.h"
 
 #if !OS(ANDROID)
 # include <sched.h>

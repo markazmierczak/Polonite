@@ -5,6 +5,7 @@
 #define STP_BASE_MATH_FIXED_H_
 
 #include "Base/Math/Safe.h"
+#include "Base/Type/FormattableFwd.h"
 #include "Base/Type/HashableFwd.h"
 
 namespace stp {

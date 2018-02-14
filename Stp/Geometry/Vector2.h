@@ -5,7 +5,7 @@
 #define STP_BASE_GEOMETRY_VECTOR2_H_
 
 #include "Base/Math/Abs.h"
-#include "Base/Text/FormatFwd.h"
+#include "Base/Text/FormatManyFwd.h"
 
 namespace stp {
 

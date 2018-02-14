@@ -7,7 +7,7 @@
 
 #include "Base/Debug/Log.h"
 #include "Base/Math/SafeConversions.h"
-#include "Base/Text/Format.h"
+#include "Base/Text/FormatMany.h"
 #include "Base/Time/TimeTicks.h"
 
 #include <windows.h>

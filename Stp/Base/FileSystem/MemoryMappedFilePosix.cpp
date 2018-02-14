@@ -6,7 +6,7 @@
 #include "Base/FileSystem/MemoryMappedFile.h"
 
 #include "Base/Debug/Log.h"
-#include "Base/Text/Format.h"
+#include "Base/Text/FormatMany.h"
 
 #include <sys/mman.h>
 #include <sys/stat.h>

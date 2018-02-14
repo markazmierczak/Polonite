@@ -10,7 +10,7 @@
 #include "Base/Memory/WeakPtr.h"
 #include "Base/Process/CommandLine.h"
 #include "Base/System/CpuInfo.h"
-#include "Base/Text/Format.h"
+#include "Base/Text/FormatMany.h"
 #include "Base/Thread/Thread.h"
 #include "Base/Time/TimeTicks.h"
 

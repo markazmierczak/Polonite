@@ -8,7 +8,7 @@
 #include <inttypes.h>
 
 #include "Base/Math/Math.h"
-#include "Base/Text/Format.h"
+#include "Base/Text/FormatMany.h"
 #include "Base/ThirdParty/nspr/prtime.h"
 #include "Base/Time/ThreadTicks.h"
 #include "Base/Type/Limits.h"

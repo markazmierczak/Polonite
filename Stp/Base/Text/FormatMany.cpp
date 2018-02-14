@@ -1,7 +1,7 @@
 // Copyright 2017 Polonite Authors. All rights reserved.
 // Distributed under MIT license that can be found in the LICENSE file.
 
-#include "Base/Text/Format.h"
+#include "Base/Text/FormatMany.h"
 
 #include "Base/Debug/Log.h"
 #include "Base/Io/ClipTextWriter.h"

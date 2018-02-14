@@ -1,8 +1,8 @@
 // Copyright 2017 Polonite Authors. All rights reserved.
 // Distributed under MIT license that can be found in the LICENSE file.
 
-#ifndef STP_BASE_TEXT_FORMAT_H_
-#define STP_BASE_TEXT_FORMAT_H_
+#ifndef STP_BASE_TEXT_FORMATMANY_H_
+#define STP_BASE_TEXT_FORMATMANY_H_
 
 #include "Base/Containers/Array.h"
 #include "Base/Io/TextWriter.h"
@@ -96,4 +96,4 @@ inline void AssertFail(
 
 } // namespace stp
 
-#endif // STP_BASE_TEXT_FORMAT_H_
+#endif // STP_BASE_TEXT_FORMATMANY_H_

@@ -5,7 +5,7 @@
 
 #include "Base/Containers/ArrayOps.h"
 #include "Base/Debug/Console.h"
-#include "Base/Text/Format.h"
+#include "Base/Text/FormatMany.h"
 
 namespace stp {
 

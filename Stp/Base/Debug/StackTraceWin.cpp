@@ -8,7 +8,7 @@
 #include "Base/Debug/Log.h"
 #include "Base/FileSystem/KnownPaths.h"
 #include "Base/Memory/OwnPtr.h"
-#include "Base/Text/Format.h"
+#include "Base/Text/FormatMany.h"
 #include "Base/Thread/Lock.h"
 
 #include <windows.h>

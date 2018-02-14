@@ -13,7 +13,7 @@
 #include "Base/Io/StringWriter.h"
 #include "Base/Process/NativeProcess.h"
 #include "Base/Crypto/CryptoRandom.h"
-#include "Base/Text/Format.h"
+#include "Base/Text/FormatMany.h"
 
 #if OS(POSIX)
 #include "Base/Posix/EintrWrapper.h"

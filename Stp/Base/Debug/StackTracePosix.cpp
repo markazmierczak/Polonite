@@ -11,7 +11,7 @@
 #include "Base/Memory/Allocate.h"
 #include "Base/Memory/OwnPtr.h"
 #include "Base/Posix/EintrWrapper.h"
-#include "Base/Text/Format.h"
+#include "Base/Text/FormatMany.h"
 
 #include <fcntl.h>
 #include <signal.h>

@@ -5,10 +5,11 @@
 #define STP_BASE_DEBUG_ASSERT_H_
 
 #include "Base/Export.h"
-#include "Base/Text/FormatFwd.h"
 #include "Base/Type/Attributes.h"
 
 namespace stp {
+
+class TextWriter;
 
 #if defined(NDEBUG) && !defined(HAVE_ASSERT_ALWAYS_ON)
 # define ASSERT_IS_ON() 0
@@ -22,12 +23,6 @@ BASE_EXPORT void AssertCrash();
 
 BASE_EXPORT TextWriter& AssertPrint(const char* file, int line, const char* expr);
 BASE_EXPORT void AssertWrapUp(TextWriter& out);
-
-// Include Format.h when used.
-template<typename... Ts>
-inline void AssertFail(
-    const char* file, int line, const char* expr,
-    StringSpan format, const Ts&... args);
 
 } // namespace stp
 

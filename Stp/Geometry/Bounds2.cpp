@@ -3,7 +3,7 @@
 
 #include "Geometry/Bounds2.h"
 
-#include "Base/Text/Format.h"
+#include "Base/Text/FormatMany.h"
 
 namespace stp {
 

@@ -4,7 +4,7 @@
 #ifndef STP_BASE_DEBUG_LOG_H_
 #define STP_BASE_DEBUG_LOG_H_
 
-#include "Base/Text/FormatFwd.h"
+#include "Base/Text/FormatManyFwd.h"
 #include "Base/Text/StringSpan.h"
 
 namespace stp {
@@ -30,7 +30,7 @@ BASE_EXPORT void LogWrapUp(TextWriter& out);
 BASE_EXPORT void LogPrint(
     LogLevel level, const char* file, unsigned line, const char* msg);
 
-// Include Format.h when used.
+// Include FormatMany.h when used.
 template<typename... Ts>
 inline void LogPrint(
     LogLevel level,

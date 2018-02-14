@@ -3,7 +3,7 @@
 
 #include "Geometry/Bounds3.h"
 
-#include "Base/Text/Format.h"
+#include "Base/Text/FormatMany.h"
 #include "Geometry/Xform3.h"
 
 namespace stp {

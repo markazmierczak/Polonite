@@ -4,6 +4,7 @@
 #ifndef STP_BASE_TEXT_ASCIISTRING_H_
 #define STP_BASE_TEXT_ASCIISTRING_H_
 
+#include "Base/Containers/ListFwd.h"
 #include "Base/Text/AsciiChar.h"
 #include "Base/Text/StringSpan.h"
 

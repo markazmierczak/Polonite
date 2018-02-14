@@ -4,7 +4,7 @@
 #include "Geometry/Ellipse.h"
 
 #include "Base/Math/Math.h"
-#include "Base/Text/Format.h"
+#include "Base/Text/FormatMany.h"
 
 namespace stp {
 

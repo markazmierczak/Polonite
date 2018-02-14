@@ -8,7 +8,7 @@
 
 #include "Base/Compiler/Os.h"
 #include "Base/Export.h"
-#include "Base/Text/FormatFwd.h"
+#include "Base/Text/FormatManyFwd.h"
 
 #if OS(POSIX)
 #include <unistd.h>

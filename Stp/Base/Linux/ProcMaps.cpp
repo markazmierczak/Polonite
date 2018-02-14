@@ -7,7 +7,7 @@
 
 #include "Base/Compiler/Os.h"
 #include "Base/Debug/Log.h"
-#include "Base/Text/Format.h"
+#include "Base/Text/FormatMany.h"
 
 #include <fcntl.h>
 

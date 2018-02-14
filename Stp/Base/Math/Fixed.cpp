@@ -6,7 +6,7 @@
 #include "Base/Error/BasicExceptions.h"
 #include "Base/Math/Bits.h"
 #include "Base/Text/AsciiChar.h"
-#include "Base/Text/Format.h"
+#include "Base/Text/FormatMany.h"
 
 namespace stp {
 namespace detail {

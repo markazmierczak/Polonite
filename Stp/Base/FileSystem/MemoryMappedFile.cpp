@@ -8,7 +8,7 @@
 #include "Base/Debug/Log.h"
 #include "Base/FileSystem/FilePath.h"
 #include "Base/System/SysInfo.h"
-#include "Base/Text/Format.h"
+#include "Base/Text/FormatMany.h"
 
 namespace stp {
 

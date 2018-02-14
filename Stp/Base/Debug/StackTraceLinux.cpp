@@ -10,7 +10,7 @@
 #include "Base/Io/FileStream.h"
 #include "Base/Io/TextWriter.h"
 #include "Base/Posix/EintrWrapper.h"
-#include "Base/Text/Format.h"
+#include "Base/Text/FormatMany.h"
 
 #include <elf.h>
 #include <fcntl.h>

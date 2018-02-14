@@ -4,7 +4,7 @@
 
 #include "Base/Test/PerfTest.h"
 
-#include "Base/Text/Format.h"
+#include "Base/Text/FormatMany.h"
 
 #include <stdio.h>
 

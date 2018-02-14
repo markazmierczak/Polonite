@@ -3,7 +3,7 @@
 
 #include "Xml/XmlSaxParser.h"
 
-#include "Base/Text/Format.h"
+#include "Base/Text/FormatMany.h"
 #include "Xml/XmlContentHandler.h"
 #include "Xml/XmlErrorHandler.h"
 #include "Xml/XmlNamespaceSupport.h"

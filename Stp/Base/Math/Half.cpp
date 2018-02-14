@@ -4,7 +4,7 @@
 #include "Base/Math/Half.h"
 
 #include "Base/Math/RawFloat.h"
-#include "Base/Text/Format.h"
+#include "Base/Text/FormatMany.h"
 
 namespace stp {
 
