@@ -5,9 +5,9 @@
 
 #include "Base/Containers/ContiguousAlgo.h"
 #include "Base/FileSystem/FilePath.h"
-#include "Base/Text/Format.h"
-#include "Base/Type/ParseFloat.h"
 #include "Base/Text/Wtf.h"
+#include "Base/Type/FormattableToString.h"
+#include "Base/Type/ParseFloat.h"
 #include "Base/Type/ParseInteger.h"
 
 #if OS(WIN)

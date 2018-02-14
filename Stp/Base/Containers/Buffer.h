@@ -149,8 +149,6 @@ struct TIsZeroConstructibleTmpl<Buffer> : TTrue {};
 template<>
 struct TIsTriviallyRelocatableTmpl<Buffer> : TTrue {};
 
-BASE_EXPORT bool TryParse(StringSpan input, Buffer& output) WARN_UNUSED_RESULT;
-
 template<typename T, TEnableIf<TIsTrivial<T>>* = nullptr>
 inline Buffer MakeBuffer(const List<T>& list) { return Buffer(BufferSpan(list)); }
 

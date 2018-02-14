@@ -157,9 +157,8 @@ void Application::SetName(StringSpan name) {
 }
 
 static String ResolveNameFromExecutablePath() {
-  String exe_name = FormattableToString(GetExecutableFilePath().GetFileName());
-  ASSERT(IsAscii(exe_name), "executable name must be ASCII");
-  return exe_name;
+  // FIXME
+  return String("toReplace");
 }
 
 const String& Application::GetName() {

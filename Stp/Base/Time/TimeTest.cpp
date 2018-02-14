@@ -6,7 +6,7 @@
 #include "Base/Time/Time.h"
 
 #include "Base/Test/GTest.h"
-#include "Base/Text/Format.h"
+#include "Base/Type/FormattableToString.h"
 
 namespace stp {
 

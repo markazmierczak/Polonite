@@ -6,8 +6,8 @@
 #include "Base/Time/TimeTicks.h"
 
 #include "Base/Test/GTest.h"
-#include "Base/Text/Format.h"
 #include "Base/Thread/Thread.h"
+#include "Base/Type/FormattableToString.h"
 
 namespace stp {
 

@@ -5,7 +5,7 @@
 #define STP_BASE_TEXT_FORMAT_H_
 
 #include "Base/Containers/Array.h"
-#include "Base/Io/StringWriter.h"
+#include "Base/Io/TextWriter.h"
 #include "Base/Type/Formattable.h"
 #include "Base/Util/Tuple.h"
 
@@ -92,22 +92,6 @@ inline void AssertFail(
   TextWriter& out = AssertPrint(file, line, expr);
   FormatMany(out, fmt, args...);
   AssertWrapUp(out);
-}
-
-template<typename... TArgs>
-inline String StringFormatMany(StringSpan fmt, const TArgs&... args) {
-  String result;
-  StringWriter writer(&result);
-  FormatMany(writer, fmt, args...);
-  return result;
-}
-
-template<typename TValue>
-inline String FormattableToString(const TValue& value, const StringSpan& opts = StringSpan()) {
-  String result;
-  StringWriter writer(&result);
-  Format(writer, value, opts);
-  return result;
 }
 
 } // namespace stp
