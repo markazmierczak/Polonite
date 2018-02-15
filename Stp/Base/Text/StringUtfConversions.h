@@ -63,7 +63,7 @@ bool AppendUnicodeNonAscii(TOutput& output, const TInput& input) {
   auto* src = input.data();
   auto* src_end = src + input.size();
   while (src < src_end) {
-    char32_t rune = UtfTmpl<SrcCharType>::Decode(src, src_end);
+    char32_t rune = TryDecodeUtf(src, src_end);
     if (LIKELY(!UtfBase::IsDecodeError(rune))) {
       AppendRune(output, rune);
     } else {

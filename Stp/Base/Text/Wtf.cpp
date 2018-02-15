@@ -109,7 +109,7 @@ static inline void WriteWtfTmpl(TextWriter& out, Span<T> wtf) {
     const T* valid_end = it;
 
     do {
-      char32_t c = UtfTmpl<T>::Decode(it, it_end);
+      char32_t c = TryDecodeUtf(it, it_end);
       if (UtfTmpl<T>::IsDecodeError(c))
         break;
       valid_end = it;

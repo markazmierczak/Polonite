@@ -47,7 +47,7 @@ TextEncoder::Result AsciiEncoder::Encode(StringSpan input, MutableBufferSpan out
       more_output = true;
       break;
     }
-    char32_t c = DecodeUtf(iptr, iptr_end);
+    char32_t c = TryDecodeUtf(iptr, iptr_end);
     if (UNLIKELY(!IsAscii(c))) {
       c = '?';
     }

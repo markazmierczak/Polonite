@@ -315,7 +315,7 @@ bool JsonParser::ConsumeStringRaw(JsonStringBuilder& out) {
 
   while (pos_ < end_pos_) {
     const char* iter_pos = pos_;
-    char32_t next_char = Utf8::Decode(pos_, end_pos_);
+    char32_t next_char = Utf8::TryDecode(pos_, end_pos_);
     if (!unicode::IsValidCharacter(next_char))
       return ReportError(JsonError::UnsupportedEncoding, 1);
 

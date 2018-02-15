@@ -40,7 +40,7 @@ class BASE_EXPORT Utf8 : public UtfBase {
   // Decodes a single code-point from UTF-8 stream.
   // An error is returned if input stream contains invalid sequence.
   // Use IsDecodeError() to check for an error.
-  static char32_t Decode(const char*& it, const char* end);
+  static char32_t TryDecode(const char*& it, const char* end);
 
   static bool Validate(StringSpan input);
 
@@ -57,7 +57,7 @@ class BASE_EXPORT Utf16 : public UtfBase {
 
   static int EncodedLength(char32_t c);
   static int Encode(char16_t* s, char32_t c);
-  static char32_t Decode(const char16_t*& it, const char16_t* end);
+  static char32_t TryDecode(const char16_t*& it, const char16_t* end);
 
   static bool Validate(String16Span input);
 
@@ -65,11 +65,11 @@ class BASE_EXPORT Utf16 : public UtfBase {
   static char32_t DecodeSlow(const char16_t*& it, const char16_t* end, char32_t c);
 };
 
-inline char32_t DecodeUtf(const char*& it, const char* end) {
-  return Utf8::Decode(it, end);
+inline char32_t TryDecodeUtf(const char*& it, const char* end) {
+  return Utf8::TryDecode(it, end);
 }
-inline char32_t DecodeUtf(const char16_t*& it, const char16_t* end) {
-  return Utf16::Decode(it, end);
+inline char32_t TryDecodeUtf(const char16_t*& it, const char16_t* end) {
+  return Utf16::TryDecode(it, end);
 }
 
 inline int EncodeUtf(char* out, char32_t c) {
@@ -115,7 +115,7 @@ inline int Utf8::EncodeInTwoUnits(char* out, char32_t c) {
   return 2;
 }
 
-inline char32_t Utf8::Decode(const char*& it, const char* end) {
+inline char32_t Utf8::TryDecode(const char*& it, const char* end) {
   ASSERT(it != end);
   char32_t c = static_cast<uint8_t>(*it++);
   return (c <= 0x7F) ? c : DecodeSlow(it, end, c);
@@ -140,7 +140,7 @@ inline int Utf16::Encode(char16_t* s, char32_t c) {
   return i;
 }
 
-inline char32_t Utf16::Decode(const char16_t*& it, const char16_t* end) {
+inline char32_t Utf16::TryDecode(const char16_t*& it, const char16_t* end) {
   ASSERT(it != end);
   char32_t c = *it++;
   return unicode::IsSurrogate(c) ? DecodeSlow(it, end, c) : static_cast<char32_t>(c);

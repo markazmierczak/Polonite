@@ -161,7 +161,7 @@ bool Utf8::Validate(StringSpan input) {
   const char* end = src + input.size();
 
   while (src < end) {
-    char32_t c = Utf8::Decode(src, end);
+    char32_t c = Utf8::TryDecode(src, end);
     if (!unicode::IsValidRune(c))
       return false;
   }

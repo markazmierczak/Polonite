@@ -21,7 +21,7 @@ inline int32_t StringReader::OnReadInternal(bool advance) {
     return -1;
 
   const char* it = string_.data();
-  char32_t uc = Utf8::Decode(it, it + size);
+  char32_t uc = Utf8::TryDecode(it, it + size);
   if (Utf8::IsDecodeError(uc))
     return -1;
 
