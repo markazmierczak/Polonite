@@ -5,7 +5,7 @@
 #ifndef STP_BASE_TEST_PERFLOG_H_
 #define STP_BASE_TEST_PERFLOG_H_
 
-#include "Base/Text/StringSpan.h"
+#include "Base/Containers/Span.h"
 
 namespace stp {
 

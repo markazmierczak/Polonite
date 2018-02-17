@@ -4,7 +4,7 @@
 #ifndef STP_BASE_APP_APPLICATIONPART_H_
 #define STP_BASE_APP_APPLICATIONPART_H_
 
-#include "Base/Text/StringSpan.h"
+#include "Base/Containers/Span.h"
 
 namespace stp {
 

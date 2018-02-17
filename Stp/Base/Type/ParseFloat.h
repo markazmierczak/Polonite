@@ -4,8 +4,8 @@
 #ifndef STP_BASE_TYPE_PARSEFLOAT_H_
 #define STP_BASE_TYPE_PARSEFLOAT_H_
 
+#include "Base/Containers/Span.h"
 #include "Base/Dtoa/Dtoa.h"
-#include "Base/Text/StringSpan.h"
 #include "Base/Type/Scalar.h"
 
 namespace stp {

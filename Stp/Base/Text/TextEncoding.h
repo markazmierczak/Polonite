@@ -6,8 +6,8 @@
 
 #include "Base/Containers/BufferSpan.h"
 #include "Base/Containers/ListFwd.h"
+#include "Base/Containers/Span.h"
 #include "Base/Error/Exception.h"
-#include "Base/Text/StringSpan.h"
 #include "Base/Type/HashableFwd.h"
 
 namespace stp {

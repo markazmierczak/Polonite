@@ -4,7 +4,7 @@
 #ifndef STP_XML_XMLCONSTANTS_H_
 #define STP_XML_XMLCONSTANTS_H_
 
-#include "Base/Text/StringSpan.h"
+#include "Base/Containers/Span.h"
 #include "Xml/Export.h"
 
 namespace stp {

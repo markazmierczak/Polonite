@@ -9,16 +9,7 @@
 
 namespace stp {
 
-class UtfBase {
-  STATIC_ONLY(UtfBase);
- public:
-  static constexpr char32_t EndOfStreamError = 0x80000000u;
-  static constexpr char32_t InvalidSequenceError = 0x80000001u;
-
-  static bool IsDecodeError(char32_t c) { return (c & 0x80000000u) != 0; }
-};
-
-class BASE_EXPORT Utf8 : public UtfBase {
+class BASE_EXPORT Utf8 {
  public:
   // Maximum number of units needed to encode a single code-point in UTF-8.
   static constexpr int MaxEncodedRuneLength = 4;
@@ -51,7 +42,7 @@ class BASE_EXPORT Utf8 : public UtfBase {
   static int EncodeSlow(char* out, char32_t c);
 };
 
-class BASE_EXPORT Utf16 : public UtfBase {
+class BASE_EXPORT Utf16 {
  public:
   static constexpr int MaxEncodedRuneLength = 2;
 
@@ -78,19 +69,6 @@ inline int EncodeUtf(char* out, char32_t c) {
 inline int EncodeUtf(char16_t* out, char32_t c) {
   return Utf16::Encode(out, c);
 }
-
-namespace detail {
-
-template<typename T>
-struct UtfTmplHelperTmpl;
-
-template<> struct UtfTmplHelperTmpl<char    > { typedef Utf8 Type; };
-template<> struct UtfTmplHelperTmpl<char16_t> { typedef Utf16 Type; };
-
-} // namespace detail
-
-template<typename T>
-using UtfTmpl = typename detail::UtfTmplHelperTmpl<T>::Type;
 
 BASE_EXPORT int TryEncodeUtf(char32_t c, MutableStringSpan out);
 

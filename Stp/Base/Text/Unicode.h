@@ -18,6 +18,11 @@ constexpr char16_t MinTrailSurrogate = 0xDC00u;
 constexpr char16_t MaxTrailSurrogate = 0xDFFFu;
 constexpr char32_t SurrogateOffset = (MinLeadSurrogate << 10u) + MinTrailSurrogate - 0x10000u;
 
+static constexpr char32_t EndOfStreamRune = 0x80000000u;
+static constexpr char32_t InvalidSequenceRune = 0x80000001u;
+
+inline bool IsDecodeError(char32_t c) { return (c & 0x80000000u) != 0; }
+
 // Excludes the surrogate code units [0xD800, 0xDFFF] and
 // code-points larger than 0x10FFFF (the highest code-point allowed).
 // Non-characters and unassigned code-points are allowed.

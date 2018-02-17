@@ -6,6 +6,7 @@
 #include "Base/FileSystem/FilePath.h"
 #include "Base/Io/TextWriter.h"
 #include "Base/Text/AsciiString.h"
+#include "Base/Text/StringSpan.h"
 #include "Base/Text/Wtf.h"
 
 namespace stp {

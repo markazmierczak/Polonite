@@ -6,7 +6,7 @@
 
 #include "Base/Compiler/Os.h"
 #include "Base/Containers/ListFwd.h"
-#include "Base/Text/StringSpan.h"
+#include "Base/Containers/Span.h"
 
 namespace stp {
 

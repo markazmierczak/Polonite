@@ -4,7 +4,6 @@
 #include "Base/Error/Exception.h"
 
 #include "Base/Memory/Allocate.h"
-#include "Base/Text/StringSpan.h"
 #include "Base/Type/Formattable.h"
 
 #include <exception>

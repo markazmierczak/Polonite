@@ -3,7 +3,6 @@
 
 #include "Base/Io/TextWriter.h"
 #include "Base/Text/FormatManyFwd.h"
-#include "Base/Text/StringSpan.h"
 #include "Base/Type/FormattableFwd.h"
 #include "Base/Type/NullableFwd.h"
 

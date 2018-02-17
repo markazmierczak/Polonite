@@ -10,6 +10,7 @@
 #include "Base/Debug/StackTrace.h"
 #include "Base/Error/ExceptionPtr.h"
 #include "Base/FileSystem/KnownPaths.h"
+#include "Base/Text/AsciiString.h"
 #include "Base/Text/FormatMany.h"
 
 namespace stp {

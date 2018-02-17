@@ -5,7 +5,7 @@
 #define STP_BASE_MATH_HALF_H_
 
 #include "Base/Export.h"
-#include "Base/Text/FormatManyFwd.h"
+#include "Base/Type/FormattableFwd.h"
 #include "Base/Type/HashableFwd.h"
 #include "Base/Type/Limits.h"
 

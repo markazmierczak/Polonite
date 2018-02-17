@@ -20,13 +20,13 @@ inline char16_t DecodeOne(const byte_t* b) {
     return b[1] | (b[0] << 8);
 }
 
-template<Endianness TOrder, typename T>
-inline TextConversionResult DecodeTmpl(
-    TextConversionContext* context, BufferSpan input, MutableSpan<T> output, bool flush) {
+template<Endianness TOrder>
+inline TextConversionResult Decode(
+    TextConversionContext* context, BufferSpan input, MutableStringSpan output, bool flush) {
   auto* input_data = static_cast<const byte_t*>(input.data());
   int num_read = 0;
   auto* output_data = output.data();
-  int max_output_size = output.size() - UtfTmpl<T>::MaxEncodedRuneLength;
+  int max_output_size = output.size() - Utf8::MaxEncodedRuneLength;
   int num_wrote = 0;
   bool did_fallback = false;
 
@@ -101,8 +101,8 @@ TextConversionResult EncodeTmpl(
   bool did_fallback = false;
 
   while (iptr < iptr_end && num_wrote < max_output_size) {
-    char32_t c = DecodeUtf(iptr, iptr_end);
-    if (UtfTmpl<T>::IsDecodeError(c)) {
+    char32_t c = TryDecodeUtf(iptr, iptr_end);
+    if (unicode::IsDecodeError(c)) {
       c = unicode::ReplacementRune;
       did_fallback = true;
     }

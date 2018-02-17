@@ -3,7 +3,7 @@
 
 #include "Base/Error/SystemException.h"
 
-#include "Base/Text/StringSpan.h"
+#include "Base/Containers/Span.h"
 
 namespace stp {
 

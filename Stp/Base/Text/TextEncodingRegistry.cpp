@@ -4,7 +4,6 @@
 #include "Base/Text/TextEncodingRegistry.h"
 
 #include "Base/Containers/FlatMap.h"
-#include "Base/Text/String.h"
 #include "Base/Thread/Lock.h"
 
 namespace stp {

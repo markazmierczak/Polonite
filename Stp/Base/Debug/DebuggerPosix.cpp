@@ -7,9 +7,9 @@
 
 #include "Base/Compiler/Cpu.h"
 #include "Base/Compiler/Os.h"
+#include "Base/Containers/Span.h"
 #include "Base/Debug/Alias.h"
 #include "Base/Posix/EintrWrapper.h"
-#include "Base/Text/StringSpan.h"
 
 #include <errno.h>
 #include <fcntl.h>

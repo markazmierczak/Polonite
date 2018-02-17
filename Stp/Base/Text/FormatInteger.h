@@ -7,7 +7,6 @@
 #include "Base/Containers/Array.h"
 #include "Base/Type/Sign.h"
 #include "Base/Text/AsciiChar.h"
-#include "Base/Text/StringSpan.h"
 
 namespace stp {
 

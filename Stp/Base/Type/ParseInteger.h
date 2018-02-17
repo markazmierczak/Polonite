@@ -4,7 +4,7 @@
 #ifndef STP_BASE_TYPE_PARSEINTEGER_H_
 #define STP_BASE_TYPE_PARSEINTEGER_H_
 
-#include "Base/Text/StringSpan.h"
+#include "Base/Containers/Span.h"
 #include "Base/Type/Limits.h"
 #include "Base/Type/Parsable.h"
 #include "Base/Type/Sign.h"

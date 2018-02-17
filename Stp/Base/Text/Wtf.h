@@ -19,7 +19,7 @@ namespace stp {
 //
 // https://simonsapin.github.io/wtf-8
 
-class BASE_EXPORT Wtf8 : public UtfBase {
+class BASE_EXPORT Wtf8 {
  public:
   // Maximum number of units needed to encode a single code-point in UTF-8.
   static constexpr int MaxEncodedRuneLength = 4;
@@ -45,7 +45,7 @@ class BASE_EXPORT Wtf8 : public UtfBase {
   static char32_t DecodeSlow(const char*& it, const char* end, char32_t c);
 };
 
-class BASE_EXPORT Wtf16 : public UtfBase {
+class BASE_EXPORT Wtf16 {
  public:
   static constexpr int MaxEncodedRuneLength = 2;
 

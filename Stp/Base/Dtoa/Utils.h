@@ -31,7 +31,7 @@
 
 #include "Base/Compiler/Cpu.h"
 #include "Base/Compiler/Os.h"
-#include "Base/Text/StringSpan.h"
+#include "Base/Containers/Span.h"
 
 #include <string.h>
 

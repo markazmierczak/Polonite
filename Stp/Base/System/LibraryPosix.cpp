@@ -39,7 +39,6 @@ void* Library::TryResolveNative(NativeLibrary library, const char* name) {
 }
 
 String Library::DecorateName(StringSpan name) {
-  ASSERT(IsAscii(name));
   return ConcatMany<String>("lib", name, ".so");
 }
 

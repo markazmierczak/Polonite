@@ -40,7 +40,7 @@ char32_t Utf8::DecodeSlow(const char*& it, const char* end, char32_t c) {
 
   if (UNLIKELY(it + len > end)) {
     SkipUtf8Trail(it, end);
-    return EndOfStreamError;
+    return unicode::EndOfStreamRune;
   }
 
   const char* start = it;
@@ -58,7 +58,7 @@ char32_t Utf8::DecodeSlow(const char*& it, const char* end, char32_t c) {
       if (illegal || c < 0x10000) {
         it = start;
         SkipUtf8Trail(it, end);
-        return InvalidSequenceError;
+        return unicode::InvalidSequenceRune;
       }
       return c;
 
@@ -69,7 +69,7 @@ char32_t Utf8::DecodeSlow(const char*& it, const char* end, char32_t c) {
       if (illegal || c < 0x800 || unicode::IsSurrogate(c)) {
         it = start;
         SkipUtf8Trail(it, end);
-        return InvalidSequenceError;
+        return unicode::InvalidSequenceRune;
       }
       return c;
 
@@ -79,14 +79,14 @@ char32_t Utf8::DecodeSlow(const char*& it, const char* end, char32_t c) {
       if (illegal || c < 0x80) {
         it = start;
         SkipUtf8Trail(it, end);
-        return InvalidSequenceError;
+        return unicode::InvalidSequenceRune;
       }
       return c;
 
     case 0:
-      return InvalidSequenceError;
+      return unicode::InvalidSequenceRune;
   }
-  UNREACHABLE(return InvalidSequenceError);
+  UNREACHABLE(return unicode::InvalidSequenceRune);
 }
 
 int Utf8::EncodeSlow(char* out, char32_t c) {
@@ -138,16 +138,16 @@ int TryEncodeUtf(char32_t c, MutableStringSpan out) {
 
 char32_t Utf16::DecodeSlow(const char16_t*& it, const char16_t* end, char32_t lead) {
   if (it >= end)
-    return EndOfStreamError;
+    return unicode::EndOfStreamRune;
 
   if (!unicode::SurrogateIsLeading(lead))
-    return InvalidSequenceError;
+    return unicode::InvalidSequenceRune;
 
   char16_t trail = *it++;
 
   if (!unicode::IsTrailSurrogate(trail)) {
     // Invalid surrogate pair.
-    return InvalidSequenceError;
+    return unicode::InvalidSequenceRune;
   }
 
   // Valid surrogate pair.

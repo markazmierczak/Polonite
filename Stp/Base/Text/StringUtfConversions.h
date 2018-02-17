@@ -10,19 +10,19 @@
 
 namespace stp {
 
-template<typename TOutput, TEnableIf<TIsStringContainer<TOutput>>* = nullptr>
+// FIXME
+template<typename TOutput>
 inline int AppendRune(TOutput& output, char32_t rune) {
   using CharType = typename TOutput::ItemType;
-  using UtfType = UtfTmpl<CharType>;
   if (sizeof(CharType) == 1 && IsAscii(rune)) {
     // Fast path the common case of one byte.
     output.Add(static_cast<char>(rune));
     return 1;
   }
-  int count = UtfType::EncodedLength(rune);
-  auto* dst = output.AppendUninitialized(count);
-  UtfType::Encode(dst, rune);
-  return count;
+  auto* dst = output.AppendUninitialized(4);
+  int n = EncodeUtf(dst, rune);
+  output.RemoveSuffix(4 - n);
+  return n;
 }
 
 namespace detail {
@@ -64,7 +64,7 @@ bool AppendUnicodeNonAscii(TOutput& output, const TInput& input) {
   auto* src_end = src + input.size();
   while (src < src_end) {
     char32_t rune = TryDecodeUtf(src, src_end);
-    if (LIKELY(!UtfBase::IsDecodeError(rune))) {
+    if (LIKELY(!unicode::IsDecodeError(rune))) {
       AppendRune(output, rune);
     } else {
       AppendRune(output, unicode::ReplacementRune);
@@ -76,8 +76,7 @@ bool AppendUnicodeNonAscii(TOutput& output, const TInput& input) {
 
 } // namespace detail
 
-template<typename TOutput, typename TInput,
-         TEnableIf<TIsStringContainer<TOutput> && TIsStringContainer<TInput>>* = nullptr>
+template<typename TOutput, typename TInput>
 bool AppendUnicode(TOutput& output, const TInput& input) {
   using DstCharType = typename TOutput::ItemType;
   using SrcCharType = typename TInput::ItemType;
@@ -88,10 +87,11 @@ bool AppendUnicode(TOutput& output, const TInput& input) {
   } else {
     if (input.IsEmpty())
       return true;
-    if (IsAscii(input)) {
-      AppendAscii(output, input);
-      return true;
-    }
+    // FIXME
+//    if (IsAscii(input)) {
+//      AppendAscii(output, input);
+//      return true;
+//    }
     int size_hint = detail::ComputeSizeHintForAppendUnicode(output, input);
     output.EnsureCapacity(size_hint);
     return detail::AppendUnicodeNonAscii(output, input);

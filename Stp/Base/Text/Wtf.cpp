@@ -27,7 +27,7 @@ char32_t Wtf8::DecodeSlow(const char*& it, const char* end, char32_t c) {
 
   if (UNLIKELY(it + len > end)) {
     SkipWtf8Trail(it, end);
-    return EndOfStreamError;
+    return unicode::EndOfStreamRune;
   }
 
   const char* start = it;
@@ -45,7 +45,7 @@ char32_t Wtf8::DecodeSlow(const char*& it, const char* end, char32_t c) {
       if (illegal || c < 0x10000) {
         it = start;
         SkipWtf8Trail(it, end);
-        return InvalidSequenceError;
+        return unicode::InvalidSequenceRune;
       }
       return c;
 
@@ -56,7 +56,7 @@ char32_t Wtf8::DecodeSlow(const char*& it, const char* end, char32_t c) {
       if (illegal || c < 0x800) {
         it = start;
         SkipWtf8Trail(it, end);
-        return InvalidSequenceError;
+        return unicode::InvalidSequenceRune;
       }
       return c;
 
@@ -66,14 +66,14 @@ char32_t Wtf8::DecodeSlow(const char*& it, const char* end, char32_t c) {
       if (illegal || c < 0x80) {
         it = start;
         SkipWtf8Trail(it, end);
-        return InvalidSequenceError;
+        return unicode::InvalidSequenceRune;
       }
       return c;
 
     case 0:
-      return InvalidSequenceError;
+      return unicode::InvalidSequenceRune;
   }
-  UNREACHABLE(return InvalidSequenceError);
+  UNREACHABLE(return unicode::InvalidSequenceRune);
 }
 
 char32_t Wtf16::DecodeSlow(const char16_t*& it, const char16_t* end, char32_t lead) {
@@ -110,7 +110,7 @@ static inline void WriteWtfTmpl(TextWriter& out, Span<T> wtf) {
 
     do {
       char32_t c = TryDecodeUtf(it, it_end);
-      if (UtfTmpl<T>::IsDecodeError(c))
+      if (unicode::IsDecodeError(c))
         break;
       valid_end = it;
     } while (it < it_end);

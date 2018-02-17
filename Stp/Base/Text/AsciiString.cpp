@@ -4,6 +4,7 @@
 #include "Base/Text/AsciiString.h"
 
 #include "Base/Containers/List.h"
+#include "Base/Math/Alignment.h"
 #include "Base/Type/Comparable.h"
 
 namespace stp {
@@ -115,6 +116,36 @@ String ToUpperAscii(StringSpan src) {
   char* dst = rv.AppendUninitialized(src.size());
   ToLowerAscii(dst, src.data(), src.size());
   return rv;
+}
+
+bool IsAscii(StringSpan text) {
+  using MachineWord = uintptr_t;
+
+  MachineWord all_char_bits = 0;
+
+  const char* str = text.data();
+  const char* end = str + text.size();
+
+  // Prologue: align the input.
+  while (!IsAlignedTo(str, isizeof(MachineWord)) && str != end) {
+    all_char_bits |= *str;
+    ++str;
+  }
+
+  // Compare the values of CPU word size.
+  constexpr int LoopIncrement = isizeof(MachineWord) / isizeof(char);
+  const char* word_end = AlignBackward(end, sizeof(MachineWord));
+  for (; str < word_end; str += LoopIncrement)
+    all_char_bits |= *(reinterpret_cast<const MachineWord*>(str));
+
+  // Process the remaining bytes.
+  while (str != end) {
+    all_char_bits |= *str;
+    ++str;
+  }
+
+  constexpr MachineWord NonAsciiBitMask = 0x8080808080808080;
+  return !(all_char_bits & NonAsciiBitMask);
 }
 
 } // namespace stp

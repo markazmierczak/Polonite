@@ -87,7 +87,7 @@ TextEncoder::Result Utf32Encoder::Encode(StringSpan input, MutableBufferSpan out
       break;
     }
     char32_t c = TryDecodeUtf(iptr, iptr_end);
-    if (UtfBase::IsDecodeError(c)) {
+    if (unicode::IsDecodeError(c)) {
       c = unicode::ReplacementRune;
     }
     num_wrote += EncodeUtf32Unit(endianness, c, output_data + num_wrote);

@@ -4,7 +4,7 @@
 #ifndef STP_BASE_JSON_JSONERROR_H_
 #define STP_BASE_JSON_JSONERROR_H_
 
-#include "Base/Text/StringSpan.h"
+#include "Base/Containers/Span.h"
 
 namespace stp {
 

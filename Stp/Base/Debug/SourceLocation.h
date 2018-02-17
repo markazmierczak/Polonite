@@ -5,8 +5,8 @@
 #define STP_BASE_DEBUG_SOURCELOCATION_H_
 
 #include "Base/Export.h"
-#include "Base/Text/FormatManyFwd.h"
 #include "Base/Type/Basic.h"
+#include "Base/Type/FormattableFwd.h"
 
 namespace stp {
 

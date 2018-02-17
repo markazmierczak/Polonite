@@ -6,6 +6,7 @@
 #include "Base/Containers/List.h"
 #include "Base/Debug/Console.h"
 #include "Base/Process/CommandLine.h"
+#include "Base/Text/StringSpan.h"
 #include "Base/Type/Formattable.h"
 #include "Base/Type/ParseInteger.h"
 #include "Base/Util/LazyInstance.h"

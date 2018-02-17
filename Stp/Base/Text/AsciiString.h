@@ -5,8 +5,8 @@
 #define STP_BASE_TEXT_ASCIISTRING_H_
 
 #include "Base/Containers/ListFwd.h"
+#include "Base/Containers/Span.h"
 #include "Base/Text/AsciiChar.h"
-#include "Base/Text/StringSpan.h"
 
 namespace stp {
 
@@ -55,40 +55,26 @@ BASE_EXPORT void ToUpperAsciiInplace(MutableStringSpan s);
 BASE_EXPORT String ToLowerAscii(StringSpan src) WARN_UNUSED_RESULT;
 BASE_EXPORT String ToUpperAscii(StringSpan src) WARN_UNUSED_RESULT;
 
-template<typename T, TEnableIf<TIsStringContainer<T>>* = nullptr>
-inline void TrimLeadingWhitespaceAscii(T& str) {
+template<typename TString>
+inline void TrimLeadingWhitespaceAscii(TString& str) {
   while (!str.IsEmpty() && IsSpaceAscii(str.GetFirst()))
     str.RemovePrefix(1);
 }
 
-template<typename T, TEnableIf<TIsStringContainer<T>>* = nullptr>
-inline void TrimTrailingWhitespaceAscii(T& str) {
+template<typename TString>
+inline void TrimTrailingWhitespaceAscii(TString& str) {
   while (!str.IsEmpty() && IsSpaceAscii(str.GetLast()))
     str.RemoveSuffix(1);
 }
 
-template<typename T, TEnableIf<TIsStringContainer<T>>* = nullptr>
-inline void TrimWhitespaceAscii(T& str) {
+template<typename TString>
+inline void TrimWhitespaceAscii(TString& str) {
   // Keep this in this order to minimize copying.
   TrimTrailingWhitespaceAscii(str);
   TrimLeadingWhitespaceAscii(str);
 }
 
-template<typename TOutput, typename TInput,
-         TEnableIf<TIsStringContainer<TOutput> && TIsStringContainer<TInput>>* = nullptr>
-inline void AppendAscii(TOutput& output, const TInput& input) {
-  using DstCharType = typename TOutput::ItemType;
-  using SrcCharType = typename TInput::ItemType;
-
-  if constexpr (TsAreSame<TRemoveCV<DstCharType>, TRemoveCV<SrcCharType>>) {
-    output.Append(input);
-  } else {
-    int size = input.size();
-    auto* dst = output.AppendUninitialized(size);
-    for (int i = 0; i < size; ++i)
-      dst[i] = char_cast<DstCharType>(input[i]);
-  }
-}
+BASE_EXPORT bool IsAscii(StringSpan text);
 
 } // namespace stp
 

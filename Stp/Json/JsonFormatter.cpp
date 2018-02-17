@@ -199,8 +199,8 @@ bool JsonFormatter::EscapeReplaceUnicode(TextWriter& out, StringSpan str) {
 
   bool total_error = false;
   while (it < end) {
-    char32_t rune = Utf8::TryDecode(it, end);
-    bool local_error = Utf8::IsDecodeError(rune);
+    char32_t rune = TryDecodeUtf(it, end);
+    bool local_error = unicode::IsDecodeError(rune);
     if (local_error) {
       rune = unicode::ReplacementRune;
       total_error = true;

@@ -61,10 +61,6 @@ constexpr int Compare(T l, T r) {
 
 namespace detail {
 
-#if SIZEOF_WCHAR_T == 2
-BASE_EXPORT int CompareWcharArray(const wchar_t* lhs, const wchar_t* rhs, int size);
-#endif
-
 template<typename T, bool IsEnum = TIsEnum<T>>
 struct TIsFastContiguousComparable : TFalse {};
 
@@ -81,10 +77,6 @@ inline int CompareContiguous(const T* lhs, const T* rhs, int count) {
   ASSERT(count >= 0);
   if constexpr (detail::TIsFastContiguousComparable<T>::Value) {
     return count ? ::memcmp(lhs, rhs, ToUnsigned(count)) : 0;
-  #if SIZEOF_WCHAR_T == 2
-  } else if constexpr (TsAreSame<T, wchar_t>) {
-    return detail::CompareWcharArray(lhs, rhs, count);
-  #endif
   } else {
     for (int i = 0; i < count; ++i) {
       int rv = Compare(lhs[i], rhs[i]);

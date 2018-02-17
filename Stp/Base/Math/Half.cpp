@@ -4,7 +4,7 @@
 #include "Base/Math/Half.h"
 
 #include "Base/Math/RawFloat.h"
-#include "Base/Text/FormatMany.h"
+#include "Base/Type/Formattable.h"
 
 namespace stp {
 
@@ -31,7 +31,7 @@ Half::Half(float x) {
     result = (fbits > RawFloat::ExponentBitMask) ? 0x7E00u : 0x7C00;
     // (De)normalized number or zero
   } else {
-    const uint32_t RoundMask = ~0xFFFu;
+    constexpr uint32_t RoundMask = ~0xFFFu;
     constexpr RawFloat Magic = RawFloat::FromBits(15u << 23);
 
     fbits &= RoundMask;
