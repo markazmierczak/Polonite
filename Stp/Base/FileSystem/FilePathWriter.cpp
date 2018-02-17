@@ -3,9 +3,7 @@
 
 #include "Base/FileSystem/FilePathWriter.h"
 
-#include "Base/Debug/Log.h"
 #include "Base/Text/AsciiChar.h"
-#include "Base/Text/StringUtfConversions.h"
 #include "Base/Text/TextEncoding.h"
 #include "Base/Text/Wtf.h"
 
@@ -39,8 +37,11 @@ void FilePathWriter::OnWriteRune(char32_t rune) {
 }
 
 void FilePathWriter::OnWriteString(StringSpan text) {
-  if (!AppendUnicode(path_.chars(), text))
-    LOG(WARN, "ignored some illegal sequences from input to file path");
+  #if OS(WIN)
+  #error "not implemented"
+  #elif OS(POSIX)
+  path_.chars().Append(text);
+  #endif
 }
 
 void FilePathWriter::OnEndLine() {

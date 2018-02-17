@@ -323,7 +323,6 @@ component("Base") {
     "Text/String16.h",
     "Text/StringAlgo.cpp",
     "Text/StringAlgo.h",
-    "Text/StringUtfConversions.h",
     "Text/TextDecoder.h",
     "Text/TextEncoder.h",
     "Text/TextEncoding.cpp",

@@ -5,6 +5,7 @@
 #define STP_BASE_TEXT_UTF_H_
 
 #include "Base/Containers/Span.h"
+#include "Base/Text/AsciiChar.h"
 #include "Base/Text/Unicode.h"
 
 namespace stp {
@@ -14,7 +15,7 @@ class BASE_EXPORT Utf8 {
   // Maximum number of units needed to encode a single code-point in UTF-8.
   static constexpr int MaxEncodedRuneLength = 4;
 
-  static bool IsEncodedLead(unsigned char c) { return (c - 0xC0) < 0x3E; }
+  static bool IsEncodedLead(unsigned char c) { return static_cast<uint8_t>(c - 0xC0) < 0x3E; }
   static bool IsEncodedTrail(unsigned char c) { return (c & 0xC0) == 0x80; }
 
   // Returns the size needed to encode given code-point in UTF-8.
@@ -33,8 +34,6 @@ class BASE_EXPORT Utf8 {
   // Use IsDecodeError() to check for an error.
   static char32_t TryDecode(const char*& it, const char* end);
 
-  static bool Validate(StringSpan input);
-
   static const uint8_t TrailLengths[256];
 
  private:
@@ -49,8 +48,6 @@ class BASE_EXPORT Utf16 {
   static int EncodedLength(char32_t c);
   static int Encode(char16_t* s, char32_t c);
   static char32_t TryDecode(const char16_t*& it, const char16_t* end);
-
-  static bool Validate(String16Span input);
 
  private:
   static char32_t DecodeSlow(const char16_t*& it, const char16_t* end, char32_t c);
@@ -122,6 +119,20 @@ inline char32_t Utf16::TryDecode(const char16_t*& it, const char16_t* end) {
   ASSERT(it != end);
   char32_t c = *it++;
   return unicode::IsSurrogate(c) ? DecodeSlow(it, end, c) : static_cast<char32_t>(c);
+}
+
+template<typename TOutput>
+inline int AppendRune(TOutput& output, char32_t rune) {
+  using CharType = typename TOutput::ItemType;
+  if (sizeof(CharType) == 1 && IsAscii(rune)) {
+    // Fast path the common case of one byte.
+    output.Add(static_cast<char>(rune));
+    return 1;
+  }
+  auto* dst = output.AppendUninitialized(4);
+  int n = EncodeUtf(dst, rune);
+  output.RemoveSuffix(4 - n);
+  return n;
 }
 
 } // namespace stp

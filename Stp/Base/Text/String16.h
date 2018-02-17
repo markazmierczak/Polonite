@@ -10,14 +10,6 @@
 
 namespace stp {
 
-inline String16 ToString16(String16 s) { return s; }
-inline String16 ToString16(String16Span s) { return String16(s); }
-BASE_EXPORT String16 ToString16(StringSpan s);
-
-BASE_EXPORT String ToString(String16Span s);
-
-BASE_EXPORT const char16_t* ToNullTerminated(const List<char16_t>& string);
-
 #if SIZEOF_WCHAR_T == 2
 inline int GetLengthOfCString(const wchar_t* str) {
   ASSERT(str);

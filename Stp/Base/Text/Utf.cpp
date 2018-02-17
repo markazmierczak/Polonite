@@ -3,8 +3,6 @@
 
 #include "Base/Text/Utf.h"
 
-#include "Base/Text/StringUtfConversions.h"
-
 namespace stp {
 
 const uint8_t Utf8::TrailLengths[256] = {
@@ -154,39 +152,6 @@ char32_t Utf16::DecodeSlow(const char16_t*& it, const char16_t* end, char32_t le
   char32_t decoded = unicode::DecodeSurrogatePair(lead, trail);
   ASSERT(unicode::IsValidRune(decoded));
   return decoded;
-}
-
-bool Utf8::Validate(StringSpan input) {
-  const char* src = input.data();
-  const char* end = src + input.size();
-
-  while (src < end) {
-    char32_t c = Utf8::TryDecode(src, end);
-    if (!unicode::IsValidRune(c))
-      return false;
-  }
-  return true;
-}
-
-bool Utf16::Validate(String16Span input) {
-  const char16_t* src = input.data();
-  const char16_t* end = src + input.size();
-
-  bool expects_trail = false;
-  while (src < end) {
-    char16_t c = *src++;
-    if (expects_trail) {
-      if (!unicode::IsTrailSurrogate(c))
-        return false;
-    } else {
-      if (unicode::IsSurrogate(c)) {
-        if (!unicode::SurrogateIsLeading(c))
-          return false;
-        expects_trail = true;
-      }
-    }
-  }
-  return !expects_trail;
 }
 
 } // namespace stp

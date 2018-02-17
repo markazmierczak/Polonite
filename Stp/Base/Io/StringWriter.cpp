@@ -5,7 +5,7 @@
 
 #include "Base/Debug/Log.h"
 #include "Base/Text/Codec/Utf8Encoding.h"
-#include "Base/Text/StringUtfConversions.h"
+#include "Base/Text/Utf.h"
 
 namespace stp {
 

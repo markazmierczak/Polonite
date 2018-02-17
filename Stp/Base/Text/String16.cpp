@@ -4,25 +4,8 @@
 #include "Base/Text/String16.h"
 
 #include "Base/Debug/Log.h"
-#include "Base/Text/StringUtfConversions.h"
 
 namespace stp {
-
-template<typename TDst, typename TSrc>
-static inline List<TDst> ConvertString(Span<TSrc> input) {
-  List<TDst> output;
-  if (!AppendUnicode(output, input))
-    LOG(WARN, "replaced illegal sequence with replacement");
-  return output;
-}
-
-String ToString(String16Span input) {
-  return ConvertString<char>(input);
-}
-
-String16 ToString16(StringSpan input) {
-  return ConvertString<char16_t>(input);
-}
 
 template<typename T>
 static inline const T* ToNullTerminatedTmpl(const List<T>& string) {
@@ -34,10 +17,6 @@ static inline const T* ToNullTerminatedTmpl(const List<T>& string) {
   }
   static T NullCharacter = '\0';
   return &NullCharacter;
-}
-
-const char16_t* ToNullTerminated(const List<char16_t>& string) {
-  return ToNullTerminatedTmpl(string);
 }
 
 #if SIZEOF_WCHAR_T == 2
