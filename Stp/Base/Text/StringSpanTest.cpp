@@ -1,7 +1,7 @@
 // Copyright 2017 Polonite Authors. All rights reserved.
 // Distributed under MIT license that can be found in the LICENSE file.
 
-#include "Base/Text/StringSpan.h"
+#include "Base/Text/StringAlgo.h"
 
 #include "Base/Test/GTest.h"
 
