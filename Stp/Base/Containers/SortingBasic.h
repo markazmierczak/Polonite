@@ -44,7 +44,8 @@ constexpr bool HasDuplicatesAlreadySorted(TContainer& sequence, TEqualComparer&&
 template<typename TContainer, TEnableIf<TIsContiguousContainer<TContainer>>* = nullptr>
 constexpr void Reverse(TContainer& sequence) {
   auto* d = sequence.data();
-  for (int i = 0, s = sequence.size() >> 1; i < s; ++i)
+  int s = sequence.size();
+  for (int i = 0; i < (s >> 1); ++i)
     Swap(d[i], d[s - 1 - i]);
 }
 
