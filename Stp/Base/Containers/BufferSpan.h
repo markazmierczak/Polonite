@@ -80,7 +80,7 @@ class BufferSpan {
     int rv = CompareData(lhs.data_, rhs.data_, lhs.size_ <= rhs.size() ? lhs.size_ : rhs.size());
     return rv ? rv : (lhs.size_ - rhs.size());
   }
-  friend HashCode hash(const BufferSpan& x) { return HashBuffer(x.data_, x.size_); }
+  friend HashCode Hash(const BufferSpan& x) { return HashBuffer(x.data_, x.size_); }
 
   friend void Format(TextWriter& out, const BufferSpan& x, const StringSpan& opts) {
     FormatBuffer(out, x.data_, x.size_, opts);
@@ -185,7 +185,7 @@ class MutableBufferSpan {
   friend int compare(const MutableBufferSpan& lhs, const BufferSpan& rhs) {
     return compare(BufferSpan(lhs), rhs);
   }
-  friend HashCode hash(const MutableBufferSpan& x) { return HashBuffer(x.data_, x.size_); }
+  friend HashCode Hash(const MutableBufferSpan& x) { return HashBuffer(x.data_, x.size_); }
 
   friend void Format(TextWriter& out, const MutableBufferSpan& x, const StringSpan& opts) {
     FormatBuffer(out, x.data_, x.size_, opts);

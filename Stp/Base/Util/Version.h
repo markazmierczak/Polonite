@@ -37,7 +37,7 @@ class BASE_EXPORT Version {
   bool operator< (const Version& other) const { return CompareTo(other) <  0; }
   bool operator> (const Version& other) const { return CompareTo(other) >  0; }
   friend int compare(const Version& l, const Version& r) { return l.CompareTo(r); }
-  friend HashCode hash(const Version& x) { return x.HashImpl(); }
+  friend HashCode Hash(const Version& x) { return x.HashImpl(); }
 
   friend TextWriter& operator<<(TextWriter& out, const Version& x) {
     x.FormatImpl(out); return out;

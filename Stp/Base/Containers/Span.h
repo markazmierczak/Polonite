@@ -246,7 +246,7 @@ inline int compare(StringSpan lhs, StringSpan rhs) noexcept {
   return ::memcmp(lhs.data(), rhs.data(), ToUnsigned(lhs.size()));
 }
 
-inline HashCode hash(StringSpan text) noexcept { return HashBuffer(text.data(), text.size()); }
+inline HashCode Hash(StringSpan text) noexcept { return HashBuffer(text.data(), text.size()); }
 
 } // namespace stp
 

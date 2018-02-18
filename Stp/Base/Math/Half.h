@@ -75,7 +75,7 @@ class BASE_EXPORT Half {
   constexpr bool operator<=(const Half& rhs) const;
   constexpr bool operator>=(const Half& rhs) const;
 
-  friend HashCode hash(const Half& x) { return static_cast<HashCode>(x.bits_); }
+  friend HashCode Hash(const Half& x) { return static_cast<HashCode>(x.bits_); }
 
   friend void Format(TextWriter& out, const Half& x, const StringSpan& opts) {
     FormatImpl(out, static_cast<float>(x), opts);

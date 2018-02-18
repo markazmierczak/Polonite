@@ -34,7 +34,7 @@
 
    .. code::
 
-      HashCode hash(const T& value);
+      HashCode Hash(const T& value);
 
 **Formattable**
 

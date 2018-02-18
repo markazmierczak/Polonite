@@ -144,7 +144,7 @@ class FlatMap {
   friend void swap(FlatMap& l, FlatMap& r) { swap(l.list_, r.list_); }
   friend bool operator==(const FlatMap& l, const FlatMap& r) { return l.list_ == r.list_; }
   friend bool operator!=(const FlatMap& l, const FlatMap& r) { return !(l == r); }
-  friend HashCode hash(const FlatMap& x) { return hash(x.list_); }
+  friend HashCode Hash(const FlatMap& x) { return Hash(x.list_); }
   friend int compare(const FlatMap& l, FlatMap r) { return compare(l.list_, r.list_); }
   friend const PairType* begin(const FlatMap& x) { return begin(x.list_); }
   friend const PairType* end(const FlatMap& x) { return end(x.list_); }

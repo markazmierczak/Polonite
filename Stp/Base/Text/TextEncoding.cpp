@@ -18,7 +18,7 @@ namespace stp {
 //}
 
 HashCode TextEncoding::HashImpl() const noexcept {
-  return hash(this);
+  return Hash(this);
 }
 
 namespace detail {

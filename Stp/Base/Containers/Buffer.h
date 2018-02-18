@@ -83,7 +83,7 @@ class Buffer {
   friend bool operator==(const Buffer& l, const SpanType& r) { return l.ToSpan() == r; }
   friend bool operator!=(const Buffer& l, const SpanType& r) { return l.ToSpan() != r; }
   friend int compare(const Buffer& l, const SpanType& r) { return compare(l.ToSpan(), r); }
-  friend HashCode hash(const Buffer& x) { return HashBuffer(x.data_, x.size_); }
+  friend HashCode Hash(const Buffer& x) { return HashBuffer(x.data_, x.size_); }
 
   friend void Format(TextWriter& out, const Buffer& x, const StringSpan& opts) {
     FormatBuffer(out, x.data_, x.size_, opts);
