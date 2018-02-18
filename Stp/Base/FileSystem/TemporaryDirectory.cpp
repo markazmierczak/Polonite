@@ -36,7 +36,7 @@ TemporaryDirectory::~TemporaryDirectory() {
 
 void TemporaryDirectory::Create() {
   FilePath system_temp_dir = GetTempDirPath();
-  String prefix = Application::Instance().GetName();
+  String prefix = Application::instance().getName();
   CreateInternal(system_temp_dir, prefix);
 }
 

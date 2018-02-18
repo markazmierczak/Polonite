@@ -32,7 +32,7 @@ void ConsoleWriter::PrintToSystemDebugLog(StringSpan text) {
   auto priority = GetLogPriority(log_level_);
 
   InlineString<256> text_copy(text);
-  const String& app_name = Application::Instance().GetName();
+  const String& app_name = Application::instance().getName();
   __android_log_write(priority, ToNullTerminated(app_name), ToNullTerminated(text_copy));
 }
 

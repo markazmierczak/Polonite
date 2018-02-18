@@ -13,8 +13,8 @@
 
 namespace stp {
 
-void PerfTestSuite::OnDidInit() {
-  TestSuite::OnDidInit();
+void PerfTestSuite::onDidInit() {
+  TestSuite::onDidInit();
 
   auto& command_line = CommandLine::ForCurrentProcess();
 
@@ -32,8 +32,8 @@ void PerfTestSuite::OnDidInit() {
   ASSERT_TRUE(InitPerfLog(log_path));
 }
 
-void PerfTestSuite::OnWillFini() {
-  TestSuite::OnWillFini();
+void PerfTestSuite::onWillFini() {
+  TestSuite::onWillFini();
 
   FinalizePerfLog();
 }

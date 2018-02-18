@@ -78,7 +78,7 @@ void StackTrace::OutputToStream(std::ostream* os) const {
   // on fatal log messages in debug builds only. If the restriction is enabled
   // then it will recursively trigger fatal failures when this enters on the
   // UI thread.
-  const char* app_name = Application::Instance().GetName().c_str();
+  const char* app_name = Application::instance().getName().c_str();
   if (!ReadProcMaps(&proc_maps)) {
     __android_log_write(
         ANDROID_LOG_ERROR, app_name, "Failed to read /proc/self/maps");

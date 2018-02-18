@@ -16,7 +16,7 @@ namespace stp {
 using linux::Xdg;
 
 static FilePath AddAppName(FilePath path) {
-  path.AddComponentAscii(Application::Instance().GetName());
+  path.AddComponentAscii(Application::instance().getName());
   return path;
 }
 

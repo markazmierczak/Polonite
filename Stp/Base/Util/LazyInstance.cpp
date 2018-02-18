@@ -44,7 +44,7 @@ void CompleteLazyInstance(
 
   // Make sure that the lazily instantiated object will get destroyed at exit.
   if (dtor)
-    AtExitManager::RegisterCallback(dtor, lazy_instance);
+    AtExitManager::registerCallback(dtor, lazy_instance);
 }
 
 } // namespace detail

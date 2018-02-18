@@ -16,7 +16,7 @@
 
 namespace stp {
 
-void BaseApplicationPart::Init() {
+void BaseApplicationPart::init() {
   auto& command_line = CommandLine::ForCurrentProcess();
   ALLOW_UNUSED_LOCAL(command_line);
 
@@ -34,12 +34,12 @@ void BaseApplicationPart::Init() {
   Thread::ClassInit();
 }
 
-void BaseApplicationPart::Fini() {
+void BaseApplicationPart::fini() {
   Thread::ClassFini();
   Console::ClassFini();
 }
 
-constexpr const ApplicationPartInfo BaseApplicationPart::Info_ = MakeInfo();
+constexpr const ApplicationPartInfo BaseApplicationPart::Info_ = makeInfo();
 
 ApplicationPart BaseApplicationPart::Instance = APPLICATION_PART_INITIALIZER(Info_);
 

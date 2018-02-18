@@ -13,8 +13,8 @@ class PerfTestSuite : public TestSuite {
   using TestSuite::TestSuite;
 
  protected:
-  void OnDidInit() override;
-  void OnWillFini() override;
+  void onDidInit() override;
+  void onWillFini() override;
 };
 
 } // namespace stp

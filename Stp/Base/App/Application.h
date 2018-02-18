@@ -26,50 +26,43 @@ class BASE_EXPORT Application {
     Dead,
   };
 
-  static Application& Instance();
+  static Application& instance();
 
   explicit Application(CommandLine::Arguments arguments);
   virtual ~Application();
 
-  // Registers a single part within application.
-  // Must be called before application object is initialized.
-  void AddPart(ApplicationPart* part);
+  void addPart(ApplicationPart* part);
 
-  // ASCII encoded string.
-  // Must not contain any (back)slashes or colons and be non empty.
-  void SetName(StringSpan name);
-  const String& GetName();
+  void setName(StringSpan name);
+  const String& getName();
 
-  // UTF-8 encoded.
-  void SetDisplayName(StringSpan display_name);
-  const String& GetDisplayName();
+  void setDisplayName(StringSpan display_name);
+  const String& getDisplayName();
 
-  void SetVersion(const Version& version);
-  const Version& GetVersion() const { return version_; }
+  void setVersion(const Version& version);
+  const Version& getVersion() const { return version_; }
 
-  void SetExitCode(int exit_code) { exit_code_ = exit_code; }
-  int GetExitCode() { return exit_code_; }
+  void setExitCode(int exit_code) { exit_code_ = exit_code; }
+  int getExitCode() { return exit_code_; }
 
-  Phase GetPhase() const { return phase_; }
+  Phase getPhase() const { return phase_; }
 
-  int Run(int (*main_function)());
+  int run(int (*main_function)());
 
-  void Init();
-  void Fini();
+  void init();
+  void fini();
 
   typedef void (*TerminateHandler)();
 
-  [[noreturn]] static void Terminate();
-  static TerminateHandler SetTerminateHandler(TerminateHandler handler);
-  static TerminateHandler GetTerminateHandler();
+  [[noreturn]] static void terminate();
+  static TerminateHandler setTerminateHandler(TerminateHandler handler);
+  static TerminateHandler getTerminateHandler();
 
  protected:
-  // A way to modify arguments before they are passed to CommandLine constructor.
-  virtual void OnCaptureArguments(CommandLine::Arguments& arguments);
+  virtual void onCaptureArguments(CommandLine::Arguments& arguments);
 
-  // Handlers called after initialization/before finalization process.
-  virtual void OnDidInit();
-  virtual void OnWillFini();
+  virtual void onDidInit();
+  virtual void onWillFini();
 
  private:
   String name_;
@@ -94,7 +87,7 @@ class BASE_EXPORT Application {
   static Application* g_instance_;
 };
 
-inline Application& Application::Instance() {
+inline Application& Application::instance() {
   ASSERT(g_instance_);
   return *g_instance_;
 }

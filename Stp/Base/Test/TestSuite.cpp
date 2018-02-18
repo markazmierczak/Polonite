@@ -56,7 +56,7 @@ void SuppressErrorDialogs() {
 
 } // namespace
 
-void TestSuite::OnCaptureArguments(CommandLine::Arguments& arguments) {
+void TestSuite::onCaptureArguments(CommandLine::Arguments& arguments) {
   #if OS(WIN)
   testing::GTEST_FLAG(catch_exceptions) = false;
   #endif
@@ -65,7 +65,7 @@ void TestSuite::OnCaptureArguments(CommandLine::Arguments& arguments) {
   testing::InitGoogleMock(&arguments.argc, arguments.argv);
 }
 
-void TestSuite::OnDidInit() {
+void TestSuite::onDidInit() {
   #if OS(IOS)
   InitIOSTestMessageLoop();
   #endif
@@ -83,7 +83,7 @@ void TestSuite::OnDidInit() {
 }
 
 int TestSuite::Run() {
-  Init();
+  init();
 
   #if OS(IOS)
   RunTestsFromIOSApp();
@@ -94,9 +94,9 @@ int TestSuite::Run() {
   #endif
 
   int result = RUN_ALL_TESTS();
-  SetExitCode(result);
+  setExitCode(result);
 
-  Fini();
+  fini();
   return result;
 }
 

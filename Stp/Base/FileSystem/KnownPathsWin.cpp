@@ -17,7 +17,7 @@
 namespace stp {
 
 static inline FilePath AppendAppName(FilePath&& path) {
-  path.AppendAscii(Application::Instance().GetName());
+  path.AppendAscii(Application::instance().getName());
   return path;
 }
 

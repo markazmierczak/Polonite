@@ -1,7 +1,5 @@
 // Copyright 2017 Polonite Authors. All rights reserved.
-// Copyright (c) 2011 The Chromium Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
+// Distributed under MIT license that can be found in the LICENSE file.
 
 #include "Base/App/AtExit.h"
 
@@ -13,28 +11,28 @@ namespace {
 int g_test_counter1 = 0;
 int g_test_counter2 = 0;
 
-void IncrementTestCounter1(void* unused) {
+void incrementTestCounter1(void* unused) {
   ++g_test_counter1;
 }
 
-void IncrementTestCounter2(void* unused) {
+void incrementTestCounter2(void* unused) {
   ++g_test_counter2;
 }
 
-void ZeroTestCounters() {
+void zeroTestCounters() {
   g_test_counter1 = 0;
   g_test_counter2 = 0;
 }
 
-void ExpectCounter1IsZero(void* unused) {
+void expectCounter1IsZero(void* unused) {
   EXPECT_EQ(0, g_test_counter1);
 }
 
-void ExpectParamIsnullptr(void* param) {
+void expectParamIsnullptr(void* param) {
   EXPECT_EQ(static_cast<void*>(nullptr), param);
 }
 
-void ExpectParamIsCounter(void* param) {
+void expectParamIsCounter(void* param) {
   EXPECT_EQ(&g_test_counter1, param);
 }
 
@@ -48,41 +46,41 @@ class AtExitTest : public testing::Test {
 };
 
 TEST_F(AtExitTest, Basic) {
-  ZeroTestCounters();
-  AtExitManager::RegisterCallback(&IncrementTestCounter1, nullptr);
-  AtExitManager::RegisterCallback(&IncrementTestCounter2, nullptr);
-  AtExitManager::RegisterCallback(&IncrementTestCounter1, nullptr);
+  zeroTestCounters();
+  AtExitManager::registerCallback(&incrementTestCounter1, nullptr);
+  AtExitManager::registerCallback(&incrementTestCounter2, nullptr);
+  AtExitManager::registerCallback(&incrementTestCounter1, nullptr);
 
   EXPECT_EQ(0, g_test_counter1);
   EXPECT_EQ(0, g_test_counter2);
-  AtExitManager::ProcessCallbacksNow();
+  AtExitManager::processCallbacksNow();
   EXPECT_EQ(2, g_test_counter1);
   EXPECT_EQ(1, g_test_counter2);
 }
 
 TEST_F(AtExitTest, LIFOOrder) {
-  ZeroTestCounters();
-  AtExitManager::RegisterCallback(&IncrementTestCounter1, nullptr);
-  AtExitManager::RegisterCallback(&ExpectCounter1IsZero, nullptr);
-  AtExitManager::RegisterCallback(&IncrementTestCounter2, nullptr);
+  zeroTestCounters();
+  AtExitManager::registerCallback(&incrementTestCounter1, nullptr);
+  AtExitManager::registerCallback(&expectCounter1IsZero, nullptr);
+  AtExitManager::registerCallback(&incrementTestCounter2, nullptr);
 
   EXPECT_EQ(0, g_test_counter1);
   EXPECT_EQ(0, g_test_counter2);
-  AtExitManager::ProcessCallbacksNow();
+  AtExitManager::processCallbacksNow();
   EXPECT_EQ(1, g_test_counter1);
   EXPECT_EQ(1, g_test_counter2);
 }
 
 TEST_F(AtExitTest, Param) {
-  AtExitManager::RegisterCallback(&ExpectParamIsnullptr, nullptr);
-  AtExitManager::RegisterCallback(&ExpectParamIsCounter, &g_test_counter1);
-  AtExitManager::ProcessCallbacksNow();
+  AtExitManager::registerCallback(&expectParamIsnullptr, nullptr);
+  AtExitManager::registerCallback(&expectParamIsCounter, &g_test_counter1);
+  AtExitManager::processCallbacksNow();
 }
 
 TEST_F(AtExitTest, Task) {
-  ZeroTestCounters();
-  AtExitManager::RegisterCallback(&ExpectParamIsCounter, &g_test_counter1);
-  AtExitManager::ProcessCallbacksNow();
+  zeroTestCounters();
+  AtExitManager::registerCallback(&expectParamIsCounter, &g_test_counter1);
+  AtExitManager::processCallbacksNow();
 }
 
 } // namespace stp

@@ -27,11 +27,11 @@ struct ApplicationPartInfo {
 
 class ApplicationPart {
  public:
-  StringSpan GetName() const { return info_->name; }
-  ApplicationPart* const* GetDependencies() const { return info_->deps; }
+  StringSpan getName() const { return info_->name; }
+  ApplicationPart* const* getDependencies() const { return info_->deps; }
 
-  void Init();
-  void Fini();
+  void init();
+  void fini();
 
   enum Status {
     Unregistered = -1,
@@ -49,12 +49,12 @@ class ApplicationPart {
 #define APPLICATION_PART_INITIALIZER(info) \
   { &info, ApplicationPart::Unregistered, nullptr, nullptr }
 
-inline void ApplicationPart::Init() {
+inline void ApplicationPart::init() {
   if (info_->init)
     info_->init();
 }
 
-inline void ApplicationPart::Fini() {
+inline void ApplicationPart::fini() {
   if (info_->fini)
     info_->fini();
 }

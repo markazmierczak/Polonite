@@ -19,22 +19,26 @@ static BasicLock g_data_lock = BASIC_LOCK_INITIALIZER;
 
 Application* Application::g_instance_ = nullptr;
 
-static void DefaultTerminate();
+static void defaultTerminate();
 
-static inline void AppendPartToList(ApplicationPart*& tail, ApplicationPart* part) {
+static inline void appendPartToList(ApplicationPart*& tail, ApplicationPart* part) {
   tail->next_ = part;
   part->prev_ = tail;
   tail = part;
 }
 
-void Application::AddPart(ApplicationPart* part) {
+/**
+ * Register a single @a part within application.
+ * Must be called before application object is initialized.
+ */
+void Application::addPart(ApplicationPart* part) {
   ASSERT(part != nullptr);
   ASSERT(phase_ == Phase::Born);
 
   if (part->status_ != ApplicationPart::Unregistered) {
     ASSERT(part->status_ == ApplicationPart::Registered,
            "application parts are circular dependent {}<->{}",
-           part->GetName(), part_being_registered_->GetName());
+           part->getName(), part_being_registered_->getName());
     return; // already registered
   }
 
@@ -43,16 +47,16 @@ void Application::AddPart(ApplicationPart* part) {
   part_being_registered_ = part;
 
   // resolve dependencies.
-  auto deps = part->GetDependencies();
+  auto deps = part->getDependencies();
   if (deps) {
     for (; *deps; ++deps)
-      AddPart(*deps);
+      addPart(*deps);
   }
 
   part_being_registered_ = nullptr;
   part->status_ = ApplicationPart::Registered;
 
-  AppendPartToList(parts_tail_, part);
+  appendPartToList(parts_tail_, part);
 }
 
 Application::Application(CommandLine::Arguments native_arguments)
@@ -87,41 +91,41 @@ Application::Application(CommandLine::Arguments native_arguments)
 
 Application::~Application() {}
 
-int Application::Run(int (*main_function)()) {
-  Init();
-  SetExitCode(main_function());
-  Fini();
+int Application::run(int (*main_function)()) {
+  init();
+  setExitCode(main_function());
+  fini();
   return exit_code_;
 }
 
-void Application::Init() {
+void Application::init() {
   ASSERT(phase_ == Phase::Born);
 
   phase_ = Phase::Initializing;
 
-  SetTerminateHandler(DefaultTerminate);
+  setTerminateHandler(defaultTerminate);
 
-  OnCaptureArguments(native_arguments_);
+  onCaptureArguments(native_arguments_);
 
   CommandLine::Init(native_arguments_);
 
   for (auto* part = parts_head_; part; part = part->next_)
-    part->Init();
+    part->init();
 
-  OnDidInit();
+  onDidInit();
 
   phase_ = Phase::Running;
 }
 
-void Application::Fini() {
+void Application::fini() {
   ASSERT(phase_ == Phase::Running);
 
   phase_ = Phase::Finalizing;
 
-  OnWillFini();
+  onWillFini();
 
   for (auto* part = parts_tail_; part; part = part->prev_)
-    part->Fini();
+    part->fini();
 
   CommandLine::Fini();
 
@@ -146,12 +150,17 @@ void Application::Fini() {
   phase_ = Phase::Dead;
 }
 
-void Application::SetName(StringSpan name) {
+/**
+ * @param name
+ * ASCII encoded string.
+ * Must not contain any (back)slashes or colons and be non empty.
+ */
+void Application::setName(StringSpan name) {
   ASSERT(!name.IsEmpty());
   // Many clients depends on short name being ASCII.
   ASSERT(IsAscii(name));
   // Short name may not contain, otherwise it cannot be used in path specification.
-  // FIXME ASSERT(name.IndexOfAny("/\\:") < 0);
+  // FIXME ASSERT(name.indexOfAny("/\\:") < 0);
 
   ASSERT(phase_ == Phase::Born);
   name_ = name;
@@ -162,34 +171,41 @@ static String ResolveNameFromExecutablePath() {
   return String("toReplace");
 }
 
-const String& Application::GetName() {
+const String& Application::getName() {
   AutoLock auto_lock(&g_data_lock);
   if (name_.IsEmpty())
     name_ = ResolveNameFromExecutablePath();
   return name_;
 }
 
-void Application::SetDisplayName(StringSpan display_name) {
+/**
+ * @param display_name
+ * UTF-8 encoded.
+ */
+void Application::setDisplayName(StringSpan display_name) {
   ASSERT(!display_name.IsEmpty());
 
   ASSERT(phase_ == Phase::Born);
   display_name_ = display_name;
 }
 
-const String& Application::GetDisplayName() {
-  return !display_name_.IsEmpty() ? display_name_ : GetName();
+const String& Application::getDisplayName() {
+  return !display_name_.IsEmpty() ? display_name_ : getName();
 }
 
-void Application::SetVersion(const Version& version) {
+void Application::setVersion(const Version& version) {
   ASSERT(phase_ == Phase::Born);
   version_ = version;
 }
 
-void Application::OnDidInit(){}
-void Application::OnWillFini() {}
-void Application::OnCaptureArguments(CommandLine::Arguments& arguments) {}
+void Application::onDidInit(){}
+void Application::onWillFini() {}
+/**
+ * Override to modify @a arguments before they are passed to @ref CommandLine constructor.
+ */
+void Application::onCaptureArguments(CommandLine::Arguments& arguments) {}
 
-static void DefaultTerminate() {
+static void defaultTerminate() {
   auto exception_ptr = ExceptionPtr::Current();
   if (exception_ptr) {
     try {
@@ -204,16 +220,16 @@ static void DefaultTerminate() {
   }
 }
 
-[[noreturn]] void Application::Terminate() {
+[[noreturn]] void Application::terminate() {
   std::terminate();
   abort();
 }
 
-Application::TerminateHandler Application::SetTerminateHandler(TerminateHandler handler) {
+Application::TerminateHandler Application::setTerminateHandler(TerminateHandler handler) {
   return std::set_terminate(handler);
 }
 
-Application::TerminateHandler Application::GetTerminateHandler() {
+Application::TerminateHandler Application::getTerminateHandler() {
   return std::get_terminate();
 }
 

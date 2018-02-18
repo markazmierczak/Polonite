@@ -57,7 +57,7 @@ SystemErrorCode File::TryCreateTemporaryIn(const FilePath& dir, FilePath& output
 
   FilePathWriter writer(output_path);
   writer.EnsureSeparator();
-  writer << ".stp." << Application::Instance().GetName() << ".XXXXXX";
+  writer << ".stp." << Application::instance().getName() << ".XXXXXX";
 
   // this should be OK since mkstemp just replaces characters in place
   char* buffer = const_cast<char*>(ToNullTerminated(output_path));

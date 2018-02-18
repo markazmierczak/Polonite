@@ -15,8 +15,8 @@ class TestSuite : public Application {
   int Run();
 
  protected:
-  void OnCaptureArguments(CommandLine::Arguments& arguments) override;
-  void OnDidInit() override;
+  void onCaptureArguments(CommandLine::Arguments& arguments) override;
+  void onDidInit() override;
 };
 
 } // namespace stp

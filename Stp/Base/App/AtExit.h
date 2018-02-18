@@ -1,7 +1,5 @@
 // Copyright 2017 Polonite Authors. All rights reserved.
-// Copyright (c) 2011 The Chromium Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
+// Distributed under MIT license that can be found in the LICENSE file.
 
 #ifndef STP_BASE_APP_ATEXIT_H_
 #define STP_BASE_APP_ATEXIT_H_
@@ -19,19 +17,15 @@ class BASE_EXPORT AtExitManager {
   AtExitManager();
   ~AtExitManager();
 
-  static void RegisterCallback(void (*func)(void*), void* param);
+  DISALLOW_COPY_AND_ASSIGN(AtExitManager);
 
-  static void RegisterCallback(Callback callback);
+  static void registerCallback(void (*func)(void*), void* param);
 
-  // Calls the registered callbacks in LIFO order.
-  // It is possible to register new callbacks after calling this function.
-  static void ProcessCallbacksNow();
+  static void registerCallback(Callback callback);
+
+  static void processCallbacksNow();
 
  protected:
-  // This constructor will allow this instance of AtExitManager to be created
-  // even if one already exists. This should only be used for testing!
-  // AtExitManagers are kept on a global stack, and it will be removed during
-  // destruction.  This allows you to shadow another AtExitManager.
   explicit AtExitManager(bool shadow);
 
  private:
@@ -41,8 +35,6 @@ class BASE_EXPORT AtExitManager {
   bool processing_callbacks_ = false;
 
   static AtExitManager* g_top_manager_;
-
-  DISALLOW_COPY_AND_ASSIGN(AtExitManager);
 };
 
 #if defined(UNIT_TEST)

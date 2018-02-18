@@ -15,16 +15,16 @@ class BASE_EXPORT BaseApplicationPart {
  private:
   static const ApplicationPartInfo Info_;
 
-  static void Init();
-  static void Fini();
+  static void init();
+  static void fini();
 
-  static constexpr ApplicationPartInfo MakeInfo();
+  static constexpr ApplicationPartInfo makeInfo();
 };
 
-constexpr ApplicationPartInfo BaseApplicationPart::MakeInfo() {
+constexpr ApplicationPartInfo BaseApplicationPart::makeInfo() {
   ApplicationPartInfo p("Stp/Base");
-  p.init = &Init;
-  p.fini = &Fini;
+  p.init = &init;
+  p.fini = &fini;
   return p;
 }
 
