@@ -91,7 +91,7 @@ template<typename T>
 using TAddRvalueReference = typename detail::TAddRvalueReferenceHelper<T>::Type;
 
 template<typename T>
-ALWAYS_INLINE constexpr TRemoveReference<T> && Move(T&& t) noexcept {
+ALWAYS_INLINE constexpr TRemoveReference<T> && move(T&& t) noexcept {
   typedef TRemoveReference<T> U;
   return static_cast<U&&>(t);
 }
@@ -109,7 +109,7 @@ ALWAYS_INLINE constexpr T&& Forward(TRemoveReference<T>&& t) noexcept {
 
 template<typename T, typename U = T>
 constexpr T Exchange(T& obj, U&& new_val) noexcept {
-  T old_val = Move(obj);
+  T old_val = move(obj);
   obj = Forward<U>(new_val);
   return old_val;
 }

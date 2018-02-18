@@ -67,12 +67,12 @@ void JsonObject::SetWithPath(StringSpan input_path, JsonValue value) {
     path = path.GetSlice(delimiter + 1);
   }
 
-  object->Set(path, Move(value));
+  object->Set(path, move(value));
 }
 
 void JsonObject::Set(StringSpan key, JsonValue value) {
   ASSERT(Utf8::Validate(key));
-  impl().Set(key, Move(value));
+  impl().Set(key, move(value));
 }
 
 const JsonValue* JsonObject::TryGetWithPath(StringSpan path) const {
@@ -149,7 +149,7 @@ bool JsonObject::ContainsKey(StringSpan key) const {
 }
 
 bool JsonObject::TryAdd(StringSpan key, JsonValue value) {
-  return impl().TryAdd(key, Move(value));
+  return impl().TryAdd(key, move(value));
 }
 
 bool JsonObject::TryRemove(StringSpan key) {
@@ -186,7 +186,7 @@ bool JsonObject::TryParse(StringSpan input, JsonObject& output, const JsonOption
     return false;
   if (!root.IsObject())
     return false;
-  output = Move(root.AsObject());
+  output = move(root.AsObject());
   return true;
 }
 

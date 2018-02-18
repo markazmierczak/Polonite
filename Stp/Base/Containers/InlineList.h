@@ -73,7 +73,7 @@ class InlineListBase {
   template<typename U>
   bool Contains(const U& item) const { return ToSpan().Contains(item); }
 
-  InlineListBase& operator+=(T item) { Add(Move(item)); return *this; }
+  InlineListBase& operator+=(T item) { Add(move(item)); return *this; }
   InlineListBase& operator+=(SpanType range) { Append(range); return *this; }
 
   bool IsSourceOf(SpanType span) const { return IsSourceOf(span.data()); }
@@ -387,7 +387,7 @@ inline int InlineListBase<T>::Add(T item) {
   int old_size = size_;
   if (UNLIKELY(capacity_ == old_size))
     WillGrow(1);
-  new(data_ + old_size) T(Move(item));
+  new(data_ + old_size) T(move(item));
   SetSizeNoGrow(old_size + 1);
   return old_size;
 }
@@ -455,7 +455,7 @@ inline void InlineListBase<T>::Insert(int at, T item) {
   if (capacity_ != size_) {
     UninitializedRelocate(old_d + at + 1, old_d + at, old_size - at);
     try {
-      new (old_d + at) T(Move(item));
+      new (old_d + at) T(move(item));
     } catch (...) {
       UninitializedRelocate(old_d + at, old_d + at + 1, old_size - at);
       throw;
@@ -469,7 +469,7 @@ inline void InlineListBase<T>::Insert(int at, T item) {
     int new_size = old_size + 1;
     int new_capacity = RecommendCapacity(new_size);
     T* new_d = Allocate<T>(new_capacity + CapacityIncrement_);
-    new(new_d + at) T(Move(item));
+    new(new_d + at) T(move(item));
     bool was_inline = IsInline();
     data_ = new_d;
     size_ = new_size;

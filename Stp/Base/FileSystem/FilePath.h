@@ -18,8 +18,8 @@ class BASE_EXPORT FilePath {
   FilePath() noexcept = default;
   ~FilePath() = default;
 
-  FilePath(FilePath&& other) noexcept : chars_(Move(other.chars_)) {}
-  FilePath& operator=(FilePath&& other) noexcept { chars_ = Move(other.chars_); return *this; }
+  FilePath(FilePath&& other) noexcept : chars_(move(other.chars_)) {}
+  FilePath& operator=(FilePath&& other) noexcept { chars_ = move(other.chars_); return *this; }
 
   FilePath(const FilePath& other) : chars_(other.chars_) {}
   FilePath& operator=(const FilePath& other) { return operator=(other.ToSpan()); }

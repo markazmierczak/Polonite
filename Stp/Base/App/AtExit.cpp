@@ -46,7 +46,7 @@ void AtExitManager::RegisterCallback(Callback callback) {
 
   AutoLock lock(&g_top_manager_->lock_);
   ASSERT(!g_top_manager_->processing_callbacks_);
-  g_top_manager_->stack_.Push(Move(callback));
+  g_top_manager_->stack_.Push(move(callback));
 }
 
 void AtExitManager::ProcessCallbacksNow() {

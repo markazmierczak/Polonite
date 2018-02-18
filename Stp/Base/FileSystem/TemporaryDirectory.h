@@ -40,7 +40,7 @@ class BASE_EXPORT TemporaryDirectory {
 
   // Caller takes ownership of the temporary directory so it won't be destroyed
   // when this object goes out of scope.
-  FilePath Take() { return Move(path_); }
+  FilePath Take() { return move(path_); }
 
   ALWAYS_INLINE const FilePath& path() const { return path_; }
 

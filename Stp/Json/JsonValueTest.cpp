@@ -31,14 +31,14 @@ TEST(JsonValueTest, Basic) {
   ASSERT_FALSE(toolbar_bookmarks);
 
   JsonArray new_toolbar_bookmarks;
-  settings.SetWithPath("global.toolbar.bookmarks", Move(new_toolbar_bookmarks));
+  settings.SetWithPath("global.toolbar.bookmarks", move(new_toolbar_bookmarks));
   toolbar_bookmarks = settings.TryGetArrayWithPath("global.toolbar.bookmarks");
   ASSERT_TRUE(toolbar_bookmarks);
 
   JsonObject new_bookmark;
   new_bookmark.SetWithPath("name", "Froogle");
   new_bookmark.SetWithPath("url", "http://froogle.com");
-  toolbar_bookmarks->Add(Move(new_bookmark));
+  toolbar_bookmarks->Add(move(new_bookmark));
 
   JsonArray* bookmark_array = settings.TryGetArrayWithPath("global.toolbar.bookmarks");
   ASSERT_TRUE(bookmark_array);

@@ -83,15 +83,15 @@ class BASE_EXPORT WeakReference {
   };
 
   WeakReference() {}
-  WeakReference(RefPtr<Flag> flag) : flag_(Move(flag)) {}
+  WeakReference(RefPtr<Flag> flag) : flag_(move(flag)) {}
   ~WeakReference() {}
 
   WeakReference(WeakReference&& other)
-      : flag_(Move(other.flag_)) { other.flag_ = Flag::Null; }
+      : flag_(move(other.flag_)) { other.flag_ = Flag::Null; }
 
   WeakReference& operator=(WeakReference&& other) {
     if (this != &other) {
-      flag_ = Move(other.flag_);
+      flag_ = move(other.flag_);
       other.flag_ = Flag::Null;
     }
     return *this;
@@ -210,7 +210,7 @@ class WeakPtr : public detail::WeakPtrBase {
   }
 
   template<typename U>
-  WeakPtr(WeakPtr<U>&& other) : WeakPtrBase(Move(other)) {
+  WeakPtr(WeakPtr<U>&& other) : WeakPtrBase(move(other)) {
     // Need to cast from U* to T* to do pointer adjustment in case of multiple
     // inheritance. This also enforces the "U is a T" rule.
     T* t = reinterpret_cast<U*>(other.ptr_);

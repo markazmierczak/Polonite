@@ -21,8 +21,8 @@ class FlatSet {
   FlatSet() = default;
   ~FlatSet() = default;
 
-  FlatSet(FlatSet&& other) noexcept : list_(Move(other.list_)) {}
-  FlatSet& operator=(FlatSet&& other) noexcept { list_ = Move(other); return *this; }
+  FlatSet(FlatSet&& other) noexcept : list_(move(other.list_)) {}
+  FlatSet& operator=(FlatSet&& other) noexcept { list_ = move(other); return *this; }
 
   FlatSet(const FlatSet& other) : list_(other.list_) {}
   FlatSet& operator=(const FlatSet& other) { list_ = other; return *this; }
@@ -55,9 +55,9 @@ class FlatSet {
   static FlatSet AdoptList(ListType list) {
     ASSERT(IsSorted(list));
     ASSERT(HasDuplicatesAlreadySorted(list));
-    return FlatSet(OrderedUniqueTag(), Move(list));
+    return FlatSet(OrderedUniqueTag(), move(list));
   }
-  ListType TakeList() { return Move(list_); }
+  ListType TakeList() { return move(list_); }
 
   friend void Swap(FlatSet& l, FlatSet& r) noexcept { Swap(l.list_, r.list_); }
   friend bool operator==(const FlatSet& l, const FlatSet& r) { return l.list_ == r.list_; }
@@ -70,7 +70,7 @@ class FlatSet {
   ListType list_;
 
   struct OrderedUniqueTag {};
-  FlatSet(OrderedUniqueTag, ListType&& list) noexcept : list_(Move(list)) {}
+  FlatSet(OrderedUniqueTag, ListType&& list) noexcept : list_(move(list)) {}
 };
 
 template<typename T, class TList>

@@ -20,7 +20,7 @@ class HashSet {
   HashSet(const HashSet& other) : map_(other.map_) {}
   HashSet& operator=(const HashSet& other);
 
-  HashSet(HashSet&& other) : map_(Move(other.map_)) {}
+  HashSet(HashSet&& other) : map_(move(other.map_)) {}
   HashSet& operator=(HashSet&& other);
 
   int size() const { return map_.size(); }
@@ -46,7 +46,7 @@ class HashSet {
 
 template<typename T>
 inline HashSet<T>& HashSet<T>::operator=(HashSet&& other) {
-  map_ = Move(other.map_);
+  map_ = move(other.map_);
   return *this;
 }
 

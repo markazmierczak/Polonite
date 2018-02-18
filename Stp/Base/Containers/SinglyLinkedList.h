@@ -63,32 +63,6 @@ class SinglyLinkedList {
   // Really slow, that's because it's not named size().
   int Count() const;
 
-  class Iterator {
-   public:
-    explicit Iterator(T* ptr) : ptr_(ptr) {}
-
-    T& operator*() const { return *ptr_; }
-    T* operator->() const { return ptr_; }
-
-    Iterator& operator++() {
-      ptr_ = ptr_->next();
-      return *this;
-    }
-
-    operator T*() const { return ptr_; }
-    T* get() const { return ptr_; }
-
-    bool operator==(const Iterator& other) const { return ptr_ == other.ptr_; }
-    bool operator!=(const Iterator& other) const { return !operator==(other); }
-
-   private:
-    T* ptr_;
-  };
-
-  // Only for range-based for-loop.
-  ALWAYS_INLINE Iterator begin() const { return Iterator(head()); }
-  ALWAYS_INLINE Iterator end() const { return Iterator(nullptr); }
-
   friend void Swap(SinglyLinkedList& lhs, SinglyLinkedList& rhs) {
     Swap(lhs.head_, rhs.head_);
     Swap(lhs.tail_, rhs.tail_);
@@ -99,6 +73,23 @@ class SinglyLinkedList {
   T* tail_ = nullptr;
 
   DISALLOW_COPY_AND_ASSIGN(SinglyLinkedList);
+};
+
+template<typename T>
+class SinglyLinkedListIterator {
+ public:
+  explicit SinglyLinkedListIterator(SinglyLinkedList<T>* list)
+      : ptr_(list->head()) {}
+
+  T& operator*() const { return *ptr_; }
+  T* operator->() const { return ptr_; }
+  T* get() const { return ptr_->that(); }
+
+  void MoveNext() { ptr_ = ptr_->next(); }
+  bool IsValid() { return ptr_ != nullptr; }
+
+ private:
+  T* ptr_;
 };
 
 template<typename T>

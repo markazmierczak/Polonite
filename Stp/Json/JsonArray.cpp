@@ -36,7 +36,7 @@ bool JsonArray::Contains(const JsonValue& item) const {
 }
 
 void JsonArray::Add(JsonValue item) {
-  impl().Add(Move(item));
+  impl().Add(move(item));
 }
 
 void JsonArray::RemoveLast() {
@@ -53,19 +53,19 @@ void JsonArray::RemoveRange(int at, int n) {
 
 void JsonArray::Set(int at, JsonValue value) {
   if (at < size()) {
-    *(data() + at) = Move(value);
+    *(data() + at) = move(value);
     return;
   }
 
   int default_n = at - size();
   if (default_n == 0) {
     // fast path
-    Add(Move(value));
+    Add(move(value));
     return;
   }
   WillGrow(default_n + 1);
   impl().AppendInitialized(default_n);
-  Add(Move(value));
+  Add(move(value));
 }
 
 const JsonValue* JsonArray::TryGet(int at) const {
@@ -103,7 +103,7 @@ bool JsonArray::Parse(StringSpan input, JsonArray& output, const JsonOptions& op
     return false;
   if (!root.IsArray())
     return false;
-  output = Move(root.AsArray());
+  output = move(root.AsArray());
   return true;
 }
 

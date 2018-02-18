@@ -110,7 +110,7 @@ inline void UninitializedMove(T* dst, T* src, int count) noexcept {
     }
   } else {
     for (int i = 0; i < count; ++i)
-      new (dst + i) T(Move(src[i]));
+      new (dst + i) T(move(src[i]));
   }
 }
 
@@ -124,12 +124,12 @@ inline void UninitializedRelocate(T* dst, T* src, int count) noexcept {
   } else {
     if (src > dst) {
       for (int i = 0; i < count; ++i) {
-        new (dst + i) T(Move(src[i]));
+        new (dst + i) T(move(src[i]));
         DestroyAt(src + i);
       }
     } else if (src < dst) {
       for (int i = count - 1; i >= 0; --i) {
-        new (dst + i) T(Move(src[i]));
+        new (dst + i) T(move(src[i]));
         DestroyAt(src + i);
       }
     }

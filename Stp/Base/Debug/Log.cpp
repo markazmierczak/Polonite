@@ -23,7 +23,7 @@ struct VmoduleMatcher {
   enum MatchTarget { MatchModule, MatchFile };
 
   explicit VmoduleMatcher(String pattern_)
-      : pattern(Move(pattern_)),
+      : pattern(move(pattern_)),
         level(2) {
     // If the pattern contains a separator, we assume that
     // it's meant to be tested against the entire __FILE__ string.
@@ -203,7 +203,7 @@ static void ParseMatchers(StringSpan input) {
     if (pos >= 0) {
       VmoduleMatcher matcher(String(pair.GetSlice(0, pos)));
       if (TryParse(pair.GetSlice(pos + 1), matcher.level) == ParseIntegerErrorCode::Ok) {
-        matchers->Add(Move(matcher));
+        matchers->Add(move(matcher));
         parsed = true;
       }
     }

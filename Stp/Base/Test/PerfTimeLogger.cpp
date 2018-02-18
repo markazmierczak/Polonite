@@ -9,7 +9,7 @@
 namespace stp {
 
 PerfTimeLogger::PerfTimeLogger(String test_name)
-    : logged_(false), test_name_(Move(test_name)) {}
+    : logged_(false), test_name_(move(test_name)) {}
 
 PerfTimeLogger::~PerfTimeLogger() {
   if (!logged_)

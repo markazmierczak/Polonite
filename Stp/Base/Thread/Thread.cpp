@@ -32,7 +32,7 @@ void ThreadData::Adopt() {
 
 void ThreadData::Dispose(ThreadData* that) {
   ASSERT(that);
-  List<Function<void()>> at_exit = Move(that->at_exit);
+  List<Function<void()>> at_exit = move(that->at_exit);
 
   // Invoke callbacks in reverse order.
   for (int i = at_exit.size() - 1; i >= 0; --i) {
@@ -82,7 +82,7 @@ Thread::~Thread() {
 
 void Thread::SetName(String name) {
   ASSERT(!IsAlive());
-  name_ = Move(name);
+  name_ = move(name);
 }
 
 void Thread::SetStackSize(int64_t size) {
@@ -142,11 +142,11 @@ int Thread::ThreadMain() {
 void ThisThread::AtExit(Function<void()> callback) {
   auto* data = detail::ThreadData::Current();
   ASSERT(data, "thread needs to be adopted to use this function");
-  data->at_exit.Add(Move(callback));
+  data->at_exit.Add(move(callback));
 }
 
 ThreadedFunction::ThreadedFunction(Function<int()> main)
-    : main_(Move(main)) {
+    : main_(move(main)) {
 }
 
 ThreadedFunction::~ThreadedFunction() {

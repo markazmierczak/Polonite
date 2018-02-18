@@ -27,7 +27,7 @@ WaitableEvent::WaitableEvent(ResetPolicy reset_policy, InitialState initial_stat
 }
 
 WaitableEvent::WaitableEvent(win::ScopedHandle handle)
-    : handle_(Move(handle)) {
+    : handle_(move(handle)) {
   ASSERT(handle_.IsValid());
 }
 

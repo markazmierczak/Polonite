@@ -46,7 +46,7 @@ template<typename T>
 class NamedFormatter final : public Formatter {
  public:
   NamedFormatter(StringSpan name, const T& arg)
-      : name_(name), adapted_(Move(arg)) {}
+      : name_(name), adapted_(move(arg)) {}
 
   void Execute(TextWriter& out, const StringSpan& opts) const override {
     Format(out, adapted_, opts);

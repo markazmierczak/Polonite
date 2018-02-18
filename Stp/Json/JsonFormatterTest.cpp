@@ -36,10 +36,10 @@ TEST(JsonFormatterTest, NestedTypes) {
   JsonArray array;
   JsonObject object;
   object.SetWithPath("inner int", 10);
-  array.Add(Move(object));
+  array.Add(move(object));
   array.Add(JsonArray());
   array.Add(true);
-  root.SetWithPath("array", Move(array));
+  root.SetWithPath("array", move(array));
 
   // Test the pretty-printer.
   EXPECT_EQ("{\"array\":[{\"inner int\":10},[],true]}", FormattableToString(root));
@@ -58,7 +58,7 @@ TEST(JsonFormatterTest, KeysWithPeriods) {
   period_dict.Set("c", 2);
   JsonObject period_dict2;
   period_dict2.Set("g.h.i.j", 1);
-  period_dict.Set("d.e.f", Move(period_dict2));
+  period_dict.Set("d.e.f", move(period_dict2));
   EXPECT_EQ("{\"a.b\":3,\"c\":2,\"d.e.f\":{\"g.h.i.j\":1}}", FormattableToString(period_dict));
 
   JsonObject period_dict3;

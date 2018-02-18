@@ -95,7 +95,7 @@ class List {
 
   bool IsSourceOf(SpanType span) const { return IsSourceOf(span.data()); }
 
-  List& operator+=(T item) { Add(Move(item)); return *this; }
+  List& operator+=(T item) { Add(move(item)); return *this; }
   List& operator+=(SpanType range) { Append(range); return *this; }
 
   friend void Swap(List& l, List& r) noexcept {
@@ -192,9 +192,6 @@ template<typename T, TEnableIf<TIsContiguousContainer<TRemoveReference<T>>>* = n
 inline List<typename T::ItemType> MakeList(T&& list) {
   return List<typename T::ItemType>(Forward<T>(list));
 }
-
-inline String ToString(String s) { return s; }
-inline String ToString(StringSpan s) { return String(s); }
 
 BASE_EXPORT const char* ToNullTerminated(const List<char>& string);
 
@@ -317,7 +314,7 @@ inline int List<T>::Add(T item) {
   int old_size = size_;
   if (UNLIKELY(capacity_ == old_size))
     WillGrow(1);
-  new(data_ + old_size) T(Move(item));
+  new(data_ + old_size) T(move(item));
   SetSizeNoGrow(old_size + 1);
   return old_size;
 }
@@ -388,7 +385,7 @@ inline void List<T>::Insert(int at, T item) {
   if (capacity_ != size_) {
     UninitializedRelocate(old_d + at + 1, old_d + at, old_size - at);
     try {
-      new (old_d + at) T(Move(item));
+      new (old_d + at) T(move(item));
     } catch (...) {
       UninitializedRelocate(old_d + at, old_d + at + 1, old_size - at);
       throw;
@@ -403,7 +400,7 @@ inline void List<T>::Insert(int at, T item) {
     int new_capacity = RecommendCapacity(new_size);
     T* new_d = Allocate<T>(new_capacity + CapacityIncrement_);
 
-    new(new_d + at) T(Move(item));
+    new(new_d + at) T(move(item));
     data_ = new_d;
     size_ = new_size;
     capacity_ = new_capacity;

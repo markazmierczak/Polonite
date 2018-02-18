@@ -264,7 +264,7 @@ class LineReader {
       if (!HasCompleteLine()) {
         int incomplete_line_length = eod_ - bol_;
         // Move the trailing incomplete line to the beginning.
-        ArrayMove(buf_, bol_, incomplete_line_length);
+        Arraymove(buf_, bol_, incomplete_line_length);
         // Read text from file and append it.
         byte_t* const append_pos = buf_ + incomplete_line_length;
         int capacity_left = buf_len_ - incomplete_line_length;

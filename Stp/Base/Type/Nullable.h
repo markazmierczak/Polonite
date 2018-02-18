@@ -80,12 +80,12 @@ class NullableValue {
   constexpr NullableValue& operator=(NullableValue<U>&& other) noexcept {
     if (other) {
       if (IsValid()) {
-        storage_.value = Move(*other);
+        storage_.value = move(*other);
       } else {
         if constexpr (TsAreSame<T, U>)
           Relocate(other);
         else
-          Init(Move(*other));
+          Init(move(*other));
       }
     } else {
       Reset();
@@ -258,7 +258,7 @@ constexpr T Coalesce(const NullableValue<U>& nullable, U&& default_value) {
 template<typename T, typename U>
 constexpr T Coalesce(NullableValue<U>&& nullable, U&& default_value) {
   static_assert(TIsConvertibleTo<U, T>, "!");
-  return nullable.operator bool() ? Move(*nullable) : static_cast<T>(Forward<U>(default_value));
+  return nullable.operator bool() ? move(*nullable) : static_cast<T>(Forward<U>(default_value));
 }
 
 } // namespace stp

@@ -471,9 +471,9 @@ struct TIsSwappableTmpl;
 
 template<typename T, TEnableIf<detail::TIsGenericSwappable<T>>* = nullptr>
 constexpr void Swap(T& x, T& y) noexcept {
-  T t(Move(x));
-  x = Move(y);
-  y = Move(t);
+  T t(move(x));
+  x = move(y);
+  y = move(t);
 }
 
 template<typename T, int N, TEnableIf<detail::TIsSwappableTmpl<T>::Value>* = nullptr>
@@ -506,7 +506,7 @@ constexpr void RelocateAt(T* target, T& source) {
   if constexpr (TIsTriviallyRelocatable<T>) {
     memcpy(target, &source, sizeof(T));
   } else {
-    new (target) T(Move(source));
+    new (target) T(move(source));
     source.~T();
   }
 }

@@ -80,7 +80,7 @@ void Directory::RemoveRecursively(const FilePath& path) {
     while (enumerator.MoveNext()) {
       FilePath full_path = enumerator.GetEntryFullPath();
       if (enumerator.base().IsDirectory()) {
-        directories.Add(Move(full_path));
+        directories.Add(move(full_path));
         has_nested = true;
       } else {
         File::Delete(full_path);

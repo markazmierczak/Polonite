@@ -40,8 +40,8 @@ class FlatMap {
   FlatMap() = default;
   ~FlatMap() = default;
 
-  FlatMap(FlatMap&& other) noexcept : list_(Move(other.list_)) {}
-  FlatMap& operator=(FlatMap&& other) noexcept { list_ = Move(other.list_); return *this; }
+  FlatMap(FlatMap&& other) noexcept : list_(move(other.list_)) {}
+  FlatMap& operator=(FlatMap&& other) noexcept { list_ = move(other.list_); return *this; }
 
   FlatMap(const FlatMap& other) : list_(other.list_) {}
   FlatMap& operator=(const FlatMap& other) { list_ = other.list_; return *this; }
@@ -94,7 +94,7 @@ class FlatMap {
     T& Get() const { return that_.list_[index_].value(); }
 
     template<typename U>
-    void Add(U&& key, T value) { that_.InsertAt(~index_, Forward<U>(key), Move(value)); }
+    void Add(U&& key, T value) { that_.InsertAt(~index_, Forward<U>(key), move(value)); }
 
    private:
     FlatMap& that_;
@@ -137,9 +137,9 @@ class FlatMap {
   static FlatMap AdoptList(ListType list) {
     ASSERT(IsSorted(list));
     ASSERT(HasDuplicatesAlreadySorted(list));
-    return FlatMap(OrderedUniqueTag(), Move(list));
+    return FlatMap(OrderedUniqueTag(), move(list));
   }
-  ListType TakeList() { return Move(list_); }
+  ListType TakeList() { return move(list_); }
 
   friend void Swap(FlatMap& l, FlatMap& r) { Swap(l.list_, r.list_); }
   friend bool operator==(const FlatMap& l, const FlatMap& r) { return l.list_ == r.list_; }
@@ -155,7 +155,7 @@ class FlatMap {
   ListType list_;
 
   struct OrderedUniqueTag {};
-  FlatMap(OrderedUniqueTag, ListType&& list) noexcept : list_(Move(list)) {}
+  FlatMap(OrderedUniqueTag, ListType&& list) noexcept : list_(move(list)) {}
 };
 
 template<typename K, typename T, class TList>
@@ -203,9 +203,9 @@ inline void FlatMap<K, T, TList>::Set(U&& key, T value) {
   if (pos >= 0) {
     auto& value = list_[pos].value();
     DestroyAt(&value);
-    new (&value) T(Move(value));
+    new (&value) T(move(value));
   } else {
-    InsertAt(~pos, Forward<U>(key), Move(value));
+    InsertAt(~pos, Forward<U>(key), move(value));
   }
 }
 
@@ -216,7 +216,7 @@ inline T* FlatMap<K, T, TList>::TryAdd(U&& key, T value) {
   if (pos >= 0)
     return nullptr;
 
-  InsertAt(~pos, Forward<U>(key), Move(value));
+  InsertAt(~pos, Forward<U>(key), move(value));
   return &list_[~pos].value();
 }
 
@@ -236,7 +236,7 @@ template<typename U>
 inline void FlatMap<K, T, TList>::InsertAt(int at, U&& key, T value) {
   ASSERT(at == 0 || Compare(list_[at - 1].key(), key) < 0);
   ASSERT(at == size() || Compare(key, list_[at].key()) < 0);
-  list_.Insert(at, PairType(Forward<U>(key), Move(value)));
+  list_.Insert(at, PairType(Forward<U>(key), move(value)));
 }
 
 } // namespace stp

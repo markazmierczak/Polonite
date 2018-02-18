@@ -67,7 +67,7 @@ FilePath ResolveInternal(
         exists = File::Exists(path);
       }
       if (!exists)
-        throw NotFoundException(Move(path));
+        throw NotFoundException(move(path));
     }
   }
 
@@ -82,7 +82,7 @@ FilePath ResolveInternal(
 } // namespace detail
 
 NotFoundException::NotFoundException(FilePath path) noexcept
-    : path_(Move(path)) {
+    : path_(move(path)) {
 }
 
 StringSpan NotFoundException::GetName() const noexcept {

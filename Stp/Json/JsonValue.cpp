@@ -30,7 +30,7 @@ JsonValue& JsonValue::operator=(const JsonValue& other) {
 
 JsonValue::JsonValue(JsonValue&& other) {
   Init(other.type());
-  AssignMove(Move(other));
+  AssignMove(move(other));
 }
 
 JsonValue& JsonValue::operator=(JsonValue&& other) {
@@ -39,7 +39,7 @@ JsonValue& JsonValue::operator=(JsonValue&& other) {
       Fini();
       Init(other.type());
     }
-    AssignMove(Move(other));
+    AssignMove(move(other));
   }
   return *this;
 }
@@ -167,15 +167,15 @@ void JsonValue::AssignMove(JsonValue&& other) {
       break;
 
     case Type::String:
-      data_.string = Move(other.data_.string);
+      data_.string = move(other.data_.string);
       break;
 
     case Type::Array:
-      data_.array = Move(other.data_.array);
+      data_.array = move(other.data_.array);
       break;
 
     case Type::Object:
-      data_.object = Move(other.data_.object);
+      data_.object = move(other.data_.object);
       break;
   }
 }
@@ -213,7 +213,7 @@ void JsonValue::operator=(JsonStringBuilder&& string) {
     Fini();
     Init(Type::String);
   }
-  data_.string = Move(string);
+  data_.string = move(string);
 }
 
 JsonValue::JsonValue(Span<JsonValue> span)

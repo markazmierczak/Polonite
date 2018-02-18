@@ -7,40 +7,30 @@
 #define STP_BASE_UTIL_OBSERVERLIST_H_
 
 #include "Base/Containers/List.h"
-#include "Base/Memory/WeakPtr.h"
-#include "Base/Type/Limits.h"
+#include "Base/Containers/SinglyLinkedList.h"
 
 namespace stp {
 
 template<class TObserver>
-class ObserverListBase : public SupportsWeakPtr<ObserverListBase<TObserver>> {
+class ObserverList {
  public:
-  // Enumeration of which observers are notified.
-  enum NotificationType {
-    // Specifies that any observers added during notification are notified.
-    // This is the default type if non type is provided to the constructor.
-    NotifyAll,
-
-    // Specifies that observers added while sending out notification are not notified.
-    NotifyExistingOnly
-  };
-
   // An iterator class that can be used to access the list of observers.
   // See also the FOR_EACH_OBSERVER macro defined below.
-  class Iterator {
+  class Iterator : public SinglyLinkedListNode<Iterator> {
    public:
-    explicit Iterator(ObserverListBase<TObserver>* list);
+    explicit Iterator(ObserverList<TObserver>* list);
     ~Iterator();
-    TObserver* GetNext();
+    TObserver* TryGetNext();
 
    private:
-    WeakPtr<ObserverListBase<TObserver>> list_;
+    friend class ObserverList;
+    ObserverList<TObserver>* list_;
     int index_;
     int max_index_;
   };
 
-  ObserverListBase() : type_(NotifyAll) {}
-  explicit ObserverListBase(NotificationType type) : type_(type) {}
+  ObserverList() = default;
+  ~ObserverList();
 
   // Add an observer to the list.  An observer should not be added to
   // the same list more than once.
@@ -54,41 +44,44 @@ class ObserverListBase : public SupportsWeakPtr<ObserverListBase<TObserver>> {
 
   void Clear();
 
- protected:
-  int size() const { return observers_.size(); }
-
-  void Compact();
+  bool MightHaveObservers() const { return observers_.size() != 0; }
 
  private:
+  friend class ObserverList::Iterator;
+
   typedef List<TObserver*> ListType;
 
   ListType observers_;
-  int notify_depth_ = 0;
-  NotificationType type_;
+  SinglyLinkedList<Iterator> iterators_;
+  bool needs_compact_ = false;
 
-  friend class ObserverListBase::Iterator;
+  void Compact();
 
-  DISALLOW_COPY_AND_ASSIGN(ObserverListBase);
+  DISALLOW_COPY_AND_ASSIGN(ObserverList);
 };
 
 template<class TObserver>
-ObserverListBase<TObserver>::Iterator::Iterator(
-    ObserverListBase<TObserver>* list)
-    : list_(list->AsWeakPtr()),
+ObserverList<TObserver>::Iterator::Iterator(ObserverList<TObserver>* list)
+    : list_(list),
       index_(0),
-      max_index_(list->type_ == NotifyAll ? Limits<int>::Max : list->observers_.size()) {
-  ++list_->notify_depth_;
+      max_index_(list->observers_.size()) {
+  list_->iterators_.Prepend(this);
 }
 
 template<class TObserver>
-ObserverListBase<TObserver>::Iterator::~Iterator() {
-  if (list_.get() && --list_->notify_depth_ == 0)
-    list_->Compact();
+ObserverList<TObserver>::Iterator::~Iterator() {
+  if (list_) {
+    auto& iterators = list_->iterators_;
+    ASSERT(iterators.First() == this);
+    iterators.RemoveFirst();
+    if (iterators.IsEmpty() && list_->needs_compact_)
+      list_->Compact();
+  }
 }
 
 template<class TObserver>
-TObserver* ObserverListBase<TObserver>::Iterator::GetNext() {
-  if (!list_.get())
+TObserver* ObserverList<TObserver>::Iterator::TryGetNext() {
+  if (!list_)
     return nullptr;
   ListType& observers = list_->observers_;
   // Advance if the current element is null
@@ -99,74 +92,65 @@ TObserver* ObserverListBase<TObserver>::Iterator::GetNext() {
 }
 
 template<class TObserver>
-void ObserverListBase<TObserver>::AddObserver(TObserver* obs) {
+inline ObserverList<TObserver>::~ObserverList() {
+  SinglyLinkedListIterator<Iterator> it(&iterators_);
+  for (; it.IsValid(); it.MoveNext()) {
+    it->list_ = nullptr;
+  }
+}
+
+template<class TObserver>
+void ObserverList<TObserver>::AddObserver(TObserver* obs) {
   ASSERT(obs);
   ASSERT(!observers_.Contains(obs), "observers can only be added once!");
   observers_.Add(obs);
 }
 
 template<class TObserver>
-void ObserverListBase<TObserver>::RemoveObserver(TObserver* obs) {
+void ObserverList<TObserver>::RemoveObserver(TObserver* obs) {
   int index = observers_.IndexOf(obs);
   ASSERT(index >= 0);
-  if (notify_depth_)
-    observers_[index] = nullptr;
-  else
+  if (iterators_.IsEmpty()) {
     observers_.RemoveAt(index);
+  } else {
+    observers_[index] = nullptr;
+    needs_compact_ = true;
+  }
 }
 
 template<class TObserver>
-bool ObserverListBase<TObserver>::HasObserver(const TObserver* observer) const {
+bool ObserverList<TObserver>::HasObserver(const TObserver* observer) const {
   return observers_.Contains(const_cast<TObserver*>(observer));
 }
 
 template<class TObserver>
-void ObserverListBase<TObserver>::Clear() {
-  if (notify_depth_) {
-    for (auto& observer : observers_)
-      observer = nullptr;
-  } else {
+void ObserverList<TObserver>::Clear() {
+  if (iterators_.IsEmpty()) {
     observers_.Clear();
+  } else {
+    for (auto& observer : observers_) {
+      observer = nullptr;
+    }
+    needs_compact_ = true;
   }
 }
 
 template<class TObserver>
-void ObserverListBase<TObserver>::Compact() {
+void ObserverList<TObserver>::Compact() {
+  ASSERT(needs_compact_);
   for (int i = observers_.size() - 1; i >= 0; --i) {
     if (observers_[i] == nullptr)
       observers_.RemoveAt(i);
   }
+  needs_compact_ = false;
 }
-
-template<class TObserverType, bool TCheckEmpty = true>
-class ObserverList : public ObserverListBase<TObserverType> {
- public:
-  typedef typename ObserverListBase<TObserverType>::NotificationType NotificationType;
-
-  ObserverList() {}
-  explicit ObserverList(NotificationType type)
-      : ObserverListBase<TObserverType>(type) {}
-
-  ~ObserverList() {
-    // When check_empty is true, assert that the list is empty on destruction.
-    if (TCheckEmpty) {
-      ObserverListBase<TObserverType>::Compact();
-      ASSERT(ObserverListBase<TObserverType>::size() == 0);
-    }
-  }
-
-  bool MightHaveObservers() const {
-    return ObserverListBase<TObserverType>::size() != 0;
-  }
-};
 
 #define FOR_EACH_OBSERVER(TObserverType, observer_list, func) \
   do { \
     if ((observer_list).MightHaveObservers()) { \
-      typename ObserverListBase<TObserverType>::Iterator \
-          it_inside_observer_macro(&observer_list); \
+      typename ObserverList<TObserverType>::Iterator it_inside_observer_macro(&observer_list); \
       TObserverType* obs; \
-      while ((obs = it_inside_observer_macro.GetNext()) != nullptr) \
+      while ((obs = it_inside_observer_macro.TryGetNext()) != nullptr) \
         obs->func; \
     } \
   } while (0)

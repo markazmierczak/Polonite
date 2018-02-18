@@ -53,7 +53,7 @@ bool MemoryMappedFile::Initialize(const FilePath& file_name, Access access) {
 
 bool MemoryMappedFile::Initialize(FileStream&& file, Access access) {
   ASSERT(access != ReadWriteExtend);
-  return Initialize(Move(file), Region::WholeFile, access);
+  return Initialize(move(file), Region::WholeFile, access);
 }
 
 bool MemoryMappedFile::Initialize(FileStream&& file, const Region& region, Access access) {
@@ -83,7 +83,7 @@ bool MemoryMappedFile::Initialize(FileStream&& file, const Region& region, Acces
     ASSERT(region.size > 0);
   }
 
-  file_ = Move(file);
+  file_ = move(file);
 
   if (!MapFileRegionToMemory(region, access)) {
     CloseHandles();

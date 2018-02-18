@@ -62,7 +62,7 @@ template<typename TResult, typename... TArgs>
 inline TResult JoinMany(typename TResult::ItemType separator, const TArgs&... args) {
   using ItemType = typename TResult::ItemType;
   InitializerList<Span<ItemType>> ilist = { args... };
-  return Join<TResult>(Move(separator), MakeSpan(ilist));
+  return Join<TResult>(move(separator), MakeSpan(ilist));
 }
 
 template<typename TResult, typename TArray>

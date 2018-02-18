@@ -15,7 +15,7 @@ class Foo {
   virtual void Observe(int x) = 0;
   virtual ~Foo() {}
 };
-using FooObserverList = ObserverList<Foo, false>;
+using FooObserverList = ObserverList<Foo>;
 
 class Adder : public Foo {
  public:
@@ -90,7 +90,7 @@ TEST(ObserverListTest, BasicTest) {
 }
 
 TEST(ObserverListTest, Existing) {
-  FooObserverList observer_list(FooObserverList::NotifyExistingOnly);
+  FooObserverList observer_list;
   Adder a(1);
   AddInObserve<FooObserverList > b(&observer_list);
 
@@ -130,19 +130,8 @@ class AddInClearObserve : public Foo {
   Adder adder_;
 };
 
-TEST(ObserverListTest, ClearNotifyAll) {
-  FooObserverList observer_list;
-  AddInClearObserve a(&observer_list);
-
-  observer_list.AddObserver(&a);
-
-  FOR_EACH_OBSERVER(Foo, observer_list, Observe(1));
-  EXPECT_TRUE(a.added());
-  EXPECT_EQ(1, a.adder().total) << "Adder should observe once and have sum of 1.";
-}
-
 TEST(ObserverListTest, ClearNotifyExistingOnly) {
-  FooObserverList observer_list(FooObserverList::NotifyExistingOnly);
+  FooObserverList observer_list;
   AddInClearObserve a(&observer_list);
 
   observer_list.AddObserver(&a);

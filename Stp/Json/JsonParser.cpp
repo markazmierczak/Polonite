@@ -61,7 +61,7 @@ bool JsonParser::Parse(StringSpan input, JsonValue& output) {
     ReportError(JsonError::UnexpectedDataAfterRoot, 1);
     return false;
   }
-  output = Move(root);
+  output = move(root);
   return true;
 }
 
@@ -228,10 +228,10 @@ bool JsonParser::ConsumeObject(JsonValue& out_value) {
       return false;
 
     if (options_.Has(JsonOptions::UniqueKeys)) {
-      if (!object.TryAdd(key.ToSpan(), Move(value)))
+      if (!object.TryAdd(key.ToSpan(), move(value)))
         return ReportError(JsonError::KeyAlreadyAssigned, 1);
     } else {
-      object.Set(key.ToSpan(), Move(value));
+      object.Set(key.ToSpan(), move(value));
     }
 
     token = GetNextToken();
@@ -247,7 +247,7 @@ bool JsonParser::ConsumeObject(JsonValue& out_value) {
   }
   ++pos_;
 
-  out_value = Move(object);
+  out_value = move(object);
   return true;
 }
 
@@ -268,7 +268,7 @@ bool JsonParser::ConsumeArray(JsonValue& out_value) {
     if (!ParseToken(token, item))
       return false;
 
-    array.Add(Move(item));
+    array.Add(move(item));
 
     token = GetNextToken();
     if (token == Token::ArraySeparator) {
@@ -283,7 +283,7 @@ bool JsonParser::ConsumeArray(JsonValue& out_value) {
   }
   ++pos_;
 
-  out_value = Move(array);
+  out_value = move(array);
   return true;
 }
 
@@ -299,7 +299,7 @@ bool JsonParser::ConsumeString(JsonValue& out_value) {
   if (!options_.Has(JsonOptions::ReferenceInput))
     string.Convert();
 
-  out_value = Move(string);
+  out_value = move(string);
   return true;
 }
 

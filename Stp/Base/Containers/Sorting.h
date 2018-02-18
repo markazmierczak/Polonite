@@ -16,13 +16,13 @@ constexpr void InsertionSort(TContainer& sequence, TComparer&& comparer = Defaul
   auto* d = sequence.data();
 
   for (int i = 0; i < right; ++i) {
-    auto tmp = Move(d[i + 1]);
+    auto tmp = move(d[i + 1]);
 
     int j = i;
     for (; j >= 0 && comparer(tmp, d[j]) < 0; --j)
       d[j + 1] = d[j];
 
-    d[j + 1] = Move(tmp);
+    d[j + 1] = move(tmp);
   }
 }
 
@@ -33,7 +33,7 @@ void DownHeap(T* d, int i, int n, TComparer&& comparer) {
   ASSERT(i > 0);
   ASSERT(n >= 0);
 
-  T tmp = Move(d[i - 1]);
+  T tmp = move(d[i - 1]);
 
   while (i <= (n >> 1)) {
     int child = i << 1;
@@ -44,10 +44,10 @@ void DownHeap(T* d, int i, int n, TComparer&& comparer) {
     if (comparer(tmp, d[child - 1]) >= 0)
       break;
 
-    d[i - 1] = Move(d[child - 1]);
+    d[i - 1] = move(d[child - 1]);
     i = child;
   }
-  d[i - 1] = Move(tmp);
+  d[i - 1] = move(tmp);
 }
 
 } // namespace detail

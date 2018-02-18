@@ -55,12 +55,12 @@ void TemporaryDirectory::Create(FilePath path) {
 
   Directory::CreatePath(path);
 
-  path_ = Move(path);
+  path_ = move(path);
 }
 
 void TemporaryDirectory::Remove() {
   ASSERT(IsValid());
-  FilePath path = Move(path_);
+  FilePath path = move(path_);
   Directory::RemoveRecursively(path);
 }
 
@@ -81,7 +81,7 @@ void TemporaryDirectory::CreateInternal(FilePathSpan base_dir, StringSpan prefix
     writer << rng.NextUInt32();
 
     if (::CreateDirectoryW(ToNullTerminated(sub_dir), NULL)) {
-      path_ = Move(sub_dir);
+      path_ = move(sub_dir);
       return;
     }
 
@@ -111,7 +111,7 @@ void TemporaryDirectory::CreateInternal(FilePathSpan base_dir, StringSpan prefix
     throw FileSystemException(GetLastPosixErrorCode());
   ASSERT(dtemp == buffer);
 
-  path_ = Move(sub_dir);
+  path_ = move(sub_dir);
 }
 #endif // OS(*)
 

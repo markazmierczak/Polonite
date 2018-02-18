@@ -42,7 +42,7 @@ class HashMap : public detail::HashMapBase {
 
     template<typename TKey>
     RealNode(TKey&& key, T value)
-        : key(key), value(Move(value)) {}
+        : key(key), value(move(value)) {}
 
     K key;
     T value;
@@ -173,7 +173,7 @@ class HashMap : public detail::HashMapBase {
     } else {
       node = Allocate<RealNode>(1);
     }
-    new (node) RealNode(Forward<U>(key), Move(value));
+    new (node) RealNode(Forward<U>(key), move(value));
     node->next = next;
     node->hash = hash;
     ++size_;
@@ -396,11 +396,11 @@ inline void HashMap<K, T>::Set(U&& key, T value) {
   if (*entry != sentinel_) {
     T& value = RealNode::Cast(*entry)->value;
     value.~T();
-    new(&value) T(Move(value));
+    new(&value) T(move(value));
   } else {
     if (WillGrow(1))
       entry = FindEntry(key, hash);
-    *entry = CreateNode(sentinel_, hash, Forward<U>(key), Move(value));
+    *entry = CreateNode(sentinel_, hash, Forward<U>(key), move(value));
   }
 }
 
@@ -416,7 +416,7 @@ inline T* HashMap<K, T>::TryAdd(U&& key, T value) {
   if (*entry != sentinel_)
     return nullptr;
 
-  RealNode* node = CreateNode(sentinel_, hash, Forward<U>(key), Move(value));
+  RealNode* node = CreateNode(sentinel_, hash, Forward<U>(key), move(value));
   *entry = node;
   return &node->value;
 }

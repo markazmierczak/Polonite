@@ -14,12 +14,6 @@ class List;
 template<typename T>
 struct TIsContiguousContainerTmpl<List<T>> : TTrue {};
 
-using String = List<char>;
-using String16 = List<char16_t>;
-#if SIZEOF_WCHAR_T == 2
-using WString = List<wchar_t>;
-#endif
-
 } // namespace stp
 
 #endif // STP_BASE_CONTAINERS_LISTFWD_H_

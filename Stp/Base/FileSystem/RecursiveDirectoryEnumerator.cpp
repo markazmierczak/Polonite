@@ -12,12 +12,12 @@ RecursiveDirectoryEnumerator::~RecursiveDirectoryEnumerator() {}
 
 SystemErrorCode RecursiveDirectoryEnumerator::TryOpen(FilePath root_path) {
   ASSERT(!IsOpen());
-  current_dir_path_ = Move(root_path);
+  current_dir_path_ = move(root_path);
   return base_.TryOpen(root_path);
 }
 
 void RecursiveDirectoryEnumerator::Open(FilePath root_path) {
-  auto error_code = TryOpen(Move(root_path));
+  auto error_code = TryOpen(move(root_path));
   if (!IsOk(error_code))
     throw FileSystemException(error_code, current_dir_path_);
 }

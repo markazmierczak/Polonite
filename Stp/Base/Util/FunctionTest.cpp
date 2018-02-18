@@ -39,7 +39,7 @@ TEST(Function, InvokeFunctor) {
       "sizeof(Function) is much larger than expected");
   func(5, 123);
 
-  Function<int(int)> getter = Move(func);
+  Function<int(int)> getter = move(func);
 
   EXPECT_TRUE(getter.IsHeapAllocated());
 
@@ -111,14 +111,14 @@ TEST(Function, NonCopyableLambda) {
   } foo_data = {{0}};
   ALLOW_UNUSED_LOCAL(foo_data);
 
-  auto functor = [up = Move(ptr_int), foo_data]() mutable {
+  auto functor = [up = move(ptr_int), foo_data]() mutable {
     (void)foo_data;
     return ++*up;
   };
 
   EXPECT_EQ(901, functor());
 
-  Function<int(void)> func = Move(functor);
+  Function<int(void)> func = move(functor);
   EXPECT_TRUE(func.IsHeapAllocated());
 
   EXPECT_EQ(902, func());
@@ -181,7 +181,7 @@ TEST(Function, DeducableArguments) {
 TEST(Function, SelfMove) {
   Function<int()> f = [] { return 42; };
   Function<int()>& g = f;
-  f = Move(g);
+  f = move(g);
   EXPECT_EQ(42, f());
 
   f = [] { return 43; };

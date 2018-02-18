@@ -48,8 +48,8 @@ class ScopeGuard {
  public:
   typedef TCondition ConditionType;
 
-  explicit ScopeGuard(TAction action) noexcept(noexcept(TAction(Move(action))))
-      : action_(Move(action)) {}
+  explicit ScopeGuard(TAction action) noexcept(noexcept(TAction(move(action))))
+      : action_(move(action)) {}
 
   ~ScopeGuard() noexcept(!TCondition::MayThrow || noexcept(action_())) {
     if (condition_.ShouldExecute())
@@ -57,7 +57,7 @@ class ScopeGuard {
   }
 
   ScopeGuard(ScopeGuard&& other)
-      : action_(Move(other.action_)),
+      : action_(move(other.action_)),
         condition_(other.condition_) {
     other.Cancel();
   }

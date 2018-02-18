@@ -84,7 +84,7 @@ struct NullableTmpl<OwnPtr<T>> {
 template<typename T, typename TAllocator>
 template<typename... TArgs>
 inline OwnPtr<T, TAllocator> OwnPtr<T, TAllocator>::New(TArgs&&... args) {
-  if (TIsNoexceptConstructible<T, TArgs...>) {
+  if constexpr (TIsNoexceptConstructible<T, TArgs...>) {
     void* raw_ptr = TAllocator::Allocate(isizeof(T));
     return OwnPtr(new(raw_ptr) T(Forward<TArgs>(args)...));
   } else {

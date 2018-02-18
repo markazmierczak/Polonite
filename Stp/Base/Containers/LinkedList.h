@@ -103,14 +103,14 @@ class LinkedListIterator {
   using NodeType = LinkedListNode<T>;
 
   explicit LinkedListIterator(LinkedList<T>* list)
-      : ptr_(list->root()), root_(*list->root()) {}
+      : ptr_(list->root()->next()), root_(*list->root()) {}
 
   T& operator*() const { return *ptr_->that(); }
   T* operator->() const { return ptr_->that(); }
   T* get() const { return ptr_->that(); }
 
   void MoveNext() { ptr_ = ptr_->next(); }
-  bool HasNext() { return ptr_->next() != &root_; }
+  bool IsValid() { return ptr_ != &root_; }
 
  private:
   NodeType* ptr_;

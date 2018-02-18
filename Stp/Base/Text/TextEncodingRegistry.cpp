@@ -62,8 +62,7 @@ class TextEncodingRegistry {
   template<typename TFunctor>
   TextEncoding Resolve(TFunctor&& functor) {
     LinkedListIterator<TextEncodingProvider> iter(&providers_);
-    while (iter.HasNext()) {
-      iter.MoveNext();
+    for (; iter.IsValid(); iter.MoveNext()) {
       TextEncoding encoding = functor(iter.get());
       if (encoding.IsValid())
         return encoding;

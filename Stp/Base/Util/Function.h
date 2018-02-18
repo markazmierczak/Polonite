@@ -63,7 +63,7 @@ struct Manager {
         that.AsLocal<TFunction>().~TFunction();
         break;
       case MoveOperation:
-        new (that.local) TFunction(Move(other->AsLocal<TFunction>()));
+        new (that.local) TFunction(move(other->AsLocal<TFunction>()));
         other->AsLocal<TFunction>().~TFunction();
         break;
       case GetMemorySpaceOperation:
@@ -111,7 +111,7 @@ class Function<TResult(TArgs...)> {
   Function(const Function&) = delete;
   Function& operator=(const Function& other) = delete;
 
-  Function(Function&& other) noexcept { Init(Move(other)); }
+  Function(Function&& other) noexcept { Init(move(other)); }
   Function& operator=(Function&& other) noexcept;
 
   Function(nullptr_t) {}
@@ -212,7 +212,7 @@ inline Function<TResult(TArgs...)>& Function<TResult(TArgs...)>::operator=(
     Function&& other) noexcept {
   if (this != &other) {
     Destroy(false);
-    Init(Move(other));
+    Init(move(other));
   }
   return *this;
 }

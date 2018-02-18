@@ -28,7 +28,7 @@ class Stack {
   const T& Peek() const { return list_.GetLast(); }
   T& Peek() { return list_.GetLast(); }
 
-  void Push(T item) { list_.Add(Move(item)); }
+  void Push(T item) { list_.Add(move(item)); }
   T Pop();
 
   const T* TryPeek() const { return IsEmpty() ? nullptr : &Peek(); }
@@ -55,7 +55,7 @@ class Stack {
 
 template<typename T, class TList>
 inline T Stack<T, TList>::Pop() {
-  T value = Move(list_.GetLast());
+  T value = move(list_.GetLast());
   list_.RemoveLast();
   return value;
 }
