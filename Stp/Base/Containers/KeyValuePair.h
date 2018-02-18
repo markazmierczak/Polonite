@@ -30,7 +30,7 @@ class KeyValuePair {
     return l.key_ == r.key_ && l.value_ == r.value_;
   }
   friend bool operator!=(const KeyValuePair& l, const KeyValuePair& r) { return !operator==(l, r); }
-  friend int Compare(const KeyValuePair& l, const KeyValuePair& r) { return Compare(l.key_, r.key_); }
+  friend int compare(const KeyValuePair& l, const KeyValuePair& r) { return compare(l.key_, r.key_); }
 
  private:
   K key_;

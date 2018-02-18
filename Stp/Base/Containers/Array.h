@@ -48,7 +48,7 @@ struct Array {
   friend constexpr void swap(Array& lhs, Array& rhs) noexcept { swap(lhs.data_, rhs.data_); }
   friend constexpr bool operator==(const Array& lhs, SpanType rhs) { return operator==(lhs.ToSpan(), rhs); }
   friend constexpr bool operator!=(const Array& lhs, SpanType rhs) { return operator==(lhs.ToSpan(), rhs); }
-  friend int Compare(const Array& lhs, SpanType rhs) { return Compare(lhs.ToSpan(), rhs); }
+  friend int compare(const Array& lhs, SpanType rhs) { return compare(lhs.ToSpan(), rhs); }
 
   friend constexpr const T* begin(const Array& x) { return x.data_; }
   friend constexpr const T* end(const Array& x) { return x.data_ + N; }

@@ -16,19 +16,19 @@ BufferedStream::~BufferedStream() {
 
   // Free internal buffer if any.
   if (buffer_)
-    Free(buffer_);
+    freeMemory(buffer_);
 }
 
 void BufferedStream::EnsureBufferAllocated() {
   if (!buffer_ && buffer_size_ > 0)
-    buffer_ = Allocate<byte_t>(buffer_size_);
+    buffer_ = (byte_t*)allocateMemory(buffer_size_);
 }
 
 void BufferedStream::SetBufferSize(int new_size) {
   ASSERT(new_size > 0);
   if (buffer_) {
     FlushBuffers();
-    buffer_ = Reallocate(buffer_, ToUnsigned(new_size));
+    buffer_ = (byte_t*)reallocateMemory(buffer_, new_size);
   }
   buffer_size_ = new_size;
 }

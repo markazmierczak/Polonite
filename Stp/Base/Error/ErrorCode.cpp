@@ -10,10 +10,10 @@
 
 namespace stp {
 
-int Compare(const ErrorCode& l, const ErrorCode& r) noexcept {
-  int rv = Compare(&l.GetCategory(), &r.GetCategory());
+int compare(const ErrorCode& l, const ErrorCode& r) noexcept {
+  int rv = compare(&l.GetCategory(), &r.GetCategory());
   if (!rv)
-    rv = Compare(l.GetCode(), r.GetCode());
+    rv = compare(l.GetCode(), r.GetCode());
   return rv;
 }
 

@@ -4,63 +4,32 @@
 #ifndef STP_BASE_MEMORY_ALLOCATE_H_
 #define STP_BASE_MEMORY_ALLOCATE_H_
 
-#include "Base/Debug/Assert.h"
-#include "Base/Error/BasicExceptions.h"
-#include "Base/Type/Limits.h"
+#include "Base/Export.h"
 #include "Base/Type/Sign.h"
 
+#include <new>
 #include <stdlib.h>
 
 namespace stp {
 
-// Will not work for over-aligned types (like SSE).
-template<typename T, typename TSize = int>
-inline T* TryAllocate(TSize count = 1) noexcept {
-  ASSERT(count > 0);
-  static_assert(alignof(T) <= alignof(max_align_t), "!");
-  auto ucount = ToUnsigned(count);
-  if (UNLIKELY(Limits<size_t>::Max / sizeof(T) < ucount))
-    return nullptr;
-  return (T*)::malloc(ucount * sizeof(T));
+inline void* tryAllocateMemory(int size) noexcept {
+  return ::malloc(ToUnsigned(size));
 }
-
-// |ptr| may be null.
-template<typename T, typename TSize>
-inline T* TryReallocate(T* ptr, TSize new_count) noexcept {
-  ASSERT(new_count > 0);
-  static_assert(alignof(T) <= alignof(max_align_t), "!");
-  auto ucount = ToUnsigned(new_count);
-  if (UNLIKELY(Limits<size_t>::Max / sizeof(T) < ucount))
-    return nullptr;
-  return (T*)::realloc(ptr, ucount * sizeof(T));
+inline void* tryReallocateMemory(void* ptr, int size) noexcept {
+  return ::realloc(ptr, ToUnsigned(size));
 }
+inline void freeMemory(void* ptr) noexcept { ::free(ptr); }
 
-// |ptr| may be null.
-inline void Free(void* ptr) noexcept { ::free(ptr); }
-
-template<typename T, typename TSize = int>
-inline T* Allocate(TSize count = 1) {
-  T* ptr = TryAllocate<T, TSize>(count);
-  if (!ptr)
-    throw OutOfMemoryException();
-  return ptr;
-}
-
-template<typename T, typename TSize>
-inline T* Reallocate(T* ptr, TSize new_count) {
-  ptr = TryReallocate<T, TSize>(ptr, new_count);
-  if (!ptr)
-    throw OutOfMemoryException();
-  return ptr;
-}
+BASE_EXPORT void* allocateMemory(int size);
+BASE_EXPORT void* reallocateMemory(void* ptr, int size);
 
 class DefaultAllocator {
  public:
-  static void* Allocate(int size) {
-    return operator new(ToUnsigned(size));
+  static void* allocate(int size) {
+    return allocateMemory(size);
   }
-  static void Deallocate(void* ptr, int size) {
-    return operator delete(ptr);
+  static void deallocate(void* ptr, int size) noexcept {
+    return freeMemory(ptr);
   }
 };
 

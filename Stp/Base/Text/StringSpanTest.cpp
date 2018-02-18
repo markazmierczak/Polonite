@@ -239,7 +239,7 @@ TEST(StringSpanTest, IsAscii) {
   // Also, test that a non-ASCII character will be detected regardless of its
   // position inside the string.
   {
-    const int string_length = ArraySizeOf(char_ascii) - 1;
+    const int string_length = isizeofArray(char_ascii) - 1;
     for (int offset = 0; offset < 8; ++offset) {
       for (int len = 0, max_len = string_length - offset; len < max_len; ++len) {
         EXPECT_TRUE(StringSpan(char_ascii + offset, len).IsAscii());
@@ -253,7 +253,7 @@ TEST(StringSpanTest, IsAscii) {
   }
 
   {
-    const int string_length = ArraySizeOf(char16_ascii) - 1;
+    const int string_length = isizeofArray(char16_ascii) - 1;
     for (int offset = 0; offset < 4; ++offset) {
       for (int len = 0, max_len = string_length - offset; len < max_len; ++len) {
         EXPECT_TRUE(String16Span(char16_ascii + offset, len).IsAscii());

@@ -24,12 +24,12 @@ namespace stp {
 
 Exception::~Exception() {
   if (msg_capacity_ != 0)
-    Free(msg_data_);
+    freeMemory(msg_data_);
 }
 
 Exception::Exception(const Exception& other) {
   if (other.msg_capacity_ != 0) {
-    msg_data_ = Allocate<char>(other.msg_capacity_);
+    msg_data_ = (char*)allocateMemory(other.msg_capacity_);
     msg_capacity_ = other.msg_capacity_;
     UninitializedCopy(msg_data_, other.msg_data_, other.msg_size_);
   } else {
@@ -66,13 +66,11 @@ void Exception::AddMessage(const StringSpan& next, bool literal) {
     int new_capacity = Max(msg_size_ << 1, total_size);
 
     char* new_data;
-    if (msg_capacity_ == 0)
-      new_data = Allocate<char>(new_capacity);
-    else
-      new_data = Reallocate(msg_data_, ToUnsigned(new_capacity));
-    if (!new_data)
-      throw OutOfMemoryException() << new_capacity;
-
+    if (msg_capacity_ == 0) {
+      new_data = (char*)allocateMemory(new_capacity);
+    } else {
+      new_data = (char*)reallocateMemory(msg_data_, new_capacity);
+    }
     if (msg_capacity_ == 0) {
       if (msg_size_ != 0)
         UninitializedCopy(new_data, msg_data_, msg_size_);

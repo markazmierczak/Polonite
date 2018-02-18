@@ -6,7 +6,6 @@
 
 #include "Base/Debug/Assert.h"
 #include "Base/Memory/Allocate.h"
-#include "Base/Type/ComparableFwd.h"
 #include "Base/Type/NullableFwd.h"
 #include "Base/Type/Variable.h"
 
@@ -68,7 +67,7 @@ class OwnPtr {
  private:
   void Destroy(T* ptr) {
     ptr->~T();
-    TAllocator::Deallocate(ptr, isizeof(T));
+    TAllocator::deallocate(ptr, isizeof(T));
   }
 
   T* ptr_ = nullptr;
@@ -85,15 +84,15 @@ template<typename T, class TAllocator>
 template<typename... TArgs>
 inline OwnPtr<T, TAllocator> OwnPtr<T, TAllocator>::New(TArgs&&... args) {
   if constexpr (TIsNoexceptConstructible<T, TArgs...>) {
-    void* raw_ptr = TAllocator::Allocate(isizeof(T));
+    void* raw_ptr = TAllocator::allocate(isizeof(T));
     return OwnPtr(new(raw_ptr) T(Forward<TArgs>(args)...));
   } else {
-    void* raw_ptr = TAllocator::Allocate(isizeof(T));
+    void* raw_ptr = TAllocator::allocate(isizeof(T));
     T* ptr;
     try {
       ptr = new(raw_ptr) T(Forward<TArgs>(args)...);
     } catch (...) {
-      TAllocator::Deallocate(ptr, isizeof(T));
+      TAllocator::deallocate(ptr, isizeof(T));
       throw;
     }
     return OwnPtr(ptr);

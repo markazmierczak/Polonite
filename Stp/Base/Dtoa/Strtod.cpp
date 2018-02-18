@@ -85,7 +85,7 @@ static const double ExactPowersOfTen[] = {
   // 10^22 = 0x21e19e0c9bab2400000 = 0x878678326eac9 * 2^22
   10000000000000000000000.0
 };
-static constexpr int ExactPowersOfTenSize = ArraySizeOf(ExactPowersOfTen);
+static constexpr int ExactPowersOfTenSize = isizeofArray(ExactPowersOfTen);
 
 // Maximum number of significant digits in the decimal representation.
 // In fact the value is 772 , but to give us some margin we round up to 780.
@@ -393,7 +393,7 @@ static double BignumStrtod(Vector<const char> buffer,
   } else {
     input.ShiftLeft(-upper_boundary.e());
   }
-  int comparison = Bignum::Compare(input, boundary);
+  int comparison = Bignum::compare(input, boundary);
   if (comparison < 0)
     return guess;
   if (comparison > 0)

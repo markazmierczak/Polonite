@@ -73,7 +73,7 @@ bool Debugger::IsPresent() {
   struct kinfo_proc info;
   size_t info_size = sizeof(info);
 
-  int sysctl_result = sysctl(mib, ArraySizeOf(mib), &info, &info_size, NULL, 0);
+  int sysctl_result = sysctl(mib, isizeofArray(mib), &info, &info_size, NULL, 0);
   ASSERT(sysctl_result == 0);
   if (sysctl_result != 0) {
     is_set = true;

@@ -25,11 +25,11 @@ Several attributes are not yet in standard (as of C++14) but available in all co
 
   int foo() WARN_UNUSED_RESULT
 
-``IgnoreResult(x)`` - Used to explicitly mark the return value of a function as unused. If you are really sure you don't want to do anything with the return value of a function that has been marked ``WARN_UNUSED_RESULT``, wrap it with this. Example::
+``ignoreResult(x)`` - Used to explicitly mark the return value of a function as unused. If you are really sure you don't want to do anything with the return value of a function that has been marked ``WARN_UNUSED_RESULT``, wrap it with this. Example::
 
   OwnPtr<MyType> my_var = ...;
   if (TakeOwnership(my_var.get()) == Success)
-    IgnoreResult(my_var.release());
+    ignoreResult(my_var.release());
 
 `Inline` Attributes
 -------------------

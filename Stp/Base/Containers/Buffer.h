@@ -82,7 +82,7 @@ class Buffer {
   }
   friend bool operator==(const Buffer& l, const SpanType& r) { return l.ToSpan() == r; }
   friend bool operator!=(const Buffer& l, const SpanType& r) { return l.ToSpan() != r; }
-  friend int Compare(const Buffer& l, const SpanType& r) { return Compare(l.ToSpan(), r); }
+  friend int compare(const Buffer& l, const SpanType& r) { return compare(l.ToSpan(), r); }
   friend HashCode Hash(const Buffer& x) { return HashBuffer(x.data_, x.size_); }
 
   friend void Format(TextWriter& out, const Buffer& x, const StringSpan& opts) {
@@ -111,7 +111,7 @@ class Buffer {
 
   void FreeIfNotNull(void* data) {
     if (data)
-      Free(data);
+      freeMemory(data);
   }
 
   SpanType ToSpan() const { return SpanType(data_, size_); }
@@ -196,9 +196,9 @@ inline void Buffer::Assign(SpanType src) {
 inline void Buffer::ResizeStorage(int new_capacity) {
   ASSERT(new_capacity >= 0 && new_capacity != capacity_);
   if (size_) {
-    data_ = Reallocate(data_, ToUnsigned(new_capacity));
+    data_ = (byte_t*)reallocateMemory(data_, new_capacity);
   } else {
-    byte_t* old_data = exchange(data_, Allocate<byte_t>(new_capacity));
+    byte_t* old_data = exchange(data_, (byte_t*)allocateMemory(new_capacity));
     FreeIfNotNull(old_data);
   }
   capacity_ = new_capacity;
@@ -217,7 +217,7 @@ inline void Buffer::ShrinkCapacity(int request) {
     ResizeStorage(request);
   } else {
     capacity_ = 0;
-    Free(exchange(data_, nullptr));
+    freeMemory(exchange(data_, nullptr));
   }
 }
 
@@ -312,7 +312,7 @@ inline void Buffer::InsertMany(int at, int n, TAction&& action) {
 
     int new_size = old_size + n;
     int new_capacity = RecommendCapacity(new_size);
-    byte_t* new_d = Allocate<byte_t>(new_capacity);
+    byte_t* new_d = (byte_t*)allocateMemory(new_capacity);
     action(new_d + at);
     data_ = new_d;
     size_ = new_size;
@@ -320,7 +320,7 @@ inline void Buffer::InsertMany(int at, int n, TAction&& action) {
     if (old_capacity) {
       ::memcpy(new_d, old_d, ToUnsigned(at));
       ::memcpy(new_d + at + n, old_d + at, ToUnsigned(old_size - at));
-      Free(old_d);
+      freeMemory(old_d);
     }
   }
 }

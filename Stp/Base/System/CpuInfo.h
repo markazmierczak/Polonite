@@ -111,7 +111,7 @@ constexpr CpuInfo::Features CpuInfo::CompilerFeatures() {
 
 inline bool CpuInfo::Supports(CpuFeature feature) {
   constexpr Features compiler_features = CompilerFeatures();
-  return ((g_features_ | compiler_features) & ToUnderlying(feature)) != 0;
+  return ((g_features_ | compiler_features) & toUnderlying(feature)) != 0;
 }
 
 } // namespace stp

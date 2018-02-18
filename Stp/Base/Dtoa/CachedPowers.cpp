@@ -135,7 +135,7 @@ static const CachedPower CachedPowers[] = {
 };
 
 #if ASSERT_IS_ON
-static constexpr int CachedPowersLength = ArraySizeOf(CachedPowers);
+static constexpr int CachedPowersLength = isizeofArray(CachedPowers);
 #endif
 
 static constexpr int CachedPowersOffset = 348; // -kCachedPowers[0].decimal_exponent

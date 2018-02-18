@@ -67,7 +67,7 @@ TEST(LineTest, Intersects) {
     { L - 10, T, R + 10, T }, { L, T, R, T },
     { L - 10, B, R + 10, B }, { L, B, R, B },
   };
-  for (int i = 0; i < ArraySizeOf(Partial); i += 2) {
+  for (int i = 0; i < isizeofArray(Partial); i += 2) {
     EXPECT_TRUE(Line2::Intersects(Partial[i], RV, &dst));
     EXPECT_EQ(Partial[i + 1], dst);
   }

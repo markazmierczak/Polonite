@@ -105,7 +105,7 @@ TEST(Vector2Test, Scale) {
     { 0, 1.2f, 3.3f, 5.6f }
   };
 
-  for (int i = 0; i < ArraySizeOf(double_values); ++i) {
+  for (int i = 0; i < isizeofArray(double_values); ++i) {
     Vector2 v(double_values[i][0], double_values[i][1]);
     v = v.GetScaled(double_values[i][2], double_values[i][3]);
     EXPECT_EQ(v.x, double_values[i][0] * double_values[i][2]);
@@ -124,7 +124,7 @@ TEST(Vector2Test, Scale) {
     { 0, 1.2f, 3.3f }
   };
 
-  for (int i = 0; i < ArraySizeOf(single_values); ++i) {
+  for (int i = 0; i < isizeofArray(single_values); ++i) {
     Vector2 v(single_values[i][0], single_values[i][1]);
     v *= single_values[i][2];
     EXPECT_EQ(v.x, single_values[i][0] * single_values[i][2]);

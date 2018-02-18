@@ -25,15 +25,15 @@ class FlatMap {
 
   struct KeyComparer {
     int operator()(const PairType& l, const PairType& r) const {
-      return Compare(l.key(), r.key());
+      return compare(l.key(), r.key());
     }
     template<typename U>
     int operator()(const U& l, const PairType& r) const {
-      return Compare(l, r.key());
+      return compare(l, r.key());
     }
     template<typename U>
     int operator()(const PairType& l, const U& r) const {
-      return Compare(l.key(), r);
+      return compare(l.key(), r);
     }
   };
 
@@ -145,7 +145,7 @@ class FlatMap {
   friend bool operator==(const FlatMap& l, const FlatMap& r) { return l.list_ == r.list_; }
   friend bool operator!=(const FlatMap& l, const FlatMap& r) { return !(l == r); }
   friend HashCode Hash(const FlatMap& x) { return Hash(x.list_); }
-  friend int Compare(const FlatMap& l, FlatMap r) { return Compare(l.list_, r.list_); }
+  friend int compare(const FlatMap& l, FlatMap r) { return compare(l.list_, r.list_); }
   friend const PairType* begin(const FlatMap& x) { return begin(x.list_); }
   friend const PairType* end(const FlatMap& x) { return end(x.list_); }
   friend PairType* begin(FlatMap& x) { return begin(x.list_); }
@@ -234,8 +234,8 @@ inline bool FlatMap<K, T, TList>::TryRemove(const U& key) {
 template<typename K, typename T, class TList>
 template<typename U>
 inline void FlatMap<K, T, TList>::InsertAt(int at, U&& key, T value) {
-  ASSERT(at == 0 || Compare(list_[at - 1].key(), key) < 0);
-  ASSERT(at == size() || Compare(key, list_[at].key()) < 0);
+  ASSERT(at == 0 || compare(list_[at - 1].key(), key) < 0);
+  ASSERT(at == size() || compare(key, list_[at].key()) < 0);
   list_.Insert(at, PairType(Forward<U>(key), move(value)));
 }
 

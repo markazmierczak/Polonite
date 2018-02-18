@@ -104,7 +104,7 @@ static void safe_strerror_r(int err, char* buf, size_t len) {
 
 void Format(TextWriter& out, PosixErrorCode code) {
   char buf[256];
-  safe_strerror_r(ToUnderlying(code), buf, sizeof(buf));
+  safe_strerror_r(toUnderlying(code), buf, sizeof(buf));
   out << MakeSpanFromNullTerminated(buf);
   out << ", code=" << code;
 }

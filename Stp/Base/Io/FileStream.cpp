@@ -20,7 +20,7 @@ FileStream::~FileStream() {
     if (lifetime_ == AutoClose)
       native_.Reset();
     else
-      IgnoreResult(native_.release());
+      ignoreResult(native_.release());
   }
 }
 

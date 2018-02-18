@@ -6,7 +6,9 @@
 
 #include "Base/Containers/ListFwd.h"
 #include "Base/Containers/Span.h"
+#include "Base/Error/BasicExceptions.h"
 #include "Base/Memory/Allocate.h"
+#include "Base/Type/Limits.h"
 
 namespace stp {
 
@@ -105,7 +107,7 @@ class List {
   }
   friend bool operator==(const List& l, const SpanType& r) { return l.ToSpan() == r; }
   friend bool operator!=(const List& l, const SpanType& r) { return l.ToSpan() != r; }
-  friend int Compare(const List& l, const SpanType& r) { return Compare(l.ToSpan(), r); }
+  friend int compare(const List& l, const SpanType& r) { return compare(l.ToSpan(), r); }
 
   friend const T* begin(const List& x) { return x.data_; }
   friend const T* end(const List& x) { return x.data_ + x.size_; }
@@ -127,7 +129,7 @@ class List {
   static void DestroyAndFree(T* data, int size, int capacity) {
     if (data) {
       Destroy(data, size);
-      Free(data);
+      freeMemory(data);
     }
   }
 
@@ -172,8 +174,8 @@ inline bool operator!=(const T (&lhs)[N], const List<T>& rhs) {
   return operator!=(MakeSpan(lhs), MakeSpan(rhs));
 }
 template<typename T, int N>
-inline int Compare(const T (&lhs)[N], const List<T>& rhs) {
-  return Compare(MakeSpan(lhs), MakeSpan(rhs));
+inline int compare(const T (&lhs)[N], const List<T>& rhs) {
+  return compare(MakeSpan(lhs), MakeSpan(rhs));
 }
 
 template<typename T, TEnableIf<TIsHashable<T>>* = nullptr>
@@ -239,15 +241,15 @@ inline void List<T>::ResizeStorage(int new_capacity) {
   ASSERT(new_capacity >= 0 && new_capacity != capacity_);
 
   if (size_ && TIsTriviallyRelocatable<T>) {
-    data_ = Reallocate(data_, ToUnsigned(new_capacity + CapacityIncrement_));
+    data_ = (T*)reallocateMemory(data_, (new_capacity + CapacityIncrement_) * isizeof(T));
     capacity_ = new_capacity;
   } else {
-    T* new_data = Allocate<T>(new_capacity + CapacityIncrement_);
+    T* new_data = (T*)allocateMemory((new_capacity + CapacityIncrement_) * isizeof(T));
     capacity_ = new_capacity;
     T* old_data = exchange(data_, new_data);
     if (old_data) {
       UninitializedRelocate(new_data, old_data, size_);
-      Free(old_data);
+      freeMemory(old_data);
     }
   }
 }
@@ -271,7 +273,7 @@ inline void List<T>::ShrinkCapacity(int request) {
     ResizeStorage(request);
   } else {
     capacity_ = 0;
-    Free(exchange(data_, nullptr));
+    freeMemory(exchange(data_, nullptr));
   }
 }
 
@@ -398,7 +400,7 @@ inline void List<T>::Insert(int at, T item) {
 
     int new_size = old_size + 1;
     int new_capacity = RecommendCapacity(new_size);
-    T* new_d = Allocate<T>(new_capacity + CapacityIncrement_);
+    T* new_d = (T*)allocateMemory((new_capacity + CapacityIncrement_) * isizeof(T));
 
     new(new_d + at) T(move(item));
     data_ = new_d;
@@ -407,7 +409,7 @@ inline void List<T>::Insert(int at, T item) {
     if (old_capacity) {
       UninitializedRelocate(new_d, old_d, at);
       UninitializedRelocate(new_d + at + 1, old_d + at, old_size - at);
-      Free(old_d);
+      freeMemory(old_d);
     }
   }
 }
@@ -461,12 +463,12 @@ inline void List<T>::InsertMany(int at, int n, TAction&& action) {
 
     int new_size = old_size + n;
     int new_capacity = RecommendCapacity(new_size);
-    T* new_d = Allocate<T>(new_capacity + CapacityIncrement_);
+    T* new_d = (T*)allocateMemory((new_capacity + CapacityIncrement_) * isizeof(T));
 
     try {
       action(new_d + at);
     } catch (...) {
-      Free(new_d);
+      freeMemory(new_d);
       throw;
     }
     data_ = new_d;
@@ -475,7 +477,7 @@ inline void List<T>::InsertMany(int at, int n, TAction&& action) {
     if (old_capacity) {
       UninitializedRelocate(new_d, old_d, at);
       UninitializedRelocate(new_d + at + n, old_d + at, old_size - at);
-      Free(old_d);
+      freeMemory(old_d);
     }
   }
 }

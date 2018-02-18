@@ -19,7 +19,7 @@
 
    .. code::
 
-      int Compare(const T& lhs, const T& rhs);
+      int compare(const T& lhs, const T& rhs);
       TIsTriviallyComparableTmpl<T>
 
 **EqualityComparable**

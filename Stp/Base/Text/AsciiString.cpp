@@ -18,7 +18,7 @@ int CompareIgnoreCaseAscii(const char* lhs, const char* rhs, int size) {
     char lc = ToLowerAscii(lhs[i]);
     char rc = ToLowerAscii(rhs[i]);
 
-    int diff = Compare(lc, rc);
+    int diff = compare(lc, rc);
     if (diff)
       return diff;
   }

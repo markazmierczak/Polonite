@@ -20,19 +20,4 @@ TEST(BasicTest, AlignedByteArray) {
   EXPECT_EQ(32u, alignof(AlignedByteArray<64, 32>));
 }
 
-namespace {
-struct CompleteType {};
-struct IncompleteType;
-enum CompleteEnum { Value };
-enum class IncompleteEnum;
-} // namespace
-
-TEST(BasicTest, TIsComplete) {
-  EXPECT_TRUE(TIsComplete<CompleteType>);
-  EXPECT_FALSE(TIsComplete<IncompleteType>);
-
-  EXPECT_TRUE(TIsComplete<CompleteEnum>);
-  EXPECT_TRUE(TIsComplete<IncompleteEnum>);
-}
-
 } // namespace stp

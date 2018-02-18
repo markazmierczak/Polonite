@@ -5,7 +5,6 @@
 #define STP_BASE_CONTAINERS_ARRAYOPS_H_
 
 #include "Base/Debug/Assert.h"
-#include "Base/Type/ComparableFwd.h"
 #include "Base/Type/Sign.h"
 #include "Base/Type/Variable.h"
 

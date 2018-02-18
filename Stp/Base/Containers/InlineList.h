@@ -6,7 +6,9 @@
 
 #include "Base/Containers/InlineListFwd.h"
 #include "Base/Containers/Span.h"
+#include "Base/Error/BasicExceptions.h"
 #include "Base/Memory/Allocate.h"
+#include "Base/Type/Limits.h"
 
 namespace stp {
 
@@ -80,7 +82,7 @@ class InlineListBase {
 
   friend bool operator==(const InlineListBase& l, const SpanType& r) { return l.ToSpan() == r; }
   friend bool operator!=(const InlineListBase& l, const SpanType& r) { return l.ToSpan() != r; }
-  friend int Compare(const InlineListBase& l, const SpanType& r) { return Compare(l.ToSpan(), r); }
+  friend int compare(const InlineListBase& l, const SpanType& r) { return compare(l.ToSpan(), r); }
 
   friend const T* begin(const InlineListBase& x) { return x.data_; }
   friend const T* end(const InlineListBase& x) { return x.data_ + x.size_; }
@@ -145,8 +147,8 @@ inline bool operator!=(const T (&lhs)[N], const InlineListBase<T>& rhs) {
   return operator!=(MakeSpan(lhs), MakeSpan(rhs));
 }
 template<typename T, int N>
-inline int Compare(const T (&lhs)[N], const InlineListBase<T>& rhs) {
-  return Compare(MakeSpan(lhs), MakeSpan(rhs));
+inline int compare(const T (&lhs)[N], const InlineListBase<T>& rhs) {
+  return compare(MakeSpan(lhs), MakeSpan(rhs));
 }
 
 template<typename T, TEnableIf<TIsHashable<T>>* = nullptr>
@@ -221,7 +223,7 @@ template<typename T>
 inline void InlineListBase<T>::DestroyAndFree(T* data, int size, int capacity) {
   Destroy(data, size);
   if (data != GetInlineData())
-    Free(data);
+    freeMemory(data);
 }
 
 template<typename T, int N>
@@ -310,13 +312,13 @@ inline void InlineListBase<T>::ResizeStorage(int new_capacity) {
   T* new_data;
   bool was_inline = IsInline();
   if (!was_inline && TIsTriviallyRelocatable<T>) {
-    new_data = Reallocate(old_data, new_capacity + CapacityIncrement_);
+    new_data = (T*)reallocateMemory(old_data, (new_capacity + CapacityIncrement_) * isizeof(T));
     capacity_ = new_capacity;
   } else {
-    new_data = Allocate<T>(new_capacity + CapacityIncrement_);
+    new_data = (T*)allocateMemory((new_capacity + CapacityIncrement_) * isizeof(T));
     UninitializedRelocate(new_data, old_data, size_);
     if (!was_inline) {
-      Free(old_data);
+      freeMemory(old_data);
     }
     capacity_ = new_capacity;
   }
@@ -344,7 +346,7 @@ inline void InlineList<T, N>::ShrinkCapacity(int request) {
     T* heap = exchange(this->data_, this->GetInlineData());
     this->capacity_ = N;
     UninitializedRelocate(this->data_, heap, this->size_);
-    Free(heap);
+    freeMemory(heap);
   }
 }
 
@@ -468,7 +470,7 @@ inline void InlineListBase<T>::Insert(int at, T item) {
 
     int new_size = old_size + 1;
     int new_capacity = RecommendCapacity(new_size);
-    T* new_d = Allocate<T>(new_capacity + CapacityIncrement_);
+    T* new_d = (T*)allocateMemory((new_capacity + CapacityIncrement_) * isizeof(T));
     new(new_d + at) T(move(item));
     bool was_inline = IsInline();
     data_ = new_d;
@@ -477,8 +479,9 @@ inline void InlineListBase<T>::Insert(int at, T item) {
     if (old_capacity) {
       UninitializedRelocate(new_d, old_d, at);
       UninitializedRelocate(new_d + at + 1, old_d + at, old_size - at);
-      if (!was_inline)
-        Free(old_d);
+      if (!was_inline) {
+        freeMemory(old_d);
+      }
     }
   }
 }
@@ -531,12 +534,12 @@ inline void InlineListBase<T>::InsertMany(int at, int n, TAction&& action) {
 
     int new_size = old_size + n;
     int new_capacity = RecommendCapacity(new_size);
-    T* new_d = Allocate<T>(new_capacity + CapacityIncrement_);
+    T* new_d = (T*)allocateMemory((new_capacity + CapacityIncrement_) * isizeof(T));
 
     try {
       action(new_d + at);
     } catch (...) {
-      Free(new_d);
+      freeMemory(new_d);
       throw;
     }
     bool was_inline = IsInline();
@@ -546,8 +549,9 @@ inline void InlineListBase<T>::InsertMany(int at, int n, TAction&& action) {
     if (old_capacity) {
       UninitializedRelocate(new_d, old_d, at);
       UninitializedRelocate(new_d + at + n, old_d + at, old_size - at);
-      if (!was_inline)
-        Free(old_d);
+      if (!was_inline) {
+        freeMemory(old_d);
+      }
     }
   }
 }

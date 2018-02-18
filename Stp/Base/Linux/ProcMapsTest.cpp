@@ -166,7 +166,7 @@ TEST(ProcMapsTest, Permissions) {
          MappedMemoryRegion::EXECUTE | MappedMemoryRegion::PRIVATE},
   };
 
-  for (size_t i = 0; i < ArraySizeOf(kTestCases); ++i) {
+  for (size_t i = 0; i < isizeofArray(kTestCases); ++i) {
     SCOPED_TRACE(
         StringPrintf("kTestCases[%zu] = %s", i, kTestCases[i].input));
 
@@ -201,7 +201,7 @@ TEST(ProcMapsTest, MissingFields) {
     "00400000-0040b000 r-xp 00000000 794418 /bin/cat\n",   // Missing device.
   };
 
-  for (size_t i = 0; i < ArraySizeOf(kTestCases); ++i) {
+  for (size_t i = 0; i < isizeofArray(kTestCases); ++i) {
     SCOPED_TRACE(StringPrintf("kTestCases[%zu] = %s", i, kTestCases[i]));
     std::vector<MappedMemoryRegion> regions;
     EXPECT_FALSE(ParseProcMaps(kTestCases[i], &regions));
@@ -218,7 +218,7 @@ TEST(ProcMapsTest, InvalidInput) {
     "00400000-0040b000 rwxp 00000000 fc:00 parse! /bin/cat\n",
   };
 
-  for (size_t i = 0; i < ArraySizeOf(kTestCases); ++i) {
+  for (size_t i = 0; i < isizeofArray(kTestCases); ++i) {
     SCOPED_TRACE(StringPrintf("kTestCases[%zu] = %s", i, kTestCases[i]));
     std::vector<MappedMemoryRegion> regions;
     EXPECT_FALSE(ParseProcMaps(kTestCases[i], &regions));

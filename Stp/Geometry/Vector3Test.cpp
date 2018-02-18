@@ -80,7 +80,7 @@ TEST(Vector3Test, Scale) {
     { 0, 1.2f, 1.8f, 3.3f, 5.6f, 4.2f }
   };
 
-  for (int i = 0; i < ArraySizeOf(triple_values); ++i) {
+  for (int i = 0; i < isizeofArray(triple_values); ++i) {
     Vector3 v(
         triple_values[i][0],
         triple_values[i][1],
@@ -116,7 +116,7 @@ TEST(Vector3Test, Scale) {
     { 4.5f, 1.2f, 0, 3.3f }
   };
 
-  for (int i = 0; i < ArraySizeOf(single_values); ++i) {
+  for (int i = 0; i < isizeofArray(single_values); ++i) {
     Vector3 v(
         single_values[i][0],
         single_values[i][1],
@@ -157,7 +157,7 @@ TEST(Vector3Test, GetLength) {
       27861786423846742743236423478236784678.236713617231f }
   };
 
-  for (int i = 0; i < ArraySizeOf(float_values); ++i) {
+  for (int i = 0; i < isizeofArray(float_values); ++i) {
     double v0 = float_values[i][0];
     double v1 = float_values[i][1];
     double v2 = float_values[i][2];

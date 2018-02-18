@@ -154,7 +154,7 @@ bool StackTrace::EnableInProcessDump() {
 
 StackTrace::StackTrace() {
   // When walking our own stack, use CaptureStackBackTrace().
-  count_ = CaptureStackBackTrace(0, ArraySizeOf(trace_), trace_, NULL);
+  count_ = CaptureStackBackTrace(0, isizeofArray(trace_), trace_, NULL);
 }
 
 #if COMPILER(MSVC)

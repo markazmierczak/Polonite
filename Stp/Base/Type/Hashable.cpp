@@ -12,7 +12,7 @@ namespace stp {
 static_assert(sizeof(HashCode) == 4, "hashing assumes HashCode is 4 bits wide");
 
 HashCode Finalize(HashCode in_code) {
-  auto code = ToUnderlying(in_code);
+  auto code = toUnderlying(in_code);
   code ^= code >> 16;
   code *= UINT32_C(0x85EBCA6B);
   code ^= code >> 13;
@@ -25,8 +25,8 @@ HashCode Combine(HashCode in_seed, HashCode in_value) {
   constexpr uint32_t C1 = UINT32_C(0xCC9E2D51);
   constexpr uint32_t C2 = UINT32_C(0x1B873593);
 
-  auto seed = ToUnderlying(in_seed);
-  auto value = ToUnderlying(in_value);
+  auto seed = toUnderlying(in_seed);
+  auto value = toUnderlying(in_value);
 
   value *= C1;
   value = RotateBitsRight(value, 15);

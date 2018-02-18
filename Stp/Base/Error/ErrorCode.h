@@ -69,7 +69,7 @@ class ErrorCode final {
   CategoryType category_;
 };
 
-BASE_EXPORT int Compare(const ErrorCode& l, const ErrorCode& r) noexcept;
+BASE_EXPORT int compare(const ErrorCode& l, const ErrorCode& r) noexcept;
 BASE_EXPORT HashCode Hash(const ErrorCode& x) noexcept;
 
 namespace detail {

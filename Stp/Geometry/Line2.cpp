@@ -175,7 +175,7 @@ bool Line2::Intersects(const Line2& line, const Bounds2& clip, Line2* out_clippe
 }
 
 void Line2::Intersect(const Bounds2& bounds) {
-  IgnoreResult(Intersects(*this, bounds, this));
+  ignoreResult(Intersects(*this, bounds, this));
 }
 
 void Line2::Transform(const Affine& affine) {

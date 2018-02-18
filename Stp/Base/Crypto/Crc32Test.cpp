@@ -25,7 +25,7 @@ TEST(Crc32Test, Basic) {
   };
 
   for (const auto& item : cases) {
-    EXPECT_EQ(item.output, ToUnderlying(ComputeCrc32(BufferSpan(item.bytes))));
+    EXPECT_EQ(item.output, toUnderlying(ComputeCrc32(BufferSpan(item.bytes))));
   }
 }
 

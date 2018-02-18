@@ -54,7 +54,7 @@ GetSectionHeaderByType(
         sh_offset + i * sizeof(buf[0]), (byte_t*)buf, num_bytes_to_read);
     ASSERT(len % sizeof(buf[0]) == 0);
     int num_headers_in_buf = len / sizeof(buf[0]);
-    ASSERT(num_headers_in_buf <= ArraySizeOf(buf));
+    ASSERT(num_headers_in_buf <= isizeofArray(buf));
     for (int j = 0; j < num_headers_in_buf; ++j) {
       if (buf[j].sh_type == type) {
         *out = buf[j];
@@ -141,7 +141,7 @@ FindSymbol(uint64_t pc,
     int len = file.PositionalRead(offset, (byte_t*)&buf, sizeof(buf));
     ASSERT(len % SizeOf(buf[0]) == 0);
     int num_symbols_in_buf = len / SizeOf(buf[0]);
-    ASSERT(num_symbols_in_buf <= ArraySizeOf(buf));
+    ASSERT(num_symbols_in_buf <= isizeofArray(buf));
     for (int j = 0; j < num_symbols_in_buf; ++j) {
       const ElfW(Sym)& symbol = buf[j];
       uint64_t start_address = symbol.st_value;

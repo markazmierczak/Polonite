@@ -5,7 +5,7 @@
 #define STP_BASE_TYPE_NULLABLE_H_
 
 #include "Base/Debug/Assert.h"
-#include "Base/Type/ComparableFwd.h"
+#include "Base/Type/Comparable.h"
 #include "Base/Type/FormattableFwd.h"
 #include "Base/Type/HashableFwd.h"
 #include "Base/Type/NullableFwd.h"
@@ -157,8 +157,8 @@ class NullableValue {
   friend constexpr bool operator!=(const NullableValue& opt, nullptr_t) { return opt.IsValid(); }
   friend constexpr bool operator!=(nullptr_t, const NullableValue& opt) { return opt.IsValid(); }
 
-  friend constexpr int Compare(const NullableValue& l, nullptr_t r) { return l ? 1 : 0; }
-  friend constexpr int Compare(nullptr_t l, const NullableValue& r) { return r ? -1 : 0; }
+  friend constexpr int compare(const NullableValue& l, nullptr_t r) { return l ? 1 : 0; }
+  friend constexpr int compare(nullptr_t l, const NullableValue& r) { return r ? -1 : 0; }
 
   constexpr const T* tryGet(const NullableValue& x) { return x.IsValid() ? x.operator->() : nullptr; }
   constexpr T* tryGet(NullableValue& x) { return x.IsValid() ? x.operator->() : nullptr; }
@@ -215,19 +215,19 @@ template<typename T, typename U, TEnableIf<TIsEqualityComparableWith<T, U>>* = n
 constexpr bool operator!=(const T& value, const NullableValue<U>& opt) { return opt != value; }
 
 template<typename T, typename U, TEnableIf<TIsComparableWith<T, U>>* = nullptr>
-constexpr int Compare(const NullableValue<T>& l, const NullableValue<U>& r) {
+constexpr int compare(const NullableValue<T>& l, const NullableValue<U>& r) {
   return l.operator bool() == r.operator bool()
-      ? (l ? Compare(*l, *r) : 0)
+      ? (l ? compare(*l, *r) : 0)
       : (l ? 1 : -1);
 }
 
 template<typename T, typename U, TEnableIf<TIsComparableWith<T, U>>* = nullptr>
-constexpr int Compare(const NullableValue<T>& l, const U& r) {
-  return l ? Compare(*l, r) : -1;
+constexpr int compare(const NullableValue<T>& l, const U& r) {
+  return l ? compare(*l, r) : -1;
 }
 template<typename T, typename U, TEnableIf<TIsComparableWith<T, U>>* = nullptr>
-constexpr int Compare(const T& l, const NullableValue<U>& r) {
-  return l ? Compare(l, *r) : 1;
+constexpr int compare(const T& l, const NullableValue<U>& r) {
+  return l ? compare(l, *r) : 1;
 }
 
 template<typename T, TEnableIf<TIsHashable<T>>* = nullptr>

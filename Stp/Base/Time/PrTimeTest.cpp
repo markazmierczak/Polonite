@@ -75,7 +75,7 @@ TEST_F(PRTimeTest, ParseTimeTest1) {
   char time_buf[BUFFER_SIZE] = {0};
   #if OS(WIN)
   localtime_s(&local_time, &current_time);
-  asctime_s(time_buf, ArraySizeOf(time_buf), &local_time);
+  asctime_s(time_buf, isizeofArray(time_buf), &local_time);
   #elif OS(POSIX)
   localtime_r(&current_time, &local_time);
   asctime_r(&local_time, time_buf);

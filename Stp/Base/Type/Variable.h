@@ -511,6 +511,13 @@ constexpr void RelocateAt(T* target, T& source) {
   }
 }
 
+template<typename T, typename = void>
+struct TIsTriviallyEqualityComparableTmpl :
+    TBoolConstant<TIsScalar<T> && !TIsFloatingPoint<T>> {};
+
+template<typename T>
+constexpr bool TIsTriviallyEqualityComparable = TIsTriviallyEqualityComparableTmpl<T>::Value;
+
 } // namespace stp
 
 #endif // STP_BASE_TYPE_VARIABLE_H_

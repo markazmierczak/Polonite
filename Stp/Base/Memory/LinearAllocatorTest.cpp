@@ -79,9 +79,9 @@ TEST(ContiguousAllocatorTest, Basic) {
 
 TEST(ContiguousAllocatorTest, Alignment) {
   LinearAllocator allocator;
-  IgnoreResult(Allocate<uint8_t>(allocator, 1));
-  IgnoreResult(Allocate<int>(allocator, 1));
-  IgnoreResult(Allocate<uint8_t>(allocator, 1));
+  ignoreResult(Allocate<uint8_t>(allocator, 1));
+  ignoreResult(Allocate<int>(allocator, 1));
+  ignoreResult(Allocate<uint8_t>(allocator, 1));
 
   EXPECT_EQ(allocator.GetTotalUsed(), 9u);
 

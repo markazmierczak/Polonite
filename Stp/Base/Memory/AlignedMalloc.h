@@ -57,8 +57,8 @@ inline TValue* AlignedAllocate(TSize count) {
 template<typename T>
 class AlignedAllocator {
  public:
-  static void* Allocate(int size) { return detail::aligned_malloc(ToUnsigned(size), alignof(T)); }
-  static void Deallocate(void* ptr, int size) { detail::aligned_free(ptr); }
+  static void* allocate(int size) { return detail::aligned_malloc(ToUnsigned(size), alignof(T)); }
+  static void deallocate(void* ptr, int size) { detail::aligned_free(ptr); }
 };
 
 } // namespace stp

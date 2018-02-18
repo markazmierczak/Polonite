@@ -32,7 +32,7 @@ constexpr StringSpan SwitchPrefixes[] = {"--", "-"};
 
 constexpr StringSpan SwitchTerminator = "--";
 
-static int g_switch_prefix_count = ArraySizeOf(SwitchPrefixes);
+static int g_switch_prefix_count = isizeofArray(SwitchPrefixes);
 
 CommandLine* CommandLine::g_for_current_process_ = nullptr;
 
@@ -175,8 +175,8 @@ void CommandLine::ParseFromArgs(const wchar_t* args) {
 
 void CommandLine::SetSlashIsNotASwitch() {
   // The last switch prefix should be slash, so adjust the size to skip it.
-  ASSERT(SwitchPrefixes[ArraySizeOf(SwitchPrefixes) - 1] == "/");
-  g_switch_prefix_count = ArraySizeOf(SwitchPrefixes) - 1;
+  ASSERT(SwitchPrefixes[isizeofArray(SwitchPrefixes) - 1] == "/");
+  g_switch_prefix_count = isizeofArray(SwitchPrefixes) - 1;
 }
 #else
 

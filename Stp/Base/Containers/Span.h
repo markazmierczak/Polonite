@@ -4,8 +4,8 @@
 #ifndef STP_BASE_CONTAINERS_SPAN_H_
 #define STP_BASE_CONTAINERS_SPAN_H_
 
-#include "Base/Containers/ArrayOps.h"
 #include "Base/Containers/SpanFwd.h"
+#include "Base/Type/Comparable.h"
 #include "Base/Type/FormattableFwd.h"
 #include "Base/Type/HashableFwd.h"
 
@@ -85,7 +85,7 @@ class Span {
     return lhs.size_ == rhs.size() && Equals(lhs.data_, rhs.data_, lhs.size_);
   }
   friend bool operator!=(const Span& lhs, const Span& rhs) { return !operator==(lhs, rhs); }
-  friend int Compare(const Span& lhs, const Span& rhs) {
+  friend int compare(const Span& lhs, const Span& rhs) {
     int rv = CompareContiguous(lhs.data_, rhs.data_, lhs.size_ <= rhs.size_ ? lhs.size_ : rhs.size_);
     return rv ? rv : (lhs.size_ - rhs.size_);
   }
@@ -184,7 +184,7 @@ class MutableSpan {
   friend bool operator!=(const MutableSpan& lhs, const Span<T>& rhs) {
     return !operator==(lhs, rhs);
   }
-  friend int Compare(const MutableSpan& lhs, const Span<T>& rhs) {
+  friend int compare(const MutableSpan& lhs, const Span<T>& rhs) {
     int rv = CompareContiguous(lhs.data_, rhs.data(), lhs.size_ <= rhs.size() ? lhs.size_ : rhs.size());
     return rv ? rv : (lhs.size_ - rhs.size());
   }
@@ -246,12 +246,12 @@ inline bool operator!=(const T (&lhs)[N], const MutableSpan<T>& rhs) {
 }
 
 template<typename T, int N>
-inline int Compare(const T (&lhs)[N], const Span<T>& rhs) {
-  return Compare(MakeSpan(lhs), rhs);
+inline int compare(const T (&lhs)[N], const Span<T>& rhs) {
+  return compare(MakeSpan(lhs), rhs);
 }
 template<typename T, int N>
-inline int Compare(const T (&lhs)[N], const MutableSpan<T>& rhs) {
-  return Compare(MakeSpan(lhs), rhs);
+inline int compare(const T (&lhs)[N], const MutableSpan<T>& rhs) {
+  return compare(MakeSpan(lhs), rhs);
 }
 
 template<typename T, TEnableIf<TIsHashable<TRemoveConst<T>>>* = nullptr>

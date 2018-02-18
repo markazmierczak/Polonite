@@ -21,7 +21,7 @@ void Version::SetComponentAt(int at, int value) {
 int Version::CompareTo(const Version& other) const {
   int min_count = Min(components_.size(), other.components_.size());
 
-  int rv = Compare(
+  int rv = compare(
       components_.GetSlice(0, min_count),
       other.components_.GetSlice(0, min_count));
 
@@ -31,7 +31,7 @@ int Version::CompareTo(const Version& other) const {
   if (components_.size() != other.components_.size()) {
     int max_count = Max(components_.size(), other.components_.size());
     for (int i = min_count; i < max_count; ++i) {
-      rv = Compare(GetComponentAt(i), other.GetComponentAt(i));
+      rv = compare(GetComponentAt(i), other.GetComponentAt(i));
       if (rv)
         return rv;
     }

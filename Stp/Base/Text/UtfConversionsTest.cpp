@@ -45,7 +45,7 @@ TEST(UTFStringConversionsTest, ConvertUTF8AndWide) {
   // we round-trip all the wide strings through UTF-8 to make sure everything
   // agrees on the conversion. This uses the stream operators to test them
   // simultaneously.
-  for (size_t i = 0; i < ArraySizeOf(kConvertRoundtripCases); ++i) {
+  for (size_t i = 0; i < isizeofArray(kConvertRoundtripCases); ++i) {
     std::ostringstream utf8;
     utf8 << WideToUtf8(kConvertRoundtripCases[i]);
     std::wostringstream wide;
@@ -93,7 +93,7 @@ TEST(UTFStringConversionsTest, ConvertUTF8ToWide) {
     #endif
   };
 
-  for (size_t i = 0; i < ArraySizeOf(convert_cases); i++) {
+  for (size_t i = 0; i < isizeofArray(convert_cases); i++) {
     std::wstring converted;
     EXPECT_EQ(convert_cases[i].success,
               UTF8ToWide(convert_cases[i].utf8,
@@ -191,10 +191,10 @@ TEST(UTFStringConversionsTest, ConvertMultiString) {
     'b', 'a', 'z', '\0',
     '\0'
   };
-  STLString16Span multistring16(multi16, ArraySizeOf(multi16));
+  STLString16Span multistring16(multi16, isizeofArray(multi16));
   std::string converted = UTF16ToUtf8(multistring16);
-  EXPECT_EQ(ArraySizeOf(multi), converted.length());
-  EXPECT_EQ(STLStringSpan(multi, ArraySizeOf(multi)), converted);
+  EXPECT_EQ(isizeofArray(multi), converted.length());
+  EXPECT_EQ(STLStringSpan(multi, isizeofArray(multi)), converted);
 }
 
 TEST(UTFStringConversionsTest, IsUtf8String) {

@@ -14,8 +14,9 @@ MemoryStream::MemoryStream() {
 }
 
 MemoryStream::~MemoryStream() {
-  if (capacity_ > 0)
-    Free(memory_);
+  if (capacity_ > 0) {
+    freeMemory(memory_);
+  }
 }
 
 void MemoryStream::OpenNewBytes() {
@@ -55,9 +56,9 @@ Buffer MemoryStream::CloseAndrelease() {
 void MemoryStream::Close() {
   ASSERT(IsOpen());
 
-  if (capacity_ > 0)
-    Free(memory_);
-
+  if (capacity_ > 0) {
+    freeMemory(memory_);
+  }
   memory_ = nullptr;
   length_ = 0;
   capacity_ = 0;
@@ -211,7 +212,7 @@ void MemoryStream::SetLength(int64_t new_length) {
       new_capacity = MinCapacity_;
 
     if (new_capacity <= (capacity_ >> 1)) {
-      memory_ = Reallocate(memory_, ToUnsigned(new_capacity));
+      memory_ = (byte_t*)reallocateMemory(memory_, new_capacity);
       ASSERT(memory_ != nullptr, "contracting memory failed");
       capacity_ = new_capacity;
     }
@@ -252,7 +253,7 @@ void MemoryStream::EnsureCapacity(int request) {
   else if (request < MinCapacity_)
     request = MinCapacity_;
 
-  memory_ = Reallocate(memory_, ToUnsigned(request));
+  memory_ = (byte_t*)reallocateMemory(memory_, request);
   capacity_ = request;
 }
 

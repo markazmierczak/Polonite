@@ -29,7 +29,7 @@ bool TryParse(StringSpan input, Crc32Value& out) noexcept {
 static void Format(TextWriter& out, Crc32Value value, bool uppercase) {
   constexpr int NibbleCount = 8;
 
-  auto raw = ToUnderlying(value);
+  auto raw = toUnderlying(value);
   Array<char, NibbleCount> text;
   for (int i = 0; i < NibbleCount; ++i) {
     text[i] = NibbleToHexDigit(raw >> (28 - 4 * i), uppercase);

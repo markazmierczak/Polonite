@@ -20,7 +20,7 @@ enum class HashCode : uint32_t { Zero = 0 };
 #define ialignof(x) static_cast<int>(alignof(x))
 
 template<typename T, int TCount>
-constexpr int ArraySizeOf(T (&array)[TCount]) { return TCount; }
+constexpr int isizeofArray(T (&array)[TCount]) { return TCount; }
 
 #if COMPILER(MSVC)
 typedef double max_align_t;
@@ -41,13 +41,13 @@ typedef struct {
 
 // Casting chars is tricky since char and wchar_t may be signed.
 template<typename T, typename U>
-constexpr T char_cast(U x) { return static_cast<T>(x); }
+constexpr T char_cast(U x) noexcept { return static_cast<T>(x); }
 
 template<typename T>
-constexpr T char_cast(char x) { return static_cast<T>(static_cast<unsigned char>(x)); }
+constexpr T char_cast(char x) noexcept { return static_cast<T>(static_cast<unsigned char>(x)); }
 
 template<typename T>
-constexpr T char_cast(wchar_t x) {
+constexpr T char_cast(wchar_t x) noexcept {
   #if SIZEOF_WCHAR_T == 2
   return static_cast<T>(static_cast<unsigned short>(x));
   #elif SIZEOF_WCHAR_T == 4
@@ -69,7 +69,7 @@ struct TIntegerConstant {
   typedef T ValueType;
   typedef TIntegerConstant<T, V> Type;
 
-  constexpr operator ValueType() const { return Value; }
+  constexpr operator ValueType() const noexcept { return Value; }
 };
 
 template<typename T, T V>
@@ -168,14 +168,8 @@ struct TsAreSameHelper<T1, T2> : TFalse {};
 template<typename T>
 struct TsAreSameHelper<T, T> : TTrue {};
 
-template<typename T>
-char TIsCompleteHelper(int(*)[sizeof(T)]);
-
-template<typename T>
-int TIsCompleteHelper(...);
-
-template<typename T> T&& DeclareHelper(int);
-template<typename T> T DeclareHelper(long);
+template<typename T> T&& declareHelper(int);
+template<typename T> T declareHelper(long);
 
 template<typename T>
 struct TUnderlyingHelper {
@@ -207,16 +201,13 @@ template<typename... Tx>
 constexpr bool TsAreSame = detail::TsAreSameHelper<Tx...>::Value;
 
 template<typename T>
-constexpr bool TIsComplete = sizeof(detail::TIsCompleteHelper<T>(0)) == 1;
-
-template<typename T>
-decltype(detail::DeclareHelper<T>(0)) declval() noexcept;
+decltype(detail::declareHelper<T>(0)) declval() noexcept;
 
 template<typename T>
 using TUnderlying = typename detail::TUnderlyingHelper<T>::Type;
 
 template<typename T, TEnableIf<TIsEnum<T>>* = nullptr>
-constexpr TUnderlying<T> ToUnderlying(T x) {
+constexpr TUnderlying<T> toUnderlying(T x) noexcept {
   return static_cast<TUnderlying<T>>(x);
 }
 

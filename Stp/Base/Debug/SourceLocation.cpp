@@ -17,9 +17,9 @@ StringSpan SourceLocation::GetFileName() const {
 }
 
 int SourceLocation::CompareTo(const SourceLocation& other) const {
-  int diff = Compare(file_name_, other.file_name_);
+  int diff = compare(file_name_, other.file_name_);
   if (!diff)
-    diff = Compare(line_number_, other.line_number_);
+    diff = compare(line_number_, other.line_number_);
   return diff;
 }
 

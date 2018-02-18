@@ -133,7 +133,7 @@ class HashMap : public detail::HashMapBase {
   bool use_binary_bucket_sizes_ = false;
 
   int ConstrainHash(HashCode in_hash) const {
-    auto hash = ToUnderlying(in_hash);
+    auto hash = toUnderlying(in_hash);
     return use_binary_bucket_sizes_
         ? (hash & (bucket_count_ - 1))
         : (hash % bucket_count_);
@@ -171,7 +171,7 @@ class HashMap : public detail::HashMapBase {
       node = free_nodes_;
       free_nodes_ = static_cast<RealNode*>(node->next);
     } else {
-      node = Allocate<RealNode>(1);
+      node = (RealNode*)allocateMemory(isizeof(RealNode));
     }
     new (node) RealNode(Forward<U>(key), move(value));
     node->next = next;
@@ -205,7 +205,7 @@ class HashMap : public detail::HashMapBase {
     RealNode* node = free_nodes_;
     while (node) {
       RealNode* next = static_cast<RealNode*>(node->next);
-      Free(node);
+      freeMemory(node);
       node = next;
     }
     free_nodes_ = nullptr;
@@ -239,14 +239,12 @@ class HashMap : public detail::HashMapBase {
 
 template<typename K, typename T>
 inline void HashMap<K, T>::InitSentinel() {
-  sentinel_ = Allocate<SentinelNode>(1);
-  new(sentinel_) SentinelNode(this);
+  sentinel_ = new SentinelNode(this);
 }
 
 template<typename K, typename T>
 inline void HashMap<K, T>::FiniSentinel() {
-  static_cast<SentinelNode*>(sentinel_)->~SentinelNode();
-  Free(sentinel_);
+  delete static_cast<SentinelNode*>(sentinel_);
 }
 
 template<typename K, typename T>
@@ -255,9 +253,9 @@ inline HashMap<K, T>::~HashMap() {
     DestroyAllNodes();
   DiscardFreeNodes();
 
-  if (buckets_)
-    Free(buckets_);
-
+  if (buckets_) {
+    freeMemory(buckets_);
+  }
   FiniSentinel();
 }
 
@@ -338,7 +336,7 @@ inline void HashMap<K, T>::Rehash(int new_bucket_count) {
   // Assign early - needed by ConstrainHash.
   bucket_count_ = new_bucket_count;
   Entry* old_buckets = buckets_;
-  Entry* new_buckets = Allocate<Entry>(new_bucket_count);
+  Entry* new_buckets = (Entry*)allocateMemory(new_bucket_count);
   buckets_ = new_buckets;
 
   BaseNode* sentinel = sentinel_;
@@ -355,8 +353,9 @@ inline void HashMap<K, T>::Rehash(int new_bucket_count) {
       node = next;
     }
   }
-  if (old_buckets)
-    Free(old_buckets);
+  if (old_buckets) {
+    freeMemory(old_buckets);
+  }
 }
 
 template<typename K, typename T>

@@ -6,7 +6,6 @@
 
 #include "Base/Debug/Assert.h"
 #include "Base/Math/Bits.h"
-#include "Base/Type/ComparableFwd.h"
 #include "Base/Type/FormattableFwd.h"
 #include "Base/Type/HashableFwd.h"
 #include "Base/Type/Variable.h"
@@ -133,11 +132,11 @@ class BitArray {
 
   friend void swap(BitArray& l, BitArray& r) noexcept { swap(l.words_, r.words_); }
   friend bool operator==(const BitArray& l, const BitArray& r) {
-    return memcmp(l.words_, r.words_, sizeof(words_)) == 0;
+    return ::memcmp(l.words_, r.words_, sizeof(words_)) == 0;
   }
   friend bool operator!=(const BitArray& l, const BitArray& r) { return !operator==(l, r); }
-  friend int Compare(const BitArray& l, const BitArray& r) {
-    return memcmp(l.words_, r.words_, sizeof(words_));
+  friend int compare(const BitArray& l, const BitArray& r) {
+    return ::memcmp(l.words_, r.words_, sizeof(words_));
   }
   friend HashCode Hash(const BitArray& x) { return Hash(x.words_, N); }
   friend void Format(TextWriter& out, const BitArray& x, const StringSpan& opts) {

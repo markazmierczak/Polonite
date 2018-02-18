@@ -34,7 +34,7 @@ class BASE_EXPORT SourceLocation {
   friend constexpr bool operator!=(const SourceLocation& l, const SourceLocation& r) {
     return !operator==(l, r);
   }
-  friend int Compare(const SourceLocation& l, const SourceLocation& r) { return l.CompareTo(r); }
+  friend int compare(const SourceLocation& l, const SourceLocation& r) { return l.CompareTo(r); }
   friend HashCode Hash(const SourceLocation& x) { return x.HashImpl(); }
 
  private:

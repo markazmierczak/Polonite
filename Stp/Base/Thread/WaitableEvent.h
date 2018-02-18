@@ -136,7 +136,7 @@ class BASE_EXPORT WaitableEvent {
     // two Waiters to be considered equal. In WaitableEvent::Dequeue, if the
     // pointers match then this function is called as a final check. See the
     // comments in ~Handle for why.
-    virtual bool Compare(void* tag) = 0;
+    virtual bool compare(void* tag) = 0;
 
    protected:
     virtual ~Waiter() {}

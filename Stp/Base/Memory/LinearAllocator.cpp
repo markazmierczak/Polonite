@@ -58,7 +58,7 @@ LinearAllocator::~LinearAllocator() {
 void LinearAllocator::FreeChain(Block* block) {
   while (block) {
     Block* next = block->next;
-    Free(block);
+    freeMemory(block);
     block = next;
   }
 };
@@ -73,10 +73,10 @@ void LinearAllocator::Clear() {
     for (Block* cur = largest->next; cur; cur = next) {
       next = cur->next;
       if (cur->GetSize() > largest->GetSize()) {
-        Free(largest);
+        freeMemory(largest);
         largest = cur;
       } else {
-        Free(cur);
+        freeMemory(cur);
       }
     }
 
@@ -170,14 +170,13 @@ size_t LinearAllocator::FreeRecent(void* ptr) {
 LinearAllocator::Block* LinearAllocator::NewBlock(size_t size) {
   ASSERT(size > 0);
 
-  if (size < chunk_size_)
+  if (size < chunk_size_) {
     size = chunk_size_;
-  else if (size > MaxBlockSize)
-    throw OutOfMemoryException();
+  } else if (size > MaxBlockSize) {
+    throw LengthException();
+  }
 
-  auto* block = (Block*)::malloc(sizeof(Block) + size);
-  if (!block)
-    throw OutOfMemoryException();
+  auto* block = (Block*)allocateMemory(isizeof(Block) + size);
 
   block->free_size = size;
   block->free_ptr = block->GetData();

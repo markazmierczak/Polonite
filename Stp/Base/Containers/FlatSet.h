@@ -62,7 +62,7 @@ class FlatSet {
   friend void swap(FlatSet& l, FlatSet& r) noexcept { swap(l.list_, r.list_); }
   friend bool operator==(const FlatSet& l, const FlatSet& r) { return l.list_ == r.list_; }
   friend bool operator!=(const FlatSet& l, const FlatSet& r) { return !(l == r); }
-  friend int Compare(const FlatSet& l, const FlatSet& r) { return Compare(l.list_, r.list_); }
+  friend int compare(const FlatSet& l, const FlatSet& r) { return compare(l.list_, r.list_); }
   friend auto begin(const FlatSet& x) { return begin(x.list_); }
   friend auto end(const FlatSet& x) { return end(x.list_); }
 

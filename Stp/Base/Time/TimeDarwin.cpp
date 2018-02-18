@@ -60,7 +60,7 @@ int64_t ComputeCurrentTicks() {
   struct timeval boottime;
   int mib[2] = {CTL_KERN, KERN_BOOTTIME};
   size_t size = sizeof(boottime);
-  int kr = sysctl(mib, ArraySizeOf(mib), &boottime, &size, nullptr, 0);
+  int kr = sysctl(mib, isizeofArray(mib), &boottime, &size, nullptr, 0);
   ASSERT(kr == KERN_SUCCESS);
   TimeDelta time_difference =
       Time::Now() - (Time::FromTimeT(boottime.tv_sec) +

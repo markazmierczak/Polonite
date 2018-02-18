@@ -73,7 +73,7 @@ class BufferSpan {
   friend bool operator!=(const BufferSpan& lhs, const BufferSpan& rhs) {
     return !operator==(lhs, rhs);
   }
-  friend int Compare(const BufferSpan& lhs, const BufferSpan& rhs) {
+  friend int compare(const BufferSpan& lhs, const BufferSpan& rhs) {
     int rv = CompareData(lhs.data_, rhs.data_, lhs.size_ <= rhs.size() ? lhs.size_ : rhs.size());
     return rv ? rv : (lhs.size_ - rhs.size());
   }
@@ -179,8 +179,8 @@ class MutableBufferSpan {
   friend bool operator!=(const MutableBufferSpan& lhs, const BufferSpan& rhs) {
     return BufferSpan(lhs) != rhs;
   }
-  friend int Compare(const MutableBufferSpan& lhs, const BufferSpan& rhs) {
-    return Compare(BufferSpan(lhs), rhs);
+  friend int compare(const MutableBufferSpan& lhs, const BufferSpan& rhs) {
+    return compare(BufferSpan(lhs), rhs);
   }
   friend HashCode Hash(const MutableBufferSpan& x) { return HashBuffer(x.data_, x.size_); }
 

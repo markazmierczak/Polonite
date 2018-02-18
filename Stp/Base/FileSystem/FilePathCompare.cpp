@@ -14,7 +14,7 @@ static int EqualCaseInsensitive(const wchar_t* lhs, const wchar_t* rhs, int size
   int rhs_letter_pos = FindDriveLetter(rhs, size);
 
   if (lhs_letter_pos < 0 || rhs_letter_pos < 0)
-    return RawWString::Compare(lhs, rhs, size);
+    return RawWString::compare(lhs, rhs, size);
 
   ASSERT(lhs_letter_pos == rhs_letter_pos);
 
@@ -23,7 +23,7 @@ static int EqualCaseInsensitive(const wchar_t* lhs, const wchar_t* rhs, int size
   if (lhs_letter != rhs_letter)
     return lhs_letter - rhs_letter;
 
-  return RawWString::Compare(
+  return RawWString::compare(
       lhs + lhs_letter_pos + 1,
       rhs + rhs_letter_pos + 1,
       size - (lhs_letter_pos + 1));

@@ -103,7 +103,7 @@ class SyncWaiter : public WaitableEvent::Waiter {
 
   // These waiters are always stack allocated and don't delete themselves. Thus
   // there's no problem and the ABA tag is the same as the object pointer.
-  bool Compare(void* tag) override { return this == tag; }
+  bool compare(void* tag) override { return this == tag; }
 
   // Called with lock held.
   ALWAYS_INLINE bool fired() const { return fired_; }
@@ -350,7 +350,7 @@ void WaitableEvent::Enqueue(Waiter* waiter) {
 bool WaitableEvent::WaitableEventKernel::Dequeue(Waiter* searched, void* tag) {
   for (int i = 0; i < waiters_.size(); ++i) {
     Waiter* waiter = waiters_[i];
-    if (waiter == searched && waiter->Compare(tag)) {
+    if (waiter == searched && waiter->compare(tag)) {
       waiters_.RemoveAt(i);
       return true;
     }

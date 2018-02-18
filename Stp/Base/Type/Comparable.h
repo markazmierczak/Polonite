@@ -5,22 +5,21 @@
 #define STP_BASE_TYPE_COMPARABLE_H_
 
 #include "Base/Containers/ArrayOps.h"
-#include "Base/Type/ComparableFwd.h"
 
 namespace stp {
 
-template<typename T, TEnableIf<TIsBoolean<T>>*>
-constexpr int Compare(T l, T r) {
+template<typename T, TEnableIf<TIsBoolean<T>>* = nullptr>
+constexpr int compare(T l, T r) noexcept {
   return static_cast<int>(l) - static_cast<int>(r);
 }
 
-template<typename T, typename U, TEnableIf<TIsCharacter<T> && TIsCharacter<U>>*>
-constexpr int Compare(T lhs, U rhs) {
+template<typename T, typename U, TEnableIf<TIsCharacter<T> && TIsCharacter<U>>* = nullptr>
+constexpr int compare(T lhs, U rhs) noexcept {
   return static_cast<int>(char_cast<char32_t>(lhs) - char_cast<char32_t>(rhs));
 }
 
-template<typename T, typename U, TEnableIf<TIsInteger<T> && TIsInteger<U>>*>
-constexpr int Compare(T l, U r) {
+template<typename T, typename U, TEnableIf<TIsInteger<T> && TIsInteger<U>>* = nullptr>
+constexpr int compare(T l, U r) noexcept {
   if (l < r)
     return -1;
   if (l > r)
@@ -28,8 +27,8 @@ constexpr int Compare(T l, U r) {
   return 0;
 }
 
-template<typename T, typename U, TEnableIf<TIsFloatingPoint<T> && TIsFloatingPoint<U>>*>
-constexpr int Compare(T l, U r) {
+template<typename T, typename U, TEnableIf<TIsFloatingPoint<T> && TIsFloatingPoint<U>>* = nullptr>
+constexpr int compare(T l, U r) noexcept {
   if (l < r)
     return -1;
   if (l > r)
@@ -41,8 +40,8 @@ constexpr int Compare(T l, U r) {
   return 1;
 }
 
-template<typename T, typename U, TEnableIf<TIsPointer<T> && TIsPointer<U>>*>
-constexpr int Compare(const T& l, const U& r) {
+template<typename T, typename U, TEnableIf<TIsPointer<T> && TIsPointer<U>>* = nullptr>
+constexpr int compare(const T& l, const U& r) noexcept {
   if (l < r)
     return -1;
   if (l > r)
@@ -50,14 +49,35 @@ constexpr int Compare(const T& l, const U& r) {
   return 0;
 }
 
-template<typename T, TEnableIf<TIsEnum<T>>*>
-constexpr int Compare(T l, T r) {
+template<typename T, TEnableIf<TIsEnum<T>>* = nullptr>
+constexpr int compare(T l, T r) noexcept {
   if (l < r)
     return -1;
   if (l > r)
     return 1;
   return 0;
 }
+
+namespace detail {
+
+template<typename T, typename U>
+using TEqualityComparableConcept = decltype(declval<const T&>() == declval<const U&>());
+template<typename T, typename U>
+using TComparableConcept = decltype(compare(declval<const T&>(), declval<const U&>()));
+
+} // namespace detail
+
+template<typename T, typename U>
+constexpr bool TIsEqualityComparableWith =
+    TsAreSame<bool, TDetect<detail::TEqualityComparableConcept, T, U>>;
+
+template<typename T>
+constexpr bool TIsEqualityComparable = TIsEqualityComparableWith<T, T>;
+
+template<typename T, typename U>
+constexpr bool TIsComparableWith = TsAreSame<int, TDetect<detail::TComparableConcept, T, U>>;
+template<typename T>
+constexpr bool TIsComparable = TIsComparableWith<T, T>;
 
 namespace detail {
 
@@ -73,13 +93,13 @@ struct TIsFastContiguousComparable<T, true> : TIsFastContiguousComparable<TUnder
 } // namespace detail
 
 template<typename T>
-inline int CompareContiguous(const T* lhs, const T* rhs, int count) {
+inline int CompareContiguous(const T* lhs, const T* rhs, int count) noexcept {
   ASSERT(count >= 0);
   if constexpr (detail::TIsFastContiguousComparable<T>::Value) {
     return count ? ::memcmp(lhs, rhs, ToUnsigned(count)) : 0;
   } else {
     for (int i = 0; i < count; ++i) {
-      int rv = Compare(lhs[i], rhs[i]);
+      int rv = compare(lhs[i], rhs[i]);
       if (rv)
         return rv;
     }
@@ -89,15 +109,15 @@ inline int CompareContiguous(const T* lhs, const T* rhs, int count) {
 
 struct DefaultEqualityComparer {
   template<typename T, typename U>
-  constexpr bool operator()(const T& x, const U& y) const {
+  constexpr bool operator()(const T& x, const U& y) const noexcept {
     return x == y;
   }
 };
 
 struct DefaultComparer {
   template<typename T, typename U>
-  constexpr int operator()(const T& x, const U& y) const {
-    return Compare(x, y);
+  constexpr int operator()(const T& x, const U& y) const noexcept {
+    return compare(x, y);
   }
 };
 

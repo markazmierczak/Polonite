@@ -72,17 +72,17 @@ class Bignum {
 
   bool ToHexString(char* buffer, int buffer_size) const;
 
-  static int Compare(const Bignum& a, const Bignum& b);
+  static int compare(const Bignum& a, const Bignum& b);
   static bool Equal(const Bignum& a, const Bignum& b) {
-    return Compare(a, b) == 0;
+    return compare(a, b) == 0;
   }
   static bool LessEqual(const Bignum& a, const Bignum& b) {
-    return Compare(a, b) <= 0;
+    return compare(a, b) <= 0;
   }
   static bool Less(const Bignum& a, const Bignum& b) {
-    return Compare(a, b) < 0;
+    return compare(a, b) < 0;
   }
-  // Returns Compare(a + b, c);
+  // Returns compare(a + b, c);
   static int PlusCompare(const Bignum& a, const Bignum& b, const Bignum& c);
   // Returns a + b == c
   static bool PlusEqual(const Bignum& a, const Bignum& b, const Bignum& c) {

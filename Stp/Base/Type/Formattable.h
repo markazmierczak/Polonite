@@ -78,7 +78,7 @@ inline void Format(TextWriter& out, const T& x, const StringSpan& opts) {
     if constexpr (TIsNamedEnum<T>) {
       out << GetEnumName(x);
     } else {
-      Format(out, ToUnderlying(x), opts);
+      Format(out, toUnderlying(x), opts);
     }
   } else if constexpr (TIsBoolean<T>) {
     detail::FormatBool(out, x, opts);
@@ -107,7 +107,7 @@ inline TextWriter& operator<<(TextWriter& out, const T& x) {
     if constexpr (TIsNamedEnum<T>) {
       out << GetEnumName(x);
     } else {
-      out << ToUnderlying(x);
+      out << toUnderlying(x);
     }
   } else if constexpr (TIsBoolean<T>) {
     detail::FormatBool(out, x);

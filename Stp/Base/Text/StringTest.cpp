@@ -19,11 +19,11 @@ TEST(StringTest, Basic) {
   {
     const wchar_t cstr[] = L"abecadlo";
     auto s = WString(cstr);
-    EXPECT_EQ(ArraySizeOf(cstr) - 1, s.size());
+    EXPECT_EQ(isizeofArray(cstr) - 1, s.size());
     EXPECT_EQ(cstr, s);
     EXPECT_EQ(wchar_t(0), *(ToNullTerminated(s) + s.size()));
 
-    for (int i = 0; i < ArraySizeOf(cstr) - 1; ++i)
+    for (int i = 0; i < isizeofArray(cstr) - 1; ++i)
       EXPECT_EQ(cstr[i], s[i]);
   }
 }

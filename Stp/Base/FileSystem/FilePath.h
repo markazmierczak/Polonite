@@ -104,7 +104,7 @@ class BASE_EXPORT FilePath {
   friend bool operator==(const FilePath& l, FilePathSpan r) { return l.ToSpan() == r; }
   friend bool operator!=(const FilePath& l, FilePathSpan r) { return !operator==(l, r); }
   friend HashCode Hash(const FilePath& x) { return Hash(x.ToSpan()); }
-  friend int Compare(const FilePath& l, FilePathSpan r) { return Compare(l.ToSpan(), r); }
+  friend int compare(const FilePath& l, FilePathSpan r) { return compare(l.ToSpan(), r); }
   friend TextWriter& operator<<(TextWriter& out, const FilePath& x) { return out << x.ToSpan(); }
   friend void Format(TextWriter& out, const FilePath& x, const StringSpan& opts) {
     Format(out, x.ToSpan(), opts);

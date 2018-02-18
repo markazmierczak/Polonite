@@ -20,7 +20,7 @@ void Format(TextWriter& out, WinErrorCode code) {
   } else {
     FormatMany(out, "error (0x{:X8}) while retrieving error", ::GetLastError());
   }
-  FormatMany(out, ", code=0x{:X8}", ToUnderlying(code));
+  FormatMany(out, ", code=0x{:X8}", toUnderlying(code));
 }
 
 } // namespace detail

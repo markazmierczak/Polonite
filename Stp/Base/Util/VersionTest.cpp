@@ -75,7 +75,7 @@ TEST(VersionTest, Compare) {
   for (const auto& test : cases) {
     auto lhs = ParseTo<Version>(test.lhs);
     auto rhs = ParseTo<Version>(test.rhs);
-    EXPECT_EQ(test.expected, Compare(lhs, rhs));
+    EXPECT_EQ(test.expected, compare(lhs, rhs));
 
     switch (test.expected) {
       case -1:

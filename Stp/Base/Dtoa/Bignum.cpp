@@ -616,7 +616,7 @@ Bignum::Chunk Bignum::BigitAt(int index) const {
 }
 
 
-int Bignum::Compare(const Bignum& a, const Bignum& b) {
+int Bignum::compare(const Bignum& a, const Bignum& b) {
   ASSERT(a.IsClamped());
   ASSERT(b.IsClamped());
   int bigit_length_a = a.BigitLength();

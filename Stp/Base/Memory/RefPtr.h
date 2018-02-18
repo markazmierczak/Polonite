@@ -5,7 +5,6 @@
 #define STP_BASE_MEMORY_REFPTR_H_
 
 #include "Base/Debug/Assert.h"
-#include "Base/Type/ComparableFwd.h"
 #include "Base/Type/Variable.h"
 
 namespace stp {

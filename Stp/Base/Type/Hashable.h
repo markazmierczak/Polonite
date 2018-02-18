@@ -42,7 +42,7 @@ inline HashCode Hash(T x) {
       return static_cast<HashCode>((y >> 32) ^ y);
     }
   } else if constexpr (TIsEnum<T>) {
-    return Hash(ToUnderlying(x));
+    return Hash(toUnderlying(x));
   } else if constexpr (TIsPointer<T>) {
     // Take lower bits only.
     return static_cast<HashCode>(reinterpret_cast<uintptr_t>(x));

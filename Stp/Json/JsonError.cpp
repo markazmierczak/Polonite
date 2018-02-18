@@ -34,7 +34,7 @@ static constexpr StringSpan Messages[] = {
   "invalid number",
   "key already assigned",
 };
-static_assert(ArraySizeOf(Messages) == JsonError::CodeCount, "!");
+static_assert(isizeofArray(Messages) == JsonError::CodeCount, "!");
 
 StringSpan JsonError::CodeToMessage(Code code) {
   return Messages[code];
