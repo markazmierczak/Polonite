@@ -8,14 +8,12 @@
 namespace stp {
 
 /**
- * @defgroup BaseLocksGroup
+ * @ref Lock is a simple wrapper around platform-specific spin-lock mechanism.
  *
- * @ref Lock and @ref BasicLock are simple wrappers around platform-specific spin-lock mechanism.
- *
- * The wrappers provide additional functionality used in debug mode: @ref Lock::assertAcquired().
+ * The wrapper provides additional functionality used in debug mode: @ref Lock::assertAcquired().
  *
  * @note
- * Only use BasicLock directly (with BASIC_LOCK_INITIALIZER) when global lock is needed.
+ * Only use @ref BasicLock directly (with BASIC_LOCK_INITIALIZER) when global lock is needed.
  * Otherwise use Lock class.
  */
 

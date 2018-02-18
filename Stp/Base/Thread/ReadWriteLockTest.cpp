@@ -1,7 +1,5 @@
 // Copyright 2017 Polonite Authors. All rights reserved.
-// Copyright 2016 The Chromium Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
+// Distributed under MIT license that can be found in the LICENSE file.
 
 #include "Base/Thread/ReadWriteLock.h"
 
@@ -12,8 +10,6 @@
 #include <stdlib.h>
 
 namespace stp {
-
-// Basic test to make sure that *Acquire()/*release() don't crash.
 
 class BasicReadWriteLockTestThread : public Thread {
  public:
@@ -33,13 +29,11 @@ class BasicReadWriteLockTestThread : public Thread {
     return 0;
   }
 
-  int GetAcquired() const { return acquired_; }
+  int getAcquired() const { return acquired_; }
 
  private:
   ReadWriteLock* lock_;
   int acquired_;
-
-  DISALLOW_COPY_AND_ASSIGN(BasicReadWriteLockTestThread);
 };
 
 TEST(ReadWriteLockTest, Basic) {
@@ -65,10 +59,8 @@ TEST(ReadWriteLockTest, Basic) {
   thread.Join();
 
   EXPECT_EQ(20, acquired);
-  EXPECT_GE(20, thread.GetAcquired());
+  EXPECT_GE(20, thread.getAcquired());
 }
-
-// Tests that reader locks allow multiple simultaneous reader acquisitions.
 
 class ReaderReadWriteLockTestThread : public Thread {
  public:
@@ -80,15 +72,14 @@ class ReaderReadWriteLockTestThread : public Thread {
     return 0;
   }
 
-  bool DidAcquire() const { return did_acquire_; }
+  bool didAcquire() const { return did_acquire_; }
 
  private:
   ReadWriteLock* lock_;
   bool did_acquire_ = false;
-
-  DISALLOW_COPY_AND_ASSIGN(ReaderReadWriteLockTestThread);
 };
 
+// Tests that reader locks allow multiple simultaneous reader acquisitions.
 TEST(ReadWriteLockTest, ReaderTwoThreads) {
   ReadWriteLock lock;
 
@@ -97,10 +88,8 @@ TEST(ReadWriteLockTest, ReaderTwoThreads) {
   ReaderReadWriteLockTestThread thread(&lock);
   thread.Start();
   thread.Join();
-  EXPECT_TRUE(thread.DidAcquire());
+  EXPECT_TRUE(thread.didAcquire());
 }
-
-// Tests that writer locks exclude reader locks.
 
 class ReadAndWriteReadWriteLockTestThread : public Thread {
  public:
@@ -117,18 +106,15 @@ class ReadAndWriteReadWriteLockTestThread : public Thread {
     return 0;
   }
 
-  void Wait() {
-    event_.Wait();
-  }
+  void wait() { event_.Wait(); }
 
  private:
   ReadWriteLock* lock_;
   int* value_;
   WaitableEvent event_;
-
-  DISALLOW_COPY_AND_ASSIGN(ReadAndWriteReadWriteLockTestThread);
 };
 
+// Tests that writer locks exclude reader locks.
 TEST(ReadWriteLockTest, ReadAndWriteThreads) {
   ReadWriteLock lock;
   int value = 0;
@@ -144,14 +130,12 @@ TEST(ReadWriteLockTest, ReadAndWriteThreads) {
     EXPECT_EQ(0, value);
   }
 
-  thread.Wait();
+  thread.wait();
   // After releasing our reader lock, the thread can acquire a write lock and
   // change |value|.
   EXPECT_EQ(1, value);
   thread.Join();
 }
-
-// Tests that writer locks actually exclude.
 
 class WriterReadWriteLockTestThread : public Thread {
  public:
@@ -159,7 +143,7 @@ class WriterReadWriteLockTestThread : public Thread {
       : lock_(lock), value_(value) {}
 
   // Static helper which can also be called from the main thread.
-  static void DoStuff(ReadWriteLock* lock, int* value) {
+  static void doStuff(ReadWriteLock* lock, int* value) {
     for (int i = 0; i < 40; i++) {
       AutoWriteLock locker(*lock);
       int v = *value;
@@ -169,7 +153,7 @@ class WriterReadWriteLockTestThread : public Thread {
   }
 
   int Main() override {
-    DoStuff(lock_, value_);
+    doStuff(lock_, value_);
     return 0;
   }
 
@@ -180,6 +164,7 @@ class WriterReadWriteLockTestThread : public Thread {
   DISALLOW_COPY_AND_ASSIGN(WriterReadWriteLockTestThread);
 };
 
+// Tests that writer locks actually exclude.
 TEST(ReadWriteLockTest, MutexTwoThreads) {
   ReadWriteLock lock;
   int value = 0;
@@ -187,7 +172,7 @@ TEST(ReadWriteLockTest, MutexTwoThreads) {
   WriterReadWriteLockTestThread thread(&lock, &value);
   thread.Start();
 
-  WriterReadWriteLockTestThread::DoStuff(&lock, &value);
+  WriterReadWriteLockTestThread::doStuff(&lock, &value);
 
   thread.Join();
 
@@ -205,7 +190,7 @@ TEST(ReadWriteLockTest, MutexFourThreads) {
   thread2.Start();
   thread3.Start();
 
-  WriterReadWriteLockTestThread::DoStuff(&lock, &value);
+  WriterReadWriteLockTestThread::doStuff(&lock, &value);
 
   thread1.Join();
   thread2.Join();

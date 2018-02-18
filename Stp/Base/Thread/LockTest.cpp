@@ -1,7 +1,5 @@
 // Copyright 2017 Polonite Authors. All rights reserved.
-// Copyright (c) 2012 The Chromium Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
+// Distributed under MIT license that can be found in the LICENSE file.
 
 #include "Base/Thread/Lock.h"
 
@@ -12,43 +10,40 @@
 
 namespace stp {
 
-// Basic test to make sure that Acquire()/release()/Try() don't crash ----------
-
 class BasicLockTestThread : public Thread {
  public:
-  explicit BasicLockTestThread(Lock* lock) : lock_(lock), acquired_(0) {}
+  explicit BasicLockTestThread(Lock* lock) : lock_(*lock), acquired_(0) {}
 
   int Main() override {
     for (int i = 0; i < 10; i++) {
-      lock_->acquire();
+      lock_.acquire();
       acquired_++;
-      lock_->release();
+      lock_.release();
     }
     for (int i = 0; i < 10; i++) {
-      lock_->acquire();
+      lock_.acquire();
       acquired_++;
       ThisThread::SleepFor(TimeDelta::FromMilliseconds(rand() % 20));
-      lock_->release();
+      lock_.release();
     }
     for (int i = 0; i < 10; i++) {
-      if (lock_->tryAcquire()) {
+      if (lock_.tryAcquire()) {
         acquired_++;
         ThisThread::SleepFor(TimeDelta::FromMilliseconds(rand() % 20));
-        lock_->release();
+        lock_.release();
       }
     }
     return 0;
   }
 
-  int acquired() const { return acquired_; }
+  int getAcquired() const { return acquired_; }
 
  private:
-  Lock* lock_;
+  Lock& lock_;
   int acquired_;
-
-  DISALLOW_COPY_AND_ASSIGN(BasicLockTestThread);
 };
 
+// Basic test to make sure that acquire()/release()/tryAcquire() don't crash
 TEST(LockTest, Basic) {
   Lock lock;
   BasicLockTestThread thread(&lock);
@@ -83,31 +78,30 @@ TEST(LockTest, Basic) {
   thread.Join();
 
   EXPECT_GE(acquired, 20);
-  EXPECT_GE(thread.acquired(), 20);
+  EXPECT_GE(thread.getAcquired(), 20);
 }
-
-// Test that Try() works as expected -------------------------------------------
 
 class TryLockTestThread : public Thread {
  public:
-  explicit TryLockTestThread(Lock* lock) : lock_(lock), got_lock_(false) {}
+  explicit TryLockTestThread(Lock* lock) : lock_(*lock), got_lock_(false) {}
 
   int Main() override {
-    got_lock_ = lock_->tryAcquire();
+    got_lock_ = lock_.tryAcquire();
     if (got_lock_)
-      lock_->release();
+      lock_.release();
     return 0;
   }
 
-  bool got_lock() const { return got_lock_; }
+  bool gotLock() const { return got_lock_; }
 
  private:
-  Lock* lock_;
+  Lock& lock_;
   bool got_lock_;
 
   DISALLOW_COPY_AND_ASSIGN(TryLockTestThread);
 };
 
+// Test that Try() works as expected
 TEST(LockTest, TryLock) {
   Lock lock;
 
@@ -119,7 +113,7 @@ TEST(LockTest, TryLock) {
     TryLockTestThread thread(&lock);
     thread.Start();
     thread.Join();
-    ASSERT_FALSE(thread.got_lock());
+    ASSERT_FALSE(thread.gotLock());
   }
 
   lock.release();
@@ -130,7 +124,7 @@ TEST(LockTest, TryLock) {
     thread.Start();
     thread.Join();
 
-    ASSERT_TRUE(thread.got_lock());
+    ASSERT_TRUE(thread.gotLock());
     // But it released it....
     ASSERT_TRUE(lock.tryAcquire());
   }
@@ -138,14 +132,12 @@ TEST(LockTest, TryLock) {
   lock.release();
 }
 
-// Tests that locks actually exclude -------------------------------------------
-
 class MutexLockTestThread : public Thread {
  public:
   MutexLockTestThread(Lock* lock, int* value) : lock_(lock), value_(value) {}
 
   // Static helper which can also be called from the main thread.
-  static void DoStuff(Lock* lock, int* value) {
+  static void doStuff(Lock* lock, int* value) {
     for (int i = 0; i < 40; i++) {
       lock->acquire();
       int v = *value;
@@ -156,7 +148,7 @@ class MutexLockTestThread : public Thread {
   }
 
   int Main() override {
-    DoStuff(lock_, value_);
+    doStuff(lock_, value_);
     return 0;
   }
 
@@ -167,13 +159,14 @@ class MutexLockTestThread : public Thread {
   DISALLOW_COPY_AND_ASSIGN(MutexLockTestThread);
 };
 
+// Tests that locks actually exclude
 TEST(LockTest, MutexTwoThreads) {
   Lock lock;
   int value = 0;
 
   MutexLockTestThread thread(&lock, &value);
   thread.Start();
-  MutexLockTestThread::DoStuff(&lock, &value);
+  MutexLockTestThread::doStuff(&lock, &value);
   thread.Join();
   EXPECT_EQ(2 * 40, value);
 }
@@ -189,7 +182,7 @@ TEST(LockTest, MutexFourThreads) {
   thread2.Start();
   thread3.Start();
 
-  MutexLockTestThread::DoStuff(&lock, &value);
+  MutexLockTestThread::doStuff(&lock, &value);
 
   thread1.Join();
   thread2.Join();
