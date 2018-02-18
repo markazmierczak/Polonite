@@ -81,7 +81,7 @@ Half::operator float() const {
 }
 
 void Half::FormatImpl(TextWriter& out, float x, const StringSpan& opts) {
-  Format(out, x, opts);
+  format(out, x, opts);
 }
 
 constexpr Half Limits<Half>::Epsilon;

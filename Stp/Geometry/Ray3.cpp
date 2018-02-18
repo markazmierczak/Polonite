@@ -88,9 +88,9 @@ bool Ray3::IntersectsTriangle(const Triangle3& triangle, float* distance) const 
 }
 
 void Ray3::ToFormat(TextWriter& out, const StringSpan& opts) const {
-  Format(out, origin);
+  format(out, origin);
   out.WriteAscii("-dir-");
-  Format(out, direction);
+  format(out, direction);
 }
 
 } // namespace stp

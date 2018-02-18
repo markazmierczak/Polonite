@@ -8,7 +8,7 @@
 namespace stp {
 namespace detail {
 
-void Format(TextWriter& out, WinErrorCode code) {
+void format(TextWriter& out, WinErrorCode code) {
   const int ErrorMessageBufferSize = 256;
   wchar_t msgbuf[ErrorMessageBufferSize];
   DWORD flags = FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS;
@@ -32,7 +32,7 @@ class WinErrorCategory final : public ErrorCategory {
   StringSpan GetName() const noexcept override { return "win"; }
 
   void FormatMessage(TextWriter& out, int code) const override {
-    detail::Format(out, static_cast<WinErrorCode>(code));
+    detail::format(out, static_cast<WinErrorCode>(code));
   }
 };
 

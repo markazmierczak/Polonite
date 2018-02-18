@@ -96,7 +96,7 @@ void ConsoleWriter::UpdateAttributes(unsigned attributes) {
     return;
   std_attributes_ = attributes;
 
-  Flush();
+  flush();
 
   ::SetConsoleTextAttribute(std_->GetNativeFile(), attributes);
 }

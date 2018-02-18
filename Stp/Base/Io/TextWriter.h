@@ -10,20 +10,16 @@ namespace stp {
 
 class TextEncoding;
 
-// Locale-independent replacement for std::ostream.
-// Useful for writing text-based representation of data, for example XML and JSON.
-// it should NOT be used to build text displayed to the user since it does not
-// support locale (and will not do; on purpose).
 class BASE_EXPORT TextWriter {
  public:
-  static TextWriter& Null();
+  static TextWriter& null();
 
   TextWriter() {}
   virtual ~TextWriter() {}
 
-  void Indent(int count, char c = ' ');
+  void indent(int count, char c = ' ');
 
-  void Flush() { OnFlush(); }
+  void flush() { onFlush(); }
 
   virtual TextEncoding GetEncoding() const = 0;
 
@@ -31,43 +27,43 @@ class BASE_EXPORT TextWriter {
   virtual bool isConsoleWriter() const;
 
   friend TextWriter& operator<<(TextWriter& out, char c) {
-    ASSERT(TextWriter::IsValidChar(c));
-    out.OnWriteChar(c);
+    ASSERT(TextWriter::isValidChar(c));
+    out.onWriteChar(c);
     return out;
   }
   friend TextWriter& operator<<(TextWriter& out, char32_t rune) {
-    out.WriteRune(rune);
+    out.writeRune(rune);
     return out;
   }
   friend TextWriter& operator<<(TextWriter& out, StringSpan text) {
-    out.OnWriteString(text);
+    out.onWriteString(text);
     return out;
   }
 
  protected:
-  virtual void OnWriteChar(char c);
-  virtual void OnWriteRune(char32_t rune);
-  virtual void OnWriteString(StringSpan text) = 0;
+  virtual void onWriteChar(char c);
+  virtual void onWriteRune(char32_t rune);
+  virtual void onWriteString(StringSpan text) = 0;
 
-  virtual void OnEndLine();
+  virtual void onEndLine();
 
-  virtual void OnIndent(int count, char c);
+  virtual void onIndent(int count, char c);
 
-  virtual void OnFlush();
+  virtual void onFlush();
 
  private:
   #if ASSERT_IS_ON
-  static bool IsValidChar(char c);
+  static bool isValidChar(char c);
   #endif
 
-  void WriteRune(char32_t rune);
+  void writeRune(char32_t rune);
 
   DISALLOW_COPY_AND_ASSIGN(TextWriter);
 };
 
-inline void TextWriter::Indent(int count, char c) {
-  ASSERT(IsValidChar(c));
-  OnIndent(count, c);
+inline void TextWriter::indent(int count, char c) {
+  ASSERT(isValidChar(c));
+  onIndent(count, c);
 }
 
 } // namespace stp

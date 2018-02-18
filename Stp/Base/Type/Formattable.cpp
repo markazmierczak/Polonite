@@ -14,20 +14,20 @@
 namespace stp {
 namespace detail {
 
-void FormatNull(TextWriter& out) {
+void formatNull(TextWriter& out) {
   out << "null";
 }
 
-void FormatBool(TextWriter& out, bool b) {
+void formatBool(TextWriter& out, bool b) {
   if (b)
     out << "true";
   else
     out << "false";
 }
 
-void FormatBool(TextWriter& out, bool b, const StringSpan& opts) {
+void formatBool(TextWriter& out, bool b, const StringSpan& opts) {
   if (opts.IsEmpty()) {
-    FormatBool(out, b);
+    formatBool(out, b);
     return;
   }
 
@@ -59,7 +59,7 @@ void FormatBool(TextWriter& out, bool b, const StringSpan& opts) {
   }
 }
 
-void FormatChar(TextWriter& out, char32_t c, const StringSpan& opts) {
+void formatChar(TextWriter& out, char32_t c, const StringSpan& opts) {
   enum class Variant { Print, Hex, Unicode };
 
   auto variant = Variant::Print;
@@ -106,7 +106,7 @@ void FormatChar(TextWriter& out, char32_t c, const StringSpan& opts) {
       FormatHexIntegerBuffer<uint32_t> buffer;
       StringSpan hex = FormatHexInteger(static_cast<uint32_t>(c), buffer, uppercase);
       if (hex.size() < size)
-        out.Indent(size - hex.size(), '0');
+        out.indent(size - hex.size(), '0');
       out << hex;
       break;
     }
@@ -118,7 +118,7 @@ void FormatChar(TextWriter& out, char32_t c, const StringSpan& opts) {
 }
 
 template<typename T>
-static inline void FormatIntTmpl(TextWriter& out, T x) {
+static inline void formatIntTmpl(TextWriter& out, T x) {
   if constexpr (TIsUnsigned<T>) {
     FormatHexIntegerBuffer<T> buffer;
     out << FormatHexInteger(x, buffer);
@@ -128,15 +128,15 @@ static inline void FormatIntTmpl(TextWriter& out, T x) {
   }
 }
 
-void FormatSInt32(TextWriter& out,  int32_t x) { FormatIntTmpl(out, x); }
-void FormatSInt64(TextWriter& out,  int64_t x) { FormatIntTmpl(out, x); }
-void FormatUInt32(TextWriter& out, uint32_t x) { FormatIntTmpl(out, x); }
-void FormatUInt64(TextWriter& out, uint64_t x) { FormatIntTmpl(out, x); }
+void formatSint32(TextWriter& out,  int32_t x) { formatIntTmpl(out, x); }
+void formatSint64(TextWriter& out,  int64_t x) { formatIntTmpl(out, x); }
+void formatUint32(TextWriter& out, uint32_t x) { formatIntTmpl(out, x); }
+void formatUint64(TextWriter& out, uint64_t x) { formatIntTmpl(out, x); }
 
 template<typename T>
-static inline void FormatIntTmpl(TextWriter& out, T x, const StringSpan& opts) {
+static inline void formatIntTmpl(TextWriter& out, T x, const StringSpan& opts) {
   if (opts.IsEmpty()) {
-    FormatIntTmpl(out, x);
+    formatIntTmpl(out, x);
     return;
   }
 
@@ -210,21 +210,21 @@ static inline void FormatIntTmpl(TextWriter& out, T x, const StringSpan& opts) {
   }
 
   if (converted.size() < precision)
-    out.Indent(precision - converted.size(), '0');
+    out.indent(precision - converted.size(), '0');
 
   out << converted;
 }
 
-void FormatSInt32(TextWriter& out,  int32_t x, const StringSpan& opts) { FormatIntTmpl(out, x, opts); }
-void FormatSInt64(TextWriter& out,  int64_t x, const StringSpan& opts) { FormatIntTmpl(out, x, opts); }
-void FormatUInt32(TextWriter& out, uint32_t x, const StringSpan& opts) { FormatIntTmpl(out, x, opts); }
-void FormatUInt64(TextWriter& out, uint64_t x, const StringSpan& opts) { FormatIntTmpl(out, x, opts); }
+void formatSint32(TextWriter& out,  int32_t x, const StringSpan& opts) { formatIntTmpl(out, x, opts); }
+void formatSint64(TextWriter& out,  int64_t x, const StringSpan& opts) { formatIntTmpl(out, x, opts); }
+void formatUint32(TextWriter& out, uint32_t x, const StringSpan& opts) { formatIntTmpl(out, x, opts); }
+void formatUint64(TextWriter& out, uint64_t x, const StringSpan& opts) { formatIntTmpl(out, x, opts); }
 
-void FormatFloat(TextWriter& out, double x) {
-  FormatFloat(out, x, StringSpan());
+void formatFloat(TextWriter& out, double x) {
+  formatFloat(out, x, StringSpan());
 }
 
-void FormatFloat(TextWriter& out, double x, const StringSpan& opts) {
+void formatFloat(TextWriter& out, double x, const StringSpan& opts) {
   enum class Variant { Fixed = 'F', Scientific = 'E', General = 'G', Percent = 'P' };
 
   auto variant = Variant::General;
@@ -328,7 +328,7 @@ void FormatFloat(TextWriter& out, double x, const StringSpan& opts) {
   }
 }
 
-void FormatRawPointer(TextWriter& out, const void* ptr) {
+void formatRawPointer(TextWriter& out, const void* ptr) {
   constexpr int AddressDigitCount = sizeof(ptr) * 2;
 
   out << "0x";
@@ -336,124 +336,12 @@ void FormatRawPointer(TextWriter& out, const void* ptr) {
   FormatHexIntegerBuffer<uintptr_t> buffer;
   StringSpan hex = FormatHexInteger(reinterpret_cast<uintptr_t>(ptr), buffer);
   if (hex.size() < AddressDigitCount)
-    out.Indent(AddressDigitCount - hex.size(), '0');
+    out.indent(AddressDigitCount - hex.size(), '0');
 
   out << hex;
 }
 
 
-void FormatContiguousGenericExt(
-    TextWriter& out,
-    const void* data, int size, int item_size,
-    const StringSpan& opts,
-    void (*item_format)(TextWriter& out, const void* item, const StringSpan& opts)) {
-  out << '[';
-  for (int i = 0; i < size; ++i) {
-    if (i != 0)
-      out << ", ";
-    item_format(out, static_cast<const byte_t*>(data) + i * item_size, opts);
-  }
-  out << ']';
-}
-
 } // namespace detail
-
-static constexpr char UpperHexChars[] = "0123456789ABCDEF";
-static constexpr char LowerHexChars[] = "0123456789abcdef";
-
-static void FormatBufferSimple(TextWriter& out, const void* data, int size, bool uppercase) {
-  char out_buffer[256];
-  auto* bytes = static_cast<const byte_t*>(data);
-  while (size > 0) {
-    int bytes_to_print = min(size, isizeof(out_buffer) / 2);
-    int chars_to_print = bytes_to_print * 2;
-
-    FormatBuffer(MutableStringSpan(out_buffer, chars_to_print), bytes, bytes_to_print, uppercase);
-    out << StringSpan(out_buffer, chars_to_print);
-    bytes += bytes_to_print;
-    size -= bytes_to_print;
-  }
-}
-
-void FormatBuffer(TextWriter& out, const void* data, int size) {
-  FormatBufferSimple(out, data, size, true);
-}
-
-static void FormatByte(TextWriter& out, byte_t b) {
-  char string[3];
-  string[0] = nibbleToHexDigitUpper((b >> 4) & 0x0F);
-  string[1] = nibbleToHexDigitUpper((b >> 0) & 0x0F);
-  string[2] = '\0';
-  out << string;
-}
-
-void FormatBuffer(TextWriter& out, const void* data, int size, const StringSpan& opts) {
-  enum class Mode { Simple, MemoryDump };
-
-  Mode mode = Mode::Simple;
-  bool uppercase = true;
-
-  for (int i = 0; i < opts.size(); ++i) {
-    char c = opts[i];
-    switch (c) {
-      case 'x':
-      case 'X':
-        uppercase = isUpperAscii(c);
-        break;
-      case 'd':
-      case 'D':
-        mode = Mode::MemoryDump;
-        break;
-      default:
-        throw FormatException("Buffer");
-    }
-  }
-
-  if (mode == Mode::Simple) {
-    FormatBufferSimple(out, data, size, uppercase);
-    return;
-  }
-
-  constexpr int BytesPerLine = 16;
-  auto* bytes = static_cast<const byte_t*>(data);
-  while (size > 0) {
-    out << bytes;
-
-    out << ' ';
-    for (int i = 0; i < BytesPerLine; ++i) {
-      if (i < size) {
-        FormatByte(out, bytes[i]);
-      } else {
-        out << "  ";
-      }
-      out << ' ';
-    }
-    for (int i = 0; i < BytesPerLine; ++i) {
-      if (i >= size)
-        break;
-      char c = static_cast<char>(bytes[i]);
-      if (!isPrintAscii(c))
-        c = '.';
-      out << c;
-    }
-    out << '\n';
-
-    bytes += BytesPerLine;
-    size -= BytesPerLine;
-  }
-}
-
-void FormatBuffer(MutableStringSpan out, const void* data, int size, bool uppercase) {
-  ASSERT(out.size() >= size * 2);
-
-  const char* hex_chars = uppercase ? UpperHexChars : LowerHexChars;
-
-  auto* bytes = static_cast<const byte_t*>(data);
-  for (int i = 0; i < size; ++i) {
-    byte_t b = bytes[i];
-    out[i * 2 + 0] = hex_chars[(b >> 4) & 0xF];
-    out[i * 2 + 1] = hex_chars[(b >> 0) & 0xF];
-  }
-}
 
 } // namespace stp

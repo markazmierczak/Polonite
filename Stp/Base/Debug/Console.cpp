@@ -39,10 +39,10 @@ ConsoleWriter::ConsoleWriter(StdDescriptor std_descriptor, int active_destinatio
 }
 
 ConsoleWriter::~ConsoleWriter() {
-  Flush();
+  flush();
 }
 
-void ConsoleWriter::OnFlush() {
+void ConsoleWriter::onFlush() {
   // ConsoleWriter buffers output until newline is written.
   AutoLock auto_lock(&lock_);
   if (!buffer_.IsEmpty())
@@ -142,7 +142,7 @@ TextEncoding ConsoleWriter::GetEncoding() const {
   return BuiltinTextEncodings::Utf8();
 }
 
-void ConsoleWriter::OnWriteString(StringSpan text) {
+void ConsoleWriter::onWriteString(StringSpan text) {
   auto data = BufferSpan(text);
 
   if (active_destinations_ & StandardOutputDestination)

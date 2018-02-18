@@ -31,7 +31,7 @@ void* const* StackTrace::GetAddresses(int* count) const {
 }
 
 void StackTrace::PrintToConsole() const {
-  Format(Console::err(), StringSpan());
+  format(Console::err(), StringSpan());
 }
 
 void StackTrace::FormatImpl(TextWriter& out, const StringSpan& opts) const {
@@ -55,13 +55,13 @@ void StackTrace::FormatImpl(TextWriter& out, const StringSpan& opts) const {
 
 void StackTrace::FormatAddresses(TextWriter& out) const {
   for (int i = 0; i < count_; ++i)
-    Format(out, trace_[i], StringSpan());
+    format(out, trace_[i], StringSpan());
 }
 
 #if OS(WIN) || OS(LINUX) || OS(DARWIN)
 void StackTrace::FormatSymbols(TextWriter& out) const {
   for (int i = count_ - 1; i >= 0; --i) {
-    out.Format(" #{} {} in ", i, trace_[i]);
+    out.format(" #{} {} in ", i, trace_[i]);
     FormatSymbol(out, trace_[i]);
     out.WriteLine();
   }

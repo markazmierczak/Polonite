@@ -27,7 +27,7 @@ class BASE_EXPORT Location {
 };
 
 BASE_EXPORT TextWriter& operator<<(TextWriter& out, const Location& x);
-inline void Format(TextWriter& out, const Location& x, const StringSpan& opts) { out << x; }
+inline void format(TextWriter& out, const Location& x, const StringSpan& opts) { out << x; }
 
 /** A macro to record the current source location. */
 #define CURRENT_SOURCE_LOCATION() \

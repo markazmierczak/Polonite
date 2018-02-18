@@ -71,7 +71,7 @@ class BASE_EXPORT Exception {
     swap(l.msg_size_, r.msg_size_);
     swap(l.msg_capacity_, r.msg_capacity_);
   }
-  friend void Format(TextWriter& out, const Exception& x, const StringSpan& opts) {
+  friend void format(TextWriter& out, const Exception& x, const StringSpan& opts) {
     x.FormatImpl(out);
   }
   friend TextWriter& operator<<(TextWriter& out, const Exception& x) {
@@ -80,7 +80,7 @@ class BASE_EXPORT Exception {
   }
 
  protected:
-  virtual void OnFormat(TextWriter& out) const;
+  virtual void onFormat(TextWriter& out) const;
 
  private:
   char* msg_data_ = nullptr;

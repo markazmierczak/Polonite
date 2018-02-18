@@ -29,12 +29,12 @@ TextEncoding ClipTextWriter::GetEncoding() const {
   return base_.GetEncoding();
 }
 
-void ClipTextWriter::OnWriteChar(char c) {
+void ClipTextWriter::onWriteChar(char c) {
   if (Grow(1) > 0)
     base_ << c;
 }
 
-void ClipTextWriter::OnWriteRune(char32_t rune) {
+void ClipTextWriter::onWriteRune(char32_t rune) {
   if (Grow(1) > 0)
     base_ << rune;
 }
@@ -58,7 +58,7 @@ static void CutText(StringSpan& text, int at) {
     TrimLastCharacter(text);
 }
 
-void ClipTextWriter::OnWriteString(StringSpan text) {
+void ClipTextWriter::onWriteString(StringSpan text) {
   int n = Grow(text.size());
   if (n < text.size()) {
     if (n > 0)
@@ -69,10 +69,10 @@ void ClipTextWriter::OnWriteString(StringSpan text) {
   base_ << text;
 }
 
-void ClipTextWriter::OnIndent(int count, char c) {
+void ClipTextWriter::onIndent(int count, char c) {
   int n = Grow(count);
   if (n > 0)
-    base_.Indent(n, c);
+    base_.indent(n, c);
 }
 
 } // namespace stp

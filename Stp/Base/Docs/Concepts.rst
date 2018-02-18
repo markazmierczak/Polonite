@@ -40,5 +40,5 @@
 
    .. code::
 
-      void Format(TextWriter& out, const T& value, const StringSpan& opts);
+      void format(TextWriter& out, const T& value, const StringSpan& opts);
       TextWriter& operator<<(TextWriter& out, const T& value);

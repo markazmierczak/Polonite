@@ -114,9 +114,9 @@ IntRect lerp(const IntRect& a, const IntRect& b, double t) {
 }
 
 void IntRect::ToFormat(TextWriter& out, const StringSpan& opts) const {
-  Format(out, position);
+  format(out, position);
   out.Write(' ');
-  Format(out, size);
+  format(out, size);
 }
 
 IntRectExtents IntRectExtents::Compute(const IntRect& inner, const IntRect& outer) {

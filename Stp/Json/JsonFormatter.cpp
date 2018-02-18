@@ -60,7 +60,7 @@ bool JsonFormatter::Write(const JsonValue& node, int depth) {
 }
 
 void JsonFormatter::IndentLine(int depth) {
-  out_.Indent(depth * 3);
+  out_.indent(depth * 3);
 }
 
 bool JsonFormatter::WriteInteger(int64_t x) {
@@ -188,7 +188,7 @@ static void WriteEscapedRune(TextWriter& out, char32_t rune) {
   FormatHexIntegerBuffer<uint32_t> buffer;
   StringSpan hex = FormatHexInteger(static_cast<uint32_t>(rune), buffer);
   if (hex.size() < 4)
-    out.Indent(4 - hex.size(), '0');
+    out.indent(4 - hex.size(), '0');
 
   out << hex;
 }

@@ -97,7 +97,7 @@ class BASE_EXPORT CommandLine {
   friend TextWriter& operator<<(TextWriter& out, const CommandLine& x) {
     x.FormatImpl(out, StringSpan()); return out;
   }
-  friend void Format(TextWriter& out, const CommandLine& x, const StringSpan& opts) {
+  friend void format(TextWriter& out, const CommandLine& x, const StringSpan& opts) {
     x.FormatImpl(out, opts);
   }
 

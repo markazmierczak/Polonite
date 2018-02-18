@@ -12,7 +12,7 @@ StringSpan FileSystemException::GetName() const noexcept {
   return "FileSystemException";
 }
 
-void FileSystemException::OnFormat(TextWriter& out) const {
+void FileSystemException::onFormat(TextWriter& out) const {
   out << GetErrorCode();
   if (!path_.IsEmpty()) {
     out << ", path=" << path_;

@@ -39,7 +39,7 @@ bool tryParse(StringSpan input, Md5Digest& out_digest) noexcept {
   return true;
 }
 
-static void Format(TextWriter& out, const Md5Digest& digest, bool uppercase) {
+static void format(TextWriter& out, const Md5Digest& digest, bool uppercase) {
   Array<char, NibbleCount> text;
   for (int i = 0; i < Md5Digest::Length; ++i) {
     text[i * 2 + 0] = nibbleToHexDigit((digest[i] >> 4) & 0xF, uppercase);
@@ -49,11 +49,11 @@ static void Format(TextWriter& out, const Md5Digest& digest, bool uppercase) {
 }
 
 TextWriter& operator<<(TextWriter& out, const Md5Digest& digest) {
-  Format(out, digest, false);
+  format(out, digest, false);
   return out;
 }
 
-void Format(TextWriter& out, const Md5Digest& digest, const StringSpan& opts) {
+void format(TextWriter& out, const Md5Digest& digest, const StringSpan& opts) {
   bool uppercase = false;
   for (int i = 0; i < opts.size(); ++i) {
     char c = opts[i];
@@ -67,7 +67,7 @@ void Format(TextWriter& out, const Md5Digest& digest, const StringSpan& opts) {
         throw FormatException("Md5Digest");
     }
   }
-  Format(out, digest, uppercase);
+  format(out, digest, uppercase);
 }
 
 // The four core functions - F1 is optimized somewhat.

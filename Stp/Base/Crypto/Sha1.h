@@ -43,7 +43,7 @@ class Sha1Digest {
 BASE_EXPORT Sha1Digest computeSha1Digest(BufferSpan input) noexcept;
 BASE_EXPORT bool tryParse(StringSpan s, Sha1Digest& out_digest) noexcept;
 
-BASE_EXPORT void Format(TextWriter& out, const Sha1Digest& digest, const StringSpan& opts);
+BASE_EXPORT void format(TextWriter& out, const Sha1Digest& digest, const StringSpan& opts);
 BASE_EXPORT TextWriter& operator<<(TextWriter& out, const Sha1Digest& digest);
 
 class BASE_EXPORT Sha1Hasher {

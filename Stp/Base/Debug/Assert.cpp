@@ -41,7 +41,7 @@ TextWriter& assertPrint(const char* file, int line, const char* expr) {
   bool being_debugged = Debugger::isPresent();
   if (!being_debugged) {
     out << "Stack Trace: \n";
-    // FIXME Format(out, StackTrace());
+    // FIXME format(out, StackTrace());
   }
   #endif
 

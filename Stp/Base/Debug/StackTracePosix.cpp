@@ -169,7 +169,7 @@ static void StackDumpSignalHandler(int signal, siginfo_t* info, void* void_conte
   }
   #endif
 
-  out.Flush();
+  out.flush();
 
   StackTrace stack_trace;
   #if 1

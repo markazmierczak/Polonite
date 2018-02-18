@@ -21,7 +21,7 @@ template<typename TValue>
 inline String FormattableToString(const TValue& value, const StringSpan& opts) {
   String result;
   StringWriter writer(&result);
-  Format(writer, value, opts);
+  format(writer, value, opts);
   return result;
 }
 

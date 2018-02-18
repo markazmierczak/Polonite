@@ -28,15 +28,15 @@ void FilePathWriter::EnsureSeparator() {
   path_.chars().Add(FilePathSeparator);
 }
 
-void FilePathWriter::OnWriteChar(char c) {
+void FilePathWriter::onWriteChar(char c) {
   path_.chars().Add(char_cast<FilePathChar>(c));
 }
 
-void FilePathWriter::OnWriteRune(char32_t rune) {
+void FilePathWriter::onWriteRune(char32_t rune) {
   AppendRune(path_.chars(), rune);
 }
 
-void FilePathWriter::OnWriteString(StringSpan text) {
+void FilePathWriter::onWriteString(StringSpan text) {
   #if OS(WIN)
   #error "not implemented"
   #elif OS(POSIX)
@@ -44,7 +44,7 @@ void FilePathWriter::OnWriteString(StringSpan text) {
   #endif
 }
 
-void FilePathWriter::OnEndLine() {
+void FilePathWriter::onEndLine() {
   // unable to add new line to FilePath
   throw NotSupportedException();
 }

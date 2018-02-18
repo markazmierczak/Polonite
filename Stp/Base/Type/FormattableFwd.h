@@ -12,7 +12,7 @@ namespace stp {
 class TextWriter;
 
 template<typename T, TEnableIf<TIsScalar<T>>* = nullptr>
-inline void Format(TextWriter& out, const T& x, const StringSpan& opts);
+inline void format(TextWriter& out, const T& x, const StringSpan& opts);
 
 template<typename T, TEnableIf<TIsScalar<T>>* = nullptr>
 inline TextWriter& operator<<(TextWriter& out, const T& x);
@@ -21,7 +21,7 @@ namespace detail {
 
 template<typename T>
 using FormattableConcept = decltype(
-    Format(declval<TextWriter&>(), declval<const T&>(), declval<const StringSpan&>()));
+    format(declval<TextWriter&>(), declval<const T&>(), declval<const StringSpan&>()));
 
 } // namespace detail
 

@@ -48,7 +48,7 @@ class BASE_EXPORT LibraryLoadError {
   friend TextWriter& operator<<(TextWriter& out, const LibraryLoadError& x) {
     x.FormatImpl(out); return out;
   }
-  friend void Format(TextWriter& out, const LibraryLoadError& x, const StringSpan& opts) {
+  friend void format(TextWriter& out, const LibraryLoadError& x, const StringSpan& opts) {
     x.FormatImpl(out);
   }
 

@@ -492,7 +492,7 @@ void FormatSymbol(TextWriter& out, void *pc) {
 //    FormatSymbolImpl(out, pc);
 //  } catch (Exception& exception) {
       out << "symbol ";
-//    Format(out, pc);
+//    format(out, pc);
 //  }
 }
 

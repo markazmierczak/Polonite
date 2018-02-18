@@ -198,7 +198,7 @@ class BASE_EXPORT Time : public TimeBase<Time> {
   friend TextWriter& operator<<(TextWriter& out, Time x) {
     FormatImpl(out, x); return out;
   }
-  friend void Format(TextWriter& out, Time x, const StringSpan& opts) {
+  friend void format(TextWriter& out, Time x, const StringSpan& opts) {
     FormatImpl(out, x);
   }
 

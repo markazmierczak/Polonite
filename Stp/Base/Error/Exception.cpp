@@ -93,7 +93,7 @@ void Exception::AddMessage(const char* msg, int msg_size, bool literal) {
 void Exception::FormatImpl(TextWriter& out) const {
   out << GetName() << ": ";
 
-  OnFormat(out);
+  onFormat(out);
 
   auto msg = GetMessage();
   if (!msg.IsEmpty()) {
@@ -101,7 +101,7 @@ void Exception::FormatImpl(TextWriter& out) const {
   }
 }
 
-void Exception::OnFormat(TextWriter& out) const {
+void Exception::onFormat(TextWriter& out) const {
 }
 
 int CountUncaughtExceptions() noexcept {

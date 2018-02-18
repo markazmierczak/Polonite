@@ -19,15 +19,15 @@ This has many drawbacks, not limited to:
 * locale-dependent
 * poor extensibility
 
-The Polonite comes with ``Formattable`` concept which is built upon ``TextWriter``. The concept is implemented in similar way as ``Swappable`` concept with standalone function ``Format()``::
+The Polonite comes with ``Formattable`` concept which is built upon ``TextWriter``. The concept is implemented in similar way as ``Swappable`` concept with standalone function ``format()``::
 
    void ToFormat(TextWriter& out, const T& value, const StringSpan& opts);
 
 This will print value with given options into the given writer.
 
-These foundations enables implementation of ``TextWriter::Format()``::
+These foundations enables implementation of ``TextWriter::format()``::
 
-   void TextWriter::Format(StringSpan fmt, const Ts&... args);
+   void TextWriter::format(StringSpan fmt, const Ts&... args);
 
 and provides an easy (C#/Python-like) way of formatting multiple objects.
 
@@ -40,7 +40,7 @@ ToString
 
 ``ToString(T, const StringSpan& opts)`` from Polonite is built upon ``Formattable`` concept and gives possibility for customization.
 
-Once you define ``Format()`` function for your type, you are able to use this type for: ``TextWriter::Format()``, ``String::Format()`` and ``ToString()``.
+Once you define ``format()`` function for your type, you are able to use this type for: ``TextWriter::format()``, ``String::format()`` and ``ToString()``.
 
 Signed vs Unsigned
 ==================

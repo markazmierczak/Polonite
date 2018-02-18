@@ -294,7 +294,7 @@ Place arguments with following order:
 
 The context is like ``this`` pointer for a class. For example, see ``out`` in following function::
 
-   void Format(TextWriter& out, const MyClass& value, const StringSpan& opts);
+   void format(TextWriter& out, const MyClass& value, const StringSpan& opts);
 
 Some array processing functions use different order to mimic ``memcpy``::
 

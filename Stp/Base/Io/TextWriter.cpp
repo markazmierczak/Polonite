@@ -10,33 +10,41 @@
 
 namespace stp {
 
-void TextWriter::OnEndLine() {
-  OnWriteChar('\n');
+/**
+ * @class TextWriter
+ * Locale-independent replacement for std::ostream.
+ * Useful for writing text-based representation of data, for example XML and JSON.
+ * it should NOT be used to build text displayed to the user since it does not
+ * support locale (and will not do; on purpose).
+ */
+
+void TextWriter::onEndLine() {
+  onWriteChar('\n');
 }
 
-void TextWriter::OnFlush() {}
+void TextWriter::onFlush() {}
 
 bool TextWriter::isConsoleWriter() const {
   return false;
 }
 
-void TextWriter::WriteRune(char32_t rune) {
+void TextWriter::writeRune(char32_t rune) {
   ASSERT(unicode::IsValidRune(rune));
   if (isAscii(rune)) {
-    OnWriteChar(static_cast<char>(rune));
+    onWriteChar(static_cast<char>(rune));
   } else {
-    OnWriteRune(rune);
+    onWriteRune(rune);
   }
 }
 
-void TextWriter::OnIndent(int count, char c) {
+void TextWriter::onIndent(int count, char c) {
   constexpr StringSpan SpacePadding = "                    ";
   constexpr int ChunkSize = SpacePadding.size();
   char custom_padding[ChunkSize];
 
   if (count <= 1) {
     if (count == 1) {
-      OnWriteChar(c);
+      onWriteChar(c);
     }
     return;
   }
@@ -51,23 +59,23 @@ void TextWriter::OnIndent(int count, char c) {
 
   while (count > 0) {
     int chunk_size = min(count, ChunkSize);
-    OnWriteString(StringSpan(templ, chunk_size));
+    onWriteString(StringSpan(templ, chunk_size));
     count -= chunk_size;
   }
 }
 
-void TextWriter::OnWriteChar(char c) {
-  OnWriteString(StringSpan(&c, 1));
+void TextWriter::onWriteChar(char c) {
+  onWriteString(StringSpan(&c, 1));
 }
 
-void TextWriter::OnWriteRune(char32_t rune) {
+void TextWriter::onWriteRune(char32_t rune) {
   char units[Utf8::MaxEncodedRuneLength];
   int n = EncodeUtf(units, rune);
-  OnWriteString(StringSpan(units, n));
+  onWriteString(StringSpan(units, n));
 }
 
 #if ASSERT_IS_ON
-bool TextWriter::IsValidChar(char c) {
+bool TextWriter::isValidChar(char c) {
   return isAscii(c);
 }
 #endif
@@ -77,15 +85,15 @@ namespace {
 class NullTextWriter final : public TextWriter {
  public:
   TextEncoding GetEncoding() const { return TextEncoding(); }
-  void OnWriteChar(char c) override {}
-  void OnWriteRune(char32_t c) override {}
-  void OnWriteString(StringSpan text) override {}
-  void OnIndent(int count, char c) override {}
+  void onWriteChar(char c) override {}
+  void onWriteRune(char32_t c) override {}
+  void onWriteString(StringSpan text) override {}
+  void onIndent(int count, char c) override {}
 };
 
 } // namespace
 
-TextWriter& TextWriter::Null() {
+TextWriter& TextWriter::null() {
   static AlignedStorage<NullTextWriter> g_storage;
   return *new(g_storage.bytes) NullTextWriter();
 }

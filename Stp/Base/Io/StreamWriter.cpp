@@ -79,7 +79,7 @@ void StreamWriter::DestroyEncoder() {
   encoder_->~TextEncoder();
 }
 
-void StreamWriter::OnFlush() {
+void StreamWriter::onFlush() {
   if (buffer_.IsEmpty())
     return;
   FlushBuffer();
@@ -128,7 +128,7 @@ void StreamWriter::WriteToBuffer(BufferSpan input) {
   buffer_.Append(input);
 }
 
-void StreamWriter::OnWriteChar(char c) {
+void StreamWriter::onWriteChar(char c) {
   if (IsDirect()) {
     if (buffer_.capacity() == buffer_.size()) {
       FlushBuffer();
@@ -139,7 +139,7 @@ void StreamWriter::OnWriteChar(char c) {
   WriteIndirect(StringSpan(&c, 1));
 }
 
-void StreamWriter::OnWriteRune(char32_t rune) {
+void StreamWriter::onWriteRune(char32_t rune) {
   char units[Utf8::MaxEncodedRuneLength];
   int length = Utf8::Encode(units, rune);
   if (IsDirect()) {
@@ -149,7 +149,7 @@ void StreamWriter::OnWriteRune(char32_t rune) {
   }
 }
 
-void StreamWriter::OnWriteString(StringSpan input) {
+void StreamWriter::onWriteString(StringSpan input) {
   if (IsDirect()) {
     WriteToBuffer(BufferSpan(input));
   } else {

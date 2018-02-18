@@ -26,7 +26,7 @@ class BASE_EXPORT FileSystemException : public SystemException {
   StringSpan GetName() const noexcept override;
 
  protected:
-  void OnFormat(TextWriter& out) const final;
+  void onFormat(TextWriter& out) const final;
 
  private:
   FilePath path_;

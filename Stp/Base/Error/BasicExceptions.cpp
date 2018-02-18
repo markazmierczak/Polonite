@@ -11,7 +11,7 @@ StringSpan ArgumentException::GetName() const noexcept {
   return "ArgumentException";
 }
 
-void ArgumentException::OnFormat(TextWriter& out) const {
+void ArgumentException::onFormat(TextWriter& out) const {
   out << "argument name: " << GetArgumentName();
 }
 
@@ -19,7 +19,7 @@ StringSpan FormatException::GetName() const noexcept {
   return "FormatException";
 }
 
-void FormatException::OnFormat(TextWriter& out) const {
+void FormatException::onFormat(TextWriter& out) const {
   out << "invalid format specifier";
   if (!type_name_.IsEmpty()) {
     out << " for type " << type_name_;
@@ -33,7 +33,7 @@ StringSpan OutOfMemoryException::GetName() const noexcept {
   return "OutOfMemoryException";
 }
 
-void OutOfMemoryException::OnFormat(TextWriter& out) const {
+void OutOfMemoryException::onFormat(TextWriter& out) const {
   if (allocation_size_ != 0) {
     out << "not enough memory to allocate " << allocation_size_ << " bytes";
   }

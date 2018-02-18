@@ -1478,7 +1478,7 @@ static void StreamFloats(TextWriter& out, StringSpan name, const float* fv, int 
 
 void DecomposedXform3::ToFormat(TextWriter& out, const StringSpan& opts) const {
   out.WriteAscii("translate: ");
-  Format(out, translate);
+  format(out, translate);
   out.WriteLine();
 
   StreamFloats(out, "scale", scale, 3);
@@ -1486,7 +1486,7 @@ void DecomposedXform3::ToFormat(TextWriter& out, const StringSpan& opts) const {
   StreamFloats(out, "perspective", perspective, 4);
 
   out.WriteAscii("quaternion: ");
-  Format(out, quaternion);
+  format(out, quaternion);
   out.WriteLine();
 }
 

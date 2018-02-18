@@ -16,10 +16,10 @@ class BASE_EXPORT InlineStringWriter final : public TextWriter {
   TextEncoding GetEncoding() const override;
 
  protected:
-  void OnWriteChar(char c) override;
-  void OnWriteRune(char32_t rune) override;
-  void OnWriteString(StringSpan text) override;
-  void OnIndent(int count, char c) override;
+  void onWriteChar(char c) override;
+  void onWriteRune(char32_t rune) override;
+  void onWriteString(StringSpan text) override;
+  void onIndent(int count, char c) override;
 
  private:
   InlineListBase<char>& string_;

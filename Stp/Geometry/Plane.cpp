@@ -78,7 +78,7 @@ Vector3 Plane::ReflectVector(const Vector3& direction) const {
 
 void Plane::ToFormat(TextWriter& out, const StringSpan& opts) const {
   out.WriteAscii("n=");
-  Format(out, normal);
+  format(out, normal);
   out.WriteAscii(", z=");
   out.WriteFloat(distance);
 }

@@ -128,7 +128,7 @@ class Fixed {
 
   friend constexpr HashCode partialHash(const Fixed& x) { return static_cast<HashCode>(x.bits_); }
 
-  friend void Format(TextWriter& out, const Fixed& x, const StringSpan& opts) {
+  friend void format(TextWriter& out, const Fixed& x, const StringSpan& opts) {
     detail::FormatFixedPoint(out, opts, x.bits_, P);
   }
   friend TextWriter& operator<<(TextWriter& out, const Fixed& x) {

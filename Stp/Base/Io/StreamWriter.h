@@ -30,10 +30,10 @@ class BASE_EXPORT StreamWriter final : public TextWriter {
   TextEncoding GetEncoding() const override;
 
  protected:
-  void OnWriteChar(char c) override;
-  void OnWriteRune(char32_t c) override;
-  void OnWriteString(StringSpan text) override;
-  void OnFlush() override;
+  void onWriteChar(char c) override;
+  void onWriteRune(char32_t c) override;
+  void onWriteString(StringSpan text) override;
+  void onFlush() override;
 
  private:
   Stream& stream_;

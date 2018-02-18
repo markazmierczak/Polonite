@@ -26,7 +26,7 @@ bool tryParse(StringSpan input, Crc32Value& out) noexcept {
   return true;
 }
 
-static void Format(TextWriter& out, Crc32Value value, bool uppercase) {
+static void format(TextWriter& out, Crc32Value value, bool uppercase) {
   constexpr int NibbleCount = 8;
 
   auto raw = toUnderlying(value);
@@ -38,11 +38,11 @@ static void Format(TextWriter& out, Crc32Value value, bool uppercase) {
 }
 
 TextWriter& operator<<(TextWriter& out, Crc32Value value) {
-  Format(out, value, false);
+  format(out, value, false);
   return out;
 }
 
-void Format(TextWriter& out, Crc32Value value, const StringSpan& opts) {
+void format(TextWriter& out, Crc32Value value, const StringSpan& opts) {
   bool uppercase = false;
   for (int i = 0; i < opts.size(); ++i) {
     char c = opts[i];
@@ -56,7 +56,7 @@ void Format(TextWriter& out, Crc32Value value, const StringSpan& opts) {
         throw FormatException("Crc32Value");
     }
   }
-  Format(out, value, uppercase);
+  format(out, value, uppercase);
 }
 
 static const uint32_t Crc32Table[256] = {

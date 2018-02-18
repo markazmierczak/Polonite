@@ -63,7 +63,7 @@ void ConsoleWriter::setForegroundColor(ConsoleColor color) {
   if (!uses_colors_)
     return;
   // TODO no need to flush early, just set destinations temporarily
-  Flush();
+  flush();
 
   AnsiColor ansi = getAnsiColor(color);
   byte_t sequence[] = "\033[;??m";
@@ -75,7 +75,7 @@ void ConsoleWriter::setForegroundColor(ConsoleColor color) {
 void ConsoleWriter::setBackgroundColor(ConsoleColor color) {
   if (!uses_colors_)
     return;
-  Flush();
+  flush();
 
   AnsiColor ansi = getAnsiColor(color);
   if (ansi.intense) {
@@ -99,7 +99,7 @@ void ConsoleWriter::fetchDefaultColors() {}
 void ConsoleWriter::resetColors() {
   if (!uses_colors_)
     return;
-  Flush();
+  flush();
   byte_t sequence[] = "\033[m";
   std_->Write(BufferSpan(sequence));
 }

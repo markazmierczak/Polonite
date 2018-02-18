@@ -11,7 +11,7 @@ StringSpan SystemException::GetName() const noexcept {
   return "SystemException";
 }
 
-void SystemException::OnFormat(TextWriter& out) const {
+void SystemException::onFormat(TextWriter& out) const {
   out << error_code_;
 }
 

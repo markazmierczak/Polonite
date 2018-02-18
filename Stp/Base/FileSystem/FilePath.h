@@ -106,8 +106,8 @@ class BASE_EXPORT FilePath {
   friend HashCode partialHash(const FilePath& x) { return partialHash(x.ToSpan()); }
   friend int compare(const FilePath& l, FilePathSpan r) { return compare(l.ToSpan(), r); }
   friend TextWriter& operator<<(TextWriter& out, const FilePath& x) { return out << x.ToSpan(); }
-  friend void Format(TextWriter& out, const FilePath& x, const StringSpan& opts) {
-    Format(out, x.ToSpan(), opts);
+  friend void format(TextWriter& out, const FilePath& x, const StringSpan& opts) {
+    format(out, x.ToSpan(), opts);
   }
 
   friend const FilePathChar* ToNullTerminated(const FilePath& x) {

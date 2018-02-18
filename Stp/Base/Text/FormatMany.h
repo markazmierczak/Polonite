@@ -35,7 +35,7 @@ class DefaultFormatter final : public Formatter {
   explicit DefaultFormatter(const T& adapted) : adapted_(adapted) {}
 
   void Execute(TextWriter& out, const StringSpan& opts) const override {
-    Format(out, adapted_, opts);
+    format(out, adapted_, opts);
   }
 
  private:
@@ -49,7 +49,7 @@ class NamedFormatter final : public Formatter {
       : name_(name), adapted_(move(arg)) {}
 
   void Execute(TextWriter& out, const StringSpan& opts) const override {
-    Format(out, adapted_, opts);
+    format(out, adapted_, opts);
   }
 
   StringSpan GetArgName() const override { return name_; }

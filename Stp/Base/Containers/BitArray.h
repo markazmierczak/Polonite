@@ -138,7 +138,7 @@ class BitArray {
     return ::memcmp(l.words_, r.words_, sizeof(words_));
   }
   friend HashCode partialHash(const BitArray& x) { return hashBuffer(x.words_, N * isizeof(WordType)); }
-  friend void Format(TextWriter& out, const BitArray& x, const StringSpan& opts) {
+  friend void format(TextWriter& out, const BitArray& x, const StringSpan& opts) {
     detail::FormatBitArray(out, opts, x.words_, N);
   }
 

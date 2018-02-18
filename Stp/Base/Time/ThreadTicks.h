@@ -55,7 +55,7 @@ class BASE_EXPORT ThreadTicks : public TimeBase<ThreadTicks> {
   friend TextWriter& operator<<(TextWriter& out, const ThreadTicks& x) {
     FormatImpl(out, x); return out;
   }
-  friend void Format(TextWriter& out, const ThreadTicks& x, const StringSpan& opts) {
+  friend void format(TextWriter& out, const ThreadTicks& x, const StringSpan& opts) {
     FormatImpl(out, x);
   }
 

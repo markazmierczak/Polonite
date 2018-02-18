@@ -18,7 +18,7 @@ class BASE_EXPORT SystemException : public Exception {
   StringSpan GetName() const noexcept override;
 
  protected:
-  void OnFormat(TextWriter& out) const override;
+  void onFormat(TextWriter& out) const override;
 
  private:
   SystemErrorCode error_code_;

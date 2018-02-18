@@ -28,7 +28,7 @@ bool tryParse(StringSpan input, Sha1Digest& out_digest) noexcept {
   return true;
 }
 
-static void Format(TextWriter& out, const Sha1Digest& digest, bool uppercase) {
+static void format(TextWriter& out, const Sha1Digest& digest, bool uppercase) {
   Array<char, NibbleCount> text;
   for (int i = 0; i < Sha1Digest::Length; ++i) {
     text[i * 2 + 0] = nibbleToHexDigit((digest[i] >> 4) & 0xF, uppercase);
@@ -38,11 +38,11 @@ static void Format(TextWriter& out, const Sha1Digest& digest, bool uppercase) {
 }
 
 TextWriter& operator<<(TextWriter& out, const Sha1Digest& digest) {
-  Format(out, digest, false);
+  format(out, digest, false);
   return out;
 }
 
-void Format(TextWriter& out, const Sha1Digest& digest, const StringSpan& opts) {
+void format(TextWriter& out, const Sha1Digest& digest, const StringSpan& opts) {
   bool uppercase = false;
   for (int i = 0; i < opts.size(); ++i) {
     char c = opts[i];
@@ -56,7 +56,7 @@ void Format(TextWriter& out, const Sha1Digest& digest, const StringSpan& opts) {
         throw FormatException("Sha1Digest");
     }
   }
-  Format(out, digest, uppercase);
+  format(out, digest, uppercase);
 }
 
 void Sha1Hasher::reset() noexcept {

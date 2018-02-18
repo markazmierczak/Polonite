@@ -35,14 +35,14 @@ inline ErrorCode MakeErrorCode(WinErrorCode code) {
 }
 
 namespace detail {
-BASE_EXPORT void Format(TextWriter& out, WinErrorCode code);
+BASE_EXPORT void format(TextWriter& out, WinErrorCode code);
 }
 
-inline void Format(TextWriter& out, WinErrorCode code, const StringSpan& opts) {
-  detail::Format(out, code);
+inline void format(TextWriter& out, WinErrorCode code, const StringSpan& opts) {
+  detail::format(out, code);
 }
 inline TextWriter& operator<<(TextWriter& out, WinErrorCode code) {
-  detail::Format(out, code); return out;
+  detail::format(out, code); return out;
 }
 
 } // namespace stp

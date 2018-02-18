@@ -53,7 +53,7 @@ class BASE_EXPORT StackTrace {
   // Prints the stack trace to stderr.
   void PrintToConsole() const;
 
-  friend void Format(TextWriter& out, const StackTrace& x, const StringSpan& opts) {
+  friend void format(TextWriter& out, const StackTrace& x, const StringSpan& opts) {
     x.FormatImpl(out, opts);
   }
   friend TextWriter& operator<<(TextWriter& out, const StackTrace& x) {

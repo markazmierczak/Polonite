@@ -23,7 +23,7 @@ HashCode partialHash(const ErrorCode& x) noexcept {
 
 namespace detail {
 
-void Format(TextWriter& out, const ErrorCode& x) {
+void format(TextWriter& out, const ErrorCode& x) {
   if (IsOk(x)) {
     out << "no error";
   } else {

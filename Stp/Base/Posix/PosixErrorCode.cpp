@@ -102,7 +102,7 @@ static void safe_strerror_r(int err, char* buf, size_t len) {
   wrap_posix_strerror_r(&strerror_r, err, buf, len);
 }
 
-void Format(TextWriter& out, PosixErrorCode code) {
+void format(TextWriter& out, PosixErrorCode code) {
   char buf[256];
   safe_strerror_r(toUnderlying(code), buf, sizeof(buf));
   out << MakeSpanFromNullTerminated(buf);
@@ -118,7 +118,7 @@ class PosixErrorCategory final : public ErrorCategory {
   StringSpan GetName() const noexcept override { return "posix"; }
 
   void FormatMessage(TextWriter& out, int code) const override {
-    detail::Format(out, static_cast<PosixErrorCode>(code));
+    detail::format(out, static_cast<PosixErrorCode>(code));
   }
 };
 

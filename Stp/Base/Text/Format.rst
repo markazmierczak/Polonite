@@ -5,7 +5,7 @@ Formatting
 
 Polonite comes with its own formatting mechanism. It is easy to use and extend::
 
-  auto msg_text = String::Format(
+  auto msg_text = String::format(
       "Namespace of prefix '{}' not found, error: {:X}", prefix, 0x2345);
 
 Each argument in format string is formattable with specification passed in braces. In above example ``:X`` specifies to format an integer in hexadecimal representation (upper-case).
@@ -16,10 +16,10 @@ You can format single object with ``ToString()`` function like this::
   // optional argument specifies format options
   String str = ToString(bytes, "X");
 
-In general you should stick to ``TextStream::Format()`` though. Above examples are easy to show power, but efficiency comes with following code::
+In general you should stick to ``TextStream::format()`` though. Above examples are easy to show power, but efficiency comes with following code::
 
    void OutputJson(TextWriter& out, JsonObject& json) {
-     out.Format("JSON formatting with ease:\n {:PC}", json);
+     out.format("JSON formatting with ease:\n {:PC}", json);
      out << "# end of file";
    }
 
@@ -46,7 +46,7 @@ To make your class formattable just add following method::
 
 or add function in the type's enclosing namespace::
 
-  void Format(TextWriter& writer, const SomeExternalType& value, const StringSpan& opts);
+  void format(TextWriter& writer, const SomeExternalType& value, const StringSpan& opts);
 
 Additional ``options`` argument is a way to customize formatting of your class.
 It is everything what comes after colon in format string.
@@ -237,17 +237,17 @@ More Examples
 .. code-block:: c++
 
    // Double '{' or '}' to print them.
-   out.Format("{{ {} }}", 5);
+   out.format("{{ {} }}", 5);
    // => "{5}"
 
    // Use positional arguments to reference single value multiple times.
-   out.Format("{0} + {0} != {}", 2, 5);
+   out.format("{0} + {0} != {}", 2, 5);
    // => "2 + 2 != 5"
 
    // Use named arguments to reference a value by name.
-   out.Format("{city} has {count}M people.", FMT_ARG(city), FMT_ARG(count));
+   out.format("{city} has {count}M people.", FMT_ARG(city), FMT_ARG(count));
    // => "New York has 9M people."
 
    // Layout your replacement:
-   out.Format("password = {}{*7}, 'p', 'd');
+   out.format("password = {}{*7}, 'p', 'd');
    // => "password = p******d"

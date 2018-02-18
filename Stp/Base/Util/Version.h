@@ -42,7 +42,7 @@ class BASE_EXPORT Version {
   friend TextWriter& operator<<(TextWriter& out, const Version& x) {
     x.FormatImpl(out); return out;
   }
-  friend void Format(TextWriter& out, const Version& x, const StringSpan& opts) {
+  friend void format(TextWriter& out, const Version& x, const StringSpan& opts) {
     x.FormatImpl(out);
   }
 

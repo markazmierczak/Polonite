@@ -230,7 +230,7 @@ class Delegate<TResult(TArgs...)> {
   explicit operator bool() const { return gmethod_ != nullptr; }
   bool IsNull() const { return gmethod_ == nullptr; }
 
-  friend void Format(TextWriter& out, const Delegate& x, const StringSpan& opts) {
+  friend void format(TextWriter& out, const Delegate& x, const StringSpan& opts) {
     delegate_impl::FormatDelegate(out, opts, reinterpret_cast<void*>(x.gmethod_));
   }
 

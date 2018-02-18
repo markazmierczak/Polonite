@@ -49,8 +49,8 @@ class ConsoleWriter : public TextWriter {
 
   void fetchDefaultColors();
 
-  void OnWriteString(StringSpan text) override;
-  void OnFlush() override;
+  void onWriteString(StringSpan text) override;
+  void onFlush() override;
 
   String buffer_;
   Lock lock_;

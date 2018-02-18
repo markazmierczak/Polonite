@@ -43,7 +43,7 @@ class Md5Digest {
 BASE_EXPORT Md5Digest computeMd5Digest(BufferSpan input) noexcept;
 BASE_EXPORT bool tryParse(StringSpan s, Md5Digest& out_digest) noexcept;
 
-BASE_EXPORT void Format(TextWriter& out, const Md5Digest& digest, const StringSpan& opts);
+BASE_EXPORT void format(TextWriter& out, const Md5Digest& digest, const StringSpan& opts);
 BASE_EXPORT TextWriter& operator<<(TextWriter& out, const Md5Digest& digest);
 
 class BASE_EXPORT Md5Hasher {

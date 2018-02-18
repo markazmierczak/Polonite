@@ -73,14 +73,14 @@ BASE_EXPORT int compare(const ErrorCode& l, const ErrorCode& r) noexcept;
 BASE_EXPORT HashCode partialHash(const ErrorCode& x) noexcept;
 
 namespace detail {
-BASE_EXPORT void Format(TextWriter& out, const ErrorCode& x);
+BASE_EXPORT void format(TextWriter& out, const ErrorCode& x);
 }
 
-inline void Format(TextWriter& out, const ErrorCode& x, const StringSpan& opts) {
-  detail::Format(out, x);
+inline void format(TextWriter& out, const ErrorCode& x, const StringSpan& opts) {
+  detail::format(out, x);
 }
 inline TextWriter& operator<<(TextWriter& out, const ErrorCode& x) {
-  detail::Format(out, x); return out;
+  detail::format(out, x); return out;
 }
 
 } // namespace stp

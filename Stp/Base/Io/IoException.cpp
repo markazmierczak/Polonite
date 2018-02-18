@@ -15,7 +15,7 @@ StringSpan EndOfStreamException::GetName() const noexcept {
   return "EndOfStreamException";
 }
 
-void EndOfStreamException::OnFormat(TextWriter& out) const {
+void EndOfStreamException::onFormat(TextWriter& out) const {
   out << "failed due operation past end of stream";
 }
 

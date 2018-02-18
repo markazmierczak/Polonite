@@ -14,7 +14,7 @@ BASE_EXPORT Crc32Value computeCrc32(BufferSpan input) noexcept;
 
 BASE_EXPORT bool tryParse(StringSpan s, Crc32Value& out_checksum) noexcept;
 
-BASE_EXPORT void Format(TextWriter& out, Crc32Value checksum, const StringSpan& opts);
+BASE_EXPORT void format(TextWriter& out, Crc32Value checksum, const StringSpan& opts);
 
 BASE_EXPORT TextWriter& operator<<(TextWriter& out, Crc32Value checksum);
 

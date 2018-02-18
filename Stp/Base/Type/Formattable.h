@@ -10,82 +10,82 @@ namespace stp {
 
 namespace detail {
 
-BASE_EXPORT void FormatNull(TextWriter& out);
-BASE_EXPORT void FormatBool(TextWriter& out, bool b);
-BASE_EXPORT void FormatBool(TextWriter& out, bool b, const StringSpan& opts);
-BASE_EXPORT void FormatChar(TextWriter& out, char32_t c, const StringSpan& opts);
+BASE_EXPORT void formatNull(TextWriter& out);
+BASE_EXPORT void formatBool(TextWriter& out, bool b);
+BASE_EXPORT void formatBool(TextWriter& out, bool b, const StringSpan& opts);
+BASE_EXPORT void formatChar(TextWriter& out, char32_t c, const StringSpan& opts);
 
-BASE_EXPORT void FormatSInt32(TextWriter& out,  int32_t x);
-BASE_EXPORT void FormatSInt64(TextWriter& out,  int64_t x);
-BASE_EXPORT void FormatUInt32(TextWriter& out, uint32_t x);
-BASE_EXPORT void FormatUInt64(TextWriter& out, uint64_t x);
+BASE_EXPORT void formatSint32(TextWriter& out,  int32_t x);
+BASE_EXPORT void formatSint64(TextWriter& out,  int64_t x);
+BASE_EXPORT void formatUint32(TextWriter& out, uint32_t x);
+BASE_EXPORT void formatUint64(TextWriter& out, uint64_t x);
 
-BASE_EXPORT void FormatSInt32(TextWriter& out,  int32_t x, const StringSpan& opts);
-BASE_EXPORT void FormatSInt64(TextWriter& out,  int64_t x, const StringSpan& opts);
-BASE_EXPORT void FormatUInt32(TextWriter& out, uint32_t x, const StringSpan& opts);
-BASE_EXPORT void FormatUInt64(TextWriter& out, uint64_t x, const StringSpan& opts);
+BASE_EXPORT void formatSint32(TextWriter& out,  int32_t x, const StringSpan& opts);
+BASE_EXPORT void formatSint64(TextWriter& out,  int64_t x, const StringSpan& opts);
+BASE_EXPORT void formatUint32(TextWriter& out, uint32_t x, const StringSpan& opts);
+BASE_EXPORT void formatUint64(TextWriter& out, uint64_t x, const StringSpan& opts);
 
 template<typename T>
-inline void FormatInt(TextWriter& out, T x, const StringSpan& opts) {
+inline void formatInt(TextWriter& out, T x, const StringSpan& opts) {
   if constexpr (TIsSigned<T>) {
     if constexpr (sizeof(T) <= 4)
-      FormatSInt32(out, x, opts);
+      formatSint32(out, x, opts);
     else
-      FormatSInt64(out, x, opts);
+      formatSint64(out, x, opts);
   } else {
     if constexpr (sizeof(T) <= 4)
-      FormatUInt32(out, x, opts);
+      formatUint32(out, x, opts);
     else
-      FormatUInt64(out, x, opts);
+      formatUint64(out, x, opts);
   }
 }
 
 template<typename T>
-inline void FormatInt(TextWriter& out, T x) {
+inline void formatInt(TextWriter& out, T x) {
   if constexpr (TIsSigned<T>) {
     if constexpr (sizeof(T) <= 4)
-      FormatSInt32(out, x);
+      formatSint32(out, x);
     else
-      FormatSInt64(out, x);
+      formatSint64(out, x);
   } else {
     if constexpr (sizeof(T) <= 4)
-      FormatUInt32(out, x);
+      formatUint32(out, x);
     else
-      FormatUInt64(out, x);
+      formatUint64(out, x);
   }
 }
 
-BASE_EXPORT void FormatFloat(TextWriter& out, double x);
-BASE_EXPORT void FormatFloat(TextWriter& out, double x, const StringSpan& opts);
+BASE_EXPORT void formatFloat(TextWriter& out, double x);
+BASE_EXPORT void formatFloat(TextWriter& out, double x, const StringSpan& opts);
 
-BASE_EXPORT void FormatRawPointer(TextWriter& out, const void* ptr);
+BASE_EXPORT void formatRawPointer(TextWriter& out, const void* ptr);
 
 template<typename T>
 using CustomContiguousFormattableConcept = decltype(
-    Format(declval<TextWriter&>(), declval<const T*>(), declval<int>(), declval<const StringSpan&>()));
+    format(declval<TextWriter&>(), declval<const T*>(), declval<int>(), declval<const StringSpan&>()));
 
 } // namespace detail
 
 template<typename T, TEnableIf<TIsScalar<T>>*>
-inline void Format(TextWriter& out, const T& x, const StringSpan& opts) {
+inline void format(TextWriter& out, const T& x, const StringSpan& opts) {
   if constexpr (TIsInteger<T>) {
-    detail::FormatInt(out, x, opts);
+    detail::formatInt(out, x, opts);
   } else if constexpr (TIsFloatingPoint<T>) {
-    detail::FormatFloat(out, static_cast<double>(x), opts);
+    detail::formatFloat(out, static_cast<double>(x), opts);
   } else if constexpr (TIsCharacter<T>) {
-    detail::FormatChar(out, char_cast<char32_t>(x), opts);
+    detail::formatChar(out, char_cast<char32_t>(x), opts);
   } else if constexpr (TIsEnum<T>) {
     if constexpr (TIsNamedEnum<T>) {
-      out << GetEnumName(x);
+      out << getEnumName(x);
     } else {
-      Format(out, toUnderlying(x), opts);
+      format(out, toUnderlying(x), opts);
     }
   } else if constexpr (TIsBoolean<T>) {
-    detail::FormatBool(out, x, opts);
+    detail::formatBool(out, x, opts);
   } else if constexpr (TIsPointer<T> || TIsMemberPointer<T>) {
-    detail::FormatRawPointer(out, x);
+    detail::formatRawPointer(out, x);
   } else if constexpr (TIsNullPointer<T>) {
-    detail::FormatNull(out);
+    detail::formatNull(out);
   } else {
     static_assert(!TIsScalar<T>, "unknown scalar type");
   }
@@ -94,9 +94,9 @@ inline void Format(TextWriter& out, const T& x, const StringSpan& opts) {
 template<typename T, TEnableIf<TIsScalar<T>>*>
 inline TextWriter& operator<<(TextWriter& out, const T& x) {
   if constexpr (TIsInteger<T>) {
-    detail::FormatInt(out, x);
+    detail::formatInt(out, x);
   } else if constexpr (TIsFloatingPoint<T>) {
-    detail::FormatFloat(out, static_cast<double>(x));
+    detail::formatFloat(out, static_cast<double>(x));
   } else if constexpr (TIsCharacter<T>) {
     if constexpr (sizeof(T) == 1) {
       out << char_cast<char>(x);
@@ -105,43 +105,23 @@ inline TextWriter& operator<<(TextWriter& out, const T& x) {
     }
   } else if constexpr (TIsEnum<T>) {
     if constexpr (TIsNamedEnum<T>) {
-      out << GetEnumName(x);
+      out << getEnumName(x);
     } else {
       out << toUnderlying(x);
     }
   } else if constexpr (TIsBoolean<T>) {
-    detail::FormatBool(out, x);
+    detail::formatBool(out, x);
   } else if constexpr (TIsPointer<T> || TIsMemberPointer<T>) {
-    detail::FormatRawPointer(out, x);
+    detail::formatRawPointer(out, x);
   } else if constexpr (TIsNullPointer<T>) {
-    detail::FormatNull(out);
+    detail::formatNull(out);
   } else {
     static_assert(!TIsScalar<T>, "unknown scalar type");
   }
   return out;
 }
 
-namespace detail {
-
-BASE_EXPORT void FormatContiguousGenericExt(
-    TextWriter& out,
-    const void* data, int size, int item_size,
-    const StringSpan& opts,
-    void (*item_format)(TextWriter& out, const void* item, const StringSpan& opts));
-
-template<typename T>
-inline void FormatContiguousGeneric(
-    TextWriter& out, const T* data, int size, const StringSpan& opts) {
-  FormatContiguousGenericExt(
-      out, data, size, sizeof(T), opts,
-      [](TextWriter& out, const void* item, const StringSpan& opts) {
-    Format(out, *static_cast<T*>(item), opts);
-  });
-}
-
-} // namespace detail
-
-inline void Format(TextWriter& out, StringSpan text, const StringSpan& opts) {
+inline void format(TextWriter& out, StringSpan text, const StringSpan& opts) {
   out << text;
 }
 

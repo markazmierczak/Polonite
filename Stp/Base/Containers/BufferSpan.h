@@ -9,9 +9,9 @@
 
 namespace stp {
 
-BASE_EXPORT void FormatBuffer(TextWriter& out, const void* data, int size, const StringSpan& opts);
-BASE_EXPORT void FormatBuffer(TextWriter& out, const void* data, int size);
-BASE_EXPORT void FormatBuffer(MutableStringSpan out, const void* data, int size, bool uppercase);
+BASE_EXPORT void formatBuffer(TextWriter& out, const void* data, int size, const StringSpan& opts);
+BASE_EXPORT void formatBuffer(TextWriter& out, const void* data, int size);
+BASE_EXPORT void formatBuffer(MutableStringSpan out, const void* data, int size, bool uppercase);
 
 class BufferSpan {
  public:
@@ -82,11 +82,11 @@ class BufferSpan {
   }
   friend HashCode partialHash(const BufferSpan& x) { return hashBuffer(x.data_, x.size_); }
 
-  friend void Format(TextWriter& out, const BufferSpan& x, const StringSpan& opts) {
-    FormatBuffer(out, x.data_, x.size_, opts);
+  friend void format(TextWriter& out, const BufferSpan& x, const StringSpan& opts) {
+    formatBuffer(out, x.data_, x.size_, opts);
   }
   friend TextWriter& operator<<(TextWriter& out, const BufferSpan& x) {
-    FormatBuffer(out, x.data_, x.size_); return out;
+    formatBuffer(out, x.data_, x.size_); return out;
   }
 
   friend constexpr const void* begin(const BufferSpan& x) { return x.data_; }
@@ -187,11 +187,11 @@ class MutableBufferSpan {
   }
   friend HashCode partialHash(const MutableBufferSpan& x) { return hashBuffer(x.data_, x.size_); }
 
-  friend void Format(TextWriter& out, const MutableBufferSpan& x, const StringSpan& opts) {
-    FormatBuffer(out, x.data_, x.size_, opts);
+  friend void format(TextWriter& out, const MutableBufferSpan& x, const StringSpan& opts) {
+    formatBuffer(out, x.data_, x.size_, opts);
   }
   friend TextWriter& operator<<(TextWriter& out, const MutableBufferSpan& x) {
-    FormatBuffer(out, x.data_, x.size_); return out;
+    formatBuffer(out, x.data_, x.size_); return out;
   }
 
   friend constexpr const void* begin(const MutableBufferSpan& x) { return x.data_; }

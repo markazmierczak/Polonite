@@ -98,7 +98,7 @@ void Quad2::ToFormat(TextWriter& out, const StringSpan& opts) const {
   for (int i = 0; i < 4; ++i) {
     if (i != 0)
       out.Write(',');
-    Format(out, p[i]);
+    format(out, p[i]);
   }
   out.Write(')');
 }

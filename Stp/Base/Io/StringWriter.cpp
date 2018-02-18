@@ -13,19 +13,19 @@ TextEncoding StringWriter::GetEncoding() const {
   return BuiltinTextEncodings::Utf8();
 }
 
-void StringWriter::OnWriteChar(char c) {
+void StringWriter::onWriteChar(char c) {
   string_.Add(c);
 }
 
-void StringWriter::OnWriteRune(char32_t rune) {
+void StringWriter::onWriteRune(char32_t rune) {
   AppendRune(string_, rune);
 }
 
-void StringWriter::OnWriteString(StringSpan text) {
+void StringWriter::onWriteString(StringSpan text) {
   string_.Append(text);
 }
 
-void StringWriter::OnIndent(int count, char c) {
+void StringWriter::onIndent(int count, char c) {
   ASSERT(count >= 0);
   ASSERT(isAscii(c));
   string_.AddRepeat(c, count);

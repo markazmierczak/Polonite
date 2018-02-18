@@ -20,7 +20,7 @@ class BASE_EXPORT ArgumentException : public Exception {
   StringSpan GetName() const noexcept override;
 
  protected:
-  void OnFormat(TextWriter& out) const override;
+  void onFormat(TextWriter& out) const override;
 
  private:
   StringSpan argument_name_;
@@ -36,7 +36,7 @@ class BASE_EXPORT FormatException : public Exception {
   StringSpan GetName() const noexcept override;
 
  protected:
-  void OnFormat(TextWriter& out) const override;
+  void onFormat(TextWriter& out) const override;
 
  private:
   StringSpan type_name_;
@@ -50,7 +50,7 @@ class BASE_EXPORT OutOfMemoryException : public Exception {
   StringSpan GetName() const noexcept override;
 
  protected:
-  void OnFormat(TextWriter& out) const override;
+  void onFormat(TextWriter& out) const override;
 
  private:
   size_t allocation_size_ = 0;

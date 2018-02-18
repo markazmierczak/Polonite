@@ -28,7 +28,7 @@ void FormatDelegate(TextWriter& out, const StringSpan& opts, void* ptr) {
   if (symbolize)
     FormatSymbol(out, ptr);
   else
-    Format(out, ptr, StringSpan());
+    format(out, ptr, StringSpan());
 }
 
 } // namespace delegate_impl

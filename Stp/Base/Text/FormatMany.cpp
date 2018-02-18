@@ -194,11 +194,11 @@ static void FormatAndLayoutReplacement(
   // Insert padding on the left side.
   if (pad_length > 0 && align != FormatAlign::Left) {
     if (align == FormatAlign::Right) {
-      out.Indent(pad_length, fill);
+      out.indent(pad_length, fill);
       pad_length = 0;
     } else {
       ASSERT(align == FormatAlign::Center);
-      out.Indent(pad_length / 2, fill);
+      out.indent(pad_length / 2, fill);
       pad_length -= pad_length / 2;
     }
   }
@@ -208,7 +208,7 @@ static void FormatAndLayoutReplacement(
 
   // Insert padding on the right side.
   if (pad_length > 0)
-    out.Indent(pad_length, fill);
+    out.indent(pad_length, fill);
 }
 
 void FormatManyImpl(TextWriter& out, StringSpan fmt, Span<Formatter*> args) {

@@ -242,9 +242,9 @@ inline TextWriter& operator<<(TextWriter& out, const NullableValue<T>& x) {
   return out;
 }
 template<typename T, TEnableIf<TIsFormattable<T>>* = nullptr>
-inline void Format(TextWriter& out, const NullableValue<T>& x, const StringSpan& opts) {
+inline void format(TextWriter& out, const NullableValue<T>& x, const StringSpan& opts) {
   if (x)
-    Format(out, *x, opts);
+    format(out, *x, opts);
   else
     out << nullptr;
 }

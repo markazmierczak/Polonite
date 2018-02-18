@@ -85,11 +85,11 @@ class Buffer {
   friend int compare(const Buffer& l, const SpanType& r) { return compare(l.ToSpan(), r); }
   friend HashCode partialHash(const Buffer& x) { return hashBuffer(x.data_, x.size_); }
 
-  friend void Format(TextWriter& out, const Buffer& x, const StringSpan& opts) {
-    FormatBuffer(out, x.data_, x.size_, opts);
+  friend void format(TextWriter& out, const Buffer& x, const StringSpan& opts) {
+    formatBuffer(out, x.data_, x.size_, opts);
   }
   friend TextWriter& operator<<(TextWriter& out, const Buffer& x) {
-    FormatBuffer(out, x.data_, x.size_); return out;
+    formatBuffer(out, x.data_, x.size_); return out;
   }
 
   friend const void* begin(const Buffer& x) { return x.data_; }

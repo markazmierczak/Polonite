@@ -186,15 +186,15 @@ void Line2::Transform(const Affine& affine) {
 }
 
 void IntLine2::ToFormat(TextWriter& out, const StringSpan& opts) const {
-  Format(out, p1);
+  format(out, p1);
   out.Write(' ');
-  Format(out, p2);
+  format(out, p2);
 }
 
 void Line2::ToFormat(TextWriter& out, const StringSpan& opts) const {
-  Format(out, p1);
+  format(out, p1);
   out.Write(' ');
-  Format(out, p2);
+  format(out, p2);
 }
 
 } // namespace stp

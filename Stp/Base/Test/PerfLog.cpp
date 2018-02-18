@@ -30,7 +30,7 @@ void LogPerfResult(StringSpan test_name, double value, StringSpan units) {
 
   // FIXME
 //  StreamWriter out(g_perf_log_stream);
-//  out.Format("{}\t{}\t{}\n", test_name, value, units);
+//  out.format("{}\t{}\t{}\n", test_name, value, units);
 //  out.Flush();
 }
 

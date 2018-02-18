@@ -112,7 +112,7 @@ class BASE_EXPORT FilePathSpan {
     x.FormatImpl(out);
     return out;
   }
-  friend void Format(TextWriter& out, const FilePathSpan& x, const StringSpan& opts) {
+  friend void format(TextWriter& out, const FilePathSpan& x, const StringSpan& opts) {
     x.FormatImpl(out);
   }
 

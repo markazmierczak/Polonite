@@ -15,7 +15,7 @@ bool Ellipse::Contains(Point2 point) const {
 }
 
 void Ellipse::ToFormat(TextWriter& out, const StringSpan& opts) const {
-  Format(out, center);
+  format(out, center);
   out.Write(' ');
   out.WriteFloat(radii.x);
   out.Write('x');

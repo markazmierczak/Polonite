@@ -77,7 +77,7 @@ class BASE_EXPORT Half {
 
   friend HashCode partialHash(const Half& x) { return static_cast<HashCode>(x.bits_); }
 
-  friend void Format(TextWriter& out, const Half& x, const StringSpan& opts) {
+  friend void format(TextWriter& out, const Half& x, const StringSpan& opts) {
     FormatImpl(out, static_cast<float>(x), opts);
   }
 

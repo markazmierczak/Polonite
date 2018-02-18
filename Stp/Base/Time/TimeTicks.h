@@ -50,7 +50,7 @@ class BASE_EXPORT TimeTicks : public TimeBase<TimeTicks> {
   friend TextWriter& operator<<(TextWriter& out, TimeTicks x) {
     FormatImpl(out, x); return out;
   }
-  friend void Format(TextWriter& out, TimeTicks x, const StringSpan& opts) {
+  friend void format(TextWriter& out, TimeTicks x, const StringSpan& opts) {
     FormatImpl(out, x);
   }
 
