@@ -48,11 +48,11 @@ class BufferSpan {
 
   constexpr bool IsEmpty() const { return size_ == 0; }
 
-  constexpr BufferSpan GetSlice(int at) const {
+  constexpr BufferSpan getSlice(int at) const {
     ASSERT(0 <= at && at <= size_);
     return BufferSpan(data_ + at, size_ - at);
   }
-  constexpr BufferSpan GetSlice(int at, int n) const {
+  constexpr BufferSpan getSlice(int at, int n) const {
     ASSERT(0 <= at && at <= size_);
     ASSERT(0 <= n && n <= size_ - at);
     return BufferSpan(data_ + at, n);
@@ -144,21 +144,21 @@ class MutableBufferSpan {
 
   constexpr bool IsEmpty() const { return size_ == 0; }
 
-  constexpr BufferSpan GetSlice(int at) const {
+  constexpr BufferSpan getSlice(int at) const {
     ASSERT(0 <= at && at <= size_);
     return BufferSpan(data_ + at, size_ - at);
   }
-  constexpr MutableBufferSpan GetSlice(int at) {
+  constexpr MutableBufferSpan getSlice(int at) {
     ASSERT(0 <= at && at <= size_);
     return MutableBufferSpan(data_ + at, size_ - at);
   }
 
-  constexpr BufferSpan GetSlice(int at, int n) const {
+  constexpr BufferSpan getSlice(int at, int n) const {
     ASSERT(0 <= at && at <= size_);
     ASSERT(0 <= n && n <= size_ - at);
     return BufferSpan(data_ + at, n);
   }
-  constexpr MutableBufferSpan GetSlice(int at, int n) {
+  constexpr MutableBufferSpan getSlice(int at, int n) {
     ASSERT(0 <= at && at <= size_);
     ASSERT(0 <= n && n <= size_ - at);
     return MutableBufferSpan(data_ + at, n);

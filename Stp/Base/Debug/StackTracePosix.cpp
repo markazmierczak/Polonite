@@ -64,7 +64,7 @@ void DemangleSymbols(TextWriter& out, StringSpan mangled) {
       break; // Mangled symbol not found.
     }
     if (mangled_start > 0) {
-      out << mangled.GetSlice(0, mangled_start);
+      out << mangled.getSlice(0, mangled_start);
       mangled.RemovePrefix(mangled_start);
     }
 
@@ -73,14 +73,14 @@ void DemangleSymbols(TextWriter& out, StringSpan mangled) {
     if (mangled_end < 0)
       mangled_end = mangled.size();
 
-    String mangled_symbol(mangled.GetSlice(0, mangled_end));
+    String mangled_symbol(mangled.getSlice(0, mangled_end));
 
     // Try to demangle the mangled symbol candidate.
     int status = 0;
     OwnPtr<char> demangled_symbol_cstr(
         abi::__cxa_demangle(ToNullTerminated(mangled_symbol), nullptr, 0, &status));
     if (status == 0) {  // Demangling is successful.
-      auto demangled_symbol = MakeSpanFromNullTerminated(demangled_symbol_cstr.get());
+      auto demangled_symbol = makeSpanFromNullTerminated(demangled_symbol_cstr.get());
       out << demangled_symbol;
 
       mangled.RemovePrefix(mangled_end);
@@ -200,7 +200,7 @@ static void WarmUpBacktrace() {
 void FormatSymbol(TextWriter& out, void* pc) {
   OwnPtr<char*[], FreeDeleter> trace_symbols(backtrace_symbols(&pc, 1));
   if (trace_symbols) {
-    auto trace_symbol = MakeSpanFromNullTerminated(trace_symbols[0]);
+    auto trace_symbol = makeSpanFromNullTerminated(trace_symbols[0]);
     DemangleSymbols(out, trace_symbol);
   }
 }
@@ -211,7 +211,7 @@ void StackTrace::FormatSymbols(TextWriter& out) const {
   OwnPtr<char*[], FreeDeleter> trace_symbols(backtrace_symbols(trace_, count_));
   if (trace_symbols) {
     for (int i = 0; i < count_; ++i) {
-      auto trace_symbol = MakeSpanFromNullTerminated(trace_symbols.get()[i]);
+      auto trace_symbol = makeSpanFromNullTerminated(trace_symbols.get()[i]);
       DemangleSymbols(out, trace_symbol);
       out << '\n';
     }

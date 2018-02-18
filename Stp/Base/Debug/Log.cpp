@@ -82,7 +82,7 @@ TextWriter* LogPrintCommon(LogLevel level, const char* file, unsigned line) {
   out << "] ";
 
   if (g_location_is_printed) {
-    out << MakeSpanFromNullTerminated(file) << ':' << line << ' ';
+    out << makeSpanFromNullTerminated(file) << ':' << line << ' ';
   }
 
   // Level is restored on exit from LOG() call.
@@ -96,7 +96,7 @@ void LogPrint(LogLevel level, const char* file, unsigned line, const char* msg) 
   if (!out)
     return;
 
-  *out << MakeSpanFromNullTerminated(msg);
+  *out << makeSpanFromNullTerminated(msg);
 
   LogWrapUp(*out);
 }
@@ -169,7 +169,7 @@ static bool MatchVlogPattern(StringSpan string, StringSpan pattern) {
 }
 
 int VerboseLogGetLevel(const char* file_cstr) {
-  auto file = MakeSpanFromNullTerminated(file_cstr);
+  auto file = makeSpanFromNullTerminated(file_cstr);
   if (!g_verbose_matchers->IsEmpty()) {
     for (const auto& matcher : *g_verbose_matchers) {
       bool match_file = matcher.match_target == VmoduleMatcher::MatchFile;
@@ -195,14 +195,14 @@ static void ParseMatchers(StringSpan input) {
 
   while (!input.IsEmpty()) {
     int comma = input.IndexOf(',');
-    StringSpan pair = input.GetSlice(0, comma);
+    StringSpan pair = input.getSlice(0, comma);
 
     bool parsed = false;
 
     int pos = pair.LastIndexOf('=');
     if (pos >= 0) {
-      VmoduleMatcher matcher(String(pair.GetSlice(0, pos)));
-      if (tryParse(pair.GetSlice(pos + 1), matcher.level) == ParseIntegerErrorCode::Ok) {
+      VmoduleMatcher matcher(String(pair.getSlice(0, pos)));
+      if (tryParse(pair.getSlice(pos + 1), matcher.level) == ParseIntegerErrorCode::Ok) {
         matchers->Add(move(matcher));
         parsed = true;
       }

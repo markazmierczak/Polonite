@@ -11,14 +11,14 @@ namespace stp {
 
 JsonStringBuilder::JsonStringBuilder(const JsonStringBuilder& other) {
   capacity_ = 0;
-  AppendString(other.ToSpan());
+  AppendString(other.toSpan());
 }
 
 JsonStringBuilder& JsonStringBuilder::operator=(const JsonStringBuilder& other) {
   if (this == &other)
     return *this;
 
-  return operator=(other.ToSpan());
+  return operator=(other.toSpan());
 }
 
 JsonStringBuilder::JsonStringBuilder(JsonStringBuilder&& other) {

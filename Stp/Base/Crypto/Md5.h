@@ -30,7 +30,7 @@ class Md5Digest {
   }
 
   friend bool operator==(const Md5Digest& l, const Md5Digest& r) noexcept {
-    return MakeSpan(l.raw_) == MakeSpan(r.raw_);
+    return makeSpan(l.raw_) == makeSpan(r.raw_);
   }
   friend bool operator!=(const Md5Digest& l, const Md5Digest& r) noexcept {
     return !operator==(l, r);

@@ -5,6 +5,7 @@
 #define STP_BASE_MEMORY_MALLOCPTR_H_
 
 #include "Base/Debug/Assert.h"
+#include "Base/Memory/Allocate.h"
 #include "Base/Type/NullableFwd.h"
 #include "Base/Type/Variable.h"
 
@@ -48,8 +49,8 @@ class MallocPtr {
 
   explicit operator bool() const noexcept { return ptr_ != nullptr; }
 
+  static MallocPtr create(int size_in_bytes);
   static MallocPtr tryCreate(int size_in_bytes) noexcept;
-  static MallocPtr tryCreateZeroed(int size_in_bytes) noexcept;
 
   friend void swap(MallocPtr& l, MallocPtr& r) noexcept { swap(l.ptr_, r.ptr_); }
 
@@ -76,13 +77,13 @@ struct NullableTmpl<MallocPtr<T>> {
 };
 
 template<typename T>
-inline MallocPtr<T> MallocPtr<T>::tryCreate(int size_in_bytes) noexcept {
-  return reinterpret_cast<T*>(::malloc(size_in_bytes));
+inline MallocPtr<T> MallocPtr<T>::create(int size_in_bytes) {
+  return (T*)allocateMemory(size_in_bytes);
 }
 
 template<typename T>
-inline MallocPtr<T> MallocPtr<T>::tryCreateZeroed(int size_in_bytes) noexcept {
-  return reinterpret_cast<T*>(::calloc(1, size_in_bytes));
+inline MallocPtr<T> MallocPtr<T>::tryCreate(int size_in_bytes) noexcept {
+  return (T*)tryAllocateMemory(size_in_bytes);
 }
 
 template<typename T>
@@ -94,7 +95,7 @@ struct TIsTriviallyEqualityComparableTmpl<MallocPtr<T>> : TTrue {};
 
 // Helper to transfer ownership of a raw pointer to a MallocPtr<T>.
 template<typename T>
-inline MallocPtr<T> MakeMallocPtr(T* ptr) noexcept {
+inline MallocPtr<T> makeMallocPtr(T* ptr) noexcept {
   return MallocPtr<T>(ptr);
 }
 

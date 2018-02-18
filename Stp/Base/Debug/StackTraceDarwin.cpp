@@ -8,7 +8,7 @@ namespace stp {
 void FormatSymbol(TextWriter& out, void *pc) {
   Dl_info info;
   if (dladdr(pc, &info))
-    DemangleSymbols(out, MakeSpanFromNullTerminated(info.dli_sname));
+    DemangleSymbols(out, makeSpanFromNullTerminated(info.dli_sname));
   else
     out << "(no symbol)";
 }

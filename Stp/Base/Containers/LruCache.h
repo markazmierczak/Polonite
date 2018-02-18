@@ -61,7 +61,7 @@ inline T& LruCache<K, T, Traits>::operator[](const InputKeyType& key) {
 template<typename K, typename T, class Traits>
 inline T* LruCache<K, T, Traits>::TryGet(const InputKeyType& key) {
   T* item = map_.TryGet(key);
-  if (item && list_.GetFirst() != item) {
+  if (item && list_.getFirst() != item) {
     list_.Remove(item);
     list_.Prepend(item);
   }

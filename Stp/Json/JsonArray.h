@@ -41,11 +41,11 @@ class BASE_EXPORT JsonArray : public JsonValue {
   const JsonValue& operator[](int at) const { return impl()[at]; }
   JsonValue& operator[](int at) { return impl()[at]; }
 
-  const JsonValue& GetFirst() const { return impl().GetFirst(); }
-  JsonValue& GetFirst() { return impl().GetFirst(); }
+  const JsonValue& getFirst() const { return impl().getFirst(); }
+  JsonValue& getFirst() { return impl().getFirst(); }
 
-  const JsonValue& GetLast() const { return impl().GetLast(); }
-  JsonValue& GetLast() { return impl().GetLast(); }
+  const JsonValue& getLast() const { return impl().getLast(); }
+  JsonValue& getLast() { return impl().getLast(); }
 
   void Set(int at, JsonValue value);
 

@@ -30,8 +30,8 @@ class Buffer {
   template<typename T, TEnableIf<TIsTrivial<T> || TIsVoid<T>>* = nullptr>
   explicit Buffer(const T* data, int size) { Assign(SpanType(data, size)); }
 
-  operator SpanType() const { return ToSpan(); }
-  operator MutableSpanType() { return ToSpan(); }
+  operator SpanType() const { return toSpan(); }
+  operator MutableSpanType() { return toSpan(); }
 
   ALWAYS_INLINE const void* data() const { return data_; }
   ALWAYS_INLINE void* data() { return data_; }
@@ -47,10 +47,10 @@ class Buffer {
 
   void WillGrow(int n);
 
-  SpanType GetSlice(int at) const { return ToSpan().GetSlice(at); }
-  SpanType GetSlice(int at, int n) const { return ToSpan().GetSlice(at, n); }
-  MutableSpanType GetSlice(int at) { return ToSpan().GetSlice(at); }
-  MutableSpanType GetSlice(int at, int n) { return ToSpan().GetSlice(at, n); }
+  SpanType getSlice(int at) const { return toSpan().getSlice(at); }
+  SpanType getSlice(int at, int n) const { return toSpan().getSlice(at, n); }
+  MutableSpanType getSlice(int at) { return toSpan().getSlice(at); }
+  MutableSpanType getSlice(int at, int n) { return toSpan().getSlice(at, n); }
 
   int Add(byte_t byte);
 
@@ -80,9 +80,9 @@ class Buffer {
     swap(l.size_, r.size_);
     swap(l.capacity_, r.capacity_);
   }
-  friend bool operator==(const Buffer& l, const SpanType& r) { return l.ToSpan() == r; }
-  friend bool operator!=(const Buffer& l, const SpanType& r) { return l.ToSpan() != r; }
-  friend int compare(const Buffer& l, const SpanType& r) { return compare(l.ToSpan(), r); }
+  friend bool operator==(const Buffer& l, const SpanType& r) { return l.toSpan() == r; }
+  friend bool operator!=(const Buffer& l, const SpanType& r) { return l.toSpan() != r; }
+  friend int compare(const Buffer& l, const SpanType& r) { return compare(l.toSpan(), r); }
   friend HashCode partialHash(const Buffer& x) { return hashBuffer(x.data_, x.size_); }
 
   friend void format(TextWriter& out, const Buffer& x, const StringSpan& opts) {
@@ -97,8 +97,8 @@ class Buffer {
   friend void* begin(Buffer& x) { return x.data_; }
   friend void* end(Buffer& x) { return x.data_ + x.size_; }
 
-  friend SpanType MakeSpan(const Buffer& x) { return x.ToSpan(); }
-  friend MutableSpanType MakeSpan(Buffer& x) { return x.ToSpan(); }
+  friend SpanType makeSpan(const Buffer& x) { return x.toSpan(); }
+  friend MutableSpanType makeSpan(Buffer& x) { return x.toSpan(); }
 
  private:
   byte_t* data_ = nullptr;
@@ -114,8 +114,8 @@ class Buffer {
       freeMemory(data);
   }
 
-  SpanType ToSpan() const { return SpanType(data_, size_); }
-  MutableSpanType ToSpan() { return MutableSpanType(data_, size_); }
+  SpanType toSpan() const { return SpanType(data_, size_); }
+  MutableSpanType toSpan() { return MutableSpanType(data_, size_); }
 
   bool IsSourceOf(const void* ptr_) const {
     auto ptr = static_cast<const byte_t*>(ptr_);

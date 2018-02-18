@@ -30,7 +30,7 @@ template<typename TResult, typename... TArgs>
 inline TResult ConcatMany(const TArgs&... args) {
   using ItemType = typename TResult::ItemType;
   InitializerList<Span<ItemType>> ilist = { args... };
-  return Concat<TResult>(MakeSpan(ilist));
+  return Concat<TResult>(makeSpan(ilist));
 }
 
 template<typename TResult, typename TArray>
@@ -62,7 +62,7 @@ template<typename TResult, typename... TArgs>
 inline TResult JoinMany(typename TResult::ItemType separator, const TArgs&... args) {
   using ItemType = typename TResult::ItemType;
   InitializerList<Span<ItemType>> ilist = { args... };
-  return Join<TResult>(move(separator), MakeSpan(ilist));
+  return Join<TResult>(move(separator), makeSpan(ilist));
 }
 
 template<typename TResult, typename TArray>
@@ -94,7 +94,7 @@ template<typename TResult, typename... TArgs>
 inline TResult JoinMany(Span<typename TResult::ItemType> separator, const TArgs&... args) {
   using ItemType = typename TResult::ItemType;
   InitializerList<Span<ItemType>> ilist = { args... };
-  return Join<TResult>(separator, MakeSpan(ilist));
+  return Join<TResult>(separator, makeSpan(ilist));
 }
 
 } // namespace stp

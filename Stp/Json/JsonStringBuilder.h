@@ -29,14 +29,14 @@ class BASE_EXPORT JsonStringBuilder {
   // For creating a reference to read-only data.
   explicit JsonStringBuilder(const char* pos) : data_(const_cast<char*>(pos)) {}
 
-  StringSpan ToSpan() const { return StringSpan(data_, size_); }
+  StringSpan toSpan() const { return StringSpan(data_, size_); }
 
   bool IsEmpty() const { return size_ == 0; }
 
   ALWAYS_INLINE const char* data() const { return data_; }
   ALWAYS_INLINE int size() const { return size_; }
 
-  bool operator==(const JsonStringBuilder& other) const { return ToSpan() == other.ToSpan(); }
+  bool operator==(const JsonStringBuilder& other) const { return toSpan() == other.toSpan(); }
   bool operator!=(const JsonStringBuilder& other) const { return !operator==(other); }
 
   // Either increases the |length_| of the string or copies the character if

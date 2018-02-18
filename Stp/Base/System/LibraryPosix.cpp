@@ -12,7 +12,7 @@
 namespace stp {
 
 static inline StringSpan DynamicLinkerErrorMessage() {
-  return MakeSpanFromNullTerminated(dlerror());
+  return makeSpanFromNullTerminated(dlerror());
 }
 
 void LibraryLoadError::FormatImpl(TextWriter& out) const {

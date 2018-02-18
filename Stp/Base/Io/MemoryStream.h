@@ -46,7 +46,6 @@ class BASE_EXPORT MemoryStream final : public Stream {
   int64_t GetPosition() override;
 
  private:
-  // Memory buffer allocated with malloc().
   byte_t* memory_ = nullptr;
   // Number of bytes within memory stream.
   int length_ = 0;

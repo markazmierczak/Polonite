@@ -47,14 +47,14 @@ class Span {
     return data_[at];
   }
 
-  constexpr const T& GetFirst() const { return operator[](0); }
-  constexpr const T& GetLast() const { return operator[](size_ - 1); }
+  constexpr const T& getFirst() const { return operator[](0); }
+  constexpr const T& getLast() const { return operator[](size_ - 1); }
 
-  constexpr Span GetSlice(int at) const {
+  constexpr Span getSlice(int at) const {
     ASSERT(0 <= at && at <= size_);
     return Span(data_ + at, size_ - at);
   }
-  constexpr Span GetSlice(int at, int n) const {
+  constexpr Span getSlice(int at, int n) const {
     ASSERT(0 <= at && at <= size_);
     ASSERT(0 <= n && n <= size_ - at);
     return Span(data_ + at, n);
@@ -129,26 +129,26 @@ class MutableSpan {
     return data_[at];
   }
 
-  constexpr const T& GetFirst() const { return operator[](0); }
-  constexpr const T& GetLast() const { return operator[](size_ - 1); }
-  constexpr T& GetFirst() { return operator[](0); }
-  constexpr T& GetLast() { return operator[](size_ - 1); }
+  constexpr const T& getFirst() const { return operator[](0); }
+  constexpr const T& getLast() const { return operator[](size_ - 1); }
+  constexpr T& getFirst() { return operator[](0); }
+  constexpr T& getLast() { return operator[](size_ - 1); }
 
-  constexpr Span<T> GetSlice(int at) const {
+  constexpr Span<T> getSlice(int at) const {
     ASSERT(0 <= at && at <= size_);
     return Span<T>(data_ + at, size_ - at);
   }
-  constexpr MutableSpan GetSlice(int at) {
+  constexpr MutableSpan getSlice(int at) {
     ASSERT(0 <= at && at <= size_);
     return MutableSpan(data_ + at, size_ - at);
   }
 
-  constexpr Span<T> GetSlice(int at, int n) const {
+  constexpr Span<T> getSlice(int at, int n) const {
     ASSERT(0 <= at && at <= size_);
     ASSERT(0 <= n && n <= size_ - at);
     return Span<T>(data_ + at, n);
   }
-  constexpr MutableSpan GetSlice(int at, int n) {
+  constexpr MutableSpan getSlice(int at, int n) {
     ASSERT(0 <= at && at <= size_);
     ASSERT(0 <= n && n <= size_ - at);
     return MutableSpan(data_ + at, n);
@@ -199,21 +199,21 @@ template<typename T>
 struct TIsZeroConstructibleTmpl<MutableSpan<T>> : TTrue {};
 
 template<typename T>
-constexpr Span<T> MakeSpan(const T* data, int size) { return Span<T>(data, size); }
+constexpr Span<T> makeSpan(const T* data, int size) { return Span<T>(data, size); }
 template<typename T>
-constexpr MutableSpan<T> MakeSpan(T* data, int size) { return MutableSpan<T>(data, size); }
+constexpr MutableSpan<T> makeSpan(T* data, int size) { return MutableSpan<T>(data, size); }
 
 template<typename T, int N>
-constexpr Span<T> MakeSpan(const T (&array)[N]) { return array; }
+constexpr Span<T> makeSpan(const T (&array)[N]) { return array; }
 template<typename T, int N>
-constexpr MutableSpan<T> MakeSpan(T (&array)[N]) { return array; }
+constexpr MutableSpan<T> makeSpan(T (&array)[N]) { return array; }
 
 template<typename T>
-constexpr Span<T> MakeSpan(const InitializerList<T>& ilist) { return Span<T>(ilist); }
+constexpr Span<T> makeSpan(const InitializerList<T>& ilist) { return Span<T>(ilist); }
 
-inline StringSpan MakeSpanFromNullTerminated(const char* cstr) {
+inline StringSpan makeSpanFromNullTerminated(const char* cstr) {
   ASSERT(cstr);
-  return MakeSpan(cstr, static_cast<int>(::strlen(cstr)));
+  return makeSpan(cstr, static_cast<int>(::strlen(cstr)));
 }
 
 template<typename T, int N, TEnableIf<TIsCharacter<T>>* = nullptr>
@@ -224,20 +224,20 @@ inline const T* ToNullTerminated(const T (&array)[N]) {
 
 template<typename T, int N>
 inline bool operator==(const T (&lhs)[N], const Span<T>& rhs) {
-  return operator==(MakeSpan(lhs), rhs);
+  return operator==(makeSpan(lhs), rhs);
 }
 template<typename T, int N>
 inline bool operator==(const T (&lhs)[N], const MutableSpan<T>& rhs) {
-  return operator==(MakeSpan(lhs), rhs);
+  return operator==(makeSpan(lhs), rhs);
 }
 
 template<typename T, int N>
 inline bool operator!=(const T (&lhs)[N], const Span<T>& rhs) {
-  return operator!=(MakeSpan(lhs), rhs);
+  return operator!=(makeSpan(lhs), rhs);
 }
 template<typename T, int N>
 inline bool operator!=(const T (&lhs)[N], const MutableSpan<T>& rhs) {
-  return operator!=(MakeSpan(lhs), rhs);
+  return operator!=(makeSpan(lhs), rhs);
 }
 
 inline int compare(StringSpan lhs, StringSpan rhs) noexcept {

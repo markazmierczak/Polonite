@@ -23,7 +23,7 @@ TextDecoder::Result AsciiDecoder::Decode(BufferSpan input, MutableStringSpan out
     if (LIKELY(b < 0x80)) {
       output[num_wrote++] = static_cast<char>(b);
     } else {
-      int num_encoded = TryEncodeUtf(unicode::ReplacementRune, output.GetSlice(num_wrote));
+      int num_encoded = TryEncodeUtf(unicode::ReplacementRune, output.getSlice(num_wrote));
       if (num_encoded == 0) {
         more_output = true;
         break;

@@ -37,7 +37,7 @@ class FormatArgId {
       return true;
 
     // First character is digit - treat as index.
-    if (isDigitAscii(s.GetFirst()))
+    if (isDigitAscii(s.getFirst()))
       return tryParse(s, size_or_index_) == ParseIntegerErrorCode::Ok;
 
     // Otherwise treat as name.
@@ -127,19 +127,19 @@ bool FormatReplacement::Parse(StringSpan s) {
 
   int id_count = comma >= 0 ? comma : (semicolon >= 0 ? semicolon : s.size());
 
-  StringSpan id_spec = s.GetSlice(0, id_count);
+  StringSpan id_spec = s.getSlice(0, id_count);
   if (!arg_id.Parse(id_spec))
     return false;
 
   if (comma != -1) {
     int layout_start = comma + 1;
     int layout_end = semicolon >= 0 ? semicolon : s.size();
-    StringSpan layout_spec = s.GetSlice(layout_start, layout_end - layout_start);
+    StringSpan layout_spec = s.getSlice(layout_start, layout_end - layout_start);
     if (!layout.Parse(layout_spec))
       return false;
   }
   if (semicolon != -1) {
-    options = s.GetSlice(semicolon + 1);
+    options = s.getSlice(semicolon + 1);
     TrimWhitespaceAscii(options);
   }
   return true;
@@ -222,16 +222,16 @@ void FormatManyImpl(TextWriter& out, StringSpan fmt, Span<Formatter*> args) {
     }
     if (fmt[brace + 1] == '{') {
       // handle double braces
-      out << fmt.GetSlice(0, brace + 1);
+      out << fmt.getSlice(0, brace + 1);
       fmt.RemovePrefix(brace + 2);
     } else { // handle replacement
-      out << fmt.GetSlice(0, brace);
+      out << fmt.getSlice(0, brace);
       fmt.RemovePrefix(brace + 1);
 
       // Find replacement boundaries.
       int closing_brace = fmt.IndexOf('}');
       ASSERT(closing_brace >= 0);
-      StringSpan rep_string = fmt.GetSlice(0, closing_brace);
+      StringSpan rep_string = fmt.getSlice(0, closing_brace);
       fmt.RemovePrefix(closing_brace + 1);
 
       FormatReplacement replacement;

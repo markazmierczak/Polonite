@@ -171,7 +171,7 @@ void JsonFormatter::EscapeSimple(TextWriter& out, StringSpan str) {
     char replacement;
     if (EscapeSpecialCharacter(str[i], replacement)) {
       if (i > 0)
-        out << str.GetSlice(0, i);
+        out << str.getSlice(0, i);
       str.RemovePrefix(i + 1);
       char escaped[2] = { '\\', replacement };
       out << escaped;
@@ -209,7 +209,7 @@ bool JsonFormatter::EscapeReplaceUnicode(TextWriter& out, StringSpan str) {
     char replacement;
     if (EscapeSpecialCharacter(rune, replacement)) {
       char escaped[2] = { '\\', replacement };
-      out << MakeSpan(escaped, 2);
+      out << makeSpan(escaped, 2);
       continue;
     }
 

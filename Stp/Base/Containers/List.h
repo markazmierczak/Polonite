@@ -36,8 +36,8 @@ class List {
 
   explicit List(const T* data, int size) { AssignExternal(SpanType(data, size)); }
 
-  operator SpanType() const { return ToSpan(); }
-  operator MutableSpanType() { return ToSpan(); }
+  operator SpanType() const { return toSpan(); }
+  operator MutableSpanType() { return toSpan(); }
 
   ALWAYS_INLINE const T* data() const { return data_; }
   ALWAYS_INLINE T* data() { return data_; }
@@ -56,15 +56,15 @@ class List {
   const T& operator[](int at) const;
   T& operator[](int at);
 
-  const T& GetFirst() const { return ToSpan().GetFirst(); }
-  const T& GetLast() const { return ToSpan().GetLast(); }
-  T& GetFirst() { return ToSpan().GetFirst(); }
-  T& GetLast() { return ToSpan().GetLast(); }
+  const T& getFirst() const { return toSpan().getFirst(); }
+  const T& getLast() const { return toSpan().getLast(); }
+  T& getFirst() { return toSpan().getFirst(); }
+  T& getLast() { return toSpan().getLast(); }
 
-  SpanType GetSlice(int at) const { return ToSpan().GetSlice(at); }
-  SpanType GetSlice(int at, int n) const { return ToSpan().GetSlice(at, n); }
-  MutableSpanType GetSlice(int at) { return ToSpan().GetSlice(at); }
-  MutableSpanType GetSlice(int at, int n) { return ToSpan().GetSlice(at, n); }
+  SpanType getSlice(int at) const { return toSpan().getSlice(at); }
+  SpanType getSlice(int at, int n) const { return toSpan().getSlice(at, n); }
+  MutableSpanType getSlice(int at) { return toSpan().getSlice(at); }
+  MutableSpanType getSlice(int at, int n) { return toSpan().getSlice(at, n); }
 
   int Add(T item);
   T* AppendUninitialized(int n = 1);
@@ -86,11 +86,11 @@ class List {
   void RemoveSuffix(int n) { Truncate(size_ - n); }
 
   template<typename U>
-  int IndexOf(const U& item) const { return ToSpan().IndexOf(item); }
+  int IndexOf(const U& item) const { return toSpan().IndexOf(item); }
   template<typename U>
-  int LastIndexOf(const U& item) const { return ToSpan().LastIndexOf(item); }
+  int LastIndexOf(const U& item) const { return toSpan().LastIndexOf(item); }
   template<typename U>
-  bool Contains(const U& item) const { return ToSpan().Contains(item); }
+  bool Contains(const U& item) const { return toSpan().Contains(item); }
 
   static List AdoptMemory(T* ptr, int size, int capacity);
   T* ReleaseMemory();
@@ -105,16 +105,16 @@ class List {
     swap(l.size_, r.size_);
     swap(l.capacity_, r.capacity_);
   }
-  friend bool operator==(const List& l, const SpanType& r) { return l.ToSpan() == r; }
-  friend bool operator!=(const List& l, const SpanType& r) { return l.ToSpan() != r; }
+  friend bool operator==(const List& l, const SpanType& r) { return l.toSpan() == r; }
+  friend bool operator!=(const List& l, const SpanType& r) { return l.toSpan() != r; }
 
   friend const T* begin(const List& x) { return x.data_; }
   friend const T* end(const List& x) { return x.data_ + x.size_; }
   friend T* begin(List& x) { return x.data_; }
   friend T* end(List& x) { return x.data_ + x.size_; }
 
-  friend SpanType MakeSpan(const List& x) { return x.ToSpan(); }
-  friend MutableSpanType MakeSpan(List& x) { return x.ToSpan(); }
+  friend SpanType makeSpan(const List& x) { return x.toSpan(); }
+  friend MutableSpanType makeSpan(List& x) { return x.toSpan(); }
 
  private:
   T* data_ = nullptr;
@@ -132,8 +132,8 @@ class List {
     }
   }
 
-  SpanType ToSpan() const { return SpanType(data_, size_); }
-  MutableSpanType ToSpan() { return MutableSpanType(data_, size_); }
+  SpanType toSpan() const { return SpanType(data_, size_); }
+  MutableSpanType toSpan() { return MutableSpanType(data_, size_); }
 
   void SetSizeNoGrow(int new_size);
 
@@ -166,11 +166,11 @@ struct TIsTriviallyRelocatableTmpl<List<T>> : TIsTriviallyRelocatableTmpl<T> {};
 
 template<typename T, int N>
 inline bool operator==(const T (&lhs)[N], const List<T>& rhs) {
-  return operator==(MakeSpan(lhs), MakeSpan(rhs));
+  return operator==(makeSpan(lhs), makeSpan(rhs));
 }
 template<typename T, int N>
 inline bool operator!=(const T (&lhs)[N], const List<T>& rhs) {
-  return operator!=(MakeSpan(lhs), MakeSpan(rhs));
+  return operator!=(makeSpan(lhs), makeSpan(rhs));
 }
 
 template<typename T, TEnableIf<TIsContiguousContainer<TRemoveReference<T>>>* = nullptr>

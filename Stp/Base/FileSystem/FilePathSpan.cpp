@@ -102,7 +102,7 @@ FilePathSpan FilePathSpan::GetFileName() const {
   if (last_separator < 0)
     return *this;
 
-  return FilePathSpan(chars_.GetSlice(last_separator + 1));
+  return FilePathSpan(chars_.getSlice(last_separator + 1));
 }
 
 FilePathSpan FilePathSpan::GetFileNameWithoutExtension() const {
@@ -153,13 +153,13 @@ int FilePathSpan::LastIndexOfSeparator() const {
 }
 
 int FilePathSpan::IndexOfSeparator(int start) const {
-  auto slice = GetSlice(start);
+  auto slice = getSlice(start);
   int found = slice.IndexOfSeparator();
   return found >= 0 ? (found + start) : found;
 }
 
 int FilePathSpan::LastIndexOfSeparator(int start) const {
-  auto slice = GetSlice(0, start + 1);
+  auto slice = getSlice(0, start + 1);
   return slice.LastIndexOfSeparator();
 }
 
@@ -234,7 +234,7 @@ bool FilePathSpan::MatchesExtension(StringSpan extension) const {
 
   // skip dot
   ++pos;
-  if (extension.GetFirst() == '.')
+  if (extension.getFirst() == '.')
     extension.RemovePrefix(1);
 
   // compare lengths

@@ -116,7 +116,7 @@ static inline void WriteWtfTmpl(TextWriter& out, Span<T> wtf) {
     } while (it < it_end);
 
     if (valid_begin != valid_end) {
-      out << MakeSpan(valid_begin, valid_end - valid_begin);
+      out << makeSpan(valid_begin, valid_end - valid_begin);
     }
 
     if (valid_end != it_end) {

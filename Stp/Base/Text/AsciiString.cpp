@@ -53,8 +53,8 @@ int IndexOfIgnoreCaseAscii(StringSpan haystack, StringSpan needle) {
 
   const char* orig_data = haystack.data();
 
-  char first_char = needle.GetFirst();
-  StringSpan needle_rest = needle.GetSlice(1);
+  char first_char = needle.getFirst();
+  StringSpan needle_rest = needle.getSlice(1);
 
   while (haystack.size() >= needle.size()) {
     int found = IndexOfIgnoreCaseAscii(haystack, first_char);
@@ -72,8 +72,8 @@ int LastIndexOfIgnoreCaseAscii(StringSpan haystack, StringSpan needle) {
   if (needle.IsEmpty())
     return haystack.size();
 
-  char last_char = needle.GetLast();
-  StringSpan needle_rest = needle.GetSlice(0, needle.size() - 1);
+  char last_char = needle.getLast();
+  StringSpan needle_rest = needle.getSlice(0, needle.size() - 1);
 
   while (haystack.size() >= needle.size()) {
     int found = LastIndexOfIgnoreCaseAscii(haystack, last_char);

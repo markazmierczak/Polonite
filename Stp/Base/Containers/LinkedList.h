@@ -65,8 +65,8 @@ class LinkedList {
   // Useful in cases when all items were already deleted.
   void Reset() { root_ = NodeType(root(), root()); }
 
-  T* GetFirst() const;
-  T* GetLast() const;
+  T* getFirst() const;
+  T* getLast() const;
 
   void InsertBefore(NodeType* before, T* e) { e->InsertBefore(before); }
   void InsertAfter(NodeType* after, T* e) { e->InsertAfter(after); }
@@ -76,8 +76,8 @@ class LinkedList {
 
   void Remove(T* e) { e->RemoveFromList(); }
 
-  void RemoveFirst() { Remove(GetFirst()); }
-  void RemoveLast() { Remove(GetLast()); }
+  void RemoveFirst() { Remove(getFirst()); }
+  void RemoveLast() { Remove(getLast()); }
 
   bool Contains(const T& value) const { return Find(value) != nullptr; }
 
@@ -147,17 +147,17 @@ inline void LinkedListNode<T>::RemoveFromList() {
 template<typename T>
 inline void LinkedList<T>::Clear() {
   while (!IsEmpty())
-    GetFirst()->RemoveFromList();
+    getFirst()->RemoveFromList();
 }
 
 template<typename T>
-inline T* LinkedList<T>::GetFirst() const {
+inline T* LinkedList<T>::getFirst() const {
   ASSERT(!IsEmpty());
   return root_.next()->that();
 }
 
 template<typename T>
-inline T* LinkedList<T>::GetLast() const {
+inline T* LinkedList<T>::getLast() const {
   ASSERT(!IsEmpty());
   return root_.prev()->that();
 }

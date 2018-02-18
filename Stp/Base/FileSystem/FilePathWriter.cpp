@@ -23,7 +23,7 @@ TextEncoding FilePathWriter::GetEncoding() const {
 void FilePathWriter::EnsureSeparator() {
   if (path_.IsEmpty())
     return;
-  if (IsFilePathSeparator(path_.chars().GetLast()))
+  if (IsFilePathSeparator(path_.chars().getLast()))
     return;
   path_.chars().Add(FilePathSeparator);
 }

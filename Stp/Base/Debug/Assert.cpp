@@ -27,7 +27,7 @@ void assertFail(const char* file, int line, const char* expr) {
 
 void assertFail(const char* file, int line, const char* expr, const char* msg) {
   TextWriter& out = assertPrint(file, line, expr);
-  out << MakeSpanFromNullTerminated(msg);
+  out << makeSpanFromNullTerminated(msg);
   assertWrapUp(out);
 }
 
@@ -50,9 +50,9 @@ TextWriter& assertPrint(const char* file, int line, const char* expr) {
   out.resetColors();
 
   out << '"';
-  out << MakeSpanFromNullTerminated(expr);
+  out << makeSpanFromNullTerminated(expr);
   out << "\" at ";
-  out << MakeSpanFromNullTerminated(file) << ':'  << line << '\n';
+  out << makeSpanFromNullTerminated(file) << ':'  << line << '\n';
 
   out.setForegroundColor(ConsoleColor::Red);
   return out;

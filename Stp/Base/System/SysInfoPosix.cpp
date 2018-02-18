@@ -30,7 +30,7 @@ String SysInfo::OsName() {
     ASSERT(false);
     return String();
   }
-  return String(MakeSpanFromNullTerminated(info.sysname));
+  return String(makeSpanFromNullTerminated(info.sysname));
 }
 #endif
 
@@ -40,7 +40,7 @@ SysInfo::CpuArch SysInfo::OsArch() {
     ASSERT(false);
     return CpuArch::Unknown;
   }
-  auto arch = MakeSpanFromNullTerminated(info.machine);
+  auto arch = makeSpanFromNullTerminated(info.machine);
   if (arch == "i386" || arch == "i486" || arch == "i586" || arch == "i686")
     return CpuArch::Intel;
   if (arch == "amd64")

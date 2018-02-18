@@ -34,13 +34,13 @@ struct IgnoreCaseAsciiComparer {
 inline bool StartsWithIgnoreCaseAscii(StringSpan str, StringSpan prefix) {
   ASSERT(!prefix.IsEmpty());
   return str.size() >= prefix.size() &&
-      EqualsIgnoreCaseAscii(str.GetSlice(0, prefix.size()), prefix);
+      EqualsIgnoreCaseAscii(str.getSlice(0, prefix.size()), prefix);
 }
 
 inline bool EndsWithIgnoreCaseAscii(StringSpan str, StringSpan suffix) {
   ASSERT(!suffix.IsEmpty());
   return str.size() >= suffix.size() &&
-      EqualsIgnoreCaseAscii(str.GetSlice(str.size() - suffix.size()), suffix);
+      EqualsIgnoreCaseAscii(str.getSlice(str.size() - suffix.size()), suffix);
 }
 
 BASE_EXPORT int IndexOfIgnoreCaseAscii(StringSpan str, char c);
@@ -57,13 +57,13 @@ BASE_EXPORT String ToUpperAscii(StringSpan src) WARN_UNUSED_RESULT;
 
 template<typename TString>
 inline void TrimLeadingWhitespaceAscii(TString& str) {
-  while (!str.IsEmpty() && isSpaceAscii(str.GetFirst()))
+  while (!str.IsEmpty() && isSpaceAscii(str.getFirst()))
     str.RemovePrefix(1);
 }
 
 template<typename TString>
 inline void TrimTrailingWhitespaceAscii(TString& str) {
-  while (!str.IsEmpty() && isSpaceAscii(str.GetLast()))
+  while (!str.IsEmpty() && isSpaceAscii(str.getLast()))
     str.RemoveSuffix(1);
 }
 

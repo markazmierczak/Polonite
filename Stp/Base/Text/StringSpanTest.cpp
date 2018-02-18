@@ -26,8 +26,8 @@ TEST(StringSpanTest, Basic) {
 
 TEST(StringSpanTest, FirstLast) {
   StringSpan s = "abc";
-  EXPECT_EQ('a', s.GetFirst());
-  EXPECT_EQ('c', s.GetLast());
+  EXPECT_EQ('a', s.getFirst());
+  EXPECT_EQ('c', s.getLast());
 }
 
 TEST(StringSpanTest, RemovePrefixSuffix) {
@@ -46,13 +46,13 @@ TEST(StringSpanTest, RemovePrefixSuffix) {
 TEST(StringSpanTest, Slice) {
   {
     StringSpan s = "abcde";
-    s = s.GetSlice(1, 2);
+    s = s.getSlice(1, 2);
     EXPECT_EQ(StringSpan("bc"), s);
   }
   // Past end.
   {
     StringSpan s = "abcde";
-    s = s.GetSlice(2);
+    s = s.getSlice(2);
     EXPECT_EQ(StringSpan("cde"), s);
   }
 }

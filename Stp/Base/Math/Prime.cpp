@@ -38,7 +38,7 @@ static constexpr Array<unsigned, 48> PrimeIndices = {
 
 template<typename T, int SmallPrimeStartIndex = 0>
 static inline bool IsPrimeHelper(T x) {
-  if (x <= SmallPrimes.GetLast())
+  if (x <= SmallPrimes.getLast())
     return BinarySearch(SmallPrimes, static_cast<unsigned>(x)) >= 0;
 
   // Divide |x| by all primes or potential primes (i) until:
@@ -97,7 +97,7 @@ static inline bool CheckPrimeOverflow(uint64_t x) {
 
 template<typename T>
 static inline T NextPrimeHelper(T x) {
-  if (x < SmallPrimes.GetLast()) {
+  if (x < SmallPrimes.getLast()) {
     int yi = LowerBound(SmallPrimes, static_cast<unsigned>(x));
     T y = SmallPrimes[yi];
     if (x == y)

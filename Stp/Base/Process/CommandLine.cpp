@@ -126,8 +126,8 @@ bool CommandLine::ParseSwitch(StringSpan argument, String& out_name, String& out
     out_name = argument;
     return true;
   }
-  out_name = argument.GetSlice(0, separator_pos);
-  out_value = argument.GetSlice(separator_pos);
+  out_name = argument.getSlice(0, separator_pos);
+  out_value = argument.getSlice(separator_pos);
   return true;
 }
 
@@ -136,11 +136,11 @@ void CommandLine::ParseFromArgv(int argc, wchar_t** argv) {
   if (argc < 1)
     return;
 
-  SetProgramName(ToString(MakeSpanFromNullTerminated(argv[0])));
+  SetProgramName(ToString(makeSpanFromNullTerminated(argv[0])));
 
   bool parse_switches = true;
   for (int i = 1; i < argc; ++i) {
-    String arg = ToString(MakeSpanFromNullTerminated(argv[i]));
+    String arg = ToString(makeSpanFromNullTerminated(argv[i]));
 
     if (parse_switches && arg == SwitchTerminator) {
       parse_switches = false;
@@ -186,15 +186,15 @@ void CommandLine::ParseFromArgv(int argc, char** argv) {
   if (argc < 1)
     return;
 
-  program_name_ = MakeSpanFromNullTerminated(argv[0]);
+  program_name_ = makeSpanFromNullTerminated(argv[0]);
 
   bool parse_switches = true;
   for (int i = 1; i < argc; ++i) {
     #if HAVE_UTF8_NATIVE_VALIDATION
-    auto arg = String(MakeSpanFromNullTerminated(argv[i]));
+    auto arg = String(makeSpanFromNullTerminated(argv[i]));
     ASSERT(Utf8::Validate(arg));
     #else
-    auto arg = WtfToUtf8(MakeSpanFromNullTerminated(argv[i]));
+    auto arg = WtfToUtf8(makeSpanFromNullTerminated(argv[i]));
     #endif
 
     if (parse_switches && arg == SwitchTerminator) {

@@ -185,7 +185,7 @@ inline double JsonValue::AsNumber() const {
 
 inline StringSpan JsonValue::AsString() const {
   ASSERT(IsString());
-  return data_.string.ToSpan();
+  return data_.string.toSpan();
 }
 
 BASE_EXPORT bool operator==(const JsonValue& lhs, const JsonValue& rhs);

@@ -229,7 +229,7 @@ Pointer Formatter
 
 Any pointer is formatted as hexadecimal number with fixed-number of digits (depending on architecture) and prefixed with ``"0x"``.
 
-If you want ``char*`` pointers to printed as strings use ``MakeSpanFromNullTerminated()``.
+If you want ``char*`` pointers to printed as strings use ``makeSpanFromNullTerminated()``.
 
 More Examples
 =============

@@ -12,7 +12,7 @@
 namespace stp {
 
 ScopedLocale::ScopedLocale(const char* locale) {
-  prev_locale_ = MakeSpanFromNullTerminated(setlocale(LC_ALL, NULL));
+  prev_locale_ = makeSpanFromNullTerminated(setlocale(LC_ALL, NULL));
   EXPECT_TRUE(setlocale(LC_ALL, locale) != NULL) << "Failed to set locale: " << locale;
 }
 

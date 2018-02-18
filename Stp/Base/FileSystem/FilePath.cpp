@@ -104,7 +104,7 @@ void FilePath::AddComponent(FilePathSpan component) {
 
   bool need_separator = false;
   if (!IsEmpty())
-    need_separator = !IsFilePathSeparator(chars_.GetLast());
+    need_separator = !IsFilePathSeparator(chars_.getLast());
 
   int length = component.size();
   CharType* dst = chars_.AppendUninitialized(length + (need_separator ? 1 : 0));
@@ -119,7 +119,7 @@ void FilePath::AddComponentAscii(StringSpan component) {
 
   bool need_separator = false;
   if (!IsEmpty())
-    need_separator = !IsFilePathSeparator(chars_.GetLast());
+    need_separator = !IsFilePathSeparator(chars_.getLast());
 
   int length = component.size();
   auto* src = component.data();

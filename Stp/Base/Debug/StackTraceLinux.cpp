@@ -479,9 +479,9 @@ static NEVER_INLINE void FormatSymbolImpl(TextWriter& out, void* pc) {
       reinterpret_cast<byte_t*>(mangled), MangledSize,
       base_address);
 
-  DemangleSymbols(out, MakeSpanFromNullTerminated(mangled));
+  DemangleSymbols(out, makeSpanFromNullTerminated(mangled));
 
-  auto filename = MakeSpanFromNullTerminated(filename_cstr);
+  auto filename = makeSpanFromNullTerminated(filename_cstr);
   if (!filename.IsEmpty()) {
     out << " at " << filename;
   }

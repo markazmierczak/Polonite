@@ -42,7 +42,7 @@ inline TextDecoder::Result DecodeTmpl(BufferSpan input, MutableSpan<T> output, b
           c = unicode::ReplacementRune;
         }
       }
-      int num_encoded = TryEncodeUtf(c, output.GetSlice(num_wrote));
+      int num_encoded = TryEncodeUtf(c, output.getSlice(num_wrote));
       if (num_encoded == 0) {
         more_output = true;
         break;

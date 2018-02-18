@@ -52,7 +52,6 @@ component("Base") {
     "Compiler/Tsan.h",
 
     "Containers/Array.h",
-    "Containers/ArrayFwd.h",
     "Containers/ArrayOps.h",
     "Containers/BinarySearch.h",
     "Containers/BitArray.cpp",
@@ -267,6 +266,7 @@ component("Base") {
     "Memory/Allocate.h",
     "Memory/LinearAllocator.cpp",
     "Memory/LinearAllocator.h",
+    "Memory/MallocPtr.h",
     "Memory/OwnPtr.h",
     "Memory/RefCounted.h",
     "Memory/RefCountedThreadSafe.h",

@@ -71,12 +71,12 @@ inline bool ContainsRange(const TList& list, Span<typename TList::ItemType> rang
 
 template<typename TList, TEnableIf<TIsContiguousContainer<TList>>* = nullptr>
 inline bool StartsWith(const TList& list, Span<typename TList::ItemType> prefix) {
-  return list.size() >= prefix.size() && list.GetSlice(0, prefix.size()) == prefix;
+  return list.size() >= prefix.size() && list.getSlice(0, prefix.size()) == prefix;
 }
 
 template<typename TList, TEnableIf<TIsContiguousContainer<TList>>* = nullptr>
 inline bool EndsWith(const TList& list, Span<typename TList::ItemType> suffix) {
-  return list.size() >= suffix.size() && list.GetSlice(list.size() - suffix.size()) == suffix;
+  return list.size() >= suffix.size() && list.getSlice(list.size() - suffix.size()) == suffix;
 }
 
 template<typename TList, typename TItem, TEnableIf<TIsContiguousContainer<TList>>* = nullptr>

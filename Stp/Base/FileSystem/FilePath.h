@@ -22,7 +22,7 @@ class BASE_EXPORT FilePath {
   FilePath& operator=(FilePath&& other) noexcept { chars_ = move(other.chars_); return *this; }
 
   FilePath(const FilePath& other) : chars_(other.chars_) {}
-  FilePath& operator=(const FilePath& other) { return operator=(other.ToSpan()); }
+  FilePath& operator=(const FilePath& other) { return operator=(other.toSpan()); }
 
   explicit FilePath(SpanType path) : chars_(path.chars()) {}
   FilePath& operator=(SpanType path) { chars_ = path.chars(); return *this; }
@@ -30,7 +30,7 @@ class BASE_EXPORT FilePath {
   explicit FilePath(Span<CharType> chars) : chars_(chars) {}
   FilePath& operator=(Span<CharType> chars) { chars_ = chars; return *this; }
 
-  operator SpanType() const { return ToSpan(); }
+  operator SpanType() const { return toSpan(); }
 
   FilePath(const CharType* data, int size) : FilePath(SpanType(data, size)) {}
 
@@ -48,37 +48,37 @@ class BASE_EXPORT FilePath {
   void EnsureCapacity(int request);
   void ShrinkToFit();
 
-  SpanType GetSlice(int at) const { return ToSpan().GetSlice(at); }
-  SpanType GetSlice(int at, int n) const { return ToSpan().GetSlice(at, n); }
+  SpanType getSlice(int at) const { return toSpan().getSlice(at); }
+  SpanType getSlice(int at, int n) const { return toSpan().getSlice(at, n); }
 
   void Truncate(int at) { chars_.Truncate(at); }
 
-  SpanType GetRoot() const { return ToSpan().GetRoot(); }
-  SpanType GetDirectoryName() const { return ToSpan().GetDirectoryName(); }
+  SpanType GetRoot() const { return toSpan().GetRoot(); }
+  SpanType GetDirectoryName() const { return toSpan().GetDirectoryName(); }
 
   bool CdUp();
 
-  SpanType GetFileName() const { return ToSpan().GetFileName(); }
-  SpanType GetFileNameWithoutExtension() const { return ToSpan().GetFileNameWithoutExtension(); }
+  SpanType GetFileName() const { return toSpan().GetFileName(); }
+  SpanType GetFileNameWithoutExtension() const { return toSpan().GetFileNameWithoutExtension(); }
 
   void StripTrailingSeparators();
 
-  int IndexOfSeparator() const { return ToSpan().IndexOfSeparator(); }
-  int IndexOfSeparator(int begin) const { return ToSpan().IndexOfSeparator(begin); }
-  int LastIndexOfSeparator() const { return ToSpan().LastIndexOfSeparator(); }
-  int LastIndexOfSeparator(int end) const { return ToSpan().LastIndexOfSeparator(end); }
+  int IndexOfSeparator() const { return toSpan().IndexOfSeparator(); }
+  int IndexOfSeparator(int begin) const { return toSpan().IndexOfSeparator(begin); }
+  int LastIndexOfSeparator() const { return toSpan().LastIndexOfSeparator(); }
+  int LastIndexOfSeparator(int end) const { return toSpan().LastIndexOfSeparator(end); }
 
-  int IndexOfDriveLetter() const { return ToSpan().IndexOfDriveLetter(); }
+  int IndexOfDriveLetter() const { return toSpan().IndexOfDriveLetter(); }
 
-  StringSpan GetExtension() const { return ToSpan().GetExtension(); }
-  bool MatchesExtension(StringSpan extension) const { return ToSpan().MatchesExtension(extension); }
+  StringSpan GetExtension() const { return toSpan().GetExtension(); }
+  bool MatchesExtension(StringSpan extension) const { return toSpan().MatchesExtension(extension); }
   void RemoveExtension();
   bool ReplaceExtension(StringSpan extension);
 
-  bool IsAbsolute() const { return ToSpan().IsAbsolute(); }
-  bool IsRelative() const { return ToSpan().IsRelative(); }
+  bool IsAbsolute() const { return toSpan().IsAbsolute(); }
+  bool IsRelative() const { return toSpan().IsRelative(); }
 
-  FilePathEnumerator Enumerate() const { return ToSpan().Enumerate(); }
+  FilePathEnumerator Enumerate() const { return toSpan().Enumerate(); }
 
   // Normalize all path separators to given type on Windows or do nothing on POSIX systems.
   void NormalizeSeparators() { NormalizeSeparatorsTo(FilePathSeparator); }
@@ -90,36 +90,36 @@ class BASE_EXPORT FilePath {
   void AddComponent(SpanType component);
   void AddComponentAscii(StringSpan component);
 
-  int GetRootLength() const { return ToSpan().GetRootLength(); }
-  int GetDirectoryNameLength() const { return ToSpan().GetDirectoryNameLength(); }
-  int IndexOfExtension() const { return ToSpan().IndexOfExtension(); }
-  int CountTrailingSeparators() const { return ToSpan().CountTrailingSeparators(); }
+  int GetRootLength() const { return toSpan().GetRootLength(); }
+  int GetDirectoryNameLength() const { return toSpan().GetDirectoryNameLength(); }
+  int IndexOfExtension() const { return toSpan().IndexOfExtension(); }
+  int CountTrailingSeparators() const { return toSpan().CountTrailingSeparators(); }
 
-  friend bool operator<=(const FilePath& l, const FilePathSpan& r) { return l.ToSpan() <= r; }
-  friend bool operator>=(const FilePath& l, const FilePathSpan& r) { return l.ToSpan() >= r; }
-  friend bool operator< (const FilePath& l, const FilePathSpan& r) { return l.ToSpan() <  r; }
-  friend bool operator> (const FilePath& l, const FilePathSpan& r) { return l.ToSpan() >  r; }
+  friend bool operator<=(const FilePath& l, const FilePathSpan& r) { return l.toSpan() <= r; }
+  friend bool operator>=(const FilePath& l, const FilePathSpan& r) { return l.toSpan() >= r; }
+  friend bool operator< (const FilePath& l, const FilePathSpan& r) { return l.toSpan() <  r; }
+  friend bool operator> (const FilePath& l, const FilePathSpan& r) { return l.toSpan() >  r; }
 
   friend void swap(FilePath& l, FilePath& r) noexcept { swap(l.chars_, r.chars_); }
-  friend bool operator==(const FilePath& l, FilePathSpan r) { return l.ToSpan() == r; }
+  friend bool operator==(const FilePath& l, FilePathSpan r) { return l.toSpan() == r; }
   friend bool operator!=(const FilePath& l, FilePathSpan r) { return !operator==(l, r); }
-  friend HashCode partialHash(const FilePath& x) { return partialHash(x.ToSpan()); }
-  friend int compare(const FilePath& l, FilePathSpan r) { return compare(l.ToSpan(), r); }
-  friend TextWriter& operator<<(TextWriter& out, const FilePath& x) { return out << x.ToSpan(); }
+  friend HashCode partialHash(const FilePath& x) { return partialHash(x.toSpan()); }
+  friend int compare(const FilePath& l, FilePathSpan r) { return compare(l.toSpan(), r); }
+  friend TextWriter& operator<<(TextWriter& out, const FilePath& x) { return out << x.toSpan(); }
   friend void format(TextWriter& out, const FilePath& x, const StringSpan& opts) {
-    format(out, x.ToSpan(), opts);
+    format(out, x.toSpan(), opts);
   }
 
   friend const FilePathChar* ToNullTerminated(const FilePath& x) {
     return ToNullTerminated(x.chars_);
   }
 
-  friend SpanType MakeSpan(const FilePath& x) { return x.ToSpan(); }
+  friend SpanType makeSpan(const FilePath& x) { return x.toSpan(); }
 
  private:
   List<CharType> chars_;
 
-  SpanType ToSpan() const { return SpanType(chars_); }
+  SpanType toSpan() const { return SpanType(chars_); }
 };
 
 namespace detail {
@@ -128,7 +128,7 @@ BASE_EXPORT FilePath CombineFilePaths(Span<FilePathSpan> components);
 
 template<typename... Ts>
 inline FilePath CombineFilePaths(const Ts&... args) {
-  auto array = MakeArray<FilePathSpan>(args...);
+  auto array = makeArray<FilePathSpan>(args...);
   return detail::CombineFilePaths(array);
 }
 

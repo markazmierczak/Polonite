@@ -30,7 +30,7 @@ class Sha1Digest {
   }
 
   friend bool operator==(const Sha1Digest& l, const Sha1Digest& r) noexcept {
-    return MakeSpan(l.raw_) == MakeSpan(r.raw_);
+    return makeSpan(l.raw_) == makeSpan(r.raw_);
   }
   friend bool operator!=(const Sha1Digest& l, const Sha1Digest& r) noexcept {
     return !operator==(l, r);

@@ -60,7 +60,7 @@ FilePath GetCurrentDirPath() {
     path.Clear();
     char* dst = path.chars().AppendUninitialized(buffer_len);
     if (::getcwd(dst, buffer_len) != nullptr) {
-      int real_length = MakeSpanFromNullTerminated(dst).size();
+      int real_length = makeSpanFromNullTerminated(dst).size();
       path.Truncate(real_length);
       return path;
     }

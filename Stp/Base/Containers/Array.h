@@ -4,11 +4,17 @@
 #ifndef STP_BASE_CONTAINERS_ARRAY_H_
 #define STP_BASE_CONTAINERS_ARRAY_H_
 
-#include "Base/Containers/ArrayFwd.h"
 #include "Base/Containers/Span.h"
 #include "Base/Type/Common.h"
 
 namespace stp {
+
+// FIXME remove
+template<typename T, int N>
+struct Array;
+
+template<typename T, int N>
+struct TIsContiguousContainerTmpl<Array<T, N>> : TTrue {};
 
 template<typename T, int N>
 struct Array {
@@ -18,8 +24,8 @@ struct Array {
 
   T data_[N];
 
-  constexpr operator Span<T>() const { return ToSpan(); }
-  constexpr operator MutableSpan<T>() { return ToSpan(); }
+  constexpr operator Span<T>() const { return toSpan(); }
+  constexpr operator MutableSpan<T>() { return toSpan(); }
 
   ALWAYS_INLINE constexpr const T* data() const { return data_; }
   ALWAYS_INLINE constexpr T* data() { return data_; }
@@ -28,15 +34,15 @@ struct Array {
   constexpr const T& operator[](int at) const;
   constexpr T& operator[](int at);
 
-  constexpr const T& GetFirst() const { return ToSpan().GetFirst(); }
-  constexpr const T& GetLast() const { return ToSpan().GetLast(); }
-  constexpr T& GetFirst() { return ToSpan().GetFirst(); }
-  constexpr T& GetLast() { return ToSpan().GetLast(); }
+  constexpr const T& getFirst() const { return toSpan().getFirst(); }
+  constexpr const T& getLast() const { return toSpan().getLast(); }
+  constexpr T& getFirst() { return toSpan().getFirst(); }
+  constexpr T& getLast() { return toSpan().getLast(); }
 
-  constexpr SpanType GetSlice(int at) const { return ToSpan().GetSlice(at); }
-  constexpr SpanType GetSlice(int at, int n) const { return ToSpan().GetSlice(at, n); }
-  constexpr MutableSpanType GetSlice(int at) { return ToSpan().GetSlice(at); }
-  constexpr MutableSpanType GetSlice(int at, int n) { return ToSpan().GetSlice(at, n); }
+  constexpr SpanType getSlice(int at) const { return toSpan().getSlice(at); }
+  constexpr SpanType getSlice(int at, int n) const { return toSpan().getSlice(at, n); }
+  constexpr MutableSpanType getSlice(int at) { return toSpan().getSlice(at); }
+  constexpr MutableSpanType getSlice(int at, int n) { return toSpan().getSlice(at, n); }
 
   template<typename U>
   int IndexOf(const U& item) const { return IndexOfItem(data_, N, item); }
@@ -46,21 +52,21 @@ struct Array {
   bool Contains(const U& item) const { return IndexOf(item) >= 0; }
 
   friend constexpr void swap(Array& lhs, Array& rhs) noexcept { swap(lhs.data_, rhs.data_); }
-  friend constexpr bool operator==(const Array& lhs, SpanType rhs) { return operator==(lhs.ToSpan(), rhs); }
-  friend constexpr bool operator!=(const Array& lhs, SpanType rhs) { return operator==(lhs.ToSpan(), rhs); }
-  friend int compare(const Array& lhs, SpanType rhs) { return compare(lhs.ToSpan(), rhs); }
+  friend constexpr bool operator==(const Array& lhs, SpanType rhs) { return operator==(lhs.toSpan(), rhs); }
+  friend constexpr bool operator!=(const Array& lhs, SpanType rhs) { return operator==(lhs.toSpan(), rhs); }
+  friend int compare(const Array& lhs, SpanType rhs) { return compare(lhs.toSpan(), rhs); }
 
   friend constexpr const T* begin(const Array& x) { return x.data_; }
   friend constexpr const T* end(const Array& x) { return x.data_ + N; }
   friend constexpr T* begin(Array& x) { return x.data_; }
   friend constexpr T* end(Array& x) { return x.data_ + N; }
 
-  friend SpanType MakeSpan(const Array& x) { return x.ToSpan(); }
-  friend MutableSpanType MakeSpan(Array& x) { return x.ToSpan(); }
+  friend SpanType makeSpan(const Array& x) { return x.toSpan(); }
+  friend MutableSpanType makeSpan(Array& x) { return x.toSpan(); }
 
  private:
-  constexpr SpanType ToSpan() const { return SpanType(data_, N); }
-  constexpr MutableSpanType ToSpan() { return MutableSpanType(data_, N); }
+  constexpr SpanType toSpan() const { return SpanType(data_, N); }
+  constexpr MutableSpanType toSpan() { return MutableSpanType(data_, N); }
 };
 
 template<typename T, int N>
@@ -69,7 +75,7 @@ template<typename T, int N>
 struct TIsTriviallyRelocatableTmpl<Array<T, N>> : TIsTriviallyRelocatableTmpl<T> {};
 
 template<typename T = void, typename... TElements>
-constexpr auto MakeArray(TElements&&... elements) {
+constexpr auto makeArray(TElements&&... elements) {
   using DT = TConditional<TIsVoid<T>, TCommon<TElements...>, T>;
   return Array<DT, sizeof...(TElements)> { { Forward<TElements>(elements)... } };
 }

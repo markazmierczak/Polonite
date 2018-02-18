@@ -119,7 +119,7 @@ void StreamWriter::WriteToBuffer(BufferSpan input) {
     return;
   }
 
-  buffer_.Append(input.GetSlice(remaining_capacity));
+  buffer_.Append(input.getSlice(remaining_capacity));
   input.RemovePrefix(remaining_capacity);
 
   FlushBuffer();

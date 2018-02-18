@@ -74,7 +74,7 @@ void Directory::RemoveRecursively(const FilePath& path) {
 
   RecursiveDirectoryEnumerator enumerator;
   while (!directories.IsEmpty()) {
-    enumerator.Open(directories.GetLast());
+    enumerator.Open(directories.getLast());
 
     bool has_nested = false;
     while (enumerator.MoveNext()) {
@@ -87,7 +87,7 @@ void Directory::RemoveRecursively(const FilePath& path) {
       }
     }
     if (!has_nested) {
-      RemoveEmpty(directories.GetLast());
+      RemoveEmpty(directories.getLast());
       directories.RemoveLast();
     }
     enumerator.Close();

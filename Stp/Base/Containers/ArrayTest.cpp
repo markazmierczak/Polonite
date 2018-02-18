@@ -12,15 +12,15 @@ using testing::_;
 using testing::Truly;
 
 TEST(ArrayTest, Basic) {
-  auto array = MakeArray<int>(2, 3, 4);
+  auto array = makeArray<int>(2, 3, 4);
   EXPECT_EQ(3, array.size());
 
   EXPECT_EQ(2, array[0]);
   EXPECT_EQ(3, array[1]);
   EXPECT_EQ(4, array[2]);
 
-  EXPECT_EQ(2, array.GetFirst());
-  EXPECT_EQ(4, array.GetLast());
+  EXPECT_EQ(2, array.getFirst());
+  EXPECT_EQ(4, array.getLast());
 
   int tmp = 2;
   for (int x : array) {
@@ -34,7 +34,7 @@ TEST(ArrayTest, Basic) {
 }
 
 TEST(ArrayTest, Find) {
-  auto array = MakeArray(2, 2, 4, 5, 6, 7, 8);
+  auto array = makeArray(2, 2, 4, 5, 6, 7, 8);
 
   EXPECT_EQ(-1, array.IndexOf(0));
   EXPECT_EQ(0, array.IndexOf(2));

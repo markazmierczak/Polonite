@@ -40,13 +40,13 @@ TextDecoder::Result Utf32Decoder::Decode(
     if (!unicode::IsValidRune(c)) {
       c = unicode::ReplacementRune;
     }
-    int encoded_size = TryEncodeUtf(c, output.GetSlice(num_wrote));
+    int encoded_size = TryEncodeUtf(c, output.getSlice(num_wrote));
     if (encoded_size == 0)
       break;
     num_wrote += encoded_size;
   }
   if (flush && leftover != 0) {
-    int encoded = TryEncodeUtf(unicode::ReplacementRune, output.GetSlice(num_wrote));
+    int encoded = TryEncodeUtf(unicode::ReplacementRune, output.getSlice(num_wrote));
     if (encoded != 0) {
       more_output = true;
       num_read += leftover;

@@ -75,7 +75,7 @@ bool InitializeSymbols() {
 
   FilePath path = GetExecutableDirPath();
   WString new_path = WString::ConcatArgs(
-      MakeSpanFromNullTerminated(symbols_path.get()),
+      makeSpanFromNullTerminated(symbols_path.get()),
       L";",
       GetExePath().GetDirectoryName().AsCharactersUnsafe());
 
@@ -121,13 +121,13 @@ void FormatSymbol(TextWriter& out, void* pc) {
   BOOL has_line = ::SymGetLineFromAddrW64(current_process_handle, frame, &line_displacement, &line);
 
   if (has_symbol) {
-    out << MakeSpanFromNullTerminated(symbol.info.Name);
+    out << makeSpanFromNullTerminated(symbol.info.Name);
     out << '+' << sym_displacement;
   } else {
     out << "(no symbol)";
   }
   if (has_line) {
-    out << " (" << MakeSpanFromNullTerminated(line.FileName) << ':' << line.LineNumber << ")";
+    out << " (" << makeSpanFromNullTerminated(line.FileName) << ':' << line.LineNumber << ")";
   }
 }
 

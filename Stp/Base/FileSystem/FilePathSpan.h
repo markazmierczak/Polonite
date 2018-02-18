@@ -62,8 +62,8 @@ class BASE_EXPORT FilePathSpan {
 
   constexpr bool IsEmpty() const { return chars_.IsEmpty(); }
 
-  FilePathSpan GetSlice(int at) const { return FilePathSpan(chars_.GetSlice(at)); }
-  FilePathSpan GetSlice(int at, int n) const { return FilePathSpan(chars_.GetSlice(at, n)); }
+  FilePathSpan getSlice(int at) const { return FilePathSpan(chars_.getSlice(at)); }
+  FilePathSpan getSlice(int at, int n) const { return FilePathSpan(chars_.getSlice(at, n)); }
 
   void Truncate(int at) { chars_.Truncate(at); }
 
@@ -126,14 +126,14 @@ class BASE_EXPORT FilePathSpan {
 };
 
 inline FilePathSpan MakeFilePathSpanFromNullTerminated(const FilePathChar* cstr) {
-  return FilePathSpan(MakeSpanFromNullTerminated(cstr));
+  return FilePathSpan(makeSpanFromNullTerminated(cstr));
 }
 
 class BASE_EXPORT FilePathEnumerator {
  public:
   explicit FilePathEnumerator(FilePathSpan path);
 
-  FilePathSpan GetCurrent() const { return path_.GetSlice(now_pos_, now_len_); }
+  FilePathSpan GetCurrent() const { return path_.getSlice(now_pos_, now_len_); }
 
   FilePathEnumerator* Next();
 

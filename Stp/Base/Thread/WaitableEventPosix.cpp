@@ -333,7 +333,7 @@ bool WaitableEvent::SignalOne() {
     if (kernel_->waiters_.IsEmpty())
       return false;
 
-    const bool r = kernel_->waiters_.GetFirst()->Fire(this);
+    const bool r = kernel_->waiters_.getFirst()->Fire(this);
     kernel_->waiters_.RemoveAt(0);
     if (r)
       return true;

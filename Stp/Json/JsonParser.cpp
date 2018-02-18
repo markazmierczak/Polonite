@@ -228,10 +228,10 @@ bool JsonParser::ConsumeObject(JsonValue& out_value) {
       return false;
 
     if (options_.Has(JsonOptions::UniqueKeys)) {
-      if (!object.TryAdd(key.ToSpan(), move(value)))
+      if (!object.TryAdd(key.toSpan(), move(value)))
         return ReportError(JsonError::KeyAlreadyAssigned, 1);
     } else {
-      object.Set(key.ToSpan(), move(value));
+      object.Set(key.toSpan(), move(value));
     }
 
     token = GetNextToken();

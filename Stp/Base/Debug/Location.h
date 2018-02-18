@@ -41,10 +41,10 @@ constexpr Location::Location() noexcept
     : function_name_("unknown"), file_name_("unknown"), line_number_(-1) {}
 
 inline StringSpan Location::getFunctionName() const {
-  return MakeSpanFromNullTerminated(function_name_);
+  return makeSpanFromNullTerminated(function_name_);
 }
 inline StringSpan Location::getFileName() const {
-  return MakeSpanFromNullTerminated(file_name_);
+  return makeSpanFromNullTerminated(file_name_);
 }
 
 } // namespace stp

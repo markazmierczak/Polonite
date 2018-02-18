@@ -46,7 +46,7 @@ static bool SplitsCharacterAt(StringSpan text, int at) {
 static void TrimLastCharacter(StringSpan& text) {
   bool lead = false;
   while (!lead && !text.IsEmpty()) {
-    lead = Utf8::IsEncodedLead(text.GetLast());
+    lead = Utf8::IsEncodedLead(text.getLast());
     text.RemoveSuffix(1);
   }
 }

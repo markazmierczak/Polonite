@@ -37,7 +37,7 @@ bool Environment::TryGetNative(const char* name, String& out_value) {
   const char* mbvalue_cstr = ::getenv(name);
   if (!mbvalue_cstr)
     return false;
-  out_value = MakeSpanFromNullTerminated(mbvalue_cstr);
+  out_value = makeSpanFromNullTerminated(mbvalue_cstr);
   return true;
 }
 

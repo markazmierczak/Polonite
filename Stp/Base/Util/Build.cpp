@@ -29,18 +29,18 @@ Time Build::TranslationTime() {
   StringSpan time_str(__TIME__); // "hh:mm:ss"
 
   Time::Exploded exploded;
-  exploded.month = MonthArray.IndexOf(date_str.GetSlice(0, 3));
+  exploded.month = MonthArray.IndexOf(date_str.getSlice(0, 3));
 
-  StringSpan day_str = date_str.GetSlice(4, 2);
+  StringSpan day_str = date_str.getSlice(4, 2);
   // First character of "dd" is space if day is lower than ten.
   if (day_str[0] == ' ')
     day_str.RemovePrefix(1);
 
   parse(day_str, exploded.day_of_month);
-  parse(date_str.GetSlice(7, 4), exploded.year);
-  parse(time_str.GetSlice(0, 2), exploded.hour);
-  parse(time_str.GetSlice(3, 2), exploded.minute);
-  parse(time_str.GetSlice(6, 2), exploded.second);
+  parse(date_str.getSlice(7, 4), exploded.year);
+  parse(time_str.getSlice(0, 2), exploded.hour);
+  parse(time_str.getSlice(3, 2), exploded.minute);
+  parse(time_str.getSlice(6, 2), exploded.second);
   exploded.day_of_week = -1;
 
   Time result;

@@ -50,7 +50,7 @@ void ConsoleWriter::onFlush() {
 }
 
 void ConsoleWriter::printBuffer(int ready_size) {
-  *this << buffer_.GetSlice(0, ready_size);
+  *this << buffer_.getSlice(0, ready_size);
   buffer_.RemovePrefix(ready_size);
 }
 
