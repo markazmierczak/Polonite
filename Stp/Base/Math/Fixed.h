@@ -126,7 +126,7 @@ class Fixed {
   friend constexpr bool operator< (Fixed l, Fixed r) { return l.bits_ <  r.bits_; }
   friend constexpr bool operator> (Fixed l, Fixed r) { return l.bits_ >  r.bits_; }
 
-  friend constexpr HashCode Hash(const Fixed& x) { return static_cast<HashCode>(x.bits_); }
+  friend constexpr HashCode hash(const Fixed& x) { return static_cast<HashCode>(x.bits_); }
 
   friend void Format(TextWriter& out, const Fixed& x, const StringSpan& opts) {
     detail::FormatFixedPoint(out, opts, x.bits_, P);

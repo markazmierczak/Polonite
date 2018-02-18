@@ -17,7 +17,7 @@ int compare(const ErrorCode& l, const ErrorCode& r) noexcept {
   return rv;
 }
 
-HashCode Hash(const ErrorCode& x) noexcept {
+HashCode hash(const ErrorCode& x) noexcept {
   return HashMany(&x.GetCategory(), x.GetCode());
 }
 

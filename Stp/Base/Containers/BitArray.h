@@ -137,7 +137,7 @@ class BitArray {
   friend int compare(const BitArray& l, const BitArray& r) {
     return ::memcmp(l.words_, r.words_, sizeof(words_));
   }
-  friend HashCode Hash(const BitArray& x) { return HashBuffer(x.words_, N * isizeof(WordType)); }
+  friend HashCode hash(const BitArray& x) { return HashBuffer(x.words_, N * isizeof(WordType)); }
   friend void Format(TextWriter& out, const BitArray& x, const StringSpan& opts) {
     detail::FormatBitArray(out, opts, x.words_, N);
   }

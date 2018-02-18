@@ -308,17 +308,17 @@ HashCode JsonValue::GetHashCode() const {
     case Type::Null:
       return HashCode::Zero;
     case Type::Boolean:
-      return Hash(AsBool());
+      return hash(AsBool());
     case Type::Integer:
-      return Hash(AsInteger());
+      return hash(AsInteger());
     case Type::Double:
-      return Hash(AsDouble());
+      return hash(AsDouble());
     case Type::String:
-      return Hash(AsString());
+      return hash(AsString());
     case Type::Array:
-      return Hash(AsArray());
+      return hash(AsArray());
     case Type::Object:
-      return Hash(AsObject());
+      return hash(AsObject());
   }
   UNREACHABLE(return 0);
 }

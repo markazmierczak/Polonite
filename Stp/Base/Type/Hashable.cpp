@@ -48,7 +48,7 @@ static HashCode Hash0To8(const byte_t* data, int size) {
   };
   x = 0;
   memcpy(bytes, data, size);
-  return size <= isizeof(HashCode) ? static_cast<HashCode>(x) : Hash(x);
+  return size <= isizeof(HashCode) ? static_cast<HashCode>(x) : hash(x);
 }
 
 HashCode HashBuffer(const void* data, int size) noexcept {

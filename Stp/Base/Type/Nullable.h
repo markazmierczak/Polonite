@@ -231,7 +231,7 @@ constexpr int compare(const T& l, const NullableValue<U>& r) {
 }
 
 template<typename T, TEnableIf<TIsHashable<T>>* = nullptr>
-constexpr HashCode Hash(const NullableValue<T>& x) { return x ? Hash(*x) : HashCode::Zero; }
+constexpr HashCode hash(const NullableValue<T>& x) { return x ? hash(*x) : HashCode::Zero; }
 
 template<typename T, TEnableIf<TIsFormattable<T>>* = nullptr>
 inline TextWriter& operator<<(TextWriter& out, const NullableValue<T>& x) {

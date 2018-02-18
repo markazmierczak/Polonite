@@ -14,7 +14,7 @@ BASE_EXPORT HashCode Combine(HashCode first, HashCode second);
 BASE_EXPORT HashCode Finalize(HashCode code);
 
 template<typename T, TEnableIf<TIsScalar<T>>* = nullptr>
-inline HashCode Hash(T x) {
+inline HashCode hash(T x) {
   if constexpr (TIsInteger<T>) {
     if constexpr (sizeof(T) <= sizeof(HashCode)) {
       return static_cast<HashCode>(x);
@@ -24,7 +24,7 @@ inline HashCode Hash(T x) {
       return static_cast<HashCode>((y >> 32) ^ y);
     }
   } else if constexpr (TIsEnum<T>) {
-    return Hash(toUnderlying(x));
+    return hash(toUnderlying(x));
   } else if constexpr (TIsPointer<T>) {
     // Take lower bits only.
     return static_cast<HashCode>(reinterpret_cast<uintptr_t>(x));
@@ -38,7 +38,7 @@ inline HashCode Hash(T x) {
       return static_cast<HashCode>(y);
     } else {
       static_assert(sizeof(T) == 8);
-      return Hash(bit_cast<uint64_t>(x) & ~UINT64_C(0x8000000000000000));
+      return hash(bit_cast<uint64_t>(x) & ~UINT64_C(0x8000000000000000));
     }
   } else if constexpr (TIsBoolean<T>) {
     return static_cast<HashCode>(x);
@@ -56,7 +56,7 @@ inline HashCode Hash(T x) {
 namespace detail {
 
 template<typename T>
-using THashableConcept = decltype(Hash(declval<const T&>()));
+using THashableConcept = decltype(hash(declval<const T&>()));
 
 } // namespace detail
 
@@ -66,17 +66,17 @@ constexpr bool TIsHashable = TsAreSame<HashCode, TDetect<detail::THashableConcep
 inline HashCode HashMany() { return HashCode::Zero; }
 
 template<typename T>
-inline HashCode HashMany(const T& v) { return Hash(v); }
+inline HashCode HashMany(const T& v) { return hash(v); }
 
 template<typename T, typename... Ts>
 inline HashCode HashMany(const T& v, const Ts&... vs) {
-  return Combine(HashMany(vs...), Hash(v));
+  return Combine(HashMany(vs...), hash(v));
 }
 
 struct DefaultHasher {
   template<typename T>
   HashCode operator()(const T& x) const {
-    return Finalize(Hash(x));
+    return Finalize(hash(x));
   }
 };
 

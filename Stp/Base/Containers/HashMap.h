@@ -132,7 +132,7 @@ class HashMap : public detail::HashMapBase {
   bool auto_shrink_ = false;
   bool use_binary_bucket_sizes_ = false;
 
-  int ConstrainHash(HashCode in_hash) const {
+  int Constrainhash(HashCode in_hash) const {
     auto hash = toUnderlying(in_hash);
     return use_binary_bucket_sizes_
         ? (hash & (bucket_count_ - 1))
@@ -144,7 +144,7 @@ class HashMap : public detail::HashMapBase {
     if (UNLIKELY(bucket_count_ == 0))
       return const_cast<Entry*>(&sentinel_);
 
-    int constrained_hash = ConstrainHash(hash);
+    int constrained_hash = Constrainhash(hash);
     Entry* entry = &buckets_[constrained_hash];
     for (BaseNode* node = *entry; !node->IsSentinel(); entry = &node->next, node = *entry) {
       if (node->hash == hash && RealNode::Cast(node)->key == key)
@@ -154,14 +154,14 @@ class HashMap : public detail::HashMapBase {
   }
 
   template<typename U>
-  Entry* FindEntry(const U& key, HashCode* out_hash = nullptr) const {
-    HashCode hash = HashCode::Zero;
-    if (bucket_count_ != 0 || out_hash != nullptr) {
-      hash = Finalize(Hash(key));
-      if (out_hash)
-        *out_hash = hash;
+  Entry* FindEntry(const U& key, HashCode* out_code = nullptr) const {
+    HashCode code = HashCode::Zero;
+    if (bucket_count_ != 0 || out_code != nullptr) {
+      code = Finalize(hash(key));
+      if (out_code)
+        *out_code = code;
     }
-    return FindEntry(key, hash);
+    return FindEntry(key, code);
   }
 
   template<typename U>
@@ -232,7 +232,7 @@ class HashMap : public detail::HashMapBase {
     auto* sentinel = static_cast<SentinelNode*>(input_node->next);
     HashMap& that = *sentinel->table;
 
-    int bucket_index = that.ConstrainHash(input_node->hash);
+    int bucket_index = that.Constrainhash(input_node->hash);
     return that.FindFirstNode(bucket_index + 1);
   }
 };
@@ -347,7 +347,7 @@ inline void HashMap<K, T>::Rehash(int new_bucket_count) {
     BaseNode* node = old_buckets[i];
     while (node != sentinel) {
       BaseNode* next = node->next;
-      int bucket_index = ConstrainHash(node->hash);
+      int bucket_index = Constrainhash(node->hash);
       node->next = new_buckets[bucket_index];
       new_buckets[bucket_index] = node;
       node = next;

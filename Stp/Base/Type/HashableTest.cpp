@@ -10,13 +10,13 @@
 namespace stp {
 
 TEST(HashableTest, HashBool) {
-  EXPECT_EQ(static_cast<HashCode>(1), Hash(true));
-  EXPECT_EQ(static_cast<HashCode>(0), Hash(false));
+  EXPECT_EQ(static_cast<HashCode>(1), hash(true));
+  EXPECT_EQ(static_cast<HashCode>(0), hash(false));
 }
 
 TEST(HashableTest, HashFloatZero) {
-  EXPECT_EQ(Hash(0.f), Hash(-0.f));
-  EXPECT_EQ(Hash(0.0), Hash(-0.0));
+  EXPECT_EQ(hash(0.f), hash(-0.f));
+  EXPECT_EQ(hash(0.0), hash(-0.0));
 }
 
 template<typename T>
@@ -41,15 +41,15 @@ TYPED_TEST(HashableTest, EqualToImpliesSameHashCode) {
   for (TypeParam v1: values) {
     for (TypeParam v2: values) {
       if (v1 == v2) {
-        EXPECT_EQ(Hash(v1), Hash(v2));
+        EXPECT_EQ(hash(v1), hash(v2));
       }
     }
   }
 }
 
-struct HashableTest_TestClass { friend HashCode Hash(const HashableTest_TestClass&); };
+struct HashableTest_TestClass { friend HashCode hash(const HashableTest_TestClass&); };
 namespace Foreign {
-struct HashableTest_TestClass2 { friend HashCode Hash(const HashableTest_TestClass2&); };
+struct HashableTest_TestClass2 { friend HashCode hash(const HashableTest_TestClass2&); };
 struct HashableTest_TestClass3 {};
 }
 static_assert(TIsHashable<HashableTest_TestClass>, "!");

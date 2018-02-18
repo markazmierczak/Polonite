@@ -46,7 +46,7 @@ int FilePathSpan::CompareTo(const FilePathSpan& other) const {
 }
 
 HashCode FilePathSpan::HashImpl() const {
-  return Hash(chars_);
+  return hash(chars_);
 }
 
 } // namespace stp

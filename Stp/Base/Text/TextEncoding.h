@@ -81,7 +81,7 @@ class BASE_EXPORT TextEncoding {
 
   friend bool operator==(const TextEncoding& l, const TextEncoding& r) { return &l == &r; }
   friend bool operator!=(const TextEncoding& l, const TextEncoding& r) { return !operator==(l, r); }
-  friend HashCode Hash(const TextEncoding& codec) { return codec.HashImpl(); }
+  friend HashCode hash(const TextEncoding& codec) { return codec.HashImpl(); }
 
   static bool AreNamesMatching(StringSpan lhs, StringSpan rhs) noexcept;
 
