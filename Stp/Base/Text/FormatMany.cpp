@@ -38,7 +38,7 @@ class FormatArgId {
 
     // First character is digit - treat as index.
     if (isDigitAscii(s.GetFirst()))
-      return TryParse(s, size_or_index_) == ParseIntegerErrorCode::Ok;
+      return tryParse(s, size_or_index_) == ParseIntegerErrorCode::Ok;
 
     // Otherwise treat as name.
     name_ = s.data();
@@ -111,7 +111,7 @@ bool FormatLayout::Parse(StringSpan s) {
       }
     }
   }
-  return TryParse(s, width) == ParseIntegerErrorCode::Ok;
+  return tryParse(s, width) == ParseIntegerErrorCode::Ok;
 }
 
 bool FormatReplacement::Parse(StringSpan s) {

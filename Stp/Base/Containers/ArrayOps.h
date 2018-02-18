@@ -53,7 +53,7 @@ inline void UninitializedInit(T* items, int count) noexcept(TIsNoexceptConstruct
   if constexpr (TIsNoexceptConstructible<T>) {
     if constexpr (TIsZeroConstructible<T>) {
       if (count)
-        ::memset(items, 0, ToUnsigned(count) * sizeof(T));
+        ::memset(items, 0, toUnsigned(count) * sizeof(T));
     } else {
       for (int i = 0; i < count; ++i)
         new (items + i) T();
@@ -77,7 +77,7 @@ inline void UninitializedCopy(T* dst, const T* src, int count) noexcept(TIsNoexc
   if constexpr (TIsNoexceptCopyConstructible<T>) {
     if constexpr (TIsTriviallyCopyConstructible<T>) {
       if (count)
-        ::memcpy(dst, src, ToUnsigned(count) * sizeof(T));
+        ::memcpy(dst, src, toUnsigned(count) * sizeof(T));
     } else {
       for (int i = 0; i < count; ++i)
         new (dst + i) T(src[i]);
@@ -100,10 +100,10 @@ inline void UninitializedMove(T* dst, T* src, int count) noexcept {
   ASSERT(!AreOverlapping(dst, src, count));
   if constexpr (TIsTriviallyMoveConstructible<T>) {
     if (count)
-      ::memcpy(dst, src, ToUnsigned(count) * sizeof(T));
+      ::memcpy(dst, src, toUnsigned(count) * sizeof(T));
   } else if constexpr (TIsTriviallyRelocatable<T> && TIsZeroConstructible<T>) {
     if (count) {
-      auto byte_count = ToUnsigned(count) * sizeof(T);
+      auto byte_count = toUnsigned(count) * sizeof(T);
       ::memcpy(dst, src, byte_count);
       ::memset(src, 0, byte_count);
     }
@@ -119,7 +119,7 @@ inline void UninitializedRelocate(T* dst, T* src, int count) noexcept {
   // Destination and source may overlap.
   if constexpr (TIsTriviallyRelocatable<T>) {
     if (count)
-      ::memmove(dst, src, ToUnsigned(count) * sizeof(T));
+      ::memmove(dst, src, toUnsigned(count) * sizeof(T));
   } else {
     if (src > dst) {
       for (int i = 0; i < count; ++i) {
@@ -141,7 +141,7 @@ inline void UninitializedFill(T* items, int count, U&& value) noexcept(TIsNoexce
   if constexpr (TIsNoexceptCopyConstructible<T>) {
     if constexpr (detail::TIsCopyInitializableWithMemset<T>) {
       if (count)
-        ::memset(items, bit_cast<uint8_t>(value), ToUnsigned(count));
+        ::memset(items, bit_cast<uint8_t>(value), toUnsigned(count));
     } else {
       for (int i = 0; i < count; ++i)
         new (items + i) T(value);
@@ -165,7 +165,7 @@ inline void Fill(T* items, int count, const U& value) noexcept(TIsNoexceptCopyAs
   if constexpr (TIsNoexceptCopyAssignable<T>) {
     if constexpr (detail::TIsCopyInitializableWithMemset<T>) {
       if (count)
-        ::memset(items, bit_cast<uint8_t>(value), ToUnsigned(count));
+        ::memset(items, bit_cast<uint8_t>(value), toUnsigned(count));
     } else {
       for (int i = 0; i < count; ++i)
         items[i] = value;
@@ -182,7 +182,7 @@ inline bool Equals(const T* lhs, const T* rhs, int count) noexcept {
   if constexpr (TIsTriviallyEqualityComparable<T>) {
     if (count == 0)
       return true;
-    return ::memcmp(lhs, rhs, ToUnsigned(count) * sizeof(T)) == 0;
+    return ::memcmp(lhs, rhs, toUnsigned(count) * sizeof(T)) == 0;
   } else {
     for (int i = 0; i < count; ++i) {
       if (lhs[i] != rhs[i])
@@ -198,7 +198,7 @@ inline void Copy(T* dst, const T* src, int count) noexcept(TIsNoexceptCopyAssign
   // Destination and source may overlap.
   if constexpr (TIsTriviallyCopyAssignable<T>) {
     if (count != 0)
-      ::memmove(dst, src, ToUnsigned(count) * sizeof(T));
+      ::memmove(dst, src, toUnsigned(count) * sizeof(T));
   } else {
     if (src > dst) {
       for (int i = 0; i < count; ++i)
@@ -216,7 +216,7 @@ inline void CopyNonOverlapping(T* dst, const T* src, int count) noexcept(TIsNoex
   ASSERT(!AreOverlapping(dst, src, count));
   if constexpr (TIsTriviallyCopyAssignable<T>) {
     if (count != 0)
-      ::memcpy(dst, src, ToUnsigned(count) * sizeof(T));
+      ::memcpy(dst, src, toUnsigned(count) * sizeof(T));
   } else {
     for (int i = 0; i < count; ++i)
       dst[i] = src[i];

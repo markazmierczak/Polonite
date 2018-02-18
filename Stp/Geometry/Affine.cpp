@@ -779,7 +779,7 @@ bool IsNear(const Affine& lhs, const Affine& rhs, float tolerance) {
   return true;
 }
 
-bool TryLerp(Affine& out, const Affine& x, const Affine& y, double t) {
+bool Trylerp(Affine& out, const Affine& x, const Affine& y, double t) {
   if (t == 0) {
     out = x;
     return true;
@@ -793,13 +793,13 @@ bool TryLerp(Affine& out, const Affine& x, const Affine& y, double t) {
   if (!x.Decompose(x_decomp) || !y.Decompose(y_decomp))
     return false;
 
-  DecomposedAffine out_decomp = Lerp(x_decomp, y_decomp, t);
+  DecomposedAffine out_decomp = lerp(x_decomp, y_decomp, t);
   out.Recompose(out_decomp);
   return true;
 }
 
 // https://www.w3.org/TR/css3-transforms/#interpolation-of-decomposed-2d-matrix-values
-DecomposedAffine Lerp(const DecomposedAffine& a, const DecomposedAffine& b, double t) {
+DecomposedAffine lerp(const DecomposedAffine& a, const DecomposedAffine& b, double t) {
   double a_angle = a.angle_radians;
   double b_angle = b.angle_radians;
   float a_scale_x = a.scale_x;
@@ -823,12 +823,12 @@ DecomposedAffine Lerp(const DecomposedAffine& a, const DecomposedAffine& b, doub
     b_angle = Angle::FullInRadians;
 
   DecomposedAffine out(DecomposedAffine::SkipInit);
-  out.delta = Lerp(a.delta, b.delta, t);
-  out.scale_x = Lerp(a_scale_x, b.scale_x, t);
-  out.scale_y = Lerp(a_scale_y, b.scale_y, t);
-  out.angle_radians = Lerp(a_angle, b_angle, t);
+  out.delta = lerp(a.delta, b.delta, t);
+  out.scale_x = lerp(a_scale_x, b.scale_x, t);
+  out.scale_y = lerp(a_scale_y, b.scale_y, t);
+  out.angle_radians = lerp(a_angle, b_angle, t);
   for (int i = 0; i < 4; ++i)
-    out.remainder[i] = Lerp(a.remainder[i], b.remainder[i], t);
+    out.remainder[i] = lerp(a.remainder[i], b.remainder[i], t);
   return out;
 }
 

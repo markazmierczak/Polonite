@@ -19,7 +19,7 @@ bool ClipTextWriter::Grow(int n) {
   if (remaining_ >= n) {
     remaining_ -= n;
   } else {
-    n = Max(remaining_, 0);
+    n = max(remaining_, 0);
     remaining_ = -1;
   }
   return n;

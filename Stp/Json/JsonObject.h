@@ -89,7 +89,7 @@ class BASE_EXPORT JsonObject : public JsonValue {
 
   HashCode GetHashCode() const;
 
-  static bool TryParse(
+  static bool tryParse(
       StringSpan input,
       JsonObject& output,
       const JsonOptions& options = JsonOptions());

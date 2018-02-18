@@ -116,7 +116,7 @@ struct BASE_EXPORT IntRectExtents {
   IntVector2 rb;
 };
 
-BASE_EXPORT IntRect Lerp(const IntRect& a, const IntRect& b, double t);
+BASE_EXPORT IntRect lerp(const IntRect& a, const IntRect& b, double t);
 
 inline IntRectExtents IntRectExtents::operator+(const IntRectExtents& o) const {
   return IntRectExtents(lt + o.lt, rb + o.rb);

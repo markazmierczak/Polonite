@@ -13,10 +13,10 @@ void IntSize2::ToFormat(TextWriter& out, const StringSpan& opts) const {
   out.WriteInteger(height);
 }
 
-IntSize2 Lerp(const IntSize2& a, const IntSize2& b, double t) {
+IntSize2 lerp(const IntSize2& a, const IntSize2& b, double t) {
   return IntSize2(
-      Lerp(a.width, b.width, t),
-      Lerp(a.height, b.height, t));
+      lerp(a.width, b.width, t),
+      lerp(a.height, b.height, t));
 }
 
 } // namespace stp

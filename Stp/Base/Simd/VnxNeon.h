@@ -72,10 +72,10 @@ struct VecNx<2, float> {
     return vmul_f32(vrsqrts_f32(vec_, vmul_f32(est0, est0)), est0);
   }
 
-  static VecNx Min(const VecNx& l, const VecNx& r) {
+  static VecNx min(const VecNx& l, const VecNx& r) {
     return vmin_f32(l.vec_, r.vec_);
   }
-  static VecNx Max(const VecNx& l, const VecNx& r) {
+  static VecNx max(const VecNx& l, const VecNx& r) {
     return vmax_f32(l.vec_, r.vec_);
   }
 
@@ -164,10 +164,10 @@ struct VecNx<4, float> {
     #endif
   }
 
-  static VecNx Min(const VecNx& l, const VecNx& r) {
+  static VecNx min(const VecNx& l, const VecNx& r) {
     return vminq_f32(l.vec_, r.vec_);
   }
-  static VecNx Max(const VecNx& l, const VecNx& r) {
+  static VecNx max(const VecNx& l, const VecNx& r) {
     return vmaxq_f32(l.vec_, r.vec_);
   }
 
@@ -220,7 +220,7 @@ struct VecNx<4, int32_t> {
   static VecNx Load(const int32_t* ptr) { return vld1q_s32(ptr); }
   void Store(int32_t* ptr) const { vst1q_s32(ptr, vec_); }
 
-  static VecNx Min(const VecNx& l, const VecNx& r) {
+  static VecNx min(const VecNx& l, const VecNx& r) {
     return vminq_s32(l.vec_, r.vec_);
   }
 
@@ -273,7 +273,7 @@ struct VecNx<4, uint32_t> {
   static VecNx Load(const uint32_t* ptr) { return vld1q_u32(ptr); }
   void Store(uint32_t* ptr) const { vst1q_u32(ptr, vec_); }
 
-  static VecNx Min(const VecNx& l, const VecNx& r) {
+  static VecNx min(const VecNx& l, const VecNx& r) {
     return vminq_u32(l.vec_, r.vec_);
   }
 
@@ -320,7 +320,7 @@ struct VecNx<4, uint16_t> {
   static VecNx Load(const uint16_t* ptr) { return vld1_u16(ptr); }
   void Store(uint16_t* ptr) const { vst1_u16(ptr, vec_); }
 
-  static VecNx Min(const VecNx& l, const VecNx& r) {
+  static VecNx min(const VecNx& l, const VecNx& r) {
     return vmin_u16(l.vec_, r.vec_);
   }
 
@@ -360,7 +360,7 @@ struct VecNx<8, uint16_t> {
   static VecNx Load(const uint16_t* ptr) { return vld1q_u16(ptr); }
   void Store(uint16_t* ptr) const { vst1q_u16(ptr, vec_); }
 
-  static VecNx Min(const VecNx& l, const VecNx& r) {
+  static VecNx min(const VecNx& l, const VecNx& r) {
     return vminq_u16(l.vec_, r.vec_);
   }
   static VecNx Ternary(const VecNx& c, const VecNx& t, const VecNx& e) {
@@ -432,7 +432,7 @@ struct VecNx<16, uint8_t> {
   static VecNx Load(const uint8_t* ptr) { return vld1q_u8(ptr); }
   void Store(uint8_t* ptr) const { vst1q_u8(ptr, vec_); }
 
-  static VecNx Min(const VecNx& l, const VecNx& r) {
+  static VecNx min(const VecNx& l, const VecNx& r) {
     return vminq_u8(l.vec_, r.vec_);
   }
 

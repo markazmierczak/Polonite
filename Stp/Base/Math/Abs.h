@@ -13,12 +13,12 @@
 namespace stp {
 
 template<typename T>
-constexpr auto AbsToUnsigned(T x) {
+constexpr auto absToUnsigned(T x) {
   using UnsignedType = TMakeUnsigned<T>;
   using ResultType = TMakeUnsigned<decltype(+x)>;
 
   auto ux = static_cast<UnsignedType>(x);
-  return IsNegative(x) ? static_cast<ResultType>(0) - ux : static_cast<ResultType>(ux);
+  return isNegative(x) ? static_cast<ResultType>(0) - ux : static_cast<ResultType>(ux);
 }
 
 // Abs() is not defined for character types - they are not suited for math operations.

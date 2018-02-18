@@ -63,7 +63,7 @@ bool MemoryMappedFile::MapFileRegionToMemory(
       // POSIX won't auto-extend the file when it is written so it must first
       // be explicitly extended to the maximum size. Zeros will fill the new
       // space.
-      file_.SetLength(Max(file_.GetLength(), region.offset + region.size));
+      file_.SetLength(max(file_.GetLength(), region.offset + region.size));
       flags |= PROT_READ | PROT_WRITE;
       break;
   }

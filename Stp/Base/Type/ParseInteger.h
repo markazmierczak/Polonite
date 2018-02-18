@@ -12,7 +12,7 @@
 namespace stp {
 
 template<int TBase, typename TChar, TEnableIf<TIsCharacter<TChar>>* = nullptr>
-constexpr bool TryParseDigit(TChar c, uint8_t& digit) {
+constexpr bool tryParseDigit(TChar c, uint8_t& digit) {
   if constexpr (TBase <= 10) {
     if ('0' <= c && c < '0' + TBase) {
       digit = static_cast<uint8_t>(c - '0');
@@ -98,7 +98,7 @@ class IntegerParser {
       for (const char* current = begin; current != end; ++current) {
         uint8_t new_digit = 0;
 
-        if (!TryParseDigit<TBase>(*current, new_digit))
+        if (!tryParseDigit<TBase>(*current, new_digit))
           return ParseIntegerErrorCode::FormatError;
 
         if (current != begin) {
@@ -147,24 +147,24 @@ class IntegerParser {
 } // namespace detail
 
 template<typename T, TEnableIf<TIsInteger<T>>*>
-constexpr ParseIntegerErrorCode TryParse(StringSpan input, T& output) {
+constexpr ParseIntegerErrorCode tryParse(StringSpan input, T& output) {
   return detail::IntegerParser<T, 10>::Invoke(input, output);
 }
 
 template<typename T, TEnableIf<TIsInteger<T>>* = nullptr>
-constexpr ParseIntegerErrorCode TryParseHex(StringSpan input, T& output) {
+constexpr ParseIntegerErrorCode tryParseHex(StringSpan input, T& output) {
   return detail::IntegerParser<T, 16>::Invoke(input, output);
 }
 
 template<typename T, TEnableIf<TIsInteger<T>>* = nullptr>
-constexpr ParseIntegerErrorCode TryParseOctal(StringSpan input, T& output) {
+constexpr ParseIntegerErrorCode tryParseOctal(StringSpan input, T& output) {
   return detail::IntegerParser<T, 8>::Invoke(input, output);
 }
 
 template<typename T>
 struct ParseTmpl<T, TEnableIf<TIsInteger<T>>> {
   constexpr void operator()(StringSpan text, T& rv) {
-    ParseIntegerErrorCode code = TryParse(text, rv);
+    ParseIntegerErrorCode code = tryParse(text, rv);
     MaybeThrow(code);
   }
 };

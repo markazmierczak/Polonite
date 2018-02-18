@@ -22,7 +22,7 @@ void ParseIntegerTester(
     ParseIntegerErrorCode (*parser)(StringSpan, T&)) {
   T output;
   for (const auto& item : cases) {
-    output = item.output ^ 1;  // Ensure TryParse wrote something.
+    output = item.output ^ 1;  // Ensure tryParse wrote something.
     EXPECT_EQ(item.error_code, parser(item.input, output));
     if (item.error_code == ParseIntegerErrorCode::Ok) {
       EXPECT_EQ(item.output, output);
@@ -35,7 +35,7 @@ void ParseIntegerTester(
   EXPECT_EQ(ParseIntegerErrorCode::FormatError, parser(StringSpan("6\06"), output));
 }
 
-TEST(ParseIntegerTest, TryParse) {
+TEST(ParseIntegerTest, tryParse) {
   ParseIntegerTestInputs<int> cases[] = {
     {"0", 0, ParseIntegerErrorCode::Ok},
     {"42", 42, ParseIntegerErrorCode::Ok},
@@ -62,10 +62,10 @@ TEST(ParseIntegerTest, TryParse) {
     {"2147483648", 0, ParseIntegerErrorCode::OverflowError},
     {"99999999999", 0, ParseIntegerErrorCode::OverflowError},
   };
-  ParseIntegerTester<int>(cases, &TryParse);
+  ParseIntegerTester<int>(cases, &tryParse);
 }
 
-TEST(ParseIntegerTest, TryParseUInt) {
+TEST(ParseIntegerTest, tryParseUInt) {
   ParseIntegerTestInputs<unsigned> cases[] = {
     {"0", 0, ParseIntegerErrorCode::Ok},
     {"42", 42, ParseIntegerErrorCode::Ok},
@@ -93,10 +93,10 @@ TEST(ParseIntegerTest, TryParseUInt) {
     {"4294967296", 0, ParseIntegerErrorCode::OverflowError},
     {"99999999999", 0, ParseIntegerErrorCode::OverflowError},
   };
-  ParseIntegerTester<unsigned>(cases, &TryParse);
+  ParseIntegerTester<unsigned>(cases, &tryParse);
 }
 
-TEST(ParseIntegerTest, TryParse64) {
+TEST(ParseIntegerTest, tryParse64) {
   ParseIntegerTestInputs<int64_t> cases[] = {
     {"0", 0, ParseIntegerErrorCode::Ok},
     {"42", 42, ParseIntegerErrorCode::Ok},
@@ -130,10 +130,10 @@ TEST(ParseIntegerTest, TryParse64) {
     {"9223372036854775808", 0, ParseIntegerErrorCode::OverflowError},
     {"99999999999999999999", 0, ParseIntegerErrorCode::OverflowError},
   };
-  ParseIntegerTester<int64_t>(cases, &TryParse);
+  ParseIntegerTester<int64_t>(cases, &tryParse);
 }
 
-TEST(ParseIntegerTest, TryParseUInt64) {
+TEST(ParseIntegerTest, tryParseUInt64) {
   ParseIntegerTestInputs<uint64_t> cases[] = {
     {"0", 0, ParseIntegerErrorCode::Ok},
     {"42", 42, ParseIntegerErrorCode::Ok},
@@ -169,10 +169,10 @@ TEST(ParseIntegerTest, TryParseUInt64) {
     {"18446744073709551615", Limits<uint64_t>::Max, ParseIntegerErrorCode::Ok},
     {"18446744073709551616", 0, ParseIntegerErrorCode::OverflowError},
   };
-  ParseIntegerTester<uint64_t>(cases, &TryParse);
+  ParseIntegerTester<uint64_t>(cases, &tryParse);
 }
 
-TEST(ParseIntegerTest, TryParseHex) {
+TEST(ParseIntegerTest, tryParseHex) {
   ParseIntegerTestInputs<int> cases[] = {
     {"0", 0, ParseIntegerErrorCode::Ok},
     {"42", 66, ParseIntegerErrorCode::Ok},
@@ -202,10 +202,10 @@ TEST(ParseIntegerTest, TryParseHex) {
     {"", 0, ParseIntegerErrorCode::FormatError},
     {"0x", 0, ParseIntegerErrorCode::FormatError},
   };
-  ParseIntegerTester<int>(cases, &TryParseHex);
+  ParseIntegerTester<int>(cases, &tryParseHex);
 }
 
-TEST(ParseIntegerTest, TryParseHexUint) {
+TEST(ParseIntegerTest, tryParseHexUint) {
   ParseIntegerTestInputs<uint32_t> cases[] = {
     {"0", 0, ParseIntegerErrorCode::Ok},
     {"42", 0x42, ParseIntegerErrorCode::Ok},
@@ -245,10 +245,10 @@ TEST(ParseIntegerTest, TryParseHexUint) {
     {"", 0, ParseIntegerErrorCode::FormatError},
     {"0x", 0, ParseIntegerErrorCode::FormatError},
   };
-  ParseIntegerTester<uint32_t>(cases, &TryParseHex);
+  ParseIntegerTester<uint32_t>(cases, &tryParseHex);
 }
 
-TEST(ParseIntegerTest, TryParseHex64) {
+TEST(ParseIntegerTest, tryParseHex64) {
   ParseIntegerTestInputs<int64_t> cases[] = {
     {"0", 0, ParseIntegerErrorCode::Ok},
     {"42", 66, ParseIntegerErrorCode::Ok},
@@ -285,10 +285,10 @@ TEST(ParseIntegerTest, TryParseHex64) {
     {"", 0, ParseIntegerErrorCode::FormatError},
     {"0x", 0, ParseIntegerErrorCode::FormatError},
   };
-  ParseIntegerTester<int64_t>(cases, &TryParseHex);
+  ParseIntegerTester<int64_t>(cases, &tryParseHex);
 }
 
-TEST(ParseIntegerTest, TryParseHexUint64) {
+TEST(ParseIntegerTest, tryParseHexUint64) {
   ParseIntegerTestInputs<uint64_t> cases[] = {
     {"0", 0, ParseIntegerErrorCode::Ok},
     {"42", 66, ParseIntegerErrorCode::Ok},
@@ -330,7 +330,7 @@ TEST(ParseIntegerTest, TryParseHexUint64) {
     {"", 0, ParseIntegerErrorCode::FormatError},
     {"0x", 0, ParseIntegerErrorCode::FormatError},
   };
-  ParseIntegerTester<uint64_t>(cases, &TryParseHex);
+  ParseIntegerTester<uint64_t>(cases, &tryParseHex);
 }
 
 } // namespace

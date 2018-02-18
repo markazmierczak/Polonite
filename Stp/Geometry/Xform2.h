@@ -245,7 +245,7 @@ class BASE_EXPORT Xform2 {
 
 BASE_EXPORT bool IsNear(const Xform2& lhs, const Xform2& rhs, float tolerance);
 
-BASE_EXPORT bool IsFinite(const Xform2& xform);
+BASE_EXPORT bool isFinite(const Xform2& xform);
 
 constexpr Xform2::Xform2(InitWithIdentityTag)
     : d_ { 1, 0, 0, 0, 1, 0, 0, 0, 1 },

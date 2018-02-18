@@ -63,7 +63,7 @@ void Exception::AddMessage(const StringSpan& next, bool literal) {
     ++total_size;
 
   if (total_size > msg_capacity_) {
-    int new_capacity = Max(msg_size_ << 1, total_size);
+    int new_capacity = max(msg_size_ << 1, total_size);
 
     char* new_data;
     if (msg_capacity_ == 0) {

@@ -7,7 +7,7 @@
 
 namespace stp {
 
-bool TryParse(StringSpan input, MutableBufferSpan output) {
+bool tryParse(StringSpan input, MutableBufferSpan output) {
   if (input.size() & 1)
     return false;
 

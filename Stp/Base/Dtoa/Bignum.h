@@ -115,7 +115,7 @@ class Bignum {
     ASSERT(size <= BigitCapacity, "capacity is not enough");
   }
   void Align(const Bignum& other);
-  void Clamp();
+  void clamp();
   bool IsClamped() const;
   void Zero();
   // Requires this to have enough capacity (no tests done).

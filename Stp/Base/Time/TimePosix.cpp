@@ -236,7 +236,7 @@ bool Time::FromExploded(bool is_local, const Exploded& exploded, Time* time) {
     else if (seconds_isdst1 < 0)
       seconds = seconds_isdst0;
     else
-      seconds = Min(seconds_isdst0, seconds_isdst1);
+      seconds = min(seconds_isdst0, seconds_isdst1);
   }
 
   // Handle overflow.  Clamping the range to what mktime and timegm might

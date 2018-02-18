@@ -109,32 +109,32 @@ using TMakeUnsigned = typename TMakeUnsignedTmpl<T>::Type;
 // Determines if a numeric value is negative without throwing compiler
 // warnings on: unsigned(value) < 0.
 template<typename T, TEnableIf<TIsUnsigned<T>>* = nullptr>
-constexpr bool IsNegative(T x) {
+constexpr bool isNegative(T x) {
   return false;
 }
 template<typename T, TEnableIf<TIsSigned<T>>* = nullptr>
-constexpr bool IsNegative(T x) {
+constexpr bool isNegative(T x) {
   return x < 0;
 }
 
 // https://en.wikipedia.org/wiki/Sign_function
 template<typename T, TEnableIf<TIsUnsigned<T>>* = nullptr>
-constexpr int Signum(T x) {
+constexpr int signum(T x) {
   return 0 < x;
 }
 
 template<typename T, TEnableIf<TIsSigned<T>>* = nullptr>
-constexpr int Signum(T x) {
+constexpr int signum(T x) {
   return (0 < x) - (x < 0);
 }
 
 template<typename T, TEnableIf<TIsInteger<T>>* = nullptr>
-constexpr TMakeSigned<T> ToSigned(T x) {
+constexpr TMakeSigned<T> toSigned(T x) {
   return static_cast<TMakeSigned<T>>(x);
 }
 
 template<typename T, TEnableIf<TIsInteger<T>>* = nullptr>
-constexpr TMakeUnsigned<T> ToUnsigned(T x) {
+constexpr TMakeUnsigned<T> toUnsigned(T x) {
   return static_cast<TMakeUnsigned<T>>(x);
 }
 

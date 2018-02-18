@@ -243,10 +243,10 @@ inline bool operator!=(const T (&lhs)[N], const MutableSpan<T>& rhs) {
 inline int compare(StringSpan lhs, StringSpan rhs) noexcept {
   if (lhs.IsEmpty() || rhs.IsEmpty())
     return lhs.IsEmpty() == rhs.IsEmpty();
-  return ::memcmp(lhs.data(), rhs.data(), ToUnsigned(lhs.size()));
+  return ::memcmp(lhs.data(), rhs.data(), toUnsigned(lhs.size()));
 }
 
-inline HashCode Hash(StringSpan text) noexcept { return HashBuffer(text.data(), text.size()); }
+inline HashCode partialHash(StringSpan text) noexcept { return hashBuffer(text.data(), text.size()); }
 
 } // namespace stp
 

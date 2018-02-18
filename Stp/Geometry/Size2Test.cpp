@@ -15,24 +15,24 @@ TEST(IntSize2Test, Clamp) {
 
   a = IntSize2(3, 5);
   EXPECT_EQ(IntSize2(3, 5), a);
-  a = Max(a, IntSize2(2, 4));
+  a = max(a, IntSize2(2, 4));
   EXPECT_EQ(IntSize2(3, 5), a);
-  a = Max(a, IntSize2(3, 5));
+  a = max(a, IntSize2(3, 5));
   EXPECT_EQ(IntSize2(3, 5), a);
-  a = Max(a, IntSize2(4, 2));
+  a = max(a, IntSize2(4, 2));
   EXPECT_EQ(IntSize2(4, 5), a);
-  a = Max(a, IntSize2(8, 10));
+  a = max(a, IntSize2(8, 10));
   EXPECT_EQ(IntSize2(8, 10), a);
 
-  a = Min(a, IntSize2(9, 11));
+  a = min(a, IntSize2(9, 11));
   EXPECT_EQ(IntSize2(8, 10), a);
-  a = Min(a, IntSize2(8, 10));
+  a = min(a, IntSize2(8, 10));
   EXPECT_EQ(IntSize2(8, 10), a);
-  a = Min(a, IntSize2(11, 9));
+  a = min(a, IntSize2(11, 9));
   EXPECT_EQ(IntSize2(8, 9), a);
-  a = Min(a, IntSize2(7, 11));
+  a = min(a, IntSize2(7, 11));
   EXPECT_EQ(IntSize2(7, 9), a);
-  a = Min(a, IntSize2(3, 5));
+  a = min(a, IntSize2(3, 5));
   EXPECT_EQ(IntSize2(3, 5), a);
 }
 

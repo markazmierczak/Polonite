@@ -503,7 +503,7 @@ template<typename T>
 constexpr bool TIsTriviallyRelocatable = TIsTriviallyRelocatableTmpl<T>::Value;
 
 template<typename T>
-constexpr void RelocateAt(T* target, T& source) {
+constexpr void relocateAt(T* target, T& source) {
   if constexpr (TIsTriviallyRelocatable<T>) {
     memcpy(target, &source, sizeof(T));
   } else {
@@ -519,7 +519,7 @@ struct TIsTriviallyEqualityComparableTmpl :
 template<typename T>
 constexpr bool TIsTriviallyEqualityComparable = TIsTriviallyEqualityComparableTmpl<T>::Value;
 
-BASE_EXPORT HashCode HashBuffer(const void* data, int size) noexcept;
+BASE_EXPORT HashCode hashBuffer(const void* data, int size) noexcept;
 
 } // namespace stp
 

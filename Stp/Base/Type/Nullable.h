@@ -29,7 +29,7 @@ struct NullableValueStorage {
   constexpr explicit NullableValueStorage(TArgs&&... args)
       : value(Forward<TArgs>(args)...), is_valid(true) {}
 
-  void Reset() {
+  void reset() {
     if (is_valid) {
       is_valid = false;
       value.~T();
@@ -53,7 +53,7 @@ struct NullableValueStorage<T, true> {
   constexpr explicit NullableValueStorage(TArgs&&... args)
       : value(Forward<TArgs>(args)...), is_valid(true) {}
 
-  void Reset() { is_valid = false; }
+  void reset() { is_valid = false; }
 
   union {
     char empty;
@@ -73,22 +73,22 @@ class NullableValue {
   template<typename U, TEnableIf<TIsConstructible<T, U&&>>* = nullptr>
   constexpr NullableValue(NullableValue<U>&& other) noexcept {
     if (other)
-      Relocate(other);
+      relocate(other);
   }
 
   template<typename U, TEnableIf<TIsAssignable<T&, U&&>>* = nullptr>
   constexpr NullableValue& operator=(NullableValue<U>&& other) noexcept {
     if (other) {
-      if (IsValid()) {
+      if (isValid()) {
         storage_.value = move(*other);
       } else {
         if constexpr (TsAreSame<T, U>)
-          Relocate(other);
+          relocate(other);
         else
-          Init(move(*other));
+          init(move(*other));
       }
     } else {
-      Reset();
+      reset();
     }
     return *this;
   }
@@ -96,18 +96,18 @@ class NullableValue {
   template<typename U, TEnableIf<TIsConstructible<T, const U&>>* = nullptr>
   constexpr NullableValue(const NullableValue<U>& other) noexcept(noexcept(T(*other))) {
     if (other)
-      Init(*other);
+      init(*other);
   }
 
   template<typename U, TEnableIf<TIsAssignable<T&, const U&>>* = nullptr>
   constexpr NullableValue& operator=(const NullableValue<U>& other) noexcept(noexcept(declval<T&>() = *other)) {
     if (other) {
-      if (IsValid())
+      if (isValid())
         storage_.value = *other;
       else
-        Init(*other);
+        init(*other);
     } else {
-      Reset();
+      reset();
     }
     return *this;
   }
@@ -122,65 +122,65 @@ class NullableValue {
 
   template<typename U, TEnableIf<TIsAssignable<T&, U>>* = nullptr>
   constexpr NullableValue& operator=(U&& other) noexcept(noexcept(declval<T&>() = Forward<U>(other))) {
-    if (IsValid())
+    if (isValid())
       storage_.value = Forward<U>(other);
     else
-      Init(other);
+      init(other);
     return *this;
   }
 
   constexpr NullableValue(nullptr_t) noexcept {}
-  constexpr NullableValue& operator=(nullptr_t) noexcept { Reset(); return *this; }
+  constexpr NullableValue& operator=(nullptr_t) noexcept { reset(); return *this; }
 
   friend void swap(NullableValue& l, NullableValue& r) noexcept {
-    if (l.IsValid() == r.IsValid()) {
-      if (l.IsValid())
+    if (l.isValid() == r.isValid()) {
+      if (l.isValid())
         swap(*l, *r);
     } else {
-      if (l.IsValid())
-        r.Relocate(l);
+      if (l.isValid())
+        r.relocate(l);
       else
-        l.Relocate(r);
+        l.relocate(r);
     }
   }
 
   constexpr explicit operator bool() const { return storage_.is_valid; }
 
-  constexpr const T* operator->() const { ASSERT(IsValid()); return storage_.value; }
-  constexpr T* operator->() { ASSERT(IsValid()); return storage_.value; }
+  constexpr const T* operator->() const { ASSERT(isValid()); return storage_.value; }
+  constexpr T* operator->() { ASSERT(isValid()); return storage_.value; }
 
-  constexpr const T& operator*() const { ASSERT(IsValid()); return storage_.value; }
-  constexpr T& operator*() { ASSERT(IsValid()); return storage_.value; }
+  constexpr const T& operator*() const { ASSERT(isValid()); return storage_.value; }
+  constexpr T& operator*() { ASSERT(isValid()); return storage_.value; }
 
   friend constexpr bool operator==(const NullableValue& opt, nullptr_t) { return !opt; }
   friend constexpr bool operator==(nullptr_t, const NullableValue& opt) { return !opt; }
-  friend constexpr bool operator!=(const NullableValue& opt, nullptr_t) { return opt.IsValid(); }
-  friend constexpr bool operator!=(nullptr_t, const NullableValue& opt) { return opt.IsValid(); }
+  friend constexpr bool operator!=(const NullableValue& opt, nullptr_t) { return opt.isValid(); }
+  friend constexpr bool operator!=(nullptr_t, const NullableValue& opt) { return opt.isValid(); }
 
   friend constexpr int compare(const NullableValue& l, nullptr_t r) { return l ? 1 : 0; }
   friend constexpr int compare(nullptr_t l, const NullableValue& r) { return r ? -1 : 0; }
 
-  constexpr const T* tryGet(const NullableValue& x) { return x.IsValid() ? x.operator->() : nullptr; }
-  constexpr T* tryGet(NullableValue& x) { return x.IsValid() ? x.operator->() : nullptr; }
+  constexpr const T* tryGet(const NullableValue& x) { return x.isValid() ? x.operator->() : nullptr; }
+  constexpr T* tryGet(NullableValue& x) { return x.isValid() ? x.operator->() : nullptr; }
 
  private:
   detail::NullableValueStorage<T> storage_;
 
   template<typename U>
-  constexpr void Init(U&& value) {
+  constexpr void init(U&& value) {
     ASSERT(!storage_.is_valid);
     new (&storage_.value) T(Forward<U>(value));
     storage_.is_valid = true;
   }
 
-  constexpr void Reset() { storage_.Reset(); }
-  constexpr bool IsValid() const { return storage_.is_valid; }
+  constexpr void reset() { storage_.reset(); }
+  constexpr bool isValid() const { return storage_.is_valid; }
 
-  void Relocate(NullableValue& other) noexcept {
+  void relocate(NullableValue& other) noexcept {
     ASSERT(!storage_.is_valid && other.storage_.is_valid);
     storage_.is_valid = true;
     storage_.is_valid = false;
-    RelocateAt(&storage_.value, other.storage_.value);
+    relocateAt(&storage_.value, other.storage_.value);
   }
 };
 
@@ -231,7 +231,7 @@ constexpr int compare(const T& l, const NullableValue<U>& r) {
 }
 
 template<typename T, TEnableIf<TIsHashable<T>>* = nullptr>
-constexpr HashCode Hash(const NullableValue<T>& x) { return x ? Hash(*x) : HashCode::Zero; }
+constexpr HashCode partialHash(const NullableValue<T>& x) { return x ? partialHash(*x) : HashCode::Zero; }
 
 template<typename T, TEnableIf<TIsFormattable<T>>* = nullptr>
 inline TextWriter& operator<<(TextWriter& out, const NullableValue<T>& x) {
@@ -250,13 +250,13 @@ inline void Format(TextWriter& out, const NullableValue<T>& x, const StringSpan&
 }
 
 template<typename T, typename U>
-constexpr T Coalesce(const NullableValue<U>& nullable, U&& default_value) {
+constexpr T coalesce(const NullableValue<U>& nullable, U&& default_value) {
   static_assert(TIsConvertibleTo<U, T>, "!");
   return nullable.operator bool() ? *nullable : static_cast<T>(Forward<U>(default_value));
 }
 
 template<typename T, typename U>
-constexpr T Coalesce(NullableValue<U>&& nullable, U&& default_value) {
+constexpr T coalesce(NullableValue<U>&& nullable, U&& default_value) {
   static_assert(TIsConvertibleTo<U, T>, "!");
   return nullable.operator bool() ? move(*nullable) : static_cast<T>(Forward<U>(default_value));
 }

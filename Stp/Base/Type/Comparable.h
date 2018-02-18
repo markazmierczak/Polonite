@@ -35,7 +35,7 @@ constexpr int compare(T l, U r) noexcept {
     return 1;
   if (l == r)
     return 0;
-  if (IsNaN(l))
+  if (isNaN(l))
     return IsNan(r) ? 0 : -1;
   return 1;
 }
@@ -96,7 +96,7 @@ template<typename T>
 inline int CompareContiguous(const T* lhs, const T* rhs, int count) noexcept {
   ASSERT(count >= 0);
   if constexpr (detail::TIsFastContiguousComparable<T>::Value) {
-    return count ? ::memcmp(lhs, rhs, ToUnsigned(count)) : 0;
+    return count ? ::memcmp(lhs, rhs, toUnsigned(count)) : 0;
   } else {
     for (int i = 0; i < count; ++i) {
       int rv = compare(lhs[i], rhs[i]);

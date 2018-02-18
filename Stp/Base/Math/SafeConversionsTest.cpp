@@ -98,7 +98,7 @@ TEST(SafeNumerics, CastTests) {
   EXPECT_EQ(Limits<int>::Max, SaturatedCast<int>(double_large_int));
 
   float not_a_number = Limits<float>::Infinity - Limits<float>::Infinity;
-  EXPECT_TRUE(IsNaN(not_a_number));
+  EXPECT_TRUE(isNaN(not_a_number));
   EXPECT_EQ(0, SaturatedCast<int>(not_a_number));
 }
 

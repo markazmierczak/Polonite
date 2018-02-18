@@ -94,16 +94,16 @@ TEST(QuaternionTest, Lerp) {
     Quaternion a(0, 0, 0, 0);
     Quaternion b(1, 2, 3, 4);
     float t = static_cast<float>(i) / 100.0f;
-    Quaternion interpolated = Lerp(a, b, t);
+    Quaternion interpolated = lerp(a, b, t);
     double s = 1.0 / sqrt(30.0);
     CompareQuaternions(Quaternion(1, 2, 3, 4) * s, interpolated);
   }
 
   Quaternion a(4, 3, 2, 1);
   Quaternion b(1, 2, 3, 4);
-  CompareQuaternions(a.GetNormalized(), Lerp(a, b, 0));
-  CompareQuaternions(b.GetNormalized(), Lerp(a, b, 1));
-  CompareQuaternions(Quaternion(1, 1, 1, 1).GetNormalized(), Lerp(a, b, 0.5));
+  CompareQuaternions(a.GetNormalized(), lerp(a, b, 0));
+  CompareQuaternions(b.GetNormalized(), lerp(a, b, 1));
+  CompareQuaternions(Quaternion(1, 1, 1, 1).GetNormalized(), lerp(a, b, 0.5));
 }
 
 TEST(QuaternionTest, Slerp) {

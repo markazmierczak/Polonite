@@ -9,36 +9,36 @@
 namespace stp {
 
 TEST(SignTest, IsNegativeValue) {
-  EXPECT_TRUE(IsNegative(-1));
-  EXPECT_TRUE(IsNegative(Limits<int>::Min));
-  EXPECT_FALSE(IsNegative(Limits<unsigned>::Min));
-  EXPECT_TRUE(IsNegative(-Limits<double>::Max));
-  EXPECT_FALSE(IsNegative(0));
-  EXPECT_FALSE(IsNegative(1));
-  EXPECT_FALSE(IsNegative(0u));
-  EXPECT_FALSE(IsNegative(1u));
-  EXPECT_FALSE(IsNegative(Limits<int>::Max));
-  EXPECT_FALSE(IsNegative(Limits<unsigned>::Max));
-  EXPECT_FALSE(IsNegative(Limits<double>::Max));
+  EXPECT_TRUE(isNegative(-1));
+  EXPECT_TRUE(isNegative(Limits<int>::Min));
+  EXPECT_FALSE(isNegative(Limits<unsigned>::Min));
+  EXPECT_TRUE(isNegative(-Limits<double>::Max));
+  EXPECT_FALSE(isNegative(0));
+  EXPECT_FALSE(isNegative(1));
+  EXPECT_FALSE(isNegative(0u));
+  EXPECT_FALSE(isNegative(1u));
+  EXPECT_FALSE(isNegative(Limits<int>::Max));
+  EXPECT_FALSE(isNegative(Limits<unsigned>::Max));
+  EXPECT_FALSE(isNegative(Limits<double>::Max));
 }
 
 TEST(SignTest, Signum) {
-  EXPECT_EQ(0, Signum(0));
-  EXPECT_EQ(1, Signum(1));
-  EXPECT_EQ(-1, Signum(-1));
-  EXPECT_EQ(-1, Signum(-1000));
-  EXPECT_EQ(1, Signum(321));
+  EXPECT_EQ(0, signum(0));
+  EXPECT_EQ(1, signum(1));
+  EXPECT_EQ(-1, signum(-1));
+  EXPECT_EQ(-1, signum(-1000));
+  EXPECT_EQ(1, signum(321));
 
-  EXPECT_EQ(0, Signum(0.0f));
-  EXPECT_EQ(0, Signum(-0.0f));
-  EXPECT_EQ(1, Signum(1.0f));
-  EXPECT_EQ(-1, Signum(-1.0f));
-  EXPECT_EQ(-1, Signum(-0.5f));
-  EXPECT_EQ(1, Signum(0.01f));
-  EXPECT_EQ(1, Signum(10.0f));
-  EXPECT_EQ(-1, Signum(-33.0f));
-  EXPECT_EQ(-1, Signum(-Limits<float>::Infinity));
-  EXPECT_EQ(1, Signum(Limits<float>::Infinity));
+  EXPECT_EQ(0, signum(0.0f));
+  EXPECT_EQ(0, signum(-0.0f));
+  EXPECT_EQ(1, signum(1.0f));
+  EXPECT_EQ(-1, signum(-1.0f));
+  EXPECT_EQ(-1, signum(-0.5f));
+  EXPECT_EQ(1, signum(0.01f));
+  EXPECT_EQ(1, signum(10.0f));
+  EXPECT_EQ(-1, signum(-33.0f));
+  EXPECT_EQ(-1, signum(-Limits<float>::Infinity));
+  EXPECT_EQ(1, signum(Limits<float>::Infinity));
 }
 
 } // namespace stp

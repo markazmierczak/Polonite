@@ -155,7 +155,7 @@ class List {
   }
 
   int RecommendCapacity(int request) const {
-    return (capacity_ < MaxCapacity_ / 2) ? Max(request, capacity_ << 1) : MaxCapacity_;
+    return (capacity_ < MaxCapacity_ / 2) ? max(request, capacity_ << 1) : MaxCapacity_;
   }
 };
 

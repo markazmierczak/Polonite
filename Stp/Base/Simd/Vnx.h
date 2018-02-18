@@ -74,11 +74,11 @@ struct VecNx {
   // Returns floor value for each component.
   VecNx Floor() const { return { lo_.Floor(), hi_.Floor() }; }
 
-  static VecNx Min(const VecNx& l, const VecNx& r) {
-    return { Half::Min(l.lo_, r.lo_), Half::Min(l.hi_, r.hi_) };
+  static VecNx min(const VecNx& l, const VecNx& r) {
+    return { Half::min(l.lo_, r.lo_), Half::min(l.hi_, r.hi_) };
   }
-  static VecNx Max(const VecNx& l, const VecNx& r) {
-    return { Half::Max(l.lo_, r.lo_), Half::Max(l.hi_, r.hi_) };
+  static VecNx max(const VecNx& l, const VecNx& r) {
+    return { Half::max(l.lo_, r.lo_), Half::max(l.hi_, r.hi_) };
   }
 
   // Ternary operator for vectors.
@@ -146,10 +146,10 @@ struct VecNx<1,T> {
   VecNx RSqrt() const { return VecNx(1) / Sqrt(); }
   VecNx Floor() const { return Floor(val_); }
 
-  static VecNx Min(const VecNx& l, const VecNx& r) {
+  static VecNx min(const VecNx& l, const VecNx& r) {
     return l.val_ < r.val_ ? l : r;
   }
-  static VecNx Max(const VecNx& l, const VecNx& r) {
+  static VecNx max(const VecNx& l, const VecNx& r) {
     return l.val_ > r.val_ ? l : r;
   }
   static VecNx Ternary(const VecNx& c, const VecNx& t, const VecNx& e) {
@@ -222,14 +222,14 @@ static VecNx<N,T> Abs(const VecNx<N,T>& x) {
 
 // Returns minimum values for all components from |l| and |r|.
 template<unsigned N, typename T>
-static VecNx<N,T> Min(const VecNx<N,T>& l, const VecNx<N,T>& r) {
-  return VecNx<N,T>::Min(l, r);
+static VecNx<N,T> min(const VecNx<N,T>& l, const VecNx<N,T>& r) {
+  return VecNx<N,T>::min(l, r);
 }
 
 // Returns maximum values for all components from |l| and |r|.
 template<unsigned N, typename T>
-static VecNx<N,T> Max(const VecNx<N,T>& l, const VecNx<N,T>& r) {
-  return VecNx<N,T>::Max(l, r);
+static VecNx<N,T> max(const VecNx<N,T>& l, const VecNx<N,T>& r) {
+  return VecNx<N,T>::max(l, r);
 }
 
 class VnxMath {

@@ -22,7 +22,7 @@ NativeThreadId NativeThread::ObjectToId(NativeThreadObject object) {
 static DWORD __stdcall ThreadFunc(void* opaque) {
   auto* delegate = static_cast<NativeThread::Delegate*>(opaque);
   int exit_code = delegate->ThreadMain();
-  return ToUnsigned(exit_code);
+  return toUnsigned(exit_code);
 }
 
 NativeThread::ObjectHandlePair NativeThread::Create(

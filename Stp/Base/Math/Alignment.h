@@ -51,7 +51,7 @@ inline TPointer* AlignForward(
     TInteger* out_padding = nullptr) {
   ASSERT(IsPowerOfTwo(alignment));
   uintptr_t uptr = reinterpret_cast<uintptr_t>(pointer);
-  uintptr_t aligned_uptr = AlignForward<uintptr_t>(uptr, ToUnsigned(alignment));
+  uintptr_t aligned_uptr = AlignForward<uintptr_t>(uptr, toUnsigned(alignment));
   if (out_padding)
     *out_padding = static_cast<TInteger>(aligned_uptr - uptr);
   return reinterpret_cast<TPointer*>(aligned_uptr);
@@ -81,7 +81,7 @@ template<typename TPointer, typename TInteger>
 inline TPointer* AlignBackward(TPointer* pointer, TInteger alignment) {
   ASSERT(IsPowerOfTwo(alignment));
   uintptr_t ptr = reinterpret_cast<uintptr_t>(pointer);
-  uintptr_t aligned_ptr = AlignBackward<uintptr_t>(ptr, ToUnsigned(alignment));
+  uintptr_t aligned_ptr = AlignBackward<uintptr_t>(ptr, toUnsigned(alignment));
   return reinterpret_cast<TPointer*>(aligned_ptr);
 }
 

@@ -39,27 +39,27 @@ TEST(HalfTest, Conversion) {
 
 TEST(HalfTest, Finite) {
   Half inf = Limits<Half>::Infinity;
-  EXPECT_TRUE(IsInfinity(inf));
-  EXPECT_FALSE(IsFinite(inf));
-  EXPECT_FALSE(IsNaN(inf));
+  EXPECT_TRUE(isInfinity(inf));
+  EXPECT_FALSE(isFinite(inf));
+  EXPECT_FALSE(isNaN(inf));
   EXPECT_FALSE(IsNormal(inf));
 
   Half nan = Limits<Half>::NaN;
-  EXPECT_FALSE(IsInfinity(nan));
-  EXPECT_FALSE(IsFinite(nan));
-  EXPECT_TRUE(IsNaN(nan));
+  EXPECT_FALSE(isInfinity(nan));
+  EXPECT_FALSE(isFinite(nan));
+  EXPECT_TRUE(isNaN(nan));
   EXPECT_FALSE(IsNormal(nan));
 
   Half one = static_cast<Half>(1.f);
-  EXPECT_FALSE(IsInfinity(one));
-  EXPECT_TRUE(IsFinite(one));
-  EXPECT_FALSE(IsNaN(one));
+  EXPECT_FALSE(isInfinity(one));
+  EXPECT_TRUE(isFinite(one));
+  EXPECT_FALSE(isNaN(one));
   EXPECT_TRUE(IsNormal(one));
 
   Half eps = Limits<Half>::Epsilon;
-  EXPECT_FALSE(IsInfinity(eps));
-  EXPECT_TRUE(IsFinite(eps));
-  EXPECT_FALSE(IsNaN(eps));
+  EXPECT_FALSE(isInfinity(eps));
+  EXPECT_TRUE(isFinite(eps));
+  EXPECT_FALSE(isNaN(eps));
   EXPECT_TRUE(IsNormal(eps));
 }
 

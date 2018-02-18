@@ -73,14 +73,14 @@ inline void FileDescriptor::Reset(int new_fd) {
 
 inline int FileDescriptor::TryReadNoBestEffort(MutableBufferSpan buffer) {
   ASSERT(IsValid());
-  ssize_t rv = HANDLE_EINTR(::read(fd_, buffer.data(), ToUnsigned(buffer.size())));
+  ssize_t rv = HANDLE_EINTR(::read(fd_, buffer.data(), toUnsigned(buffer.size())));
   ASSERT(-1 <= rv && rv <= buffer.size());
   return static_cast<int>(rv);
 }
 
 inline int FileDescriptor::TryWriteNoBestEffort(BufferSpan buffer) {
   ASSERT(IsValid());
-  ssize_t rv = HANDLE_EINTR(::write(fd_, buffer.data(), ToUnsigned(buffer.size())));
+  ssize_t rv = HANDLE_EINTR(::write(fd_, buffer.data(), toUnsigned(buffer.size())));
   ASSERT(-1 <= rv && rv <= buffer.size());
   return static_cast<int>(rv);
 }

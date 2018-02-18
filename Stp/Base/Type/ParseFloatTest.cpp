@@ -9,7 +9,7 @@
 namespace stp {
 namespace {
 
-TEST(ParseFloatTest, TryParse) {
+TEST(ParseFloatTest, tryParse) {
   static const struct {
     StringSpan input;
     double output;
@@ -47,7 +47,7 @@ TEST(ParseFloatTest, TryParse) {
 
   for (const auto& item : cases) {
     double output;
-    EXPECT_EQ(item.success, TryParse(item.input, output));
+    EXPECT_EQ(item.success, tryParse(item.input, output));
     if (item.success) {
       EXPECT_DOUBLE_EQ(item.output, output);
     }
@@ -57,7 +57,7 @@ TEST(ParseFloatTest, TryParse) {
   // embedded NUL characters.  The NUL and extra data after it should be
   // interpreted as junk after the number.
   double output;
-  EXPECT_FALSE(TryParse("3.14\0" "159", output));
+  EXPECT_FALSE(tryParse("3.14\0" "159", output));
 }
 
 } // namespace

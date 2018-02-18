@@ -9,19 +9,19 @@ namespace stp {
 namespace {
 
 struct Animal {
-  virtual bool IsDog() const { return false; }
+  virtual bool isDog() const { return false; }
 };
 
 struct Bird : Animal {};
 
 struct Dog : Animal {
-  bool IsDog() const final { return true; }
+  bool isDog() const final { return true; }
 
-  virtual bool IsMaltese() const { return false; }
+  virtual bool isMaltese() const { return false; }
 };
 
 struct Maltese : Dog {
-  bool IsMaltese() const final { return true; }
+  bool isMaltese() const final { return true; }
 };
 
 struct Terrier : Dog {};
@@ -30,14 +30,14 @@ struct Terrier : Dog {};
 
 template<typename T>
 struct TIsInstanceOf<Dog, T> {
-  static bool Check(const T& x) { return x.IsDog(); }
+  static bool check(const T& x) { return x.isDog(); }
 };
 
 template<typename T>
 struct TIsInstanceOf<Maltese, T> {
-  static bool Check(const T& x) {
-    auto* dog = TryObjectCast<Dog>(x);
-    return dog && dog->IsMaltese();
+  static bool check(const T& x) {
+    auto* dog = tryObjectCast<Dog>(x);
+    return dog && dog->isMaltese();
   }
 };
 
@@ -50,42 +50,42 @@ TEST(ObjectCastTest, Basic) {
   Maltese maltese;
   Terrier terrier;
 
-  EXPECT_FALSE(IsInstanceOf<Dog>(animal));
-  EXPECT_FALSE(IsInstanceOf<Dog>(bird));
-  EXPECT_TRUE(IsInstanceOf<Dog>(dog));
-  EXPECT_TRUE(IsInstanceOf<Dog>(maltese));
-  EXPECT_TRUE(IsInstanceOf<Dog>(terrier));
+  EXPECT_FALSE(isInstanceOf<Dog>(animal));
+  EXPECT_FALSE(isInstanceOf<Dog>(bird));
+  EXPECT_TRUE(isInstanceOf<Dog>(dog));
+  EXPECT_TRUE(isInstanceOf<Dog>(maltese));
+  EXPECT_TRUE(isInstanceOf<Dog>(terrier));
 
-  EXPECT_FALSE(IsInstanceOf<Dog>(&animal));
-  EXPECT_FALSE(IsInstanceOf<Dog>(&bird));
-  EXPECT_TRUE(IsInstanceOf<Dog>(&dog));
-  EXPECT_TRUE(IsInstanceOf<Dog>(&maltese));
-  EXPECT_TRUE(IsInstanceOf<Dog>(&terrier));
+  EXPECT_FALSE(isInstanceOf<Dog>(&animal));
+  EXPECT_FALSE(isInstanceOf<Dog>(&bird));
+  EXPECT_TRUE(isInstanceOf<Dog>(&dog));
+  EXPECT_TRUE(isInstanceOf<Dog>(&maltese));
+  EXPECT_TRUE(isInstanceOf<Dog>(&terrier));
 
   {
     Animal& oa = dog;
-    EXPECT_TRUE(IsInstanceOf<Dog>(oa));
+    EXPECT_TRUE(isInstanceOf<Dog>(oa));
   }
   {
     Animal& oa = maltese;
-    EXPECT_TRUE(IsInstanceOf<Dog>(oa));
+    EXPECT_TRUE(isInstanceOf<Dog>(oa));
   }
 
   {
     Animal* oa = &dog;
-    EXPECT_EQ(&dog, ObjectCast<Dog>(oa));
+    EXPECT_EQ(&dog, objectCast<Dog>(oa));
   }
 
   {
     Animal* oa = &dog;
-    EXPECT_EQ(&dog, TryObjectCast<Dog>(oa));
-    EXPECT_EQ(nullptr, TryObjectCast<Maltese>(oa));
+    EXPECT_EQ(&dog, tryObjectCast<Dog>(oa));
+    EXPECT_EQ(nullptr, tryObjectCast<Maltese>(oa));
   }
 }
 
 TEST(ObjectCastTest, Null) {
   Animal* animal = nullptr;
-  EXPECT_EQ(nullptr, TryObjectCast<Maltese>(animal));
+  EXPECT_EQ(nullptr, tryObjectCast<Maltese>(animal));
 }
 
 } // namespace

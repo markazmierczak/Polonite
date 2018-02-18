@@ -58,8 +58,8 @@ static void TestTemplateVecNf() {
 
   assert_nearly_eq(0.001f, fours.Reciprocal(), 0.25, 0.25, 0.25, 0.25);
 
-  assert_eq(Min(a, fours), 3, 4, 4, 4);
-  assert_eq(Max(a, fours), 4, 4, 5, 6);
+  assert_eq(min(a, fours), 3, 4, 4, 4);
+  assert_eq(max(a, fours), 4, 4, 5, 6);
 
   // Test some comparisons.  This is not exhaustive.
   EXPECT_TRUE((a == b).AllTrue());
@@ -134,7 +134,7 @@ TEST(VnxTest, MinLt) {
   for (int a = 0; a < (1<<8); a++) {
     for (int b = 0; b < (1<<8); b++) {
       Vec16b aw(a), bw(b);
-      EXPECT_EQ(Min(a, b), Min(aw, bw)[0]);
+      EXPECT_EQ(min(a, b), min(aw, bw)[0]);
       EXPECT_EQ(!(a < b), !(aw < bw)[0]);
     }
   }
@@ -145,7 +145,7 @@ TEST(VnxTest, MinLt) {
 TEST(VnxTest, MinLtExhaustive) {
   for (int a = 0; a < (1<<16); a++) {
     for (int b = 0; b < (1<<16); b++)
-      EXPECT_EQ(Min(a, b), Min(Vec8h(a), Vec8h(b))[0]);
+      EXPECT_EQ(min(a, b), min(Vec8h(a), Vec8h(b))[0]);
   }
 }
 #endif

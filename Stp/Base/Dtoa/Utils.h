@@ -68,13 +68,13 @@ namespace dtoa {
 
 // Returns the maximum of the two parameters.
 template<typename T>
-static T Max(T a, T b) {
+static T max(T a, T b) {
   return a < b ? b : a;
 }
 
 // Returns the minimum of the two parameters.
 template<typename T>
-static T Min(T a, T b) {
+static T min(T a, T b) {
   return a < b ? a : b;
 }
 
@@ -133,7 +133,7 @@ class StringBuilder {
 
   ~StringBuilder() {
     if (!is_finalized())
-      Finalize();
+      finalizeHash();
   }
 
   int size() const { return buffer_.length(); }
@@ -155,7 +155,7 @@ class StringBuilder {
   void Reset() { position_ = 0; }
 
   // Add a single character to the builder. It is not allowed to add
-  // 0-characters; use the Finalize() method to terminate the string
+  // 0-characters; use the finalizeHash() method to terminate the string
   // instead.
   void AddCharacter(char c) {
     ASSERT(c != '\0');
@@ -187,7 +187,7 @@ class StringBuilder {
   }
 
   // Finalize the string by 0-terminating it and returning the buffer.
-  StringSpan Finalize() {
+  StringSpan finalizeHash() {
     ASSERT(!is_finalized());
     ASSERT(position_ < buffer_.length());
     buffer_[position_] = '\0';

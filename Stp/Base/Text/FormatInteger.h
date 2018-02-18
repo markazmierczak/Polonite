@@ -29,7 +29,7 @@ constexpr StringSpan FormatInteger(T input, MutableStringSpan buffer) {
 
   // We need to switch to the unsigned type when negating the value since
   // abs(INT_MIN) == INT_MAX + 1.
-  bool negative = IsNegative(input);
+  bool negative = isNegative(input);
   auto value = negative ? static_cast<UnsignedType>(0) - input : static_cast<UnsignedType>(input);
   do {
     --begin;
@@ -55,7 +55,7 @@ constexpr StringSpan FormatHexInteger(
   char* end = buffer.data() + buffer.size();
   char* begin = end;
 
-  bool negative = IsNegative(input);
+  bool negative = isNegative(input);
   auto value = negative ? static_cast<UnsignedType>(0) - input : static_cast<UnsignedType>(input);
   do {
     --begin;
@@ -81,7 +81,7 @@ constexpr StringSpan FormatOctalInteger(T input, MutableStringSpan buffer) {
   char* end = buffer.data() + buffer.size();
   char* begin = end;
 
-  bool negative = IsNegative(input);
+  bool negative = isNegative(input);
   auto value = negative ? static_cast<UnsignedType>(0) - input : static_cast<UnsignedType>(input);
   do {
     --begin;

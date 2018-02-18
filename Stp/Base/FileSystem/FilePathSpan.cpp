@@ -274,7 +274,7 @@ FilePathEnumerator::FilePathEnumerator(FilePathSpan path)
   if (root_size > 0)
     now_len_ = root_size;
   else
-    now_len_ = Max(0, path_.IndexOfSeparator());
+    now_len_ = max(0, path_.IndexOfSeparator());
 }
 
 FilePathEnumerator* FilePathEnumerator::Next() {

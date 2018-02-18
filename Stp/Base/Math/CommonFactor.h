@@ -20,8 +20,8 @@ auto GreatestCommonDivisor(T ai, U bi) -> TCommon<T, U> {
   using ResultType = TCommon<T, U>;
   using UCommonType = TMakeUnsigned<ResultType>;
 
-  UCommonType a = AbsToUnsigned(ai);
-  UCommonType b = AbsToUnsigned(bi);
+  UCommonType a = absToUnsigned(ai);
+  UCommonType b = absToUnsigned(bi);
   if (a == 0)
     return b;
   if (b == 0)
@@ -49,8 +49,8 @@ auto LeastCommonMultiple(T ai, U bi) -> TCommon<T, U> {
   using ResultType = TCommon<T, U>;
   using UCommonType = TMakeUnsigned<ResultType>;
 
-  UCommonType x = AbsToUnsigned(ai / GreatestCommonDivisor(ai, bi));
-  UCommonType y = AbsToUnsigned(bi);
+  UCommonType x = absToUnsigned(ai / GreatestCommonDivisor(ai, bi));
+  UCommonType y = absToUnsigned(bi);
   ASSERT(static_cast<UCommonType>(Limits<ResultType>::Max) / x > y);
   return static_cast<ResultType>(x * y);
 

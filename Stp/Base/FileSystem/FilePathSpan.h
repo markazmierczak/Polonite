@@ -106,7 +106,7 @@ class BASE_EXPORT FilePathSpan {
 
   friend bool operator==(const FilePathSpan& l, const FilePathSpan& r) { return l.EqualsTo(r); }
   friend bool operator!=(const FilePathSpan& l, const FilePathSpan& r) { return !operator==(l, r); }
-  friend HashCode Hash(const FilePathSpan& x) { return x.HashImpl(); }
+  friend HashCode partialHash(const FilePathSpan& x) { return x.HashImpl(); }
   friend int compare(const FilePathSpan& l, const FilePathSpan& r) { return l.CompareTo(r); }
   friend TextWriter& operator<<(TextWriter& out, const FilePathSpan& x) {
     x.FormatImpl(out);

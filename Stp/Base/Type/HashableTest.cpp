@@ -9,14 +9,14 @@
 
 namespace stp {
 
-TEST(HashableTest, HashBool) {
-  EXPECT_EQ(static_cast<HashCode>(1), Hash(true));
-  EXPECT_EQ(static_cast<HashCode>(0), Hash(false));
+TEST(HashableTest, hashBool) {
+  EXPECT_EQ(static_cast<HashCode>(1), partialHash(true));
+  EXPECT_EQ(static_cast<HashCode>(0), partialHash(false));
 }
 
-TEST(HashableTest, HashFloatZero) {
-  EXPECT_EQ(Hash(0.f), Hash(-0.f));
-  EXPECT_EQ(Hash(0.0), Hash(-0.0));
+TEST(HashableTest, hashFloatZero) {
+  EXPECT_EQ(partialHash(0.f), partialHash(-0.f));
+  EXPECT_EQ(partialHash(0.0), partialHash(-0.0));
 }
 
 template<typename T>
@@ -35,21 +35,21 @@ typedef ::testing::Types<
 
 TYPED_TEST_CASE(HashableTest, FunctionalTypes);
 
-TYPED_TEST(HashableTest, EqualToImpliesSameHashCode) {
+TYPED_TEST(HashableTest, equalToImpliesSameHashCode) {
   TypeParam values[32];
   this->rng.Fill(MakeBufferSpan(values));
   for (TypeParam v1: values) {
     for (TypeParam v2: values) {
       if (v1 == v2) {
-        EXPECT_EQ(Hash(v1), Hash(v2));
+        EXPECT_EQ(partialHash(v1), partialHash(v2));
       }
     }
   }
 }
 
-struct HashableTest_TestClass { friend HashCode Hash(const HashableTest_TestClass&); };
+struct HashableTest_TestClass { friend HashCode partialHash(const HashableTest_TestClass&); };
 namespace Foreign {
-struct HashableTest_TestClass2 { friend HashCode Hash(const HashableTest_TestClass2&); };
+struct HashableTest_TestClass2 { friend HashCode partialHash(const HashableTest_TestClass2&); };
 struct HashableTest_TestClass3 {};
 }
 static_assert(TIsHashable<HashableTest_TestClass>, "!");

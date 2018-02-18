@@ -42,10 +42,10 @@ struct VecNx<2, float> {
   VecNx Sqrt() const { return _mm_sqrt_ps(vec_); }
   VecNx RSqrt() const { return _mm_rsqrt_ps(vec_); }
 
-  static VecNx Min(const VecNx& l, const VecNx& r) {
+  static VecNx min(const VecNx& l, const VecNx& r) {
     return _mm_min_ps(l.vec_, r.vec_);
   }
-  static VecNx Max(const VecNx& l, const VecNx& r) {
+  static VecNx max(const VecNx& l, const VecNx& r) {
     return _mm_max_ps(l.vec_, r.vec_);
   }
 
@@ -110,10 +110,10 @@ struct VecNx<4, float> {
     #endif
   }
 
-  static VecNx Min(const VecNx& l, const VecNx& r) {
+  static VecNx min(const VecNx& l, const VecNx& r) {
     return _mm_min_ps(l.vec_, r.vec_);
   }
-  static VecNx Max(const VecNx& l, const VecNx& r) {
+  static VecNx max(const VecNx& l, const VecNx& r) {
     return _mm_max_ps(l.vec_, r.vec_);
   }
 
@@ -295,7 +295,7 @@ struct VecNx<8, uint16_t> {
   }
   void Store(uint16_t* ptr) const { _mm_storeu_si128((__m128i*)ptr, vec_); }
 
-  static VecNx Min(const VecNx& a, const VecNx& b) {
+  static VecNx min(const VecNx& a, const VecNx& b) {
     // No unsigned _mm_min_epu16, so we'll shift into a space where we can use
     // the signed version, _mm_min_epi16, then shift back.
     const uint16_t top = 0x8000;
@@ -368,7 +368,7 @@ struct VecNx<16, uint8_t> {
   }
   void Store(uint8_t* ptr) const { _mm_storeu_si128((__m128i*)ptr, vec_); }
 
-  static VecNx Min(const VecNx& l, const VecNx& r) {
+  static VecNx min(const VecNx& l, const VecNx& r) {
     return _mm_min_epu8(l.vec_, r.vec_);
   }
 

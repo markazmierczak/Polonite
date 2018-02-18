@@ -39,8 +39,8 @@ class BufferSpan {
 
   template<typename T, TEnableIf<TIsTrivial<T>>* = nullptr>
   explicit constexpr operator Span<T>() const noexcept {
-    ASSERT(!(ToUnsigned(size_) & (sizeof(T) - 1)));
-    return Span<T>(reinterpret_cast<const T*>(data_), static_cast<int>(ToUnsigned(size_) / sizeof(T)));
+    ASSERT(!(toUnsigned(size_) & (sizeof(T) - 1)));
+    return Span<T>(reinterpret_cast<const T*>(data_), static_cast<int>(toUnsigned(size_) / sizeof(T)));
   }
 
   ALWAYS_INLINE constexpr const void* data() const { return data_; }
@@ -80,7 +80,7 @@ class BufferSpan {
     int rv = CompareData(lhs.data_, rhs.data_, lhs.size_ <= rhs.size() ? lhs.size_ : rhs.size());
     return rv ? rv : (lhs.size_ - rhs.size());
   }
-  friend HashCode Hash(const BufferSpan& x) { return HashBuffer(x.data_, x.size_); }
+  friend HashCode partialHash(const BufferSpan& x) { return hashBuffer(x.data_, x.size_); }
 
   friend void Format(TextWriter& out, const BufferSpan& x, const StringSpan& opts) {
     FormatBuffer(out, x.data_, x.size_, opts);
@@ -97,7 +97,7 @@ class BufferSpan {
   int size_;
 
   static int CompareData(const void* lhs, const void* rhs, int count) {
-    return count ? ::memcmp(lhs, rhs, ToUnsigned(count)) : 0;
+    return count ? ::memcmp(lhs, rhs, toUnsigned(count)) : 0;
   }
 };
 
@@ -129,13 +129,13 @@ class MutableBufferSpan {
 
   template<typename T, TEnableIf<TIsTrivial<T> && TIsConst<T>>* = nullptr>
   explicit constexpr operator Span<T>() const noexcept {
-    ASSERT(!(ToUnsigned(size_) & (sizeof(T) - 1)));
-    return Span<T>(reinterpret_cast<T*>(data_), static_cast<int>(ToUnsigned(size_) / sizeof(T)));
+    ASSERT(!(toUnsigned(size_) & (sizeof(T) - 1)));
+    return Span<T>(reinterpret_cast<T*>(data_), static_cast<int>(toUnsigned(size_) / sizeof(T)));
   }
   template<typename T, TEnableIf<TIsTrivial<T> && !TIsConst<T>>* = nullptr>
   explicit constexpr operator MutableSpan<T>() noexcept {
-    ASSERT(!(ToUnsigned(size_) & (sizeof(T) - 1)));
-    return MutableSpan<T>(reinterpret_cast<T*>(data_), static_cast<int>(ToUnsigned(size_) / sizeof(T)));
+    ASSERT(!(toUnsigned(size_) & (sizeof(T) - 1)));
+    return MutableSpan<T>(reinterpret_cast<T*>(data_), static_cast<int>(toUnsigned(size_) / sizeof(T)));
   }
 
   ALWAYS_INLINE constexpr const void* data() const { return data_; }
@@ -185,7 +185,7 @@ class MutableBufferSpan {
   friend int compare(const MutableBufferSpan& lhs, const BufferSpan& rhs) {
     return compare(BufferSpan(lhs), rhs);
   }
-  friend HashCode Hash(const MutableBufferSpan& x) { return HashBuffer(x.data_, x.size_); }
+  friend HashCode partialHash(const MutableBufferSpan& x) { return hashBuffer(x.data_, x.size_); }
 
   friend void Format(TextWriter& out, const MutableBufferSpan& x, const StringSpan& opts) {
     FormatBuffer(out, x.data_, x.size_, opts);
@@ -234,10 +234,10 @@ constexpr auto MakeBufferSpan(T& container) {
 
 inline void Fill(MutableBufferSpan buffer, byte_t byte) {
   if (!buffer.IsEmpty())
-    ::memset(buffer.data(), byte, ToUnsigned(buffer.size()));
+    ::memset(buffer.data(), byte, toUnsigned(buffer.size()));
 }
 
-[[nodiscard]] BASE_EXPORT bool TryParse(StringSpan input, MutableBufferSpan output);
+[[nodiscard]] BASE_EXPORT bool tryParse(StringSpan input, MutableBufferSpan output);
 
 } // namespace stp
 

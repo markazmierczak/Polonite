@@ -146,16 +146,16 @@ class RawFloatingPoint {
     return Abs(x).ToBits() > ExponentBitMask;
   }
 
-  friend constexpr bool IsFinite(RawFloatingPoint x) {
+  friend constexpr bool isFinite(RawFloatingPoint x) {
     return x.GetExponentBits() != ExponentBitMask;
   }
 
-  friend constexpr bool IsInfinity(RawFloatingPoint x) {
+  friend constexpr bool isInfinity(RawFloatingPoint x) {
     return Abs(x).ToBits() == ExponentBitMask;
   }
 
   friend constexpr bool IsNormal(RawFloatingPoint x) {
-    return x.GetExponentBits() != 0 && IsFinite(x);
+    return x.GetExponentBits() != 0 && isFinite(x);
   }
 
   // Returns true iff this number is at most MaxUlps ULP's away from rhs.

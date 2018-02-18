@@ -32,7 +32,7 @@ constexpr T ZeroExtendNBits(T x, int n) {
   ASSERT(0 < n && n <= BitCount);
   using UnsignedType = TMakeUnsigned<T>;
   UnsignedType mask = ~UnsignedType(0) >> (BitCount - n);
-  return static_cast<T>(ToUnsigned(x) & mask);
+  return static_cast<T>(toUnsigned(x) & mask);
 }
 
 // Takes first |n| bits and returns sign extended value.
@@ -42,7 +42,7 @@ constexpr T SignExtendNBits(T x, int n) {
   constexpr int BitCount = 8 * sizeof(T);
   ASSERT(0 < n && n <= BitCount);
   int shift = BitCount - n;
-  return static_cast<T>(ToSigned(ToUnsigned(x) << shift) >> shift);
+  return static_cast<T>(toSigned(toUnsigned(x) << shift) >> shift);
 }
 
 template<typename T>

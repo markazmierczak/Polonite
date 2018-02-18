@@ -350,7 +350,7 @@ bool JsonParser::ConsumeStringRaw(JsonStringBuilder& out) {
             return ReportError(JsonError::InvalidEscape, 0);
 
           uint32_t hex_digit = 0;
-          if (!TryParseHex(StringSpan(pos_, 2), hex_digit) ||
+          if (!tryParseHex(StringSpan(pos_, 2), hex_digit) ||
               !unicode::IsValidCharacter(hex_digit)) {
             return ReportError(JsonError::InvalidEscape, 0);
           }
@@ -418,7 +418,7 @@ bool JsonParser::DecodeUtf16(JsonStringBuilder& out) {
   // This only stores UTF-16 code units, though.
   // Consume the UTF-16 code unit, which may be a high surrogate.
   uint16_t code_unit16_high = 0;
-  if (!TryParseHex(StringSpan(pos_, 4), code_unit16_high))
+  if (!tryParseHex(StringSpan(pos_, 4), code_unit16_high))
     return false;
 
   pos_ += 4;
@@ -445,7 +445,7 @@ bool JsonParser::DecodeUtf16(JsonStringBuilder& out) {
     pos_ += 2; // Read past 'u'.
 
     uint16_t code_unit16_low = 0;
-    if (!TryParseHex(StringSpan(pos_, 4), code_unit16_low))
+    if (!tryParseHex(StringSpan(pos_, 4), code_unit16_low))
       return false;
 
     pos_ += 4;
@@ -540,14 +540,14 @@ bool JsonParser::ConsumeNumber(JsonValue& out_value) {
   StringSpan num_string(start, pos_ - start);
 
   int64_t num_int;
-  if (TryParse(num_string, num_int)) {
+  if (tryParse(num_string, num_int)) {
     out_value = JsonValue(num_int);
     return true;
   }
 
   double num_double;
-  if (TryParse(num_string, num_double) &&
-      IsFinite(num_double)) {
+  if (tryParse(num_string, num_double) &&
+      isFinite(num_double)) {
     out_value = JsonValue(num_double);
     return true;
   }

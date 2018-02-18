@@ -89,7 +89,7 @@ int BufferedStream::ReadFromBuffer(MutableBufferSpan output) {
 int BufferedStream::WriteToBuffer(BufferSpan input) {
   ASSERT(write_pos_ >= 0);
 
-  int bytes_to_write = Min(buffer_size_ - write_pos_, input.size());
+  int bytes_to_write = min(buffer_size_ - write_pos_, input.size());
   if (bytes_to_write == 0)
     return 0;
 

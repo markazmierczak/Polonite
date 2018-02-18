@@ -70,7 +70,7 @@ class ErrorCode final {
 };
 
 BASE_EXPORT int compare(const ErrorCode& l, const ErrorCode& r) noexcept;
-BASE_EXPORT HashCode Hash(const ErrorCode& x) noexcept;
+BASE_EXPORT HashCode partialHash(const ErrorCode& x) noexcept;
 
 namespace detail {
 BASE_EXPORT void Format(TextWriter& out, const ErrorCode& x);

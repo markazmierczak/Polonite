@@ -86,7 +86,7 @@ int FileStream::ReadAtMost(MutableBufferSpan output) {
   int bytes_read = 0;
   int fd = native_.get();
   do {
-    ssize_t prv = ::read(fd, output.data(), ToUnsigned(output.size()));
+    ssize_t prv = ::read(fd, output.data(), toUnsigned(output.size()));
     ASSERT(-1 <= prv && prv <= output.size());
     int rv = static_cast<int>(prv);
     if (rv > 0) {
@@ -106,7 +106,7 @@ void FileStream::Write(BufferSpan input) {
   ASSERT(CanWrite());
   int fd = native_.get();
   do {
-    ssize_t prv = ::write(fd, input.data(), ToUnsigned(input.size()));
+    ssize_t prv = ::write(fd, input.data(), toUnsigned(input.size()));
     ASSERT(-1 <= prv && prv <= input.size());
     int rv = static_cast<int>(prv);
     if (rv >= 0) {
@@ -135,7 +135,7 @@ void FileStream::PositionalRead(int64_t offset, MutableBufferSpan output) {
   ASSERT(offset >= 0);
   int fd = native_.get();
   do {
-    ssize_t prv = ::pread(fd, output.data(), ToUnsigned(output.size()), offset);
+    ssize_t prv = ::pread(fd, output.data(), toUnsigned(output.size()), offset);
     ASSERT(-1 <= prv && prv <= output.size());
     int rv = static_cast<int>(prv);
     if (rv > 0) {
@@ -159,7 +159,7 @@ void FileStream::PositionalWrite(int64_t offset, BufferSpan input) {
   ASSERT(!append_);
   int fd = native_.get();
   do {
-    ssize_t prv = ::pwrite(fd, input.data(), ToUnsigned(input.size()), offset);
+    ssize_t prv = ::pwrite(fd, input.data(), toUnsigned(input.size()), offset);
     ASSERT(-1 <= prv && prv <= input.size());
     int rv = static_cast<int>(prv);
     if (rv >= 0) {

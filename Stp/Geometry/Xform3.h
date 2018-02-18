@@ -403,11 +403,11 @@ class BASE_EXPORT Xform3 {
 // you're going to be calling this rapidly (e.g., in an animation) you should
 // decompose once using DecomposeTransforms and reuse your
 // DecomposedTransform.
-BASE_EXPORT bool TryLerp(Xform3& out, const Xform3& x, const Xform3& y, double t);
+BASE_EXPORT bool Trylerp(Xform3& out, const Xform3& x, const Xform3& y, double t);
 
 BASE_EXPORT bool IsNear(const Xform3& lhs, const Xform3& rhs, float tolerance = 0.1f);
 
-BASE_EXPORT bool IsFinite(const Xform3& xform);
+BASE_EXPORT bool isFinite(const Xform3& xform);
 
 // Contains the components of a factored transform. These components may be
 // blended and recomposed.
@@ -436,7 +436,7 @@ struct BASE_EXPORT DecomposedXform3 {
 // routines described in http://www.w3.org/TR/css3-3d-transform/.
 // |progress| is in the range [0, 1] (0 leaves |out| unchanged, and 1
 // assigns |from| to |out|).
-BASE_EXPORT DecomposedXform3 Lerp(
+BASE_EXPORT DecomposedXform3 lerp(
     const DecomposedXform3& from, const DecomposedXform3& to,
     double progress);
 

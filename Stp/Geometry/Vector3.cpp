@@ -91,46 +91,46 @@ bool IsNear(const Vector3& lhs, const Vector3& rhs, float tolerance) {
          IsNear(lhs.z, rhs.z, tolerance);
 }
 
-IntVector3 Min(const IntVector3& lhs, const IntVector3& rhs) {
+IntVector3 min(const IntVector3& lhs, const IntVector3& rhs) {
   return IntVector3(
-      Min(lhs.x, rhs.x),
-      Min(lhs.y, rhs.y),
-      Min(lhs.z, rhs.z));
+      min(lhs.x, rhs.x),
+      min(lhs.y, rhs.y),
+      min(lhs.z, rhs.z));
 }
 
-IntVector3 Max(const IntVector3& lhs, const IntVector3& rhs) {
+IntVector3 max(const IntVector3& lhs, const IntVector3& rhs) {
   return IntVector3(
-      Max(lhs.x, rhs.x),
-      Max(lhs.y, rhs.y),
-      Max(lhs.z, rhs.z));
+      max(lhs.x, rhs.x),
+      max(lhs.y, rhs.y),
+      max(lhs.z, rhs.z));
 }
 
-Vector3 Min(const Vector3& lhs, const Vector3& rhs) {
+Vector3 min(const Vector3& lhs, const Vector3& rhs) {
   return Vector3(
-      Min(lhs.x, rhs.x),
-      Min(lhs.y, rhs.y),
-      Min(lhs.z, rhs.z));
+      min(lhs.x, rhs.x),
+      min(lhs.y, rhs.y),
+      min(lhs.z, rhs.z));
 }
 
-Vector3 Max(const Vector3& lhs, const Vector3& rhs) {
+Vector3 max(const Vector3& lhs, const Vector3& rhs) {
   return Vector3(
-      Max(lhs.x, rhs.x),
-      Max(lhs.y, rhs.y),
-      Max(lhs.z, rhs.z));
+      max(lhs.x, rhs.x),
+      max(lhs.y, rhs.y),
+      max(lhs.z, rhs.z));
 }
 
-IntVector3 Lerp(const IntVector3& a, const IntVector3& b, double t) {
+IntVector3 lerp(const IntVector3& a, const IntVector3& b, double t) {
   return IntVector3(
-      Lerp(a.x, b.x, t),
-      Lerp(a.y, b.y, t),
-      Lerp(a.z, b.z, t));
+      lerp(a.x, b.x, t),
+      lerp(a.y, b.y, t),
+      lerp(a.z, b.z, t));
 }
 
-Vector3 Lerp(const Vector3& a, const Vector3& b, double t) {
+Vector3 lerp(const Vector3& a, const Vector3& b, double t) {
   return Vector3(
-      Lerp(a.x, b.x, t),
-      Lerp(a.y, b.y, t),
-      Lerp(a.z, b.z, t));
+      lerp(a.x, b.x, t),
+      lerp(a.y, b.y, t),
+      lerp(a.z, b.z, t));
 }
 
 Vector3 CrossProduct(const Vector3& lhs, const Vector3& rhs) {

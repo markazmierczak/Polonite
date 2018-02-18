@@ -104,15 +104,15 @@ typedef Vector3 Point3;
 inline IntVector3 Abs(const IntVector3& v) { return IntVector3(Abs(v.x), Abs(v.y), Abs(v.z)); }
 inline Vector3 Abs(const Vector3& v) { return Vector3(Abs(v.x), Abs(v.y), Abs(v.z)); }
 
-BASE_EXPORT IntVector3 Min(const IntVector3& lhs, const IntVector3& rhs);
-BASE_EXPORT IntVector3 Max(const IntVector3& lhs, const IntVector3& rhs);
+BASE_EXPORT IntVector3 min(const IntVector3& lhs, const IntVector3& rhs);
+BASE_EXPORT IntVector3 max(const IntVector3& lhs, const IntVector3& rhs);
 
-BASE_EXPORT Vector3 Min(const Vector3& lhs, const Vector3& rhs);
-BASE_EXPORT Vector3 Max(const Vector3& lhs, const Vector3& rhs);
+BASE_EXPORT Vector3 min(const Vector3& lhs, const Vector3& rhs);
+BASE_EXPORT Vector3 max(const Vector3& lhs, const Vector3& rhs);
 
-BASE_EXPORT IntVector3 Lerp(const IntVector3& a, const IntVector3& b, double t);
+BASE_EXPORT IntVector3 lerp(const IntVector3& a, const IntVector3& b, double t);
 
-BASE_EXPORT Vector3 Lerp(const Vector3& a, const Vector3& b, double t);
+BASE_EXPORT Vector3 lerp(const Vector3& a, const Vector3& b, double t);
 
 BASE_EXPORT bool IsNear(const Vector3& lhs, const Vector3& rhs, float tolerance);
 

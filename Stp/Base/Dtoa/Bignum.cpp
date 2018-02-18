@@ -71,7 +71,7 @@ void Bignum::AssignUInt64(uint64_t value) {
     value = value >> BigitSize;
   }
   used_digits_ = needed_bigits;
-  Clamp();
+  clamp();
 }
 
 
@@ -120,7 +120,7 @@ void Bignum::AssignDecimalString(Vector<const char> value) {
   uint64_t digits = ReadUInt64(value, pos, length);
   MultiplyByPowerOfTen(length);
   AddUInt64(digits);
-  Clamp();
+  clamp();
 }
 
 
@@ -158,7 +158,7 @@ void Bignum::AssignHexString(Vector<const char> value) {
     bigits_[used_digits_] = most_significant_bigit;
     used_digits_++;
   }
-  Clamp();
+  clamp();
 }
 
 
@@ -190,7 +190,7 @@ void Bignum::AddBignum(const Bignum& other) {
   //  cccccccccccc 0000
   // In both cases we might need a carry bigit.
 
-  EnsureCapacity(1 + Max(BigitLength(), other.BigitLength()) - exponent_);
+  EnsureCapacity(1 + max(BigitLength(), other.BigitLength()) - exponent_);
   Chunk carry = 0;
   int bigit_pos = other.exponent_ - exponent_;
   ASSERT(bigit_pos >= 0);
@@ -207,7 +207,7 @@ void Bignum::AddBignum(const Bignum& other) {
     carry = sum >> BigitSize;
     bigit_pos++;
   }
-  used_digits_ = Max(bigit_pos, used_digits_);
+  used_digits_ = max(bigit_pos, used_digits_);
   ASSERT(IsClamped());
 }
 
@@ -235,7 +235,7 @@ void Bignum::SubtractBignum(const Bignum& other) {
     borrow = difference >> (ChunkSize - 1);
     ++i;
   }
-  Clamp();
+  clamp();
 }
 
 
@@ -409,7 +409,7 @@ void Bignum::Square() {
   // Don't forget to update the used_digits and the exponent.
   used_digits_ = product_length;
   exponent_ *= 2;
-  Clamp();
+  clamp();
 }
 
 
@@ -528,7 +528,7 @@ uint16_t Bignum::DivideModuloIntBignum(const Bignum& other) {
     uint16_t quotient = static_cast<uint16_t>(this_bigit / other_bigit);
     bigits_[used_digits_ - 1] = this_bigit - other_bigit * quotient;
     result += quotient;
-    Clamp();
+    clamp();
     return result;
   }
 
@@ -623,7 +623,7 @@ int Bignum::compare(const Bignum& a, const Bignum& b) {
   int bigit_length_b = b.BigitLength();
   if (bigit_length_a < bigit_length_b) return -1;
   if (bigit_length_a > bigit_length_b) return +1;
-  for (int i = bigit_length_a - 1; i >= Min(a.exponent_, b.exponent_); --i) {
+  for (int i = bigit_length_a - 1; i >= min(a.exponent_, b.exponent_); --i) {
     Chunk bigit_a = a.BigitAt(i);
     Chunk bigit_b = b.BigitAt(i);
     if (bigit_a < bigit_b) return -1;
@@ -652,7 +652,7 @@ int Bignum::PlusCompare(const Bignum& a, const Bignum& b, const Bignum& c) {
 
   Chunk borrow = 0;
   // Starting at min_exponent all digits are == 0. So no need to compare them.
-  int min_exponent = Min(Min(a.exponent_, b.exponent_), c.exponent_);
+  int min_exponent = min(min(a.exponent_, b.exponent_), c.exponent_);
   for (int i = c.BigitLength() - 1; i >= min_exponent; --i) {
     Chunk chunk_a = a.BigitAt(i);
     Chunk chunk_b = b.BigitAt(i);
@@ -671,7 +671,7 @@ int Bignum::PlusCompare(const Bignum& a, const Bignum& b, const Bignum& c) {
 }
 
 
-void Bignum::Clamp() {
+void Bignum::clamp() {
   while (used_digits_ > 0 && bigits_[used_digits_ - 1] == 0) {
     used_digits_--;
   }
@@ -760,7 +760,7 @@ void Bignum::SubtractTimes(const Bignum& other, int factor) {
     bigits_[i] = difference & BigitMask;
     borrow = difference >> (ChunkSize - 1);
   }
-  Clamp();
+  clamp();
 }
 
 

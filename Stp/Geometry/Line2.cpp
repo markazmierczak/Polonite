@@ -25,7 +25,7 @@ double Line2::DistanceToSquared(Point2 p) const {
   double dot = DotProduct(v, rel);
   double projected = dot * dot / v.GetLengthSquared();
   double len_squared = rel.GetLengthSquared() - projected;
-  return Max(len_squared, 0.0);
+  return max(len_squared, 0.0);
 }
 
 float Line2::GetDistanceTo(Point2 p) const {

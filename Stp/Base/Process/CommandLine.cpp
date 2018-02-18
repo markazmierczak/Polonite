@@ -68,12 +68,12 @@ bool CommandLine::TryGetInt(StringSpan name, int& out_value) const {
   const String* value = TryGet(name);
   if (!value)
     return false;
-  return TryParse(*value, out_value) == ParseIntegerErrorCode::Ok;
+  return tryParse(*value, out_value) == ParseIntegerErrorCode::Ok;
 }
 
 bool CommandLine::TryGetFloat(StringSpan name, double& out_value) const {
   const String* value = TryGet(name);
-  return value ? TryParse(*value, out_value) : false;
+  return value ? tryParse(*value, out_value) : false;
 }
 
 bool CommandLine::TryGet(StringSpan name, FilePath& out_value) const {

@@ -270,9 +270,9 @@ inline Affine Affine::operator*(const Affine& rhs) const {
 // Note: this call is expensive since we need to decompose the transform. If
 // you're going to be calling this rapidly (e.g., in an animation) you should
 // decompose once using Affine::Decompose and reuse your DecomposedAffine.
-BASE_EXPORT bool TryLerp(Affine& out, const Affine& x, const Affine& y, double t);
+BASE_EXPORT bool Trylerp(Affine& out, const Affine& x, const Affine& y, double t);
 
-BASE_EXPORT DecomposedAffine Lerp(const DecomposedAffine& x, const DecomposedAffine& y, double t);
+BASE_EXPORT DecomposedAffine lerp(const DecomposedAffine& x, const DecomposedAffine& y, double t);
 
 BASE_EXPORT bool IsNear(const Affine& lhs, const Affine& rhs, float tolerance);
 

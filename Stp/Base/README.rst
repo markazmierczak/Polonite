@@ -200,7 +200,7 @@ Basic concepts and type system routines (``<type_traits>`` replacement).
 
 Get the name of your type with ``TGetName()``.
 
-Cast objects safely with ``IsInstanceOf()`` and ``ObjectCast()``.
+Cast objects safely with ``isInstanceOf()`` and ``objectCast()``.
 
 ``Util/``
 =========

@@ -129,7 +129,7 @@ bool Xform2::PreservesRightAngles(float tolerance) const {
   return IsNear(dot, tolerance * tolerance, NearlyZeroForGraphics<float>);
 }
 
-bool IsFinite(const Xform2& xform) {
+bool isFinite(const Xform2& xform) {
   float accumulator = 0;
   for (int i = 0; i < Xform2::EntryCount; ++i)
     accumulator *= xform.Get(i);
@@ -627,7 +627,7 @@ bool Xform2::GetInverted(Xform2& out) const {
   double inv_det = 1 / det;
 
   ComplexInverse(out.d_, d_, inv_det, HasPerspective());
-  if (!IsFinite(out))
+  if (!isFinite(out))
     return false;
 
   out.type_mask_ = type_mask_;

@@ -126,7 +126,7 @@ class Fixed {
   friend constexpr bool operator< (Fixed l, Fixed r) { return l.bits_ <  r.bits_; }
   friend constexpr bool operator> (Fixed l, Fixed r) { return l.bits_ >  r.bits_; }
 
-  friend constexpr HashCode Hash(const Fixed& x) { return static_cast<HashCode>(x.bits_); }
+  friend constexpr HashCode partialHash(const Fixed& x) { return static_cast<HashCode>(x.bits_); }
 
   friend void Format(TextWriter& out, const Fixed& x, const StringSpan& opts) {
     detail::FormatFixedPoint(out, opts, x.bits_, P);
@@ -141,10 +141,10 @@ class Fixed {
     return Abs(x - y) <= tolerance;
   }
 
-  friend constexpr Fixed Lerp(Fixed a, Fixed b, double t) {
-    return FromBits(Lerp(a.bits_, b.bits_, t));
+  friend constexpr Fixed lerp(Fixed a, Fixed b, double t) {
+    return FromBits(lerp(a.bits_, b.bits_, t));
   }
-  friend constexpr Fixed Lerp(Fixed x, Fixed y, Fixed t) {
+  friend constexpr Fixed lerp(Fixed x, Fixed y, Fixed t) {
     ASSERT(0 <= t.bits_ && t.bits_ <= OneBitValue);
     auto a = static_cast<WideBitsType>(x.bits_) * (OneBitValue - t.bits_);
     auto b = static_cast<WideBitsType>(y.bits_) * t.bits_;

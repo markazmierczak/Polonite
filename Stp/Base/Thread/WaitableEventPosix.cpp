@@ -215,7 +215,7 @@ int WaitableEvent::WaitMany(WaitableEvent** raw_waitables, int count) {
   ASSERT(count == waitables.size());
 
   Sort(waitables, [](const WaiterAndIndex& lhs, const WaiterAndIndex& rhs) {
-    return Signum(reinterpret_cast<intptr_t>(lhs.waitable) - reinterpret_cast<intptr_t>(rhs.waitable));
+    return signum(reinterpret_cast<intptr_t>(lhs.waitable) - reinterpret_cast<intptr_t>(rhs.waitable));
   });
 
   // The set of waitables must be distinct. Since we have just sorted by

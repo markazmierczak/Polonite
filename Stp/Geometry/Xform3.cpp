@@ -1045,7 +1045,7 @@ bool Xform3::GetInverted(Xform3& out) const {
     out.d_[3][3] = 1;
 
     out.type_mask_ = type_mask_;
-    return IsFinite(out);
+    return isFinite(out);
   }
 
   double a00 = d_[0][0];
@@ -1093,7 +1093,7 @@ bool Xform3::GetInverted(Xform3& out) const {
     // If det is zero, we want to return false. However, we also want to return false
     // if 1/det overflows to infinity (i.e. det is denormalized). Both of these are
     // handled by checking that 1/det is finite.
-    if (!IsFinite(invdet))
+    if (!isFinite(invdet))
       return false;
 
     b00 *= invdet;
@@ -1124,7 +1124,7 @@ bool Xform3::GetInverted(Xform3& out) const {
     out.d_[3][3] = 1;
 
     out.type_mask_ = type_mask_;
-    return IsFinite(out);
+    return isFinite(out);
   }
 
   double b00 = a00 * a11 - a01 * a10;
@@ -1147,7 +1147,7 @@ bool Xform3::GetInverted(Xform3& out) const {
   // If det is zero, we want to return false. However, we also want to return false
   // if 1/det overflows to infinity (i.e. det is denormalized). Both of these are
   // handled by checking that 1/det is finite.
-  if (!IsFinite(invdet))
+  if (!isFinite(invdet))
     return false;
 
   b00 *= invdet;
@@ -1182,7 +1182,7 @@ bool Xform3::GetInverted(Xform3& out) const {
 
   out.type_mask_ = type_mask_;
 
-  return IsFinite(out);
+  return isFinite(out);
 }
 
 bool Xform3::IsInvertible() const {
@@ -1191,10 +1191,10 @@ bool Xform3::IsInvertible() const {
       return true;
     return d_[0][0] * d_[1][1] * d_[2][2] != 0;
   }
-  return IsFinite(1 / GetDeterminant());
+  return isFinite(1 / GetDeterminant());
 }
 
-bool IsFinite(const Xform3& xform) {
+bool isFinite(const Xform3& xform) {
   float accumulator = 0;
   for (int row = 0; row < 4; ++row) {
     for (int col = 0; col < 4; ++col)
@@ -1339,10 +1339,10 @@ bool Xform3::Decompose(DecomposedXform3& out) const {
   double row11 = rows[1].y;
   double row22 = rows[2].z;
 
-  double qx = 0.5 * Sqrt(Max(1.0 + row00 - row11 - row22, 0.0));
-  double qy = 0.5 * Sqrt(Max(1.0 - row00 + row11 - row22, 0.0));
-  double qz = 0.5 * Sqrt(Max(1.0 - row00 - row11 + row22, 0.0));
-  double qw = 0.5 * Sqrt(Max(1.0 + row00 + row11 + row22, 0.0));
+  double qx = 0.5 * Sqrt(max(1.0 + row00 - row11 - row22, 0.0));
+  double qy = 0.5 * Sqrt(max(1.0 - row00 + row11 - row22, 0.0));
+  double qz = 0.5 * Sqrt(max(1.0 - row00 - row11 + row22, 0.0));
+  double qw = 0.5 * Sqrt(max(1.0 + row00 + row11 + row22, 0.0));
 
   if (rows[2].y > rows[1].z)
     qx = -qx;
@@ -1405,7 +1405,7 @@ bool IsNear(const Xform3& lhs, const Xform3& rhs, float tolerance) {
   return true;
 }
 
-bool TryLerp(Xform3& out, const Xform3& x, const Xform3& y, double t) {
+bool Trylerp(Xform3& out, const Xform3& x, const Xform3& y, double t) {
   if (t == 0) {
     out = x;
     return true;
@@ -1419,7 +1419,7 @@ bool TryLerp(Xform3& out, const Xform3& x, const Xform3& y, double t) {
   if (!x.Decompose(x_decomp) || !y.Decompose(y_decomp))
     return false;
 
-  DecomposedXform3 out_decomp = Lerp(x_decomp, y_decomp, t);
+  DecomposedXform3 out_decomp = lerp(x_decomp, y_decomp, t);
   out.Recompose(out_decomp);
   return true;
 }
@@ -1448,7 +1448,7 @@ void Combine(float* out, const float* a, const float* b, double scale_a, double 
 
 } // namespace
 
-DecomposedXform3 Lerp(
+DecomposedXform3 lerp(
     const DecomposedXform3& from, const DecomposedXform3& to,
     double progress) {
   // NOTE: Be aware |out| can be equal to |&from| or |&to|, but since we modify each component
@@ -1457,7 +1457,7 @@ DecomposedXform3 Lerp(
   double scaleb = progress;
 
   DecomposedXform3 out(DecomposedXform3::SkipInit);
-  out.translate = Lerp(from.translate, to.translate, progress);
+  out.translate = lerp(from.translate, to.translate, progress);
   Combine<3>(out.scale, from.scale, to.scale, scalea, scaleb);
   Combine<3>(out.shear, from.shear, to.shear, scalea, scaleb);
   Combine<4>(out.perspective, from.perspective, to.perspective, scalea, scaleb);

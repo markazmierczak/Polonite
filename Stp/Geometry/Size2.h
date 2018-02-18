@@ -30,15 +30,15 @@ struct BASE_EXPORT IntSize2 {
   int height;
 };
 
-inline IntSize2 Min(const IntSize2& lhs, const IntSize2& rhs) {
-  return IntSize2(Min(lhs.width, rhs.width), Min(lhs.height, rhs.height));
+inline IntSize2 min(const IntSize2& lhs, const IntSize2& rhs) {
+  return IntSize2(min(lhs.width, rhs.width), min(lhs.height, rhs.height));
 }
 
-inline IntSize2 Max(const IntSize2& lhs, const IntSize2& rhs) {
-  return IntSize2(Max(lhs.width, rhs.width), Max(lhs.height, rhs.height));
+inline IntSize2 max(const IntSize2& lhs, const IntSize2& rhs) {
+  return IntSize2(max(lhs.width, rhs.width), max(lhs.height, rhs.height));
 }
 
-BASE_EXPORT IntSize2 Lerp(const IntSize2& a, const IntSize2& b, double t);
+BASE_EXPORT IntSize2 lerp(const IntSize2& a, const IntSize2& b, double t);
 
 } // namespace stp
 

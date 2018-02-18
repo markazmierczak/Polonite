@@ -35,7 +35,7 @@ inline void aligned_free(void* ptr) noexcept {
 template<typename TValue, typename TSize>
 inline TValue* TryAlignedAllocate(TSize count) noexcept {
   ASSERT(count > 0);
-  auto ucount = ToUnsigned(count);
+  auto ucount = toUnsigned(count);
   if (UNLIKELY(Limits<size_t>::Max / sizeof(TValue) < ucount))
     return nullptr;
   return (TValue*)detail::aligned_malloc(count * sizeof(TValue), alignof(TValue));
@@ -57,7 +57,7 @@ inline TValue* AlignedAllocate(TSize count) {
 template<typename T>
 class AlignedAllocator {
  public:
-  static void* allocate(int size) { return detail::aligned_malloc(ToUnsigned(size), alignof(T)); }
+  static void* allocate(int size) { return detail::aligned_malloc(toUnsigned(size), alignof(T)); }
   static void deallocate(void* ptr, int size) { detail::aligned_free(ptr); }
 };
 

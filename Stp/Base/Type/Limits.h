@@ -22,16 +22,16 @@ namespace stp {
 namespace detail {
 
 // MSVC requires a proxy.
-constexpr float GetInfValueForFloat() { return __builtin_huge_valf(); }
-constexpr float GetNaNValueForFloat() { return __builtin_nanf("0"); }
-constexpr double GetInfValueForDouble() { return __builtin_huge_val(); }
-constexpr double GetNaNValueForDouble() { return __builtin_nan("0"); }
+constexpr float getInfValueForFloat() { return __builtin_huge_valf(); }
+constexpr float getNaNValueForFloat() { return __builtin_nanf("0"); }
+constexpr double getInfValueForDouble() { return __builtin_huge_val(); }
+constexpr double getNaNValueForDouble() { return __builtin_nan("0"); }
 #if COMPILER(MSVC) && !COMPILER(CLANG)
-constexpr long double GetInfValueForLongDouble() { return __builtin_huge_val(); }
-constexpr long double GetNaNValueForLongDouble() { return __builtin_nan("0"); }
+constexpr long double getInfValueForLongDouble() { return __builtin_huge_val(); }
+constexpr long double getNaNValueForLongDouble() { return __builtin_nan("0"); }
 #else
-constexpr long double GetInfValueForLongDouble() { return __builtin_huge_vall(); }
-constexpr long double GetNaNValueForLongDouble() { return __builtin_nanl("0"); }
+constexpr long double getInfValueForLongDouble() { return __builtin_huge_vall(); }
+constexpr long double getNaNValueForLongDouble() { return __builtin_nanl("0"); }
 #endif
 
 } // namespace detail
@@ -136,8 +136,8 @@ struct BASE_EXPORT Limits<float> {
   static constexpr Type Epsilon = FLT_EPSILON;
   static constexpr Type SmallestNormal = FLT_MIN;
 
-  static constexpr Type Infinity = detail::GetInfValueForFloat();
-  static constexpr Type NaN = detail::GetNaNValueForFloat();
+  static constexpr Type Infinity = detail::getInfValueForFloat();
+  static constexpr Type NaN = detail::getNaNValueForFloat();
 };
 
 template<>
@@ -155,8 +155,8 @@ struct BASE_EXPORT Limits<double> {
   static constexpr Type Epsilon = DBL_EPSILON;
   static constexpr Type SmallestNormal = DBL_MIN;
 
-  static constexpr Type Infinity = detail::GetInfValueForDouble();
-  static constexpr Type NaN = detail::GetNaNValueForDouble();
+  static constexpr Type Infinity = detail::getInfValueForDouble();
+  static constexpr Type NaN = detail::getNaNValueForDouble();
 };
 
 template<>
@@ -174,22 +174,22 @@ struct BASE_EXPORT Limits<long double> {
   static constexpr Type Epsilon = LDBL_EPSILON;
   static constexpr Type SmallestNormal = LDBL_MIN;
 
-  static constexpr Type Infinity = detail::GetInfValueForLongDouble();
-  static constexpr Type NaN = detail::GetNaNValueForLongDouble();
+  static constexpr Type Infinity = detail::getInfValueForLongDouble();
+  static constexpr Type NaN = detail::getNaNValueForLongDouble();
 };
 
 template<typename T, TEnableIf<TIsFloatingPoint<T>>* = nullptr>
-inline bool IsNaN(T x) {
+inline bool isNaN(T x) {
   return isnan(x) != 0;
 }
 
 template<typename T, TEnableIf<TIsFloatingPoint<T>>* = nullptr>
-inline bool IsInfinity(T x) {
+inline bool isInfinity(T x) {
   return isinf(x) != 0;
 }
 
 template<typename T, TEnableIf<TIsFloatingPoint<T>>* = nullptr>
-inline bool IsFinite(T x) {
+inline bool isFinite(T x) {
   return isfinite(x) != 0;
 }
 

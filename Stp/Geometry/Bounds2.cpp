@@ -44,10 +44,10 @@ bool Bounds2::Intersects(const Bounds2& lhs, const Bounds2& rhs) {
 }
 
 bool IntBounds2::TryIntersect(const IntBounds2& other) {
-  auto minx = Max(min.x, other.min.x);
-  auto maxx = Min(max.x, other.max.x);
-  auto miny = Max(min.y, other.min.y);
-  auto maxy = Min(max.y, other.max.y);
+  auto minx = max(min.x, other.min.x);
+  auto maxx = min(max.x, other.max.x);
+  auto miny = max(min.y, other.min.y);
+  auto maxy = min(max.y, other.max.y);
   if (minx >= maxx || miny >= maxy)
     return false;
 
@@ -57,10 +57,10 @@ bool IntBounds2::TryIntersect(const IntBounds2& other) {
 }
 
 bool Bounds2::TryIntersect(const Bounds2& other) {
-  auto minx = Max(min.x, other.min.x);
-  auto maxx = Min(max.x, other.max.x);
-  auto miny = Max(min.y, other.min.y);
-  auto maxy = Min(max.y, other.max.y);
+  auto minx = max(min.x, other.min.x);
+  auto maxx = min(max.x, other.max.x);
+  auto miny = max(min.y, other.min.y);
+  auto maxy = min(max.y, other.max.y);
   if (minx >= maxx || miny >= maxy)
     return false;
 
@@ -76,10 +76,10 @@ void IntBounds2::Unite(const IntBounds2& other) {
   if (IsEmpty()) {
     *this = other;
   } else {
-    min.x = Min(min.x, other.min.x);
-    min.y = Min(min.y, other.min.y);
-    max.x = Max(max.x, other.max.x);
-    max.y = Max(max.y, other.max.y);
+    min.x = min(min.x, other.min.x);
+    min.y = min(min.y, other.min.y);
+    max.x = max(max.x, other.max.x);
+    max.y = max(max.y, other.max.y);
   }
 }
 
@@ -90,10 +90,10 @@ void Bounds2::Unite(const Bounds2& other) {
   if (IsEmpty()) {
     *this = other;
   } else {
-    min.x = Min(min.x, other.min.x);
-    min.y = Min(min.y, other.min.y);
-    max.x = Max(max.x, other.max.x);
-    max.y = Max(max.y, other.max.y);
+    min.x = min(min.x, other.min.x);
+    min.y = min(min.y, other.min.y);
+    max.x = max(max.x, other.max.x);
+    max.y = max(max.y, other.max.y);
   }
 }
 
@@ -110,10 +110,10 @@ static inline T OfPointsTemplate(const P points[], int count) {
   for (int i = 0; i < count; ++i) {
     auto x = points[i].x;
     auto y = points[i].y;
-    rx = Min(rx, x);
-    ry = Min(ry, y);
-    rr = Max(rr, x);
-    rb = Max(rb, y);
+    rx = min(rx, x);
+    ry = min(ry, y);
+    rr = max(rr, x);
+    rb = max(rb, y);
   }
   return T(rx, ry, rr, rb);
 }

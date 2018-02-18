@@ -421,7 +421,7 @@ TEST(Xform3Test, BlendTranslate) {
     to.Translate(1, 1, 1);
     double t = i / 9.0;
     Xform3 res(Xform3::SkipInit);
-    ASSERT_TRUE(TryLerp(res, from, to, t));
+    ASSERT_TRUE(Trylerp(res, from, to, t));
     EXPECT_FLOAT_EQ(t, res.Get(0, 3));
     EXPECT_FLOAT_EQ(t, res.Get(1, 3));
     EXPECT_FLOAT_EQ(t, res.Get(2, 3));
@@ -442,7 +442,7 @@ TEST(Xform3Test, BlendRotate) {
       to.RotateAbout(axis, Angle::DegreesToRadians(90));
       double t = i / 9.0;
       Xform3 res(Xform3::SkipInit);
-      ASSERT_TRUE(TryLerp(res, from, to, t));
+      ASSERT_TRUE(Trylerp(res, from, to, t));
 
       Xform3 expected = Xform3::Identity();
       expected.RotateAbout(axis, Angle::DegreesToRadians(90 * t));
@@ -467,7 +467,7 @@ TEST(Xform3Test, CanBlend180DegreeRotation) {
 
       double t = i / 9.0;
       Xform3 res(Xform3::SkipInit);
-      ASSERT_TRUE(TryLerp(res, from, to, t));
+      ASSERT_TRUE(Trylerp(res, from, to, t));
 
       // A 180 degree rotation is exactly opposite on the sphere, therefore
       // either great circle arc to it is equivalent (and numerical precision
@@ -491,7 +491,7 @@ TEST(Xform3Test, BlendScale) {
     to.Scale(5, 4, 3);
     double t = i / 9.0;
     Xform3 res(Xform3::SkipInit);
-    ASSERT_TRUE(TryLerp(res, from, to, t));
+    ASSERT_TRUE(Trylerp(res, from, to, t));
     EXPECT_FLOAT_EQ(t * 4 + 1, res.Get(0, 0));
     EXPECT_FLOAT_EQ(t * 3 + 1, res.Get(1, 1));
     EXPECT_FLOAT_EQ(t * 2 + 1, res.Get(2, 2));
@@ -507,7 +507,7 @@ TEST(Xform3Test, BlendSkew) {
     Xform3 expected = Xform3::Identity();
     expected.Skew(t * 10, t * 5);
     Xform3 res(Xform3::SkipInit);
-    ASSERT_TRUE(TryLerp(res, from, to, t));
+    ASSERT_TRUE(Trylerp(res, from, to, t));
     EXPECT_TRUE(MatricesAreNearlyEqual(expected, res));
   }
 }
@@ -521,7 +521,7 @@ TEST(Xform3Test, ExtrapolateSkew) {
     Xform3 expected = Xform3::Identity();
     expected.Skew(t * 20, t * 0);
     Xform3 res(Xform3::SkipInit);
-    ASSERT_TRUE(TryLerp(res, from, to, t));
+    ASSERT_TRUE(Trylerp(res, from, to, t));
     EXPECT_TRUE(MatricesAreNearlyEqual(expected, res));
   }
 }
@@ -534,11 +534,11 @@ TEST(Xform3Test, BlendPerspective) {
     Xform3 to = Xform3::Identity();
     to.ApplyPerspectiveDepth(800);
     double t = i;
-    double depth = 1.0 / Lerp(1.0 / 200, 1.0 / 800, t);
+    double depth = 1.0 / lerp(1.0 / 200, 1.0 / 800, t);
     Xform3 expected = Xform3::Identity();
     expected.ApplyPerspectiveDepth(depth);
     Xform3 res(Xform3::SkipInit);
-    ASSERT_TRUE(TryLerp(res, from, to, t));
+    ASSERT_TRUE(Trylerp(res, from, to, t));
     EXPECT_TRUE(MatricesAreNearlyEqual(expected, res));
   }
 }
@@ -547,7 +547,7 @@ TEST(Xform3Test, BlendIdentity) {
   Xform3 from = Xform3::Identity();
   Xform3 to = Xform3::Identity();
   Xform3 res(Xform3::SkipInit);
-  ASSERT_TRUE(TryLerp(res, from, to, 0.5));
+  ASSERT_TRUE(Trylerp(res, from, to, 0.5));
   EXPECT_EQ(to, res);
 }
 
@@ -556,7 +556,7 @@ TEST(Xform3Test, CannotBlendSingularMatrix) {
   Xform3 to = Xform3::Identity();
   to.Set(3, 3, 0);
   Xform3 res(Xform3::SkipInit);
-  EXPECT_FALSE(TryLerp(res, from, to, 0.5));
+  EXPECT_FALSE(Trylerp(res, from, to, 0.5));
 }
 
 TEST(Xform3Test, VerifyBlendForTranslation) {
@@ -567,12 +567,12 @@ TEST(Xform3Test, VerifyBlendForTranslation) {
 
   to.Translate(200.0, 100.0, 300.0);
   Xform3 res(Xform3::SkipInit);
-  ASSERT_TRUE(TryLerp(res, from, to, 0.0));
+  ASSERT_TRUE(Trylerp(res, from, to, 0.0));
   EXPECT_EQ(from, res);
 
   to.SetIdentity();
   to.Translate(200.0, 100.0, 300.0);
-  ASSERT_TRUE(TryLerp(res, from, to, 0.25));
+  ASSERT_TRUE(Trylerp(res, from, to, 0.25));
   EXPECT_ROW1_EQ(1.0f, 0.0f, 0.0f, 125.0f, res);
   EXPECT_ROW2_EQ(0.0f, 1.0f, 0.0f, 175.0f, res);
   EXPECT_ROW3_EQ(0.0f, 0.0f, 1.0f, 150.0f, res);
@@ -580,7 +580,7 @@ TEST(Xform3Test, VerifyBlendForTranslation) {
 
   to.SetIdentity();
   to.Translate(200.0, 100.0, 300.0);
-  ASSERT_TRUE(TryLerp(res, from, to, 0.5));
+  ASSERT_TRUE(Trylerp(res, from, to, 0.5));
   EXPECT_ROW1_EQ(1.0f, 0.0f, 0.0f, 150.0f, res);
   EXPECT_ROW2_EQ(0.0f, 1.0f, 0.0f, 150.0f, res);
   EXPECT_ROW3_EQ(0.0f, 0.0f, 1.0f, 200.0f, res);
@@ -588,7 +588,7 @@ TEST(Xform3Test, VerifyBlendForTranslation) {
 
   to.SetIdentity();
   to.Translate(200.0, 100.0, 300.0);
-  ASSERT_TRUE(TryLerp(res, from, to, 1.0));
+  ASSERT_TRUE(Trylerp(res, from, to, 1.0));
   EXPECT_ROW1_EQ(1.0f, 0.0f, 0.0f, 200.0f, res);
   EXPECT_ROW2_EQ(0.0f, 1.0f, 0.0f, 100.0f, res);
   EXPECT_ROW3_EQ(0.0f, 0.0f, 1.0f, 300.0f, res);
@@ -603,12 +603,12 @@ TEST(Xform3Test, VerifyBlendForScale) {
 
   to.Scale(200.0, 100.0, 300.0);
   Xform3 res(Xform3::SkipInit);
-  ASSERT_TRUE(TryLerp(res, from, to, 0.0));
+  ASSERT_TRUE(Trylerp(res, from, to, 0.0));
   EXPECT_EQ(from, res);
 
   to.SetIdentity();
   to.Scale(200.0, 100.0, 300.0);
-  ASSERT_TRUE(TryLerp(res, from, to, 0.25));
+  ASSERT_TRUE(Trylerp(res, from, to, 0.25));
   EXPECT_ROW1_EQ(125.0f, 0.0f,  0.0f,  0.0f, res);
   EXPECT_ROW2_EQ(0.0f,  175.0f, 0.0f,  0.0f, res);
   EXPECT_ROW3_EQ(0.0f,   0.0f, 150.0f, 0.0f, res);
@@ -616,7 +616,7 @@ TEST(Xform3Test, VerifyBlendForScale) {
 
   to.SetIdentity();
   to.Scale(200.0, 100.0, 300.0);
-  ASSERT_TRUE(TryLerp(res, from, to, 0.5));
+  ASSERT_TRUE(Trylerp(res, from, to, 0.5));
   EXPECT_ROW1_EQ(150.0f, 0.0f,  0.0f,  0.0f, res);
   EXPECT_ROW2_EQ(0.0f,  150.0f, 0.0f,  0.0f, res);
   EXPECT_ROW3_EQ(0.0f,   0.0f, 200.0f, 0.0f, res);
@@ -624,7 +624,7 @@ TEST(Xform3Test, VerifyBlendForScale) {
 
   to.SetIdentity();
   to.Scale(200.0, 100.0, 300.0);
-  ASSERT_TRUE(TryLerp(res, from, to, 1.0));
+  ASSERT_TRUE(Trylerp(res, from, to, 1.0));
   EXPECT_ROW1_EQ(200.0f, 0.0f,  0.0f,  0.0f, res);
   EXPECT_ROW2_EQ(0.0f,  100.0f, 0.0f,  0.0f, res);
   EXPECT_ROW3_EQ(0.0f,   0.0f, 300.0f, 0.0f, res);
@@ -641,12 +641,12 @@ TEST(Xform3Test, VerifyBlendForSkew) {
   to.Skew(45.0, 0.0);
 
   Xform3 res(Xform3::SkipInit);
-  ASSERT_TRUE(TryLerp(res, from, to, 0.0));
+  ASSERT_TRUE(Trylerp(res, from, to, 0.0));
   EXPECT_EQ(from, res);
 
   to.SetIdentity();
   to.Skew(45.0, 0.0);
-  ASSERT_TRUE(TryLerp(res, from, to, 0.5));
+  ASSERT_TRUE(Trylerp(res, from, to, 0.5));
   EXPECT_ROW1_EQ(1.0f, 0.5f, 0.0f, 0.0f, res);
   EXPECT_ROW2_EQ(0.0f, 1.0f, 0.0f, 0.0f, res);
   EXPECT_ROW3_EQ(0.0f, 0.0f, 1.0f, 0.0f, res);
@@ -654,7 +654,7 @@ TEST(Xform3Test, VerifyBlendForSkew) {
 
   to.SetIdentity();
   to.Skew(45.0, 0.0);
-  ASSERT_TRUE(TryLerp(res, from, to, 0.25));
+  ASSERT_TRUE(Trylerp(res, from, to, 0.25));
   EXPECT_ROW1_EQ(1.0f, 0.25f, 0.0f, 0.0f, res);
   EXPECT_ROW2_EQ(0.0f, 1.0f,  0.0f, 0.0f, res);
   EXPECT_ROW3_EQ(0.0f, 0.0f,  1.0f, 0.0f, res);
@@ -662,7 +662,7 @@ TEST(Xform3Test, VerifyBlendForSkew) {
 
   to.SetIdentity();
   to.Skew(45.0, 0.0);
-  ASSERT_TRUE(TryLerp(res, from, to, 1.0));
+  ASSERT_TRUE(Trylerp(res, from, to, 1.0));
   EXPECT_ROW1_EQ(1.0f, 1.0f, 0.0f, 0.0f, res);
   EXPECT_ROW2_EQ(0.0f, 1.0f, 0.0f, 0.0f, res);
   EXPECT_ROW3_EQ(0.0f, 0.0f, 1.0f, 0.0f, res);
@@ -691,12 +691,12 @@ TEST(Xform3Test, VerifyBlendForSkew) {
   to.SetIdentity();
 
   to.Skew(0.0, 45.0);
-  ASSERT_TRUE(TryLerp(res, from, to, 0.0));
+  ASSERT_TRUE(Trylerp(res, from, to, 0.0));
   EXPECT_EQ(from, res);
 
   to.SetIdentity();
   to.Skew(0.0, 45.0);
-  ASSERT_TRUE(TryLerp(res, from, to, 0.25));
+  ASSERT_TRUE(Trylerp(res, from, to, 0.25));
   EXPECT_ROW1_NEAR(
       1.0823489449280947471976333,
       0.0464370719145053845178239,
@@ -716,7 +716,7 @@ TEST(Xform3Test, VerifyBlendForSkew) {
 
   to.SetIdentity();
   to.Skew(0.0, 45.0);
-  ASSERT_TRUE(TryLerp(res, from, to, 0.5));
+  ASSERT_TRUE(Trylerp(res, from, to, 0.5));
   EXPECT_ROW1_NEAR(
       1.1152212925809066312865525,
       0.0676495144007326631996335,
@@ -736,7 +736,7 @@ TEST(Xform3Test, VerifyBlendForSkew) {
 
   to.SetIdentity();
   to.Skew(0.0, 45.0);
-  ASSERT_TRUE(TryLerp(res, from, to, 1.0));
+  ASSERT_TRUE(Trylerp(res, from, to, 1.0));
   EXPECT_ROW1_NEAR(1.0, 0.0, 0.0, 0.0, res, LOOSE_ERROR_THRESHOLD);
   EXPECT_ROW2_NEAR(1.0, 1.0, 0.0, 0.0, res, LOOSE_ERROR_THRESHOLD);
   EXPECT_ROW3_EQ(0.0f, 0.0f, 1.0f, 0.0f, res);
@@ -757,13 +757,13 @@ TEST(Xform3Test, VerifyBlendForRotationAboutX) {
   to.RotateAboutUnit(Vector3(1.0, 0.0, 0.0), Angle::DegreesToRadians(90.0));
 
   Xform3 res(Xform3::SkipInit);
-  ASSERT_TRUE(TryLerp(res, from, to, 0.0));
+  ASSERT_TRUE(Trylerp(res, from, to, 0.0));
   EXPECT_EQ(from, res);
 
   double expected_rotation_angle = Angle::DegreesToRadians(22.5);
   to.SetIdentity();
   to.RotateAboutUnit(Vector3(1.0, 0.0, 0.0), Angle::DegreesToRadians(90.0));
-  ASSERT_TRUE(TryLerp(res, from, to, 0.25));
+  ASSERT_TRUE(Trylerp(res, from, to, 0.25));
   EXPECT_ROW1_NEAR(1.0, 0.0, 0.0, 0.0, res, ERROR_THRESHOLD);
   EXPECT_ROW2_NEAR(
       0.0,
@@ -782,7 +782,7 @@ TEST(Xform3Test, VerifyBlendForRotationAboutX) {
   expected_rotation_angle = Angle::DegreesToRadians(45.0);
   to.SetIdentity();
   to.RotateAboutUnit(Vector3(1.0, 0.0, 0.0), Angle::DegreesToRadians(90.0));
-  ASSERT_TRUE(TryLerp(res, from, to, 0.5));
+  ASSERT_TRUE(Trylerp(res, from, to, 0.5));
   EXPECT_ROW1_NEAR(1.0, 0.0, 0.0, 0.0, res, ERROR_THRESHOLD);
   EXPECT_ROW2_NEAR(
       0.0,
@@ -800,7 +800,7 @@ TEST(Xform3Test, VerifyBlendForRotationAboutX) {
 
   to.SetIdentity();
   to.RotateAboutUnit(Vector3(1.0, 0.0, 0.0), Angle::DegreesToRadians(90.0));
-  ASSERT_TRUE(TryLerp(res, from, to, 1.0));
+  ASSERT_TRUE(Trylerp(res, from, to, 1.0));
   EXPECT_ROW1_NEAR(1.0, 0.0,  0.0, 0.0, res, ERROR_THRESHOLD);
   EXPECT_ROW2_NEAR(0.0, 0.0, -1.0, 0.0, res, ERROR_THRESHOLD);
   EXPECT_ROW3_NEAR(0.0, 1.0,  0.0, 0.0, res, ERROR_THRESHOLD);
@@ -816,13 +816,13 @@ TEST(Xform3Test, VerifyBlendForRotationAboutY) {
   to.RotateAboutUnit(Vector3(0.0, 1.0, 0.0), Angle::DegreesToRadians(90.0));
 
   Xform3 res(Xform3::SkipInit);
-  ASSERT_TRUE(TryLerp(res, from, to, 0.0));
+  ASSERT_TRUE(Trylerp(res, from, to, 0.0));
   EXPECT_EQ(from, res);
 
   double expected_rotation_angle = Angle::DegreesToRadians(22.5);
   to.SetIdentity();
   to.RotateAboutUnit(Vector3(0.0, 1.0, 0.0), Angle::DegreesToRadians(90.0));
-  ASSERT_TRUE(TryLerp(res, from, to, 0.25));
+  ASSERT_TRUE(Trylerp(res, from, to, 0.25));
   EXPECT_ROW1_NEAR(
       Cos(expected_rotation_angle),
       0.0,
@@ -843,7 +843,7 @@ TEST(Xform3Test, VerifyBlendForRotationAboutY) {
   expected_rotation_angle = Angle::DegreesToRadians(45.0);
   to.SetIdentity();
   to.RotateAboutUnit(Vector3(0.0, 1.0, 0.0), Angle::DegreesToRadians(90.0));
-  ASSERT_TRUE(TryLerp(res, from, to, 0.5));
+  ASSERT_TRUE(Trylerp(res, from, to, 0.5));
 
   EXPECT_ROW1_NEAR(
       Cos(expected_rotation_angle),
@@ -864,7 +864,7 @@ TEST(Xform3Test, VerifyBlendForRotationAboutY) {
 
   to.SetIdentity();
   to.RotateAboutUnit(Vector3(0.0, 1.0, 0.0), Angle::DegreesToRadians(90.0));
-  ASSERT_TRUE(TryLerp(res, from, to, 1.0));
+  ASSERT_TRUE(Trylerp(res, from, to, 1.0));
   EXPECT_ROW1_NEAR(0.0,  0.0, 1.0, 0.0, res, ERROR_THRESHOLD);
   EXPECT_ROW2_NEAR(0.0,  1.0, 0.0, 0.0, res, ERROR_THRESHOLD);
   EXPECT_ROW3_NEAR(-1.0, 0.0, 0.0, 0.0, res, ERROR_THRESHOLD);
@@ -880,13 +880,13 @@ TEST(Xform3Test, VerifyBlendForRotationAboutZ) {
   to.RotateAboutUnit(Vector3(0.0, 0.0, 1.0), Angle::DegreesToRadians(90.0));
 
   Xform3 res(Xform3::SkipInit);
-  ASSERT_TRUE(TryLerp(res, from, to, 0.0));
+  ASSERT_TRUE(Trylerp(res, from, to, 0.0));
   EXPECT_EQ(from, res);
 
   double expected_rotation_angle = Angle::DegreesToRadians(22.5);
   to.SetIdentity();
   to.RotateAboutUnit(Vector3(0.0, 0.0, 1.0), Angle::DegreesToRadians(90.0));
-  ASSERT_TRUE(TryLerp(res, from, to, 0.25));
+  ASSERT_TRUE(Trylerp(res, from, to, 0.25));
   EXPECT_ROW1_NEAR(
       Cos(expected_rotation_angle),
       -Sin(expected_rotation_angle),
@@ -907,7 +907,7 @@ TEST(Xform3Test, VerifyBlendForRotationAboutZ) {
   expected_rotation_angle = Angle::DegreesToRadians(45.0);
   to.SetIdentity();
   to.RotateAboutUnit(Vector3(0.0, 0.0, 1.0), Angle::DegreesToRadians(90.0));
-  ASSERT_TRUE(TryLerp(res, from, to, 0.5));
+  ASSERT_TRUE(Trylerp(res, from, to, 0.5));
   EXPECT_ROW1_NEAR(
       Cos(expected_rotation_angle),
       -Sin(expected_rotation_angle),
@@ -927,7 +927,7 @@ TEST(Xform3Test, VerifyBlendForRotationAboutZ) {
 
   to.SetIdentity();
   to.RotateAboutUnit(Vector3(0.0, 0.0, 1.0), Angle::DegreesToRadians(90.0));
-  ASSERT_TRUE(TryLerp(res, from, to, 1.0));
+  ASSERT_TRUE(Trylerp(res, from, to, 1.0));
   EXPECT_ROW1_NEAR(0.0, -1.0, 0.0, 0.0, res, ERROR_THRESHOLD);
   EXPECT_ROW2_NEAR(1.0,  0.0, 0.0, 0.0, res, ERROR_THRESHOLD);
   EXPECT_ROW3_NEAR(0.0,  0.0, 1.0, 0.0, res, ERROR_THRESHOLD);
@@ -957,14 +957,14 @@ TEST(Xform3Test, VerifyBlendForCompositeTransform) {
   to = expected_end_of_animation;
 
   Xform3 res(Xform3::SkipInit);
-  ASSERT_TRUE(TryLerp(res, from, to, 0.0));
+  ASSERT_TRUE(Trylerp(res, from, to, 0.0));
   EXPECT_EQ(from, res);
 
   to = expected_end_of_animation;
   // We short circuit if blend is >= 1, so to check the numerics, we will
   // check that we get close to what we expect when we're nearly done
   // interpolating.
-  ASSERT_TRUE(TryLerp(res, from, to, 0.9999f));
+  ASSERT_TRUE(Trylerp(res, from, to, 0.9999f));
 
   // Recomposing the matrix results in a normalized matrix, so to verify we
   // need to normalize the expected_end_of_animation before comparing elements.

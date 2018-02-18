@@ -53,7 +53,7 @@ class ProcStats : public ProcCommon {
 
 template<typename T>
 inline bool ProcStats::Reader::GetFieldAsInt(Field field, T& value) {
-  return TryParse(GetField(field), value);
+  return tryParse(GetField(field), value);
 }
 
 } // namespace linux

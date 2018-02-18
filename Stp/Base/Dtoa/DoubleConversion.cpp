@@ -184,7 +184,7 @@ bool DoubleToStringConverter::ToShortest(double value,
       (exponent < decimal_in_shortest_high_)) {
     CreateDecimalRepresentation(decimal_rep, decimal_rep_length,
                                 decimal_point,
-                                Max(0, decimal_rep_length - decimal_point),
+                                max(0, decimal_rep_length - decimal_point),
                                 result_builder);
   } else {
     CreateExponentialRepresentation(decimal_rep, decimal_rep_length, exponent,
@@ -327,7 +327,7 @@ bool DoubleToStringConverter::ToPrecision(
                                     result_builder);
   } else {
     CreateDecimalRepresentation(decimal_rep, decimal_rep_length, decimal_point,
-                                Max(0, precision - decimal_point),
+                                max(0, precision - decimal_point),
                                 result_builder);
   }
   return true;

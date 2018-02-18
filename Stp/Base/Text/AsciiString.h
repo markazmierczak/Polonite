@@ -22,7 +22,7 @@ inline bool EqualsIgnoreCaseAscii(StringSpan lhs, StringSpan rhs) {
 }
 
 inline int CompareIgnoreCaseAscii(StringSpan lhs, StringSpan rhs) {
-  int min_size = Min(lhs.size(), rhs.size());
+  int min_size = min(lhs.size(), rhs.size());
   int rv = detail::CompareIgnoreCaseAscii(lhs.data(), rhs.data(), min_size);
   return rv != 0 ? rv : (lhs.size() - rhs.size());
 }

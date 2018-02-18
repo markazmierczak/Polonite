@@ -86,7 +86,7 @@ class BASE_EXPORT LinearAllocator {
 template<typename TValue, typename TSize>
 inline TValue* TryAllocate(LinearAllocator& allocator, TSize count) {
   ASSERT(count > 0);
-  auto ucount = ToUnsigned(count);
+  auto ucount = toUnsigned(count);
   if (UNLIKELY(Limits<size_t>::Max / sizeof(TValue) < ucount))
     return nullptr;
   return static_cast<TValue*>(

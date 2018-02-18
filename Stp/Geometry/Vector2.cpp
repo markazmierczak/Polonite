@@ -100,16 +100,16 @@ bool IsNear(const Vector2& lhs, const Vector2& rhs, float tolerance) {
          IsNear(lhs.y, rhs.y, tolerance);
 }
 
-IntVector2 Lerp(const IntVector2& a, const IntVector2& b, double t) {
+IntVector2 lerp(const IntVector2& a, const IntVector2& b, double t) {
   return IntVector2(
-      Lerp(a.x, b.x, t),
-      Lerp(a.y, b.y, t));
+      lerp(a.x, b.x, t),
+      lerp(a.y, b.y, t));
 }
 
-Vector2 Lerp(const Vector2& a, const Vector2& b, double t) {
+Vector2 lerp(const Vector2& a, const Vector2& b, double t) {
   return Vector2(
-      Lerp(a.x, b.x, t),
-      Lerp(a.y, b.y, t));
+      lerp(a.x, b.x, t),
+      lerp(a.y, b.y, t));
 }
 
 } // namespace stp

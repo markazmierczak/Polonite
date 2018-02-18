@@ -24,7 +24,7 @@ time_t Time::ToTimeT() const {
 }
 
 Time Time::FromDoubleT(double dt) {
-  if (dt == 0 || IsNaN(dt))
+  if (dt == 0 || isNaN(dt))
     return Time();  // Preserve 0 so we can tell it doesn't exist.
   return UnixEpoch() + TimeDelta::FromSecondsF(dt);
 }

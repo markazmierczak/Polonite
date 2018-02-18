@@ -14,7 +14,7 @@ namespace stp {
 template<typename T>
 constexpr T ArithmeticShiftLeft(T x, int shift) {
   ASSERT(0 <= shift && shift < static_cast<int>(8 * sizeof(T)));
-  return static_cast<T>(ToUnsigned(x) << shift);
+  return static_cast<T>(toUnsigned(x) << shift);
 }
 
 template<typename T, TEnableIf<TIsInteger<T> && TIsUnsigned<T>>* = nullptr>

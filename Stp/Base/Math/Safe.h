@@ -259,12 +259,12 @@ template<typename T, typename U>
 constexpr auto LShift(T x, U y) {
   typedef decltype(x << y) ResultType;
   ASSERT(!ArithmeticOpOverflow<ResultType>::LShift(x, y));
-  return MakeSafe(static_cast<ResultType>(ToUnsigned(x) << y));
+  return MakeSafe(static_cast<ResultType>(toUnsigned(x) << y));
 }
 
 template<typename T, typename U>
 constexpr auto RShift(T x, U y) {
-  ASSERT(!IsNegative(y) && y < static_cast<U>(8 * sizeof(x)));
+  ASSERT(!isNegative(y) && y < static_cast<U>(8 * sizeof(x)));
   return MakeSafe(x >> y);
 }
 
@@ -367,19 +367,19 @@ struct CompareOp<TLhs, TRhs, ComparisonMethod::UnsignedLhs> {
   static bool Eq(TLhs x, TRhs y) {
     if (y < 0)
       return false;
-    return x == ToUnsigned(y);
+    return x == toUnsigned(y);
   }
   static bool Ne(TLhs x, TRhs y) { return !Eq(x, y); }
 
   static bool Gt(TLhs x, TRhs y) {
     if (y < 0)
       return true;
-    return x > ToUnsigned(y);
+    return x > toUnsigned(y);
   }
   static bool Lt(TLhs x, TRhs y) {
     if (y < 0)
       return false;
-    return x < ToUnsigned(y);
+    return x < toUnsigned(y);
   }
   static bool Le(TLhs x, TRhs y) { return !Gt(x, y); }
   static bool Ge(TLhs x, TRhs y) { return !Lt(x, y); }
@@ -390,19 +390,19 @@ struct CompareOp<TLhs, TRhs, ComparisonMethod::UnsignedRhs> {
   static bool Eq(TLhs x, TRhs y) {
     if (x < 0)
       return false;
-    return ToUnsigned(x) == y;
+    return toUnsigned(x) == y;
   }
   static bool Ne(TLhs x, TRhs y) { return !Eq(x, y); }
 
   static bool Gt(TLhs x, TRhs y) {
     if (x < 0)
       return false;
-    return ToUnsigned(x) > y;
+    return toUnsigned(x) > y;
   }
   static bool Lt(TLhs x, TRhs y) {
     if (x < 0)
       return true;
-    return ToUnsigned(x) < y;
+    return toUnsigned(x) < y;
   }
   static bool Le(TLhs x, TRhs y) { return !Gt(x, y); }
   static bool Ge(TLhs x, TRhs y) { return !Lt(x, y); }
@@ -524,31 +524,31 @@ constexpr auto Abs(Safe<T> x) {
 }
 
 template<typename T>
-constexpr auto AbsToUnsigned(Safe<T> x) {
-  return MakeSafe(AbsToUnsigned(x.get()));
+constexpr auto absToUnsigned(Safe<T> x) {
+  return MakeSafe(absToUnsigned(x.get()));
 }
 
 template<typename T>
-constexpr auto ToUnsigned(Safe<T> x) {
+constexpr auto toUnsigned(Safe<T> x) {
   static_assert(TIsInteger<T>, "!");
-  ASSERT(!IsNegative(x.get()));
-  return MakeSafe(ToUnsigned(x.get()));
+  ASSERT(!isNegative(x.get()));
+  return MakeSafe(toUnsigned(x.get()));
 }
 template<typename T>
-constexpr Safe<TMakeSigned<T>> ToSigned(Safe<T> x) {
+constexpr Safe<TMakeSigned<T>> toSigned(Safe<T> x) {
   static_assert(TIsInteger<T>, "!");
   ASSERT(x.get() <= static_cast<T>(Limits<TMakeSigned<T>>::Max));
-  return MakeSafe(ToSigned(x.get()));
+  return MakeSafe(toSigned(x.get()));
 }
 
 template<typename T>
-constexpr bool IsNegative(Safe<T> x) {
-  return IsNegative(x.get());
+constexpr bool isNegative(Safe<T> x) {
+  return isNegative(x.get());
 }
 
 template<typename T>
-constexpr int Signum(Safe<T> x) {
-  return Signum(x.get());
+constexpr int signum(Safe<T> x) {
+  return signum(x.get());
 }
 
 template<typename TDst, typename TSrc>
@@ -557,8 +557,8 @@ constexpr Safe<TDst> AssertedCast(Safe<TSrc> x) {
 }
 
 template<typename T, typename U, TEnableIf<safe::TAreValidBinaryArguments<T, U>>* = nullptr>
-constexpr auto Lerp(T x, U y, double t) {
-  return MakeSafe(Lerp(safe::Extract(x), safe::Extract(y), t));
+constexpr auto lerp(T x, U y, double t) {
+  return MakeSafe(lerp(safe::Extract(x), safe::Extract(y), t));
 }
 
 } // namespace stp

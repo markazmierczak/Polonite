@@ -8,7 +8,7 @@
 
 namespace stp {
 
-inline bool TryParse(const char*& ptr, const char* end, double* out_value) {
+inline bool tryParse(const char*& ptr, const char* end, double* out_value) {
   return dtoa::StringToDoubleConverter::StringToDouble(
       ptr, end, out_value);
 }
@@ -21,7 +21,7 @@ inline StringSpan FloatToString(double value, FloatToStringBuffer buffer) {
   const dtoa::DoubleToStringConverter& converter =
       dtoa::DoubleToStringConverter::EcmaScriptConverter();
   converter.ToShortest(value, &builder);
-  return builder.Finalize();
+  return builder.finalizeHash();
 }
 
 BASE_EXPORT StringSpan FloatToFixedPrecisionString(

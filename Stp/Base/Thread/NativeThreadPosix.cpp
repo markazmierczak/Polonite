@@ -39,7 +39,7 @@ class PthreadAttributes {
   }
 
   void SetStackSize(int64_t size) {
-    int error = pthread_attr_setstacksize(&attr_, ToUnsigned(size));
+    int error = pthread_attr_setstacksize(&attr_, toUnsigned(size));
     ASSERT(error == 0, "invalid stack size for created thread");
     ALLOW_UNUSED_LOCAL(error);
   }

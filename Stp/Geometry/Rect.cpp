@@ -33,10 +33,10 @@ bool IntRect::TryIntersect(const IntRect& other) {
 }
 
 IntRect IntRect::Intersection(const IntRect& a, const IntRect& b) {
-  int rx = Max(a.left(), b.left());
-  int ry = Max(a.top(), b.top());
-  int rr = Min(a.right(), b.right());
-  int rb = Min(a.bottom(), b.bottom());
+  int rx = max(a.left(), b.left());
+  int ry = max(a.top(), b.top());
+  int rr = min(a.right(), b.right());
+  int rb = min(a.bottom(), b.bottom());
 
   // Return a clean empty rectangle for non-intersecting cases.
   if (rx >= rr || ry >= rb) {
@@ -58,10 +58,10 @@ void IntRect::Unite(const IntRect& other) {
     return;
   }
 
-  int rx = Min(left(), other.left());
-  int ry = Min(top(), other.top());
-  int rr = Max(right(), other.right());
-  int rb = Max(bottom(), other.bottom());
+  int rx = min(left(), other.left());
+  int ry = min(top(), other.top());
+  int rr = max(right(), other.right());
+  int rb = max(bottom(), other.bottom());
 
   position = IntPoint2(rx, ry);
   size = IntSize2(rr - rx, rb - ry);
@@ -100,17 +100,17 @@ void IntRect::Outset(const IntRectExtents& extents) {
 }
 
 IntRect IntRect::Enclose(const IntPoint2& a, const IntPoint2& b) {
-  int rx = Min(a.x, b.x);
-  int ry = Min(a.y, b.y);
-  int rr = Max(a.x, b.x);
-  int rb = Max(a.y, b.y);
+  int rx = min(a.x, b.x);
+  int ry = min(a.y, b.y);
+  int rr = max(a.x, b.x);
+  int rb = max(a.y, b.y);
   return IntRect(rx, ry, rr - rx, rb - ry);
 }
 
-IntRect Lerp(const IntRect& a, const IntRect& b, double t) {
+IntRect lerp(const IntRect& a, const IntRect& b, double t) {
   return IntRect(
-      Lerp(a.position, b.position, t),
-      Lerp(a.size, b.size, t));
+      lerp(a.position, b.position, t),
+      lerp(a.size, b.size, t));
 }
 
 void IntRect::ToFormat(TextWriter& out, const StringSpan& opts) const {

@@ -83,7 +83,7 @@ class Buffer {
   friend bool operator==(const Buffer& l, const SpanType& r) { return l.ToSpan() == r; }
   friend bool operator!=(const Buffer& l, const SpanType& r) { return l.ToSpan() != r; }
   friend int compare(const Buffer& l, const SpanType& r) { return compare(l.ToSpan(), r); }
-  friend HashCode Hash(const Buffer& x) { return HashBuffer(x.data_, x.size_); }
+  friend HashCode partialHash(const Buffer& x) { return hashBuffer(x.data_, x.size_); }
 
   friend void Format(TextWriter& out, const Buffer& x, const StringSpan& opts) {
     FormatBuffer(out, x.data_, x.size_, opts);
@@ -135,7 +135,7 @@ class Buffer {
   }
 
   int RecommendCapacity(int request) const {
-    return (capacity_ < MaxCapacity_ / 2) ? Max(request, capacity_ << 1) : MaxCapacity_;
+    return (capacity_ < MaxCapacity_ / 2) ? max(request, capacity_ << 1) : MaxCapacity_;
   }
 
   template<typename TAction>
@@ -154,8 +154,8 @@ inline Buffer MakeBuffer(const List<T>& list) { return Buffer(BufferSpan(list));
 
 template<typename T, TEnableIf<TIsTrivial<T>>* = nullptr>
 inline Buffer MakeBuffer(List<T>&& list) {
-  int size = static_cast<int>(ToUnsigned(list.size()) * sizeof(T));
-  int capacity = static_cast<int>(ToUnsigned(list.capacity()) * sizeof(T));
+  int size = static_cast<int>(toUnsigned(list.size()) * sizeof(T));
+  int capacity = static_cast<int>(toUnsigned(list.capacity()) * sizeof(T));
   return Buffer::AdoptMemory(list.ReleaseMemory(), size, capacity);
 }
 
@@ -189,7 +189,7 @@ inline void Buffer::Assign(SpanType src) {
     Clear();
     EnsureCapacity(src.size());
   }
-  ::memcpy(data_, src.data(), ToUnsigned(src.size()));
+  ::memcpy(data_, src.data(), toUnsigned(src.size()));
   SetSizeNoGrow(src.size());
 }
 
@@ -247,14 +247,14 @@ inline void* Buffer::AppendUninitialized(int n) {
 }
 
 inline int Buffer::AppendInitialized(int n) {
-  return n ? AddMany(n, [](void* dst, int count) { ::memset(dst, 0, ToUnsigned(count)); }) : size_;
+  return n ? AddMany(n, [](void* dst, int count) { ::memset(dst, 0, toUnsigned(count)); }) : size_;
 }
 
 inline int Buffer::Append(SpanType src) {
   ASSERT(!IsSourceOf(src));
   const void* src_d = src.data();
   return !src.IsEmpty() ? AddMany(src.size(), [src_d](void* dst, int count) {
-    ::memcpy(dst, src_d, ToUnsigned(count));
+    ::memcpy(dst, src_d, toUnsigned(count));
   }) : size_;
 }
 
@@ -280,7 +280,7 @@ inline void Buffer::InsertInitialized(int at, int n) {
   ASSERT(0 <= at && at <= size_);
   ASSERT(n >= 0);
   if (n)
-    InsertMany(at, n, [n](void* dst) { ::memset(dst, 0, ToUnsigned(n)); });
+    InsertMany(at, n, [n](void* dst) { ::memset(dst, 0, toUnsigned(n)); });
 }
 
 inline void Buffer::InsertRange(int at, SpanType src) {
@@ -288,7 +288,7 @@ inline void Buffer::InsertRange(int at, SpanType src) {
   ASSERT(!IsSourceOf(src));
   if (!src.IsEmpty()) {
     InsertMany(at, src.size(), [src](void* dst) {
-      ::memcpy(dst, src.data(), ToUnsigned(src.size()));
+      ::memcpy(dst, src.data(), toUnsigned(src.size()));
     });
   }
 }
@@ -302,7 +302,7 @@ inline void Buffer::InsertMany(int at, int n, TAction&& action) {
   int old_size = size_;
 
   if (capacity_ - old_size >= n) {
-    ::memmove(old_d + at + n, old_d + at, ToUnsigned(old_size - at));
+    ::memmove(old_d + at + n, old_d + at, toUnsigned(old_size - at));
     action(old_d + at);
     SetSizeNoGrow(old_size + n);
   } else {
@@ -318,8 +318,8 @@ inline void Buffer::InsertMany(int at, int n, TAction&& action) {
     size_ = new_size;
     capacity_ = new_capacity;
     if (old_capacity) {
-      ::memcpy(new_d, old_d, ToUnsigned(at));
-      ::memcpy(new_d + at + n, old_d + at, ToUnsigned(old_size - at));
+      ::memcpy(new_d, old_d, toUnsigned(at));
+      ::memcpy(new_d + at + n, old_d + at, toUnsigned(old_size - at));
       freeMemory(old_d);
     }
   }
@@ -330,7 +330,7 @@ inline void Buffer::RemoveRange(int at, int n) {
   ASSERT(0 <= n && n <= size_ - at);
   if (n) {
     int old_size = exchange(size_, size_ - n);
-    ::memcpy(data_ + at, data_ + at + n, ToUnsigned(old_size - n - at));
+    ::memcpy(data_ + at, data_ + at + n, toUnsigned(old_size - n - at));
   }
 }
 

@@ -36,9 +36,9 @@ static double BezierInterp(double x1, double x2, double x) {
   ASSERT(0.0 <= x1 && x1 <= 1.0);
   ASSERT(0.0 <= x2 && x2 <= 1.0);
 
-  x1 = Min(Max(x1, 0.0), 1.0);
-  x2 = Min(Max(x2, 0.0), 1.0);
-  x = Min(Max(x, 0.0), 1.0);
+  x1 = min(max(x1, 0.0), 1.0);
+  x2 = min(max(x2, 0.0), 1.0);
+  x = min(max(x, 0.0), 1.0);
 
   // We're just going to do bisection for now (for simplicity), but we could
   // easily do some newton steps if this turns out to be a bottleneck.
@@ -113,8 +113,8 @@ CubicBezier::Range CubicBezier::GetRange() const {
     sol_2 = EvalBezier(y1_, y2_, t_2);
 
   return Range {
-    Min(Min(0.0, sol_1), sol_2),
-    Max(Max(1.0, sol_1), sol_2)
+    min(min(0.0, sol_1), sol_2),
+    max(max(1.0, sol_1), sol_2)
   };
 }
 

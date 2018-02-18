@@ -186,18 +186,18 @@ TEST(SafeTest, SignConversion) {
   static_assert(TsAreSame<Safe<uint8_t>, TMakeUnsigned<Safe<int8_t>>>, "!");
 
   {
-    auto x = ToSigned(MakeSafe(3u));
+    auto x = toSigned(MakeSafe(3u));
     EXPECT_VALUE_OF_TYPE(x, Safe<int>);
     EXPECT_EQ(x, 3);
   }
   {
-    auto x = ToSigned(MakeSafe(-3));
+    auto x = toSigned(MakeSafe(-3));
     EXPECT_VALUE_OF_TYPE(x, Safe<int>);
     EXPECT_EQ(x, -3);
   }
 
   {
-    auto x = ToUnsigned(MakeSafe(3));
+    auto x = toUnsigned(MakeSafe(3));
     EXPECT_VALUE_OF_TYPE(x, Safe<unsigned int>);
     EXPECT_EQ(x, 3);
   }
@@ -214,7 +214,7 @@ TEST(SafeTest, Abs) {
   }
 
   {
-    auto x = AbsToUnsigned(MakeSafe(-3));
+    auto x = absToUnsigned(MakeSafe(-3));
     EXPECT_VALUE_OF_TYPE(x, Safe<unsigned int>);
     EXPECT_EQ(x, 3);
   }

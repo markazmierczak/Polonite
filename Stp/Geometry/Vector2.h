@@ -110,23 +110,23 @@ struct BASE_EXPORT Vector2 {
 inline IntVector2 Abs(const IntVector2& v) { return IntVector2(Abs(v.x), Abs(v.y)); }
 inline Vector2 Abs(const Vector2& v) { return Vector2(Abs(v.x), Abs(v.y)); }
 
-inline IntVector2 Min(const IntVector2& lhs, const IntVector2& rhs) {
-  return IntVector2(Min(lhs.x, rhs.x), Min(lhs.y, rhs.y));
+inline IntVector2 min(const IntVector2& lhs, const IntVector2& rhs) {
+  return IntVector2(min(lhs.x, rhs.x), min(lhs.y, rhs.y));
 }
-inline IntVector2 Max(const IntVector2& lhs, const IntVector2& rhs) {
-  return IntVector2(Max(lhs.x, rhs.x), Max(lhs.y, rhs.y));
-}
-
-inline Vector2 Min(const Vector2& lhs, const Vector2& rhs) {
-  return Vector2(Min(lhs.x, rhs.x), Min(lhs.y, rhs.y));
-}
-inline Vector2 Max(const Vector2& lhs, const Vector2& rhs) {
-  return Vector2(Max(lhs.x, rhs.x), Max(lhs.y, rhs.y));
+inline IntVector2 max(const IntVector2& lhs, const IntVector2& rhs) {
+  return IntVector2(max(lhs.x, rhs.x), max(lhs.y, rhs.y));
 }
 
-BASE_EXPORT IntVector2 Lerp(const IntVector2& a, const IntVector2& b, double t);
+inline Vector2 min(const Vector2& lhs, const Vector2& rhs) {
+  return Vector2(min(lhs.x, rhs.x), min(lhs.y, rhs.y));
+}
+inline Vector2 max(const Vector2& lhs, const Vector2& rhs) {
+  return Vector2(max(lhs.x, rhs.x), max(lhs.y, rhs.y));
+}
 
-BASE_EXPORT Vector2 Lerp(const Vector2& a, const Vector2& b, double t);
+BASE_EXPORT IntVector2 lerp(const IntVector2& a, const IntVector2& b, double t);
+
+BASE_EXPORT Vector2 lerp(const Vector2& a, const Vector2& b, double t);
 
 BASE_EXPORT bool IsNear(const Vector2& a, const Vector2& b, float tolerance);
 

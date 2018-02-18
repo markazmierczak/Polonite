@@ -54,17 +54,17 @@ class BASE_EXPORT Half {
 
   friend constexpr Half Abs(Half x) { return FromBits(x.bits_ & ~SignBitMask); }
 
-  friend constexpr bool IsNaN(Half x) {
+  friend constexpr bool isNaN(Half x) {
     // It's a NaN if the exponent bits are all ones and the mantissa
     // bits are not entirely zeros.
     return Abs(x).ToBits() > ExponentBitMask;
   }
 
-  friend constexpr bool IsFinite(Half x) { return x.GetExponentBits() != ExponentBitMask; }
+  friend constexpr bool isFinite(Half x) { return x.GetExponentBits() != ExponentBitMask; }
 
-  friend constexpr bool IsInfinity(Half x) { return Abs(x).ToBits() == ExponentBitMask; }
+  friend constexpr bool isInfinity(Half x) { return Abs(x).ToBits() == ExponentBitMask; }
 
-  friend constexpr bool IsNormal(Half x) { return x.GetExponentBits() != 0 && IsFinite(x); }
+  friend constexpr bool IsNormal(Half x) { return x.GetExponentBits() != 0 && isFinite(x); }
 
   // == and != must be implemented separately to handle -0, +0 case.
   constexpr bool operator==(const Half& rhs) const;
@@ -75,7 +75,7 @@ class BASE_EXPORT Half {
   constexpr bool operator<=(const Half& rhs) const;
   constexpr bool operator>=(const Half& rhs) const;
 
-  friend HashCode Hash(const Half& x) { return static_cast<HashCode>(x.bits_); }
+  friend HashCode partialHash(const Half& x) { return static_cast<HashCode>(x.bits_); }
 
   friend void Format(TextWriter& out, const Half& x, const StringSpan& opts) {
     FormatImpl(out, static_cast<float>(x), opts);
@@ -112,7 +112,7 @@ constexpr bool Half::operator==(const Half& rhs) const {
   const Half& lhs = *this;
 
   if (lhs.ToBits() == rhs.ToBits())
-    return !IsNaN(lhs);
+    return !isNaN(lhs);
 
   // Check for -0, +0 case:
   if ((lhs.ToBits() | rhs.ToBits()) == Half::SignBitMask)
@@ -131,7 +131,7 @@ constexpr bool Half::operator!=(const Half& rhs) const {
   if ((lhs.ToBits() | rhs.ToBits()) == Half::SignBitMask)
     return false;
 
-  if (IsNaN(lhs) || IsNaN(rhs))
+  if (isNaN(lhs) || isNaN(rhs))
     return false;
 
   return true;
@@ -141,7 +141,7 @@ constexpr bool Half::operator!=(const Half& rhs) const {
   constexpr bool Half::operator OP(const Half& rhs) const { \
   const Half& lhs = *this; \
     return static_cast<int16_t>(lhs.ToBits()) OP static_cast<int16_t>(rhs.ToBits()) && \
-           !(IsNaN(lhs) || IsNaN(rhs)); \
+           !(isNaN(lhs) || isNaN(rhs)); \
   }
 
 HALF_COMPARISON(<)

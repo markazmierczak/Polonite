@@ -309,10 +309,10 @@ TEST(JsonParserTest, Reading) {
   {
     // Test objects
     JsonObject dict;
-    ASSERT_TRUE(JsonObject::TryParse("{}", dict));
+    ASSERT_TRUE(JsonObject::tryParse("{}", dict));
 
     ASSERT_TRUE(
-        JsonObject::TryParse("{\"number\":9.87654321, \"null\":null , \"\\x53\" : \"str\" }", dict));
+        JsonObject::tryParse("{\"number\":9.87654321, \"null\":null , \"\\x53\" : \"str\" }", dict));
 
     double double_val = 0.0;
     EXPECT_TRUE(dict.TryGetWithPath("number", double_val));
@@ -325,12 +325,12 @@ TEST(JsonParserTest, Reading) {
     EXPECT_EQ("str", str_val);
 
     JsonObject root2;
-    ASSERT_TRUE(JsonObject::TryParse(
+    ASSERT_TRUE(JsonObject::tryParse(
         "{\"number\":9.87654321, \"null\":null , \"\\x53\" : \"str\", }", root2, allow_comma));
     EXPECT_EQ(dict, root2);
 
     // Test newline equivalence.
-    ASSERT_TRUE(JsonObject::TryParse(
+    ASSERT_TRUE(JsonObject::tryParse(
         "{\n"
         "  \"number\":9.87654321,\n"
         "  \"null\":null,\n"
@@ -338,7 +338,7 @@ TEST(JsonParserTest, Reading) {
         "}\n", root2, allow_comma));
     EXPECT_EQ(dict, root2);
 
-    ASSERT_TRUE(JsonObject::TryParse(
+    ASSERT_TRUE(JsonObject::tryParse(
         "{\r\n"
         "  \"number\":9.87654321,\r\n"
         "  \"null\":null,\r\n"
@@ -350,7 +350,7 @@ TEST(JsonParserTest, Reading) {
   {
     // Test nesting
     JsonObject dict;
-    ASSERT_TRUE(JsonObject::TryParse("{\"inner\":{\"array\":[true]},\"false\":false,\"d\":{}}", dict));
+    ASSERT_TRUE(JsonObject::tryParse("{\"inner\":{\"array\":[true]},\"false\":false,\"d\":{}}", dict));
     JsonObject* inner_dict = dict.TryGetObjectWithPath("inner");
     ASSERT_TRUE(inner_dict);
     JsonArray* inner_array = inner_dict->TryGetArrayWithPath("array");
@@ -363,14 +363,14 @@ TEST(JsonParserTest, Reading) {
     EXPECT_TRUE(inner_dict);
 
     JsonObject root2;
-    JsonObject::TryParse("{\"inner\": {\"array\":[true] , },\"false\":false,\"d\":{},}", root2, allow_comma);
+    JsonObject::tryParse("{\"inner\": {\"array\":[true] , },\"false\":false,\"d\":{},}", root2, allow_comma);
     EXPECT_EQ(dict, root2);
   }
 
   {
     // Test keys with periods
     JsonObject dict;
-    ASSERT_TRUE(JsonObject::TryParse("{\"a.b\":3,\"c\":2,\"d.e.f\":{\"g.h.i.j\":1}}", dict));
+    ASSERT_TRUE(JsonObject::tryParse("{\"a.b\":3,\"c\":2,\"d.e.f\":{\"g.h.i.j\":1}}", dict));
     int integer_value = 0;
     EXPECT_TRUE(dict.TryGet("a.b", integer_value));
     EXPECT_EQ(3, integer_value);
@@ -382,7 +382,7 @@ TEST(JsonParserTest, Reading) {
     EXPECT_TRUE(inner_dict->TryGet("g.h.i.j", integer_value));
     EXPECT_EQ(1, integer_value);
 
-    ASSERT_TRUE(JsonObject::TryParse("{\"a\":{\"b\":2},\"a.b\":1}", dict));
+    ASSERT_TRUE(JsonObject::tryParse("{\"a\":{\"b\":2},\"a.b\":1}", dict));
     EXPECT_TRUE(dict.TryGetWithPath("a.b", integer_value));
     EXPECT_EQ(2, integer_value);
     EXPECT_TRUE(dict.TryGet("a.b", integer_value));
@@ -443,7 +443,7 @@ TEST(JsonParserTest, Reading) {
     EXPECT_EQ(u"\x7f51\x9875", ToString16(str_val));
 
     JsonObject dict;
-    ASSERT_TRUE(JsonObject::TryParse("{\"path\": \"/tmp/\xc3\xa0\xc3\xa8\xc3\xb2.png\"}", dict));
+    ASSERT_TRUE(JsonObject::tryParse("{\"path\": \"/tmp/\xc3\xa0\xc3\xa8\xc3\xb2.png\"}", dict));
     EXPECT_TRUE(dict.TryGetWithPath("path", str_val));
     EXPECT_EQ("/tmp/\xC3\xA0\xC3\xA8\xC3\xB2.png", str_val);
   }

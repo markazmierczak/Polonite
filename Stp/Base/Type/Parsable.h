@@ -11,7 +11,7 @@ namespace stp {
 enum class ParseIntegerErrorCode;
 
 template<typename T, TEnableIf<TIsInteger<T>>* = nullptr>
-constexpr ParseIntegerErrorCode TryParse(StringSpan input, T& output);
+constexpr ParseIntegerErrorCode tryParse(StringSpan input, T& output);
 
 template<typename TResult, typename = void>
 struct ParseTmpl {

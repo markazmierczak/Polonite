@@ -90,18 +90,18 @@ static StringSpan JSONFloatToString(double value, FloatToStringBuffer buffer) {
 
   dtoa::StringBuilder builder(buffer, FloatToStringBufferLength);
   converter.ToShortest(value, &builder);
-  return builder.Finalize();
+  return builder.finalizeHash();
 }
 
 bool JsonFormatter::WriteDouble(const JsonValue& node) {
   double d = node.AsDouble();
-  if (!IsFinite(d)) {
+  if (!isFinite(d)) {
     if (!options_.Has(JsonOptions::EnableInfNaN)) {
       if (RaiseError(JsonError::InvalidNumber))
         return false;
       out_ << 0;
     } else {
-      if (IsNaN(d)) {
+      if (isNaN(d)) {
         out_ << "NaN";
       } else {
         if (d < 0) {

@@ -180,7 +180,7 @@ void JsonObject::RemoveWithPath(StringSpan path, EmptyHandling empty_handling) {
   ASSUME(removed);
 }
 
-bool JsonObject::TryParse(StringSpan input, JsonObject& output, const JsonOptions& options) {
+bool JsonObject::tryParse(StringSpan input, JsonObject& output, const JsonOptions& options) {
   JsonValue root;
   if (!JsonValue::Parse(input, root, options))
     return false;
@@ -193,7 +193,7 @@ bool JsonObject::TryParse(StringSpan input, JsonObject& output, const JsonOption
 HashCode JsonObject::GetHashCode() const {
   HashCode code = 0;
   for (const auto& pair : *this) {
-    code = Combine(code, HashMany(pair.key, pair.value));
+    code = combineHash(code, partialHashMany(pair.key, pair.value));
   }
   return code;
 }

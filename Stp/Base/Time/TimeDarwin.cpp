@@ -123,7 +123,7 @@ Time Time::FromCFAbsoluteTime(CFAbsoluteTime t) {
   if (t == 0)
     return Time();  // Consider 0 as a null Time.
   if (t == Limits<CFAbsoluteTime>::Infinity)
-    return Max();
+    return max();
   return Time(static_cast<int64_t>(t + kCFAbsoluteTimeIntervalSince1970) * TimeDelta::MicrosecondsPerSecond);
 }
 

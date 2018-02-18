@@ -32,16 +32,16 @@ inline T NextPrimeNumberImpl(T x) { return NextPrimeNumber64(x); }
 
 template<typename T, TEnableIf<TIsInteger<T>>* = nullptr>
 inline T IsPrimeNumber(T x) {
-  ASSERT(!IsNegative(x));
-  auto ux = ToUnsigned(x);
+  ASSERT(!isNegative(x));
+  auto ux = toUnsigned(x);
   return detail::IsPrimeNumberImpl(ux);
 }
 
 // Returns the first prime number greater than |x|.
 template<typename T, TEnableIf<TIsInteger<T>>* = nullptr>
 inline T NextPrimeNumber(T x) {
-  ASSERT(!IsNegative(x));
-  auto ux = ToUnsigned(x);
+  ASSERT(!isNegative(x));
+  auto ux = toUnsigned(x);
   auto rv = detail::NextPrimeNumberImpl(ux);
   return AssertedCast<T>(rv);
 }

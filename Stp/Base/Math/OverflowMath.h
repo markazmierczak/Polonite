@@ -127,10 +127,10 @@ inline bool OverflowMul(T x, T y, T* presult) {
 
   // Since the value of x*y is potentially undefined if we have a signed type,
   // we compute it using the unsigned type of the same size.
-  TUint ux = AbsToUnsigned(x);
-  TUint uy = AbsToUnsigned(y);
+  TUint ux = absToUnsigned(x);
+  TUint uy = absToUnsigned(y);
   TUint uresult = static_cast<TUint>(ux * uy);
-  bool is_negative = IsNegative(x ^ y);
+  bool is_negative = isNegative(x ^ y);
   *presult = is_negative ? static_cast<TUint>(0) - uresult : uresult;
   // We have a fast out for unsigned identity or zero on the second operand.
   // After that it's an unsigned overflow check on the absolute value, with
@@ -176,7 +176,7 @@ struct OverflowLShiftOp<T, U, true> {
 
 template<typename T, typename U>
 inline bool OverflowLShift(T x, U shift, T* presult) {
-  ASSERT(!IsNegative(shift));
+  ASSERT(!isNegative(shift));
   ASSERT(shift < static_cast<U>(8 * sizeof(T)));
   return detail::OverflowLShiftOp<T, U>::Do(x, shift, presult);
 }

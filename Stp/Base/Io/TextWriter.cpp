@@ -50,7 +50,7 @@ void TextWriter::OnIndent(int count, char c) {
   }
 
   while (count > 0) {
-    int chunk_size = Min(count, ChunkSize);
+    int chunk_size = min(count, ChunkSize);
     OnWriteString(StringSpan(templ, chunk_size));
     count -= chunk_size;
   }

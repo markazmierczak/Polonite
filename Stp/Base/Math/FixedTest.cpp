@@ -119,9 +119,9 @@ TEST(FixedTest, Sqrt) {
 }
 
 TEST(FixedTest, Lerp) {
-  EXPECT_EQ(Fixed16(0.5), Lerp(Fixed16(0), Fixed16(1), 0.5));
-  EXPECT_EQ(Fixed16(2), Lerp(Fixed16(0), Fixed16(2), 1));
-  EXPECT_EQ(Fixed16(-1), Lerp(Fixed16(-1), Fixed16(2), 0));
+  EXPECT_EQ(Fixed16(0.5), lerp(Fixed16(0), Fixed16(1), 0.5));
+  EXPECT_EQ(Fixed16(2), lerp(Fixed16(0), Fixed16(2), 1));
+  EXPECT_EQ(Fixed16(-1), lerp(Fixed16(-1), Fixed16(2), 0));
 }
 
 TEST(FixedTest, RSqrt) {

@@ -12,13 +12,13 @@ namespace stp {
 // -1 is returned if |x| is zero.
 template<typename T>
 inline int FindFirstOneBit(T x) {
-  return detail::FindFirstOneBitImpl(ToUnsigned(x));
+  return detail::FindFirstOneBitImpl(toUnsigned(x));
 }
 
 // Same as above but for last (most-significant) bit.
 template<typename T>
 inline int FindLastOneBit(T x) {
-  return detail::FindLastOneBitImpl(ToUnsigned(x));
+  return detail::FindLastOneBitImpl(toUnsigned(x));
 }
 
 // Extracts first (least-significant) bit that is set within integral value.
@@ -27,7 +27,7 @@ inline int FindLastOneBit(T x) {
 // 0 is returned if |x| is zero.
 template<typename T>
 inline T ExtractFirstOneBit(T x) {
-  return static_cast<T>(detail::ExtractFirstOneBitImpl(ToUnsigned(x)));
+  return static_cast<T>(detail::ExtractFirstOneBitImpl(toUnsigned(x)));
 }
 
 // Same as above but for last (most-significant) bit.
@@ -43,30 +43,30 @@ inline T ExtractLastOneBit(T x) {
 // If input value is zero, the number of bits in source type is returned.
 template<typename T>
 inline int CountTrailingZeroBits(T x) {
-  return detail::CountTrailingZeroBitsImpl(ToUnsigned(x));
+  return detail::CountTrailingZeroBitsImpl(toUnsigned(x));
 }
 
 // Same as above but for leading (most-significant) 0-bits.
 template<typename T>
 inline int CountLeadingZeroBits(T x) {
-  return detail::CountLeadingZeroBitsImpl(ToUnsigned(x));
+  return detail::CountLeadingZeroBitsImpl(toUnsigned(x));
 }
 
 // Returns true if number of bits set in input value is odd.
 template<typename T>
 inline bool GetBitsParity(T x) {
-  return detail::GetBitsParityImpl(ToUnsigned(x));
+  return detail::GetBitsParityImpl(toUnsigned(x));
 }
 
 // Returns the number of bits set in input value.
 template<typename T>
 inline int CountBitsPopulation(T x) {
-  return detail::CountBitsPopulationImpl(ToUnsigned(x));
+  return detail::CountBitsPopulationImpl(toUnsigned(x));
 }
 
 template<typename T>
 inline T ReverseBits(T x) {
-  return detail::ReverseBitsImpl(ToUnsigned(x));
+  return detail::ReverseBitsImpl(toUnsigned(x));
 }
 
 } // namespace stp

@@ -34,12 +34,12 @@ class BASE_EXPORT Base64 {
 
 inline int Base64::EstimateEncodedLength(int input_size) {
   ASSERT(input_size >= 0);
-  return (ToUnsigned(input_size) + 2) / 3 * 4 + 1;
+  return (toUnsigned(input_size) + 2) / 3 * 4 + 1;
 }
 
 inline int Base64::EstimateDecodedSize(int input_size) {
   ASSERT(input_size >= 0);
-  return ToUnsigned(input_size) / 4 * 3 + 2;
+  return toUnsigned(input_size) / 4 * 3 + 2;
 }
 
 } // namespace stp

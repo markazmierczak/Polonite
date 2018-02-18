@@ -95,7 +95,7 @@ struct BASE_EXPORT Quaternion {
   double z;
 };
 
-BASE_EXPORT Quaternion Lerp(const Quaternion& q1, const Quaternion& q2, double t);
+BASE_EXPORT Quaternion lerp(const Quaternion& q1, const Quaternion& q2, double t);
 
 // Spherical linear interpolation between two quaternions
 BASE_EXPORT Quaternion Slerp(const Quaternion& q1, const Quaternion& q2, double t);

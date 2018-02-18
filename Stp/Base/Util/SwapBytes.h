@@ -51,7 +51,7 @@ inline unsigned long SwapBytes(unsigned long x) {
 
 template<typename T, TEnableIf<TIsSigned<T>>* = nullptr>
 inline T SwapBytes(T x) {
-  return static_cast<T>(SwapBytes(ToUnsigned(x)));
+  return static_cast<T>(SwapBytes(toUnsigned(x)));
 }
 
 } // namespace stp

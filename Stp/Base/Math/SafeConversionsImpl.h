@@ -166,8 +166,8 @@ struct NarrowingRange {
     static_assert(TsAreSame<T, TDst>, "!");
     static_assert(Shift < DstLimits::Digits, "!");
     return static_cast<T>(ConditionalNegate(
-        AbsToUnsigned(value) & ~((T(1) << Shift) - T(1)),
-        IsNegative(value)));
+        absToUnsigned(value) & ~((T(1) << Shift) - T(1)),
+        isNegative(value)));
   }
 
   template<typename T, TEnableIf<TIsFloatingPoint<T>>* = nullptr>

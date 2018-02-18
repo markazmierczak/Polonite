@@ -90,7 +90,7 @@ int JsonStringBuilder::RecommendCapacity(int new_length) {
   constexpr int MinCapacity = 8;
 
   int rv = (new_length > capacity_ + 4) ? new_length : (new_length * 2);
-  return Max(rv, MinCapacity);
+  return max(rv, MinCapacity);
 }
 
 } // namespace stp

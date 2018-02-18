@@ -85,7 +85,7 @@ TObserver* ObserverList<TObserver>::Iterator::TryGetNext() {
     return nullptr;
   ListType& observers = list_->observers_;
   // Advance if the current element is null
-  int max_index = Min(max_index_, observers.size());
+  int max_index = min(max_index_, observers.size());
   while (index_ < max_index && !observers[index_])
     ++index_;
   return index_ < max_index ? observers[index_++] : nullptr;

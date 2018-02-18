@@ -17,7 +17,7 @@ namespace stp {
  */
 
 StackTrace::StackTrace(void* const* trace, int count) {
-  count = Min(count, isizeofArray(trace_));
+  count = min(count, isizeofArray(trace_));
   if (count)
     UninitializedCopy(trace_, trace, count);
   count_ = count;

@@ -170,33 +170,33 @@ template<typename T>
 constexpr bool TIsNamedEnum = THasDetected<detail::TNamedEnumConcept, T>;
 
 // Min and Max - Typed minimum and maximum.
-// Min(a, b) selects one of following (depending on T type):
+// min(a, b) selects one of following (depending on T type):
 // - const reference is returned for non-fundamental types
 
 template<typename T, TEnableIf<TIsFundamental<T>>* = nullptr>
-constexpr T Min(T x, T y) {
+constexpr T min(T x, T y) {
   return x < y ? x : y;
 }
 
 template<typename T, TEnableIf<TIsFundamental<T>>* = nullptr>
-constexpr T Max(T x, T y) {
+constexpr T max(T x, T y) {
   return x < y ? y : x;
 }
 
-// Clamp(x, min, max) - clamps |x| to the [min..max] range.
+// clamp(x, min, max) - clamps |x| to the [min..max] range.
 template<typename T, TEnableIf<TIsFundamental<T>>* = nullptr>
-constexpr T Clamp(T x, T min, T max) {
-  return Min(Max(x, min), max);
+constexpr T clamp(T x, T min, T max) {
+  return min(max(x, min), max);
 }
 
-// Lerp(a, b, t) - linear interpolation between |a| and |b|.
+// lerp(a, b, t) - linear interpolation between |a| and |b|.
 template<typename T, TEnableIf<TIsArithmetic<T>>* = nullptr>
-constexpr T Lerp(T x, T y, double t) {
+constexpr T lerp(T x, T y, double t) {
   return static_cast<T>(x * (1 - t) + y * t);
 }
 
 template<typename T>
-constexpr T* Coalesce(T* nullable, T* default_not_null) {
+constexpr T* coalesce(T* nullable, T* default_not_null) {
   return nullable ? nullable : default_not_null;
 }
 

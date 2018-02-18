@@ -202,7 +202,7 @@ static void ParseMatchers(StringSpan input) {
     int pos = pair.LastIndexOf('=');
     if (pos >= 0) {
       VmoduleMatcher matcher(String(pair.GetSlice(0, pos)));
-      if (TryParse(pair.GetSlice(pos + 1), matcher.level) == ParseIntegerErrorCode::Ok) {
+      if (tryParse(pair.GetSlice(pos + 1), matcher.level) == ParseIntegerErrorCode::Ok) {
         matchers->Add(move(matcher));
         parsed = true;
       }
@@ -222,7 +222,7 @@ void InitLogging() {
 
   const String* v = command_line.TryGet("v");
   if (v) {
-    if (TryParse(*v, g_max_log_level) != ParseIntegerErrorCode::Ok) {
+    if (tryParse(*v, g_max_log_level) != ParseIntegerErrorCode::Ok) {
       g_max_log_level = 0;
       LOG(ERROR, "unable to parse --v switch");
     }

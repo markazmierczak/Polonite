@@ -170,14 +170,14 @@ static inline void FormatIntTmpl(TextWriter& out, T x, const StringSpan& opts) {
 
   // Parse precision specifier if any.
   if (o_begin != o_end) {
-    if (TryParse(StringSpan(o_begin, o_end - o_begin), precision) != ParseIntegerErrorCode::Ok)
+    if (tryParse(StringSpan(o_begin, o_end - o_begin), precision) != ParseIntegerErrorCode::Ok)
       ok = false;
   }
   if (!ok)
     throw FormatException("int");
 
   constexpr int MaxBufferSize = static_cast<int>(
-      Max(sizeof(FormatIntegerBuffer<T>), sizeof(FormatOctalIntegerBuffer<T>)));
+      max(sizeof(FormatIntegerBuffer<T>), sizeof(FormatOctalIntegerBuffer<T>)));
 
   Array<char, MaxBufferSize> buffer;
 
@@ -196,7 +196,7 @@ static inline void FormatIntTmpl(TextWriter& out, T x, const StringSpan& opts) {
       break;
   }
 
-  if (IsNegative(x)) {
+  if (isNegative(x)) {
     // The converter adds '-' sign when value is negative.
     // This formatter must account for additional requirements, i.e. precision specifier.
     // Write the sign and remove from converter's output.
@@ -256,7 +256,7 @@ void FormatFloat(TextWriter& out, double x, const StringSpan& opts) {
 
     // Parse precision specifier if any.
     if (o_begin != o_end) {
-      if (TryParse(StringSpan(o_begin, o_end - o_begin), precision) != ParseIntegerErrorCode::Ok)
+      if (tryParse(StringSpan(o_begin, o_end - o_begin), precision) != ParseIntegerErrorCode::Ok)
         ok = false;
     }
     if (!ok)
@@ -305,8 +305,8 @@ void FormatFloat(TextWriter& out, double x, const StringSpan& opts) {
     ASSERT_UNUSED(ok, ok);
   }
 
-  StringSpan converted = builder.Finalize();
-  if (IsNegative(x)) {
+  StringSpan converted = builder.finalizeHash();
+  if (isNegative(x)) {
     // The converter adds '-' sign when value is negative.
     // This formatter must account for additional requirements, i.e. precision specifier.
     // Write the sign and remove from converter's output.
@@ -322,7 +322,7 @@ void FormatFloat(TextWriter& out, double x, const StringSpan& opts) {
   out << converted;
 
   if (variant == Variant::Percent) {
-    if (IsFinite(x)) {
+    if (isFinite(x)) {
       out << '%';
     }
   }
@@ -365,7 +365,7 @@ static void FormatBufferSimple(TextWriter& out, const void* data, int size, bool
   char out_buffer[256];
   auto* bytes = static_cast<const byte_t*>(data);
   while (size > 0) {
-    int bytes_to_print = Min(size, isizeof(out_buffer) / 2);
+    int bytes_to_print = min(size, isizeof(out_buffer) / 2);
     int chars_to_print = bytes_to_print * 2;
 
     FormatBuffer(MutableStringSpan(out_buffer, chars_to_print), bytes, bytes_to_print, uppercase);

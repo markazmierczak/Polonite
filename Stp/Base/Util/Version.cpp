@@ -19,7 +19,7 @@ void Version::setPart(int at, int value) {
 }
 
 int Version::CompareTo(const Version& other) const {
-  int max_count = Max(parts_.size(), other.parts_.size());
+  int max_count = max(parts_.size(), other.parts_.size());
   for (int i = 0; i < max_count; ++i) {
     int rv = compare(getPartAt(i), other.getPartAt(i));
     if (rv)
@@ -29,7 +29,7 @@ int Version::CompareTo(const Version& other) const {
 }
 
 HashCode Version::HashImpl() const {
-  return HashBuffer(parts_.data(), parts_.size() * isizeof(PartType));
+  return hashBuffer(parts_.data(), parts_.size() * isizeof(PartType));
 }
 
 void Version::FormatImpl(TextWriter& out) const {
@@ -62,7 +62,7 @@ bool tryParse(StringSpan str, Version& out) {
       return false;
 
     int part;
-    if (TryParse(part_str, part) != ParseIntegerErrorCode::Ok)
+    if (tryParse(part_str, part) != ParseIntegerErrorCode::Ok)
       return false;
     if (part < 0)
       return false;

@@ -185,24 +185,24 @@ TEST(Vector2Test, ClampInt) {
 
   a = IntVector2(3, 5);
   EXPECT_EQ(IntVector2(3, 5), a);
-  a = Max(a, IntVector2(2, 4));
+  a = max(a, IntVector2(2, 4));
   EXPECT_EQ(IntVector2(3, 5), a);
-  a = Max(a, IntVector2(3, 5));
+  a = max(a, IntVector2(3, 5));
   EXPECT_EQ(IntVector2(3, 5), a);
-  a = Max(a, IntVector2(4, 2));
+  a = max(a, IntVector2(4, 2));
   EXPECT_EQ(IntVector2(4, 5), a);
-  a = Max(a, IntVector2(8, 10));
+  a = max(a, IntVector2(8, 10));
   EXPECT_EQ(IntVector2(8, 10), a);
 
-  a = Min(a, IntVector2(9, 11));
+  a = min(a, IntVector2(9, 11));
   EXPECT_EQ(IntVector2(8, 10), a);
-  a = Min(a, IntVector2(8, 10));
+  a = min(a, IntVector2(8, 10));
   EXPECT_EQ(IntVector2(8, 10), a);
-  a = Min(a, IntVector2(11, 9));
+  a = min(a, IntVector2(11, 9));
   EXPECT_EQ(IntVector2(8, 9), a);
-  a = Min(a, IntVector2(7, 11));
+  a = min(a, IntVector2(7, 11));
   EXPECT_EQ(IntVector2(7, 9), a);
-  a = Min(a, IntVector2(3, 5));
+  a = min(a, IntVector2(3, 5));
   EXPECT_EQ(IntVector2(3, 5), a);
 }
 
@@ -211,24 +211,24 @@ TEST(Vector2Test, Clamp) {
 
   a = Vector2(3.5f, 5.5f);
   EXPECT_EQ(Vector2(3.5f, 5.5f), a);
-  a = Max(a, Vector2(2.5f, 4.5f));
+  a = max(a, Vector2(2.5f, 4.5f));
   EXPECT_EQ(Vector2(3.5f, 5.5f), a);
-  a = Max(a, Vector2(3.5f, 5.5f));
+  a = max(a, Vector2(3.5f, 5.5f));
   EXPECT_EQ(Vector2(3.5f, 5.5f), a);
-  a = Max(a, Vector2(4.5f, 2.5f));
+  a = max(a, Vector2(4.5f, 2.5f));
   EXPECT_EQ(Vector2(4.5f, 5.5f), a);
-  a = Max(a, Vector2(8.5f, 10.5f));
+  a = max(a, Vector2(8.5f, 10.5f));
   EXPECT_EQ(Vector2(8.5f, 10.5f), a);
 
-  a = Min(a, Vector2(9.5f, 11.5f));
+  a = min(a, Vector2(9.5f, 11.5f));
   EXPECT_EQ(Vector2(8.5f, 10.5f), a);
-  a = Min(a, Vector2(8.5f, 10.5f));
+  a = min(a, Vector2(8.5f, 10.5f));
   EXPECT_EQ(Vector2(8.5f, 10.5f), a);
-  a = Min(a, Vector2(11.5f, 9.5f));
+  a = min(a, Vector2(11.5f, 9.5f));
   EXPECT_EQ(Vector2(8.5f, 9.5f), a);
-  a = Min(a, Vector2(7.5f, 11.5f));
+  a = min(a, Vector2(7.5f, 11.5f));
   EXPECT_EQ(Vector2(7.5f, 9.5f), a);
-  a = Min(a, Vector2(3.5f, 5.5f));
+  a = min(a, Vector2(3.5f, 5.5f));
   EXPECT_EQ(Vector2(3.5f, 5.5f), a);
 }
 

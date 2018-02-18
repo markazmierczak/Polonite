@@ -131,7 +131,7 @@ double DotProduct(const Quaternion& lhs, const Quaternion& rhs) {
   return lhs.w * rhs.w + lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * rhs.z;
 }
 
-Quaternion Lerp(const Quaternion& q1, const Quaternion& q2, double t) {
+Quaternion lerp(const Quaternion& q1, const Quaternion& q2, double t) {
   return (q1 * (1 - t) + q2 * t).GetNormalized();
 }
 
@@ -139,7 +139,7 @@ Quaternion Lerp(const Quaternion& q1, const Quaternion& q2, double t) {
 Quaternion Slerp(const Quaternion& q1, const Quaternion& q2, double t) {
   double dot = DotProduct(q1, q2);
 
-  dot = Clamp(dot, -1.0, 1.0);
+  dot = clamp(dot, -1.0, 1.0);
 
   constexpr double Epsilon = Limits<float>::Epsilon;
   if (IsNear(dot, 1.0, Epsilon) || IsNear(dot, -1.0, Epsilon))
