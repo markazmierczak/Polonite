@@ -3,6 +3,7 @@
 
 #include "Base/Type/Formattable.h"
 
+#include "Base/Containers/BufferSpan.h"
 #include "Base/Dtoa/Dtoa.h"
 #include "Base/Error/BasicExceptions.h"
 #include "Base/Io/TextWriter.h"

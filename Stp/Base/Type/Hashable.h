@@ -71,21 +71,6 @@ inline HashCode Hash(T x) {
   }
 }
 
-template<typename T>
-inline HashCode HashContiguous(const T* data, int size) {
-  if constexpr (!TIsFloatingPoint<T> && alignof(T) < sizeof(HashCode)) {
-    return HashBuffer(data, size * isizeof(T));
-  } else {
-    HashCode code = HashCode::Zero;
-    if (size) {
-      code = Hash(data[0]);
-      for (int i = 1; i < size; ++i)
-        code = Combine(code, Hash(data[i]));
-    }
-    return code;
-  }
-}
-
 } // namespace stp
 
 #endif // STP_BASE_TYPE_HASHABLE_H_

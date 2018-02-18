@@ -10,6 +10,10 @@
 
 namespace stp {
 
+BASE_EXPORT void FormatBuffer(TextWriter& out, const void* data, int size, const StringSpan& opts);
+BASE_EXPORT void FormatBuffer(TextWriter& out, const void* data, int size);
+BASE_EXPORT void FormatBuffer(MutableStringSpan out, const void* data, int size, bool uppercase);
+
 class BufferSpan {
  public:
   constexpr BufferSpan() noexcept

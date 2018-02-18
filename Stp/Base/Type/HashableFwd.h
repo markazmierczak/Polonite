@@ -22,13 +22,7 @@ using THashableConcept = decltype(Hash(declval<const T&>()));
 template<typename T>
 constexpr bool TIsHashable = TsAreSame<HashCode, TDetect<detail::THashableConcept, T>>;
 
-BASE_EXPORT HashCode HashBuffer(const void* data, int size);
-
-template<typename T>
-inline HashCode HashContiguous(const T* data, int size);
-
-template<typename T, int N, TEnableIf<TIsHashable<T>>* = nullptr>
-inline HashCode Hash(T (&array)[N]) { return HashContiguous(array, N - TIsCharacter<T>); }
+BASE_EXPORT HashCode HashBuffer(const void* data, int size) noexcept;
 
 } // namespace stp
 

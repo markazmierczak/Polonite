@@ -4,14 +4,16 @@
 #ifndef STP_BASE_CONTAINERS_SPAN_H_
 #define STP_BASE_CONTAINERS_SPAN_H_
 
+#include "Base/Debug/Assert.h"
+#include "Base/Containers/ArrayOps.h"
 #include "Base/Containers/SpanFwd.h"
-#include "Base/Type/Comparable.h"
-#include "Base/Type/FormattableFwd.h"
-#include "Base/Type/HashableFwd.h"
+#include "Base/Type/Variable.h"
 
 #include <initializer_list>
 
 namespace stp {
+
+BASE_EXPORT HashCode HashBuffer(const void* data, int size) noexcept;
 
 template<typename T>
 using InitializerList = std::initializer_list<T>;
@@ -85,10 +87,7 @@ class Span {
     return lhs.size_ == rhs.size() && Equals(lhs.data_, rhs.data_, lhs.size_);
   }
   friend bool operator!=(const Span& lhs, const Span& rhs) { return !operator==(lhs, rhs); }
-  friend int compare(const Span& lhs, const Span& rhs) {
-    int rv = CompareContiguous(lhs.data_, rhs.data_, lhs.size_ <= rhs.size_ ? lhs.size_ : rhs.size_);
-    return rv ? rv : (lhs.size_ - rhs.size_);
-  }
+
   friend constexpr const T* begin(const Span& x) { return x.data_; }
   friend constexpr const T* end(const Span& x) { return x.data_ + x.size_; }
 
@@ -245,37 +244,13 @@ inline bool operator!=(const T (&lhs)[N], const MutableSpan<T>& rhs) {
   return operator!=(MakeSpan(lhs), rhs);
 }
 
-template<typename T, int N>
-inline int compare(const T (&lhs)[N], const Span<T>& rhs) {
-  return compare(MakeSpan(lhs), rhs);
-}
-template<typename T, int N>
-inline int compare(const T (&lhs)[N], const MutableSpan<T>& rhs) {
-  return compare(MakeSpan(lhs), rhs);
+inline int compare(StringSpan lhs, StringSpan rhs) noexcept {
+  if (lhs.IsEmpty() || rhs.IsEmpty())
+    return lhs.IsEmpty() == rhs.IsEmpty();
+  return ::memcmp(lhs.data(), rhs.data(), ToUnsigned(lhs.size()));
 }
 
-template<typename T, TEnableIf<TIsHashable<TRemoveConst<T>>>* = nullptr>
-inline HashCode Hash(const Span<T>& x) { return HashContiguous(x.data(), x.size()); }
-template<typename T, TEnableIf<TIsHashable<TRemoveConst<T>>>* = nullptr>
-inline HashCode Hash(const MutableSpan<T>& x) { return HashContiguous(x.data(), x.size()); }
-
-template<typename T, TEnableIf<TIsFormattable<TRemoveConst<T>>>* = nullptr>
-inline void Format(TextWriter& out, const Span<T>& x, const StringSpan& opts) {
-  FormatContiguous(out, x.data(), x.size(), opts);
-}
-template<typename T, TEnableIf<TIsFormattable<TRemoveConst<T>>>* = nullptr>
-inline void Format(TextWriter& out, const MutableSpan<T>& x, const StringSpan& opts) {
-  FormatContiguous(out, x.data(), x.size(), opts);
-}
-
-template<typename T, TEnableIf<TIsFormattable<TRemoveConst<T>>>* = nullptr>
-inline TextWriter& operator<<(TextWriter& out, const Span<T>& x) {
-  FormatContiguous(out, x.data(), x.size()); return out;
-}
-template<typename T, TEnableIf<TIsFormattable<TRemoveConst<T>>>* = nullptr>
-inline TextWriter& operator<<(TextWriter& out, const MutableSpan<T>& x) {
-  FormatContiguous(out, x.data(), x.size()); return out;
-}
+inline HashCode Hash(StringSpan text) noexcept { return HashBuffer(text.data(), text.size()); }
 
 } // namespace stp
 

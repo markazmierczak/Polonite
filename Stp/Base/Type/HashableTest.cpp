@@ -47,12 +47,6 @@ TYPED_TEST(HashableTest, EqualToImpliesSameHashCode) {
   }
 }
 
-TYPED_TEST(HashableTest, HashValueArrayUsesHashRange) {
-  TypeParam values[128];
-  this->rng.Fill(MakeBufferSpan(values));
-  EXPECT_EQ(HashContiguous(values, 128), Hash(values));
-}
-
 struct HashableTest_TestClass { friend HashCode Hash(const HashableTest_TestClass&); };
 namespace Foreign {
 struct HashableTest_TestClass2 { friend HashCode Hash(const HashableTest_TestClass2&); };

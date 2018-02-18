@@ -19,28 +19,17 @@ void Version::SetComponentAt(int at, int value) {
 }
 
 int Version::CompareTo(const Version& other) const {
-  int min_count = Min(components_.size(), other.components_.size());
-
-  int rv = compare(
-      components_.GetSlice(0, min_count),
-      other.components_.GetSlice(0, min_count));
-
-  if (rv)
-    return rv;
-
-  if (components_.size() != other.components_.size()) {
-    int max_count = Max(components_.size(), other.components_.size());
-    for (int i = min_count; i < max_count; ++i) {
-      rv = compare(GetComponentAt(i), other.GetComponentAt(i));
-      if (rv)
-        return rv;
-    }
+  int max_count = Max(components_.size(), other.components_.size());
+  for (int i = 0; i < max_count; ++i) {
+    int rv = compare(GetComponentAt(i), other.GetComponentAt(i));
+    if (rv)
+      return rv;
   }
   return 0;
 }
 
 HashCode Version::HashImpl() const {
-  return Hash(components_);
+  return HashBuffer(components_.data(), components_.size());
 }
 
 void Version::FormatImpl(TextWriter& out) const {

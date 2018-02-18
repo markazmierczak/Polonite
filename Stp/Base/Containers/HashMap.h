@@ -336,7 +336,7 @@ inline void HashMap<K, T>::Rehash(int new_bucket_count) {
   // Assign early - needed by ConstrainHash.
   bucket_count_ = new_bucket_count;
   Entry* old_buckets = buckets_;
-  Entry* new_buckets = (Entry*)allocateMemory(new_bucket_count);
+  Entry* new_buckets = (Entry*)allocateMemory(new_bucket_count * isizeof(Entry));
   buckets_ = new_buckets;
 
   BaseNode* sentinel = sentinel_;

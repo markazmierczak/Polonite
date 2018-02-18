@@ -28,24 +28,6 @@ using FormattableConcept = decltype(
 template<typename T>
 constexpr bool TIsFormattable = THasDetected<detail::FormattableConcept, T>;
 
-template<typename T>
-inline void FormatContiguous(TextWriter& out, const T* data, int size, const StringSpan& opts);
-template<typename T>
-inline void FormatContiguous(TextWriter& out, const T* data, int size);
-
-template<typename T, int N, TEnableIf<TIsFormattable<T>>* = nullptr>
-inline void Format(TextWriter& out, const T (&array)[N], const StringSpan& opts) {
-  FormatContiguous(out, static_cast<const T*>(array), N - TIsCharacter<T>, opts);
-}
-template<typename T, int N, TEnableIf<TIsFormattable<T>>* = nullptr>
-inline TextWriter& operator<<(TextWriter& out, const T (&array)[N]) {
-  FormatContiguous(out, static_cast<const T*>(array), N - TIsCharacter<T>); return out;
-}
-
-BASE_EXPORT void FormatBuffer(TextWriter& out, const void* data, int size, const StringSpan& opts);
-BASE_EXPORT void FormatBuffer(TextWriter& out, const void* data, int size);
-BASE_EXPORT void FormatBuffer(MutableStringSpan out, const void* data, int size, bool uppercase);
-
 } // namespace stp
 
 #endif // STP_BASE_TYPE_FORMATTABLEFWD_H_

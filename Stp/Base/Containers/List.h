@@ -107,7 +107,6 @@ class List {
   }
   friend bool operator==(const List& l, const SpanType& r) { return l.ToSpan() == r; }
   friend bool operator!=(const List& l, const SpanType& r) { return l.ToSpan() != r; }
-  friend int compare(const List& l, const SpanType& r) { return compare(l.ToSpan(), r); }
 
   friend const T* begin(const List& x) { return x.data_; }
   friend const T* end(const List& x) { return x.data_ + x.size_; }
@@ -172,22 +171,6 @@ inline bool operator==(const T (&lhs)[N], const List<T>& rhs) {
 template<typename T, int N>
 inline bool operator!=(const T (&lhs)[N], const List<T>& rhs) {
   return operator!=(MakeSpan(lhs), MakeSpan(rhs));
-}
-template<typename T, int N>
-inline int compare(const T (&lhs)[N], const List<T>& rhs) {
-  return compare(MakeSpan(lhs), MakeSpan(rhs));
-}
-
-template<typename T, TEnableIf<TIsHashable<T>>* = nullptr>
-inline HashCode Hash(const List<T>& x) { return HashContiguous(x.data(), x.size()); }
-
-template<typename T, TEnableIf<TIsFormattable<T>>* = nullptr>
-inline void Format(TextWriter& out, const List<T>& x, const StringSpan& opts) {
-  FormatContiguous(out, x.data(), x.size(), opts);
-}
-template<typename T, TEnableIf<TIsFormattable<T>>* = nullptr>
-inline TextWriter& operator<<(TextWriter& out, const List<T>& x) {
-  FormatContiguous(out, x.data(), x.size()); return out;
 }
 
 template<typename T, TEnableIf<TIsContiguousContainer<TRemoveReference<T>>>* = nullptr>

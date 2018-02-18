@@ -146,22 +146,6 @@ template<typename T, int N>
 inline bool operator!=(const T (&lhs)[N], const InlineListBase<T>& rhs) {
   return operator!=(MakeSpan(lhs), MakeSpan(rhs));
 }
-template<typename T, int N>
-inline int compare(const T (&lhs)[N], const InlineListBase<T>& rhs) {
-  return compare(MakeSpan(lhs), MakeSpan(rhs));
-}
-
-template<typename T, TEnableIf<TIsHashable<T>>* = nullptr>
-inline HashCode Hash(const InlineListBase<T>& x) { return HashContiguous(x.data(), x.size()); }
-
-template<typename T, TEnableIf<TIsFormattable<T>>* = nullptr>
-inline void Format(TextWriter& out, const InlineListBase<T>& x, const StringSpan& opts) {
-  FormatContiguous(out, x.data(), x.size(), opts);
-}
-template<typename T, TEnableIf<TIsFormattable<T>>* = nullptr>
-inline TextWriter& operator<<(TextWriter& out, const InlineListBase<T>& x) {
-  FormatContiguous(out, x.data(), x.size()); return out;
-}
 
 template<typename T>
 inline const T* ToNullTerminated(const InlineListBase<T>& string) {

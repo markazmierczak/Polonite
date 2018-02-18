@@ -51,7 +51,7 @@ static HashCode Hash0To8(const byte_t* data, int size) {
   return size <= isizeof(HashCode) ? static_cast<HashCode>(x) : Hash(x);
 }
 
-HashCode HashBuffer(const void* data, int size) {
+HashCode HashBuffer(const void* data, int size) noexcept {
   ASSERT(size >= 0);
   auto* bytes = static_cast<const byte_t*>(data);
   if (size <= 8)

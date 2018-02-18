@@ -68,18 +68,6 @@ struct TIsZeroConstructibleTmpl<Array<T, N>> : TIsZeroConstructibleTmpl<T> {};
 template<typename T, int N>
 struct TIsTriviallyRelocatableTmpl<Array<T, N>> : TIsTriviallyRelocatableTmpl<T> {};
 
-template<typename T, int N, TEnableIf<TIsHashable<T>>* = nullptr>
-inline HashCode Hash(const Array<T, N>& x) { return HashContiguous(x.data(), x.size()); }
-
-template<typename T, int N, TEnableIf<TIsFormattable<T>>* = nullptr>
-inline void Format(TextWriter& out, const Array<T, N>& x, const StringSpan& opts) {
-  FormatContiguous(out, x.data(), x.size(), opts);
-}
-template<typename T, int N, TEnableIf<TIsFormattable<T>>* = nullptr>
-inline TextWriter& operator<<(TextWriter& out, const Array<T, N>& x) {
-  FormatContiguous(out, x.data(), x.size()); return out;
-}
-
 template<typename T = void, typename... TElements>
 constexpr auto MakeArray(TElements&&... elements) {
   using DT = TConditional<TIsVoid<T>, TCommon<TElements...>, T>;

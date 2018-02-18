@@ -141,26 +141,8 @@ inline void FormatContiguousGeneric(
 
 } // namespace detail
 
-template<typename T>
-inline void FormatContiguous(TextWriter& out, const T* data, int size, const StringSpan& opts) {
-  if constexpr (TIsCharacter<T>) {
-    out << MakeSpan(data, size);
-  } else if constexpr(THasDetected<detail::CustomContiguousFormattableConcept, T>) {
-    Format(out, data, size, opts);
-  } else {
-    detail::FormatContiguousGeneric(out, data, size, opts);
-  }
-}
-
-template<typename T>
-inline void FormatContiguous(TextWriter& out, const T* data, int size) {
-  if constexpr (TIsCharacter<T>) {
-    out << MakeSpan(data, size);
-  } else if constexpr(THasDetected<detail::CustomContiguousFormattableConcept, T>) {
-    Format(out, data, size);
-  } else {
-    detail::FormatContiguousGeneric(out, data, size, StringSpan());
-  }
+inline void Format(TextWriter& out, StringSpan text, const StringSpan& opts) {
+  out << text;
 }
 
 } // namespace stp

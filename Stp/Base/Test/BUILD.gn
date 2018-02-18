@@ -171,7 +171,7 @@ test("BaseUnitTests") {
     "../Containers/BinarySearchTest.cpp",
     "../Containers/BitArrayTest.cpp",
     "../Containers/BufferTest.cpp",
-    "../Containers/FlatMapTest.cpp",
+    # TODO "../Containers/FlatMapTest.cpp",
     "../Containers/FlatSetTest.cpp",
     "../Containers/HashMapTest.cpp",
     # TODO "Containers/LinkedListTest.cpp",
