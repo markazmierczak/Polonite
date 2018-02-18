@@ -4,7 +4,6 @@
 #ifndef STP_BASE_CONTAINERS_BUFFERSPAN_H_
 #define STP_BASE_CONTAINERS_BUFFERSPAN_H_
 
-#include "Base/Containers/BufferSpanFwd.h"
 #include "Base/Containers/Span.h"
 #include "Base/Type/Variable.h"
 

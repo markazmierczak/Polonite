@@ -60,7 +60,6 @@ component("Base") {
     "Containers/Buffer.h",
     "Containers/BufferSpan.cpp",
     "Containers/BufferSpan.h",
-    "Containers/BufferSpanFwd.h",
     "Containers/ContiguousAlgo.h",
     "Containers/FlatMap.h",
     "Containers/FlatSet.h",

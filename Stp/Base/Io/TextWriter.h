@@ -4,7 +4,6 @@
 #ifndef STP_BASE_IO_TEXTWRITER_H_
 #define STP_BASE_IO_TEXTWRITER_H_
 
-#include "Base/Containers/BufferSpanFwd.h"
 #include "Base/Containers/Span.h"
 
 namespace stp {
