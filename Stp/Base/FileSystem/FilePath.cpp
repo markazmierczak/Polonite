@@ -35,7 +35,7 @@ bool FilePath::CdUp() {
 }
 
 void FilePath::RemoveExtension() {
-  int pos = IndexOfExtension();
+  int pos = indexOfExtension();
   if (pos >= 0)
     Truncate(pos);
 }
@@ -63,7 +63,7 @@ static bool IsEmptyOrSpecialCase(Span<FilePathChar> path) {
  * @return false if this path is empty or its filename is dot or dot-dot, true otherwise.
  */
 bool FilePath::ReplaceExtension(StringSpan extension) {
-  int pos = IndexOfExtension();
+  int pos = indexOfExtension();
   if (pos < 0) {
     FilePathSpan filename = GetFileName();
     if (IsEmptyOrSpecialCase(filename.chars()))

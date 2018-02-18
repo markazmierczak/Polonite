@@ -114,7 +114,7 @@ static float SectWithVertical(const Line2& line, float X) {
 
 bool Line2::Intersects(const Line2& line, const Bounds2& clip, Line2* out_clipped) {
   Bounds2 bounds = line.GetBounds();
-  if (clip.Contains(bounds)) {
+  if (clip.contains(bounds)) {
     if (out_clipped && out_clipped != &line)
       *out_clipped = line;
     return true;
@@ -169,7 +169,7 @@ bool Line2::Intersects(const Line2& line, const Bounds2& clip, Line2* out_clippe
     if (tmp[index1].x > clip.max.x)
       tmp[index1] = Point2(clip.max.x, SectWithVertical(line, clip.max.x));
     *out_clipped = Line2(tmp[0], tmp[1]);
-    ASSERT(clip.Contains(out_clipped->GetBounds()));
+    ASSERT(clip.contains(out_clipped->GetBounds()));
   }
   return true;
 }

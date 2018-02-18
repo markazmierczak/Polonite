@@ -224,7 +224,7 @@ inline void CopyNonOverlapping(T* dst, const T* src, int count) noexcept(TIsNoex
 }
 
 template<typename T, typename U>
-inline int IndexOfItem(const T* items, int size, const U& item) noexcept {
+inline int indexOfItem(const T* items, int size, const U& item) noexcept {
   ASSERT(size >= 0);
   for (int i = 0; i < size; ++i) {
     if (items[i] == item)
@@ -234,7 +234,7 @@ inline int IndexOfItem(const T* items, int size, const U& item) noexcept {
 }
 
 template<typename T, typename U>
-inline int LastIndexOfItem(const T* items, int size, const U& item) noexcept {
+inline int lastIndexOfItem(const T* items, int size, const U& item) noexcept {
   ASSERT(size >= 0);
   for (int i = size - 1; i >= 0; --i) {
     if (items[i] == item)
@@ -248,7 +248,7 @@ int Count(const T* items, int size, const U& item) noexcept {
   ASSERT(size >= 0);
   int count = 0;
   while (size > 0) {
-    int pos = IndexOfItem(items, size, item);
+    int pos = indexOfItem(items, size, item);
     if (pos < 0)
       break;
 

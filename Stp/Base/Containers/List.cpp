@@ -25,7 +25,7 @@ namespace stp {
  */
 
 const char* ToNullTerminated(const List<char>& string) {
-  ASSERT(!string.Contains('\0'));
+  ASSERT(!string.contains('\0'));
   if (string.capacity() != 0) {
     auto* cstr = string.data();
     *(const_cast<char*>(cstr) + string.size()) = '\0';

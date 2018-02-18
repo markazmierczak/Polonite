@@ -156,9 +156,9 @@ TEST(StringSpanTest, EndsWith_Ordinal) {
   #undef ENDS_WITH
 }
 
-TEST(StringSpanTest, IndexOfString_Ordinal) {
-  #define INDEX_OF(c) a.IndexOf(c)
-  #define LAST_INDEX_OF(c) a.LastIndexOf(c)
+TEST(StringSpanTest, indexOfString_Ordinal) {
+  #define INDEX_OF(c) a.indexOf(c)
+  #define LAST_INDEX_OF(c) a.lastIndexOf(c)
 
   StringSpan a = "abccdef";
 
@@ -179,8 +179,8 @@ TEST(StringSpanTest, IndexOfString_Ordinal) {
   #undef LAST_INDEX_OF
 }
 
-TEST(StringSpanTest, Contains_Ordinal) {
-  #define CONTAINS(x, y) StringSpan(x).Contains(y)
+TEST(StringSpanTest, contains_Ordinal) {
+  #define CONTAINS(x, y) StringSpan(x).contains(y)
 
   EXPECT_TRUE(CONTAINS("abcde", "abc"));
   EXPECT_TRUE(CONTAINS("abcde", "cde"));
@@ -210,9 +210,9 @@ TEST(StringSpanTest, CountString_Ordinal) {
   #undef COUNT
 }
 
-TEST(StringSpanTest, IndexOfAnyOf) {
-  #define INDEX_ANY_OF(x, y) StringSpan(x).IndexOfAny(y)
-  #define LAST_INDEX_ANY_OF(x, y) StringSpan(x).LastIndexOfAny(y)
+TEST(StringSpanTest, indexOfAnyOf) {
+  #define INDEX_ANY_OF(x, y) StringSpan(x).indexOfAny(y)
+  #define LAST_INDEX_ANY_OF(x, y) StringSpan(x).lastIndexOfAny(y)
 
   EXPECT_EQ(-1, INDEX_ANY_OF("abcd", "efghijk"));
   EXPECT_EQ(1, INDEX_ANY_OF("abbccd", "efghijkb"));

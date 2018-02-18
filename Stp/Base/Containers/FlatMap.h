@@ -81,7 +81,7 @@ class FlatMap {
 
   template<typename U>
   ConstFindResult Find(const U& key) const {
-    return ConstFindResult(*this, IndexOf(key));
+    return ConstFindResult(*this, indexOf(key));
   }
 
   class FindResult {
@@ -103,7 +103,7 @@ class FlatMap {
 
   template<typename U>
   FindResult Find(const U& key) {
-    return FindResult(*this, IndexOf(key));
+    return FindResult(*this, indexOf(key));
   }
 
   template<typename U>
@@ -116,10 +116,10 @@ class FlatMap {
   bool TryRemove(const U& key);
 
   template<typename U>
-  bool ContainsKey(const U& key) const { return IndexOf(key) >= 0; }
+  bool containsKey(const U& key) const { return indexOf(key) >= 0; }
 
   template<typename U>
-  int IndexOf(const U& key) const { return BinarySearch(list_, key, KeyComparer()); }
+  int indexOf(const U& key) const { return BinarySearch(list_, key, KeyComparer()); }
 
   template<typename U>
   void InsertAt(int at, U&& key, T value);
@@ -185,21 +185,21 @@ inline T& FlatMap<K, T, TList>::operator[](const U& key) {
 template<typename K, typename T, class TList>
 template<typename U>
 inline const T* FlatMap<K, T, TList>::TryGet(const U& key) const {
-  int pos = IndexOf(key);
+  int pos = indexOf(key);
   return pos >= 0 ? &list_[pos].value() : nullptr;
 }
 
 template<typename K, typename T, class TList>
 template<typename U>
 inline T* FlatMap<K, T, TList>::TryGet(const U& key) {
-  int pos = IndexOf(key);
+  int pos = indexOf(key);
   return pos >= 0 ? &list_[pos].value() : nullptr;
 }
 
 template<typename K, typename T, class TList>
 template<typename U>
 inline void FlatMap<K, T, TList>::Set(U&& key, T value) {
-  int pos = IndexOf(key);
+  int pos = indexOf(key);
   if (pos >= 0) {
     auto& value = list_[pos].value();
     DestroyAt(&value);
@@ -212,7 +212,7 @@ inline void FlatMap<K, T, TList>::Set(U&& key, T value) {
 template<typename K, typename T, class TList>
 template<typename U>
 inline T* FlatMap<K, T, TList>::TryAdd(U&& key, T value) {
-  int pos = IndexOf(key);
+  int pos = indexOf(key);
   if (pos >= 0)
     return nullptr;
 
@@ -223,7 +223,7 @@ inline T* FlatMap<K, T, TList>::TryAdd(U&& key, T value) {
 template<typename K, typename T, class TList>
 template<typename U>
 inline bool FlatMap<K, T, TList>::TryRemove(const U& key) {
-  int pos = IndexOf(key);
+  int pos = indexOf(key);
   if (pos < 0)
     return false;
 

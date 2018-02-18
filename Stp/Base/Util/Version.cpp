@@ -45,7 +45,7 @@ bool tryParse(StringSpan str, Version& out) {
 
   int index = 0;
   for (; !str.IsEmpty(); ++index) {
-    int dot_pos = str.IndexOf('.');
+    int dot_pos = str.indexOf('.');
 
     StringSpan part_str;
     if (dot_pos < 0) {

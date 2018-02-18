@@ -27,10 +27,10 @@ struct BASE_EXPORT IntBounds2 {
 
   bool IsEmpty() const { return min.x >= max.x || min.y >= max.y; }
 
-  bool Contains(IntPoint2 point) const { return Contains(point.x, point.y); }
-  bool Contains(int x, int y) const;
+  bool contains(IntPoint2 point) const { return contains(point.x, point.y); }
+  bool contains(int x, int y) const;
 
-  bool Contains(const IntBounds2& other) const;
+  bool contains(const IntBounds2& other) const;
 
   static bool Intersects(const IntBounds2& lhs, const IntBounds2& rhs);
 
@@ -76,10 +76,10 @@ struct BASE_EXPORT Bounds2 {
 
   bool IsEmpty() const { return min.x >= max.x || min.y >= max.y; }
 
-  bool Contains(Point2 point) const { return Contains(point.x, point.y); }
-  bool Contains(float x, float y) const;
+  bool contains(Point2 point) const { return contains(point.x, point.y); }
+  bool contains(float x, float y) const;
 
-  bool Contains(const Bounds2& other) const;
+  bool contains(const Bounds2& other) const;
 
   static bool Intersects(const Bounds2& lhs, const Bounds2& rhs);
 
@@ -124,12 +124,12 @@ inline float Bounds2::GetPerimeter() const {
   return 2 * ((max.x - min.x) + (max.y - min.y));
 }
 
-inline bool IntBounds2::Contains(int x, int y) const {
+inline bool IntBounds2::contains(int x, int y) const {
   return (unsigned)(x - min.x) <= (unsigned)(max.x - min.x) &&
          (unsigned)(y - min.y) <= (unsigned)(max.y - min.y);
 }
 
-inline bool Bounds2::Contains(float x, float y) const {
+inline bool Bounds2::contains(float x, float y) const {
   return min.x <= x && x <= max.x && min.y <= y && y <= max.y;
 }
 
@@ -155,12 +155,12 @@ inline IntBounds2 IntBounds2::operator-(const IntVector2& offset) const {
   return IntBounds2(min - offset, max - offset);
 }
 
-inline bool IntBounds2::Contains(const IntBounds2& other) const {
+inline bool IntBounds2::contains(const IntBounds2& other) const {
   return min.x <= other.min.x && other.max.x <= max.x
       && min.y <= other.min.y && other.max.y <= max.y;
 }
 
-inline bool Bounds2::Contains(const Bounds2& other) const {
+inline bool Bounds2::contains(const Bounds2& other) const {
   return min.x <= other.min.x && other.max.x <= max.x
       && min.y <= other.min.y && other.max.y <= max.y;
 }

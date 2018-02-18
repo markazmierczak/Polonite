@@ -13,7 +13,7 @@ Point2 Triangle2::GetCentroid() const {
   return sum * (1.f / 3);
 }
 
-bool Triangle2::Contains(float px, float py) {
+bool Triangle2::contains(float px, float py) {
   // Compute the barycentric coordinates (u, v, w) of |point| relative to the
   // triangle (r1, r2, r3) by the solving the system of equations:
   //   1) point = u * r1 + v * r2 + w * r3

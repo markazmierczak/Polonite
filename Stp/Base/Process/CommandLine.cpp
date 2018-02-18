@@ -118,7 +118,7 @@ bool CommandLine::ParseSwitch(StringSpan argument, String& out_name, String& out
   argument.RemovePrefix(prefix_size);
 
   // Split pair:
-  int separator_pos = argument.IndexOf(SwitchValueSeparator);
+  int separator_pos = argument.indexOf(SwitchValueSeparator);
 
   if (separator_pos <= 0) {
     if (separator_pos == 0)
@@ -232,7 +232,7 @@ static void FormatCommandLineArgument(TextWriter& out, StringSpan arg) {
   // We follow the quoting rules of CommandLineToArgvW.
   // http://msdn.microsoft.com/en-us/library/17w5ykft.aspx
   StringSpan quotable_chars = " \\\"";
-  if (arg.IndexOfAny(quotable_chars) < 0) {
+  if (arg.indexOfAny(quotable_chars) < 0) {
     // No quoting necessary.
     out << arg;
     return;

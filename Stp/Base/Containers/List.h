@@ -86,11 +86,11 @@ class List {
   void RemoveSuffix(int n) { Truncate(size_ - n); }
 
   template<typename U>
-  int IndexOf(const U& item) const { return toSpan().IndexOf(item); }
+  int indexOf(const U& item) const { return toSpan().indexOf(item); }
   template<typename U>
-  int LastIndexOf(const U& item) const { return toSpan().LastIndexOf(item); }
+  int lastIndexOf(const U& item) const { return toSpan().lastIndexOf(item); }
   template<typename U>
-  bool Contains(const U& item) const { return toSpan().Contains(item); }
+  bool contains(const U& item) const { return toSpan().contains(item); }
 
   static List AdoptMemory(T* ptr, int size, int capacity);
   T* ReleaseMemory();

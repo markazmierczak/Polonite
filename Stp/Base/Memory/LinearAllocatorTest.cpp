@@ -22,7 +22,7 @@ void CheckAlloc(
 void* SimpleAlloc(LinearAllocator* allocator, unsigned size) {
   void* ptr = allocator->TryAllocate(size, 1);
   CheckAlloc(*allocator, size, size, 1);
-  EXPECT_TRUE(allocator->Contains(ptr));
+  EXPECT_TRUE(allocator->contains(ptr));
   return ptr;
 }
 
@@ -33,8 +33,8 @@ TEST(ContiguousAllocatorTest, Basic) {
 
   // check empty
   CheckAlloc(allocator, 0, 0, 0);
-  EXPECT_FALSE(allocator.Contains(nullptr));
-  EXPECT_FALSE(allocator.Contains(this));
+  EXPECT_FALSE(allocator.contains(nullptr));
+  EXPECT_FALSE(allocator.contains(this));
 
   // reset on empty allocator
   allocator.Reset();
@@ -50,14 +50,14 @@ TEST(ContiguousAllocatorTest, Basic) {
 
   allocator.Reset();
   CheckAlloc(allocator, 0, 0, 0);
-  EXPECT_FALSE(allocator.Contains(ptr));
+  EXPECT_FALSE(allocator.contains(ptr));
 
   // test rewind when something is allocated
   ptr = SimpleAlloc(&allocator, size);
 
   allocator.Clear();
   CheckAlloc(allocator, size, 0, 1);
-  EXPECT_FALSE(allocator.Contains(ptr));
+  EXPECT_FALSE(allocator.contains(ptr));
 
   // use the available block
   ptr = SimpleAlloc(&allocator, size);
@@ -68,13 +68,13 @@ TEST(ContiguousAllocatorTest, Basic) {
 
   ptr = allocator.TryAllocate(MinBlockSize, 1);
   CheckAlloc(allocator, 2*MinBlockSize, size+MinBlockSize, 2);
-  EXPECT_TRUE(allocator.Contains(ptr));
+  EXPECT_TRUE(allocator.contains(ptr));
 
   // test out unalloc
   unsigned freed = allocator.FreeRecent(ptr);
   EXPECT_EQ(freed, MinBlockSize);
   CheckAlloc(allocator, 2*MinBlockSize, size, 2);
-  EXPECT_FALSE(allocator.Contains(ptr));
+  EXPECT_FALSE(allocator.contains(ptr));
 }
 
 TEST(ContiguousAllocatorTest, Alignment) {

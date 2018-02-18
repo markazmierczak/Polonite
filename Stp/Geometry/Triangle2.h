@@ -15,8 +15,8 @@ struct BASE_EXPORT Triangle2 {
   // Gives the center point of the triangle (geometric average of vertices).
   Point2 GetCentroid() const;
 
-  bool Contains(Point2 point) { return Contains(point.x, point.y); }
-  bool Contains(float px, float py);
+  bool contains(Point2 point) { return contains(point.x, point.y); }
+  bool contains(float px, float py);
 
   Point2 p;
   Point2 q;

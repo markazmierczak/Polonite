@@ -45,11 +45,11 @@ struct Array {
   constexpr MutableSpanType getSlice(int at, int n) { return toSpan().getSlice(at, n); }
 
   template<typename U>
-  int IndexOf(const U& item) const { return IndexOfItem(data_, N, item); }
+  int indexOf(const U& item) const { return indexOfItem(data_, N, item); }
   template<typename U>
-  int LastIndexOf(const U& item) const { return LastIndexOfItem(data_, N, item); }
+  int lastIndexOf(const U& item) const { return lastIndexOfItem(data_, N, item); }
   template<typename U>
-  bool Contains(const U& item) const { return IndexOf(item) >= 0; }
+  bool contains(const U& item) const { return indexOf(item) >= 0; }
 
   friend constexpr void swap(Array& lhs, Array& rhs) noexcept { swap(lhs.data_, rhs.data_); }
   friend constexpr bool operator==(const Array& lhs, SpanType rhs) { return operator==(lhs.toSpan(), rhs); }

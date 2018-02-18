@@ -172,7 +172,7 @@ class Utf8ReaderState {
   bool NeedsFlush() const { return bytes_[0] != 0; }
   int CountChars() const { return NeedsFlush() ? 4 : 0; }
 
-  int GetLength() { return GetSpan().IndexOf(0); }
+  int GetLength() { return GetSpan().indexOf(0); }
   MutableSpan<byte_t> GetSpan() { return MutableSpan<byte_t>(bytes_, 4); }
 
  private:

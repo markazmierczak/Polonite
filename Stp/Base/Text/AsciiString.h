@@ -43,11 +43,11 @@ inline bool EndsWithIgnoreCaseAscii(StringSpan str, StringSpan suffix) {
       EqualsIgnoreCaseAscii(str.getSlice(str.size() - suffix.size()), suffix);
 }
 
-BASE_EXPORT int IndexOfIgnoreCaseAscii(StringSpan str, char c);
-BASE_EXPORT int LastIndexOfIgnoreCaseAscii(StringSpan str, char c);
+BASE_EXPORT int indexOfIgnoreCaseAscii(StringSpan str, char c);
+BASE_EXPORT int lastIndexOfIgnoreCaseAscii(StringSpan str, char c);
 
-BASE_EXPORT int IndexOfIgnoreCaseAscii(StringSpan haystack, StringSpan needle);
-BASE_EXPORT int LastIndexOfIgnoreCaseAscii(StringSpan haystack, StringSpan needle);
+BASE_EXPORT int indexOfIgnoreCaseAscii(StringSpan haystack, StringSpan needle);
+BASE_EXPORT int lastIndexOfIgnoreCaseAscii(StringSpan haystack, StringSpan needle);
 
 BASE_EXPORT void ToLowerAsciiInplace(MutableStringSpan s);
 BASE_EXPORT void ToUpperAsciiInplace(MutableStringSpan s);

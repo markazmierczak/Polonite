@@ -409,7 +409,7 @@ BASE_EXPORT bool IsNear(const Xform3& lhs, const Xform3& rhs, float tolerance = 
 
 BASE_EXPORT bool isFinite(const Xform3& xform);
 
-// Contains the components of a factored transform. These components may be
+// contains the components of a factored transform. These components may be
 // blended and recomposed.
 struct BASE_EXPORT DecomposedXform3 {
   enum SkipInitialization { SkipInit };

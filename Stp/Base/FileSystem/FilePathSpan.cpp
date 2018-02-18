@@ -20,7 +20,7 @@ static constexpr wchar_t FilePathSeparators[2] = { FilePathSeparator, FilePathAl
  * returns the position of the character of the drive letter specification,
  * otherwise returns -1.
  */
-int FilePathSpan::IndexOfDriveLetter() const {
+int FilePathSpan::indexOfDriveLetter() const {
   #if HAVE_FILE_PATH_WITH_DRIVE_LETTER
   // This is dependent on an ASCII-based character set, but that's a
   // reasonable assumption.
@@ -40,7 +40,7 @@ int FilePathSpan::IndexOfDriveLetter() const {
 int FilePathSpan::GetRootLength() const {
   // FIXME for UNC consume whole \\abc\def
   #if OS(WIN)
-  int letter = IndexOfDriveLetter();
+  int letter = indexOfDriveLetter();
   if (letter >= 0) {
     // Look for a separator right after the drive specification.
     int pos = letter + 2;
@@ -67,7 +67,7 @@ FilePathSpan FilePathSpan::GetRoot() const {
 
 int FilePathSpan::GetDirectoryNameLength() const {
   int root_len = GetRootLength();
-  int last_separator = LastIndexOfSeparator();
+  int last_separator = lastIndexOfSeparator();
 
   int pos = last_separator;
   for (; pos > root_len; --pos) {
@@ -96,7 +96,7 @@ FilePathSpan FilePathSpan::GetFileName() const {
   int root_len = GetRootLength();
 
   // Keep everything after the final separator.
-  int last_separator = LastIndexOfSeparator();
+  int last_separator = lastIndexOfSeparator();
   if (last_separator < 0)
     last_separator = root_len - 1;
   if (last_separator < 0)
@@ -136,34 +136,34 @@ bool FilePathSpan::CdUp() {
   return chars_.size() != root_length;
 }
 
-int FilePathSpan::IndexOfSeparator() const {
+int FilePathSpan::indexOfSeparator() const {
   #if OS(WIN)
-  return chars_.IndexOfAny(FilePathSeparators);
+  return chars_.indexOfAny(FilePathSeparators);
   #elif OS(POSIX)
-  return chars_.IndexOf(FilePathSeparator);
+  return chars_.indexOf(FilePathSeparator);
   #endif
 }
 
-int FilePathSpan::LastIndexOfSeparator() const {
+int FilePathSpan::lastIndexOfSeparator() const {
   #if OS(WIN)
-  return chars_.LastIndexOfAny(FilePathSeparators);
+  return chars_.lastIndexOfAny(FilePathSeparators);
   #elif OS(POSIX)
-  return chars_.LastIndexOf(FilePathSeparator);
+  return chars_.lastIndexOf(FilePathSeparator);
   #endif
 }
 
-int FilePathSpan::IndexOfSeparator(int start) const {
+int FilePathSpan::indexOfSeparator(int start) const {
   auto slice = getSlice(start);
-  int found = slice.IndexOfSeparator();
+  int found = slice.indexOfSeparator();
   return found >= 0 ? (found + start) : found;
 }
 
-int FilePathSpan::LastIndexOfSeparator(int start) const {
+int FilePathSpan::lastIndexOfSeparator(int start) const {
   auto slice = getSlice(0, start + 1);
-  return slice.LastIndexOfSeparator();
+  return slice.lastIndexOfSeparator();
 }
 
-int FilePathSpan::IndexOfExtension() const {
+int FilePathSpan::indexOfExtension() const {
   // Must be "> 0" due how extensions work, there must be something before dot.
   auto* this_data = data();
   int this_size = size();
@@ -194,7 +194,7 @@ int FilePathSpan::IndexOfExtension() const {
 }
 
 bool FilePathSpan::HasExtension() const {
-  return IndexOfExtension() >= 0;
+  return indexOfExtension() >= 0;
 }
 
 /**
@@ -203,7 +203,7 @@ bool FilePathSpan::HasExtension() const {
  * with precisely one dot.
  */
 String FilePathSpan::GetExtension() const {
-  int pos = IndexOfExtension();
+  int pos = indexOfExtension();
 
   String result;
   if (pos < 0)
@@ -225,7 +225,7 @@ String FilePathSpan::GetExtension() const {
 bool FilePathSpan::MatchesExtension(StringSpan extension) const {
   ASSERT(IsAscii(extension));
 
-  int pos = IndexOfExtension();
+  int pos = indexOfExtension();
 
   bool no_extension = pos < 0;
   bool expect_no_extension = extension.IsEmpty();
@@ -255,7 +255,7 @@ bool FilePathSpan::MatchesExtension(StringSpan extension) const {
  * "C:\pics\jojo.jpg" -> "C:\pics\jojo"
  */
 void FilePathSpan::RemoveExtension() {
-  int pos = IndexOfExtension();
+  int pos = indexOfExtension();
   if (pos >= 0)
     chars_.Truncate(pos);
 }
@@ -274,7 +274,7 @@ FilePathEnumerator::FilePathEnumerator(FilePathSpan path)
   if (root_size > 0)
     now_len_ = root_size;
   else
-    now_len_ = max(0, path_.IndexOfSeparator());
+    now_len_ = max(0, path_.indexOfSeparator());
 }
 
 FilePathEnumerator* FilePathEnumerator::Next() {
@@ -298,7 +298,7 @@ FilePathEnumerator* FilePathEnumerator::Next() {
     return this;
   }
   // find next component after ours
-  int next_sep = path_.IndexOfSeparator(pos);
+  int next_sep = path_.indexOfSeparator(pos);
   now_len_ = (next_sep >= 0 ? next_sep : path_size) - pos;
   return this;
 }

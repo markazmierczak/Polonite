@@ -40,7 +40,7 @@ bool ConsoleWriter::shouldUseColors(const FileStream& stream) {
   String term_name;
   if (!Environment::TryGet("TERM", term_name))
     return false;
-  return SupportedTerminals.Contains(term_name);
+  return SupportedTerminals.contains(term_name);
 }
 
 static AnsiColor getAnsiColor(ConsoleColor color) {

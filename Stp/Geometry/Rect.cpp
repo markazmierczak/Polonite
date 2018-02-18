@@ -8,12 +8,12 @@
 
 namespace stp {
 
-bool IntRect::Contains(int px, int py) const {
+bool IntRect::contains(int px, int py) const {
   return px >= left() && px < right() &&
          py >= top() && py < bottom();
 }
 
-bool IntRect::Contains(const IntRect& other) const {
+bool IntRect::contains(const IntRect& other) const {
   return left() <= other.left() && right() >= other.right() &&
          top() <= other.top() && bottom() >= other.bottom();
 }

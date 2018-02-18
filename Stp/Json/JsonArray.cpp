@@ -31,8 +31,8 @@ void JsonArray::ShrinkCapacity(int request) {
   impl().ShrinkCapacity(request);
 }
 
-bool JsonArray::Contains(const JsonValue& item) const {
-  return impl().Contains(item);
+bool JsonArray::contains(const JsonValue& item) const {
+  return impl().contains(item);
 }
 
 void JsonArray::Add(JsonValue item) {

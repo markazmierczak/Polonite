@@ -58,7 +58,7 @@ void DemangleSymbols(TextWriter& out, StringSpan mangled) {
 
   while (!mangled.IsEmpty()) {
     // Look for the start of a mangled symbol, from search_from.
-    int mangled_start = mangled.IndexOf(MangledSymbolPrefix);
+    int mangled_start = mangled.indexOf(MangledSymbolPrefix);
     if (mangled_start < 0) {
       out << mangled;
       break; // Mangled symbol not found.
@@ -69,7 +69,7 @@ void DemangleSymbols(TextWriter& out, StringSpan mangled) {
     }
 
     // Look for the end of the mangled symbol.
-    int mangled_end = mangled.IndexOfAnyBut(SymbolCharacters);
+    int mangled_end = mangled.indexOfAnyBut(SymbolCharacters);
     if (mangled_end < 0)
       mangled_end = mangled.size();
 

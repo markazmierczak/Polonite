@@ -77,7 +77,7 @@ class BASE_EXPORT JsonObject : public JsonValue {
   bool TryRemoveWithPath(StringSpan path, EmptyHandling empty_handling = EraseEmpty);
   void RemoveWithPath(StringSpan path, EmptyHandling empty_handling = EraseEmpty);
 
-  bool ContainsKey(StringSpan key) const;
+  bool containsKey(StringSpan key) const;
 
   const String& GetKeyAt(int at) const { return impl().GetKeyAt(at); }
 

@@ -37,7 +37,7 @@ class FlatSet {
   void Clear() { list_.Clear(); }
 
   template<typename U>
-  bool Contains(const U& value) const { return IndexOf(value) >= 0; }
+  bool contains(const U& value) const { return indexOf(value) >= 0; }
 
   template<typename U>
   bool TryAdd(U&& value);
@@ -45,7 +45,7 @@ class FlatSet {
   bool TryRemove(const U& value);
 
   template<typename U>
-  int IndexOf(const U& value) const { return BinarySearch(list_, value); }
+  int indexOf(const U& value) const { return BinarySearch(list_, value); }
 
   void RemoveAt(int at) { list_.RemoveAt(at); }
   void RemoveRange(int at, int n) { list_.RemoveRange(at, n); }
@@ -83,7 +83,7 @@ struct TIsTriviallyRelocatableTmpl<FlatSet<T, TList>>
 template<typename T, class TList>
 template<typename U>
 inline bool FlatSet<T, TList>::TryAdd(U&& value) {
-  int pos = IndexOf(value);
+  int pos = indexOf(value);
   if (pos >= 0)
     return false;
 
@@ -94,7 +94,7 @@ inline bool FlatSet<T, TList>::TryAdd(U&& value) {
 template<typename T, class TList>
 template<typename U>
 inline bool FlatSet<T, TList>::TryRemove(const U& value) {
-  int pos = IndexOf(value);
+  int pos = indexOf(value);
   if (pos < 0)
     return false;
 

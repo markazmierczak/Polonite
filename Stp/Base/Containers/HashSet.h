@@ -36,7 +36,7 @@ class HashSet {
   bool TryRemove(const U& value) { return map_.TryRemove(value); }
 
   template<typename U>
-  bool Contains(const U& value) const { return map_.Contains(value); }
+  bool contains(const U& value) const { return map_.contains(value); }
 
   friend void swap(HashSet& lhs, HashSet& rhs) { swap(lhs.map_, rhs.map_); }
 

@@ -50,9 +50,9 @@ bool Quad2::IsCounterClockwise() const {
   return element1 + element2 < element3 + element4;
 }
 
-bool Quad2::Contains(const Point2& point) const {
-  return Triangle2(p[0], p[1], p[2]).Contains(point)
-      || Triangle2(p[0], p[2], p[3]).Contains(point);
+bool Quad2::contains(const Point2& point) const {
+  return Triangle2(p[0], p[1], p[2]).contains(point)
+      || Triangle2(p[0], p[2], p[3]).contains(point);
 }
 
 void Quad2::Scale(float x_scale, float y_scale) {

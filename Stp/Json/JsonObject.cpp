@@ -37,7 +37,7 @@ void JsonObject::SetWithPath(StringSpan input_path, JsonValue value) {
   ASSERT(Utf8::Validate(input_path));
 
   StringSpan path = input_path;
-  int delimiter = path.IndexOf('.');
+  int delimiter = path.indexOf('.');
 
   String input_path_copy;
   if (delimiter >= 0) {
@@ -48,10 +48,10 @@ void JsonObject::SetWithPath(StringSpan input_path, JsonValue value) {
   }
 
   JsonObject* object = this;
-  for (; delimiter >= 0; delimiter = path.IndexOf('.')) {
+  for (; delimiter >= 0; delimiter = path.indexOf('.')) {
     // Assume that we're indexing into a dictionary.
     StringSpan key = path.getSlice(0, delimiter);
-    int pos = object->impl().IndexOf(key);
+    int pos = object->impl().indexOf(key);
 
     if (pos < 0) {
       pos = -pos;
@@ -82,7 +82,7 @@ const JsonValue* JsonObject::TryGetWithPath(StringSpan path) const {
 JsonValue* JsonObject::TryGetWithPath(StringSpan input_path) {
   StringSpan path = input_path;
   JsonObject* object = this;
-  for (int delimiter = path.IndexOf('.'); delimiter >= 0; delimiter = path.IndexOf('.')) {
+  for (int delimiter = path.indexOf('.'); delimiter >= 0; delimiter = path.indexOf('.')) {
     StringSpan key = path.getSlice(0, delimiter);
 
     object = object->TryGetObject(key);
@@ -144,8 +144,8 @@ JsonObject* JsonObject::TryGetObject(StringSpan key) {
   return TryGetTmpl<JsonObject>(*this, key);
 }
 
-bool JsonObject::ContainsKey(StringSpan key) const {
-  return impl().ContainsKey(key);
+bool JsonObject::containsKey(StringSpan key) const {
+  return impl().containsKey(key);
 }
 
 bool JsonObject::TryAdd(StringSpan key, JsonValue value) {
@@ -157,7 +157,7 @@ bool JsonObject::TryRemove(StringSpan key) {
 }
 
 bool JsonObject::TryRemoveWithPath(StringSpan path, EmptyHandling empty_handling) {
-  int delimiter_pos = path.IndexOf('.');
+  int delimiter_pos = path.indexOf('.');
   if (delimiter_pos < 0)
     return TryRemove(path);
 

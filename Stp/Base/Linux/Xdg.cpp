@@ -61,7 +61,7 @@ DesktopEnvironment Xdg::GetDesktopEnvironment() {
       // DESKTOP_SESSION can be gnome-fallback or gnome-fallback-compiz
       String desktop_session;
       if (Environment::TryGet("DESKTOP_SESSION", desktop_session) &&
-          ContainsRange(desktop_session, "gnome-fallback")) {
+          containsRange(desktop_session, "gnome-fallback")) {
         return DesktopEnvironment::Gnome;
       }
       return DesktopEnvironment::Unity;
@@ -83,7 +83,7 @@ DesktopEnvironment Xdg::GetDesktopEnvironment() {
       return DesktopEnvironment::Kde4;
     if (desktop_session == "kde")
       return GetKdeDesktopEnvironment();
-    if (ContainsRange(desktop_session, "xfce") || desktop_session == "xubuntu")
+    if (containsRange(desktop_session, "xfce") || desktop_session == "xubuntu")
       return DesktopEnvironment::Xfce;
   }
 

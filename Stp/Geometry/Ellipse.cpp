@@ -8,7 +8,7 @@
 
 namespace stp {
 
-bool Ellipse::Contains(Point2 point) const {
+bool Ellipse::contains(Point2 point) const {
   auto d = point - center;
   auto r = radii;
   return (d.x * d.x) / (r.x * r.x) + (d.y * d.y) / (r.y * r.y) <= 1;

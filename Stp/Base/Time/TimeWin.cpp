@@ -19,7 +19,7 @@ namespace stp {
 
 namespace {
 
-// From MSDN, FILETIME "Contains a 64-bit value representing the number of
+// From MSDN, FILETIME "contains a 64-bit value representing the number of
 // 100-nanosecond intervals since January 1, 1601 (UTC)."
 int64_t FileTimeToMicroseconds(const FILETIME& ft) {
   // Need to bit_cast to fix alignment, then divide by 10 to convert

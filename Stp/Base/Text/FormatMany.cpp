@@ -117,8 +117,8 @@ bool FormatLayout::Parse(StringSpan s) {
 bool FormatReplacement::Parse(StringSpan s) {
   TrimWhitespaceAscii(s);
 
-  int comma = s.IndexOf(',');
-  int semicolon = s.IndexOf(':');
+  int comma = s.indexOf(',');
+  int semicolon = s.indexOf(':');
 
   // options specification can also use comma.
   // Detect the case when comma is specified after semicolon only.
@@ -215,7 +215,7 @@ void FormatManyImpl(TextWriter& out, StringSpan fmt, Span<Formatter*> args) {
   // TODO handle double }} correctly
   int implicit_index = -1;
   while (!fmt.IsEmpty()) {
-    int brace = fmt.IndexOf('{');
+    int brace = fmt.indexOf('{');
     if (brace < 0) {
       out << fmt;
       break;
@@ -229,7 +229,7 @@ void FormatManyImpl(TextWriter& out, StringSpan fmt, Span<Formatter*> args) {
       fmt.RemovePrefix(brace + 1);
 
       // Find replacement boundaries.
-      int closing_brace = fmt.IndexOf('}');
+      int closing_brace = fmt.indexOf('}');
       ASSERT(closing_brace >= 0);
       StringSpan rep_string = fmt.getSlice(0, closing_brace);
       fmt.RemovePrefix(closing_brace + 1);

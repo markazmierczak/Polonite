@@ -29,7 +29,7 @@ Time Build::TranslationTime() {
   StringSpan time_str(__TIME__); // "hh:mm:ss"
 
   Time::Exploded exploded;
-  exploded.month = MonthArray.IndexOf(date_str.getSlice(0, 3));
+  exploded.month = MonthArray.indexOf(date_str.getSlice(0, 3));
 
   StringSpan day_str = date_str.getSlice(4, 2);
   // First character of "dd" is space if day is lower than ten.

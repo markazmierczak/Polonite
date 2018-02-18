@@ -55,18 +55,18 @@ inline int CountMatching(const TList& list, const TItem& item, TPredicate&& matc
 }
 
 template<typename TList, TEnableIf<TIsContiguousContainer<TList>>* = nullptr>
-inline int IndexOfRange(const TList& list, Span<typename TList::ItemType> range) {
-  return IndexOfRange(list.data(), list.size(), range.data(), range.size());
+inline int indexOfRange(const TList& list, Span<typename TList::ItemType> range) {
+  return indexOfRange(list.data(), list.size(), range.data(), range.size());
 }
 
 template<typename TList, TEnableIf<TIsContiguousContainer<TList>>* = nullptr>
-inline int LastIndexOfRange(const TList& list, Span<typename TList::ItemType> range) {
-  return LastIndexOfRange(list.data(), list.size(), range.data(), range.size());
+inline int lastIndexOfRange(const TList& list, Span<typename TList::ItemType> range) {
+  return lastIndexOfRange(list.data(), list.size(), range.data(), range.size());
 }
 
 template<typename TList, TEnableIf<TIsContiguousContainer<TList>>* = nullptr>
-inline bool ContainsRange(const TList& list, Span<typename TList::ItemType> range) {
-  return IndexOfRange(list, range) >= 0;
+inline bool containsRange(const TList& list, Span<typename TList::ItemType> range) {
+  return indexOfRange(list, range) >= 0;
 }
 
 template<typename TList, TEnableIf<TIsContiguousContainer<TList>>* = nullptr>
@@ -81,7 +81,7 @@ inline bool EndsWith(const TList& list, Span<typename TList::ItemType> suffix) {
 
 template<typename TList, typename TItem, TEnableIf<TIsContiguousContainer<TList>>* = nullptr>
 inline bool TryRemoveOne(TList& list, const TItem& item) {
-  int index = list.IndexOf(item);
+  int index = list.indexOf(item);
   if (index >= 0) {
     list.RemoveAt(index);
     return true;

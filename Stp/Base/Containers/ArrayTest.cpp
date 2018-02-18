@@ -36,23 +36,23 @@ TEST(ArrayTest, Basic) {
 TEST(ArrayTest, Find) {
   auto array = makeArray(2, 2, 4, 5, 6, 7, 8);
 
-  EXPECT_EQ(-1, array.IndexOf(0));
-  EXPECT_EQ(0, array.IndexOf(2));
-  EXPECT_EQ(3, array.IndexOf(5));
-  EXPECT_EQ(6, array.IndexOf(8));
-  EXPECT_EQ(-1, array.IndexOf(10));
+  EXPECT_EQ(-1, array.indexOf(0));
+  EXPECT_EQ(0, array.indexOf(2));
+  EXPECT_EQ(3, array.indexOf(5));
+  EXPECT_EQ(6, array.indexOf(8));
+  EXPECT_EQ(-1, array.indexOf(10));
 
-  EXPECT_EQ(-1, array.LastIndexOf(0));
-  EXPECT_EQ(1, array.LastIndexOf(2));
-  EXPECT_EQ(3, array.LastIndexOf(5));
-  EXPECT_EQ(6, array.LastIndexOf(8));
-  EXPECT_EQ(-1, array.LastIndexOf(10));
+  EXPECT_EQ(-1, array.lastIndexOf(0));
+  EXPECT_EQ(1, array.lastIndexOf(2));
+  EXPECT_EQ(3, array.lastIndexOf(5));
+  EXPECT_EQ(6, array.lastIndexOf(8));
+  EXPECT_EQ(-1, array.lastIndexOf(10));
 
-  EXPECT_FALSE(array.Contains(0));
-  EXPECT_TRUE(array.Contains(2));
-  EXPECT_TRUE(array.Contains(5));
-  EXPECT_TRUE(array.Contains(8));
-  EXPECT_FALSE(array.Contains(10));
+  EXPECT_FALSE(array.contains(0));
+  EXPECT_TRUE(array.contains(2));
+  EXPECT_TRUE(array.contains(5));
+  EXPECT_TRUE(array.contains(8));
+  EXPECT_FALSE(array.contains(10));
 }
 
 } // namespace stp

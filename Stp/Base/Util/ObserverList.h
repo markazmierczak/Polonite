@@ -102,13 +102,13 @@ inline ObserverList<TObserver>::~ObserverList() {
 template<class TObserver>
 void ObserverList<TObserver>::AddObserver(TObserver* obs) {
   ASSERT(obs);
-  ASSERT(!observers_.Contains(obs), "observers can only be added once!");
+  ASSERT(!observers_.contains(obs), "observers can only be added once!");
   observers_.Add(obs);
 }
 
 template<class TObserver>
 void ObserverList<TObserver>::RemoveObserver(TObserver* obs) {
-  int index = observers_.IndexOf(obs);
+  int index = observers_.indexOf(obs);
   ASSERT(index >= 0);
   if (iterators_.IsEmpty()) {
     observers_.RemoveAt(index);
@@ -120,7 +120,7 @@ void ObserverList<TObserver>::RemoveObserver(TObserver* obs) {
 
 template<class TObserver>
 bool ObserverList<TObserver>::HasObserver(const TObserver* observer) const {
-  return observers_.Contains(const_cast<TObserver*>(observer));
+  return observers_.contains(const_cast<TObserver*>(observer));
 }
 
 template<class TObserver>

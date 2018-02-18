@@ -23,7 +23,7 @@ class Stack {
   void Clear() { list_.Clear(); }
 
   template<typename U>
-  bool Contains(const U& item) const { return list_.Contains(item); }
+  bool contains(const U& item) const { return list_.contains(item); }
 
   const T& Peek() const { return list_.getLast(); }
   T& Peek() { return list_.getLast(); }

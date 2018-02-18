@@ -56,7 +56,7 @@ class SinglyLinkedList {
 
   T* TakeFirst();
 
-  bool Contains(const T& value) const { return Find(value) != nullptr; }
+  bool contains(const T& value) const { return Find(value) != nullptr; }
 
   T* Find(const T& value) const;
 

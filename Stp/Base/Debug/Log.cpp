@@ -27,7 +27,7 @@ struct VmoduleMatcher {
         level(2) {
     // If the pattern contains a separator, we assume that
     // it's meant to be tested against the entire __FILE__ string.
-    match_target = IndexOfAny(pattern, "\\/") < 0 ? MatchModule : MatchFile;
+    match_target = indexOfAny(pattern, "\\/") < 0 ? MatchModule : MatchFile;
   }
 
   String pattern;
@@ -106,11 +106,11 @@ void LogPrint(LogLevel level, const char* file, unsigned line, const char* msg) 
 static StringSpan GetModule(StringSpan file) {
   StringSpan module = file;
 
-  int last_slash_pos = LastIndexOfAny(module, "\\/");
+  int last_slash_pos = lastIndexOfAny(module, "\\/");
   if (last_slash_pos >= 0)
     module.RemovePrefix(last_slash_pos + 1);
 
-  int extension_start = module.LastIndexOf('.');
+  int extension_start = module.lastIndexOf('.');
   if (extension_start >= 0)
     module.Truncate(extension_start);
 
@@ -194,12 +194,12 @@ static void ParseMatchers(StringSpan input) {
   List<VmoduleMatcher>* matchers = g_verbose_matchers.Pointer();
 
   while (!input.IsEmpty()) {
-    int comma = input.IndexOf(',');
+    int comma = input.indexOf(',');
     StringSpan pair = input.getSlice(0, comma);
 
     bool parsed = false;
 
-    int pos = pair.LastIndexOf('=');
+    int pos = pair.lastIndexOf('=');
     if (pos >= 0) {
       VmoduleMatcher matcher(String(pair.getSlice(0, pos)));
       if (tryParse(pair.getSlice(pos + 1), matcher.level) == ParseIntegerErrorCode::Ok) {

@@ -25,8 +25,8 @@ struct BASE_EXPORT IntBounds3 {
 
   bool IsEmpty() const { return min.x >= max.x || min.y >= max.y || min.z >= max.z; }
 
-  bool Contains(IntPoint3 point) const { return Contains(point.x, point.y, point.z); }
-  bool Contains(int x, int y, int z) const;
+  bool contains(IntPoint3 point) const { return contains(point.x, point.y, point.z); }
+  bool contains(int x, int y, int z) const;
 
   void Sort();
   IntBounds3 GetSorted() const WARN_UNUSED_RESULT { auto s = *this; s.Sort(); return s; }
@@ -58,8 +58,8 @@ struct BASE_EXPORT Bounds3 {
 
   bool IsEmpty() const { return min.x >= max.x || min.y >= max.y || min.z >= max.z; }
 
-  bool Contains(Point3 point) const { return Contains(point.x, point.y, point.z); }
-  bool Contains(float x, float y, float z) const;
+  bool contains(Point3 point) const { return contains(point.x, point.y, point.z); }
+  bool contains(float x, float y, float z) const;
 
   void Sort();
   Bounds3 GetSorted() const WARN_UNUSED_RESULT { auto s = *this; s.Sort(); return s; }
@@ -79,13 +79,13 @@ struct BASE_EXPORT Bounds3 {
   Point3 max;
 };
 
-inline bool IntBounds3::Contains(int x, int y, int z) const {
+inline bool IntBounds3::contains(int x, int y, int z) const {
   return (unsigned)(x - min.x) <= (unsigned)(max.x - min.x) &&
          (unsigned)(y - min.y) <= (unsigned)(max.y - min.y) &&
          (unsigned)(z - min.z) <= (unsigned)(max.z - min.z);
 }
 
-inline bool Bounds3::Contains(float x, float y, float z) const {
+inline bool Bounds3::contains(float x, float y, float z) const {
   return min.x <= x && x <= max.x && min.y <= y && y <= max.y && min.z <= z && z <= max.z;
 }
 

@@ -100,7 +100,7 @@ class HashMap : public detail::HashMapBase {
   bool TryRemove(const U& key);
 
   template<typename U>
-  bool ContainsKey(const U& key) const { return TryGet(key) != nullptr; }
+  bool containsKey(const U& key) const { return TryGet(key) != nullptr; }
 
   template<typename U>
   const T& operator[](const U& key) const;

@@ -52,23 +52,23 @@ TEST(Span, Find) {
   int array[] = { 2, 2, 4, 5, 6, 7, 8 };
   Span<int> span = array;
 
-  EXPECT_EQ(-1, span.IndexOf(0));
-  EXPECT_EQ(0, span.IndexOf(2));
-  EXPECT_EQ(3, span.IndexOf(5));
-  EXPECT_EQ(6, span.IndexOf(8));
-  EXPECT_EQ(-1, span.IndexOf(10));
+  EXPECT_EQ(-1, span.indexOf(0));
+  EXPECT_EQ(0, span.indexOf(2));
+  EXPECT_EQ(3, span.indexOf(5));
+  EXPECT_EQ(6, span.indexOf(8));
+  EXPECT_EQ(-1, span.indexOf(10));
 
-  EXPECT_EQ(-1, span.LastIndexOf(0));
-  EXPECT_EQ(1, span.LastIndexOf(2));
-  EXPECT_EQ(3, span.LastIndexOf(5));
-  EXPECT_EQ(6, span.LastIndexOf(8));
-  EXPECT_EQ(-1, span.LastIndexOf(10));
+  EXPECT_EQ(-1, span.lastIndexOf(0));
+  EXPECT_EQ(1, span.lastIndexOf(2));
+  EXPECT_EQ(3, span.lastIndexOf(5));
+  EXPECT_EQ(6, span.lastIndexOf(8));
+  EXPECT_EQ(-1, span.lastIndexOf(10));
 
-  EXPECT_FALSE(span.Contains(0));
-  EXPECT_TRUE(span.Contains(2));
-  EXPECT_TRUE(span.Contains(5));
-  EXPECT_TRUE(span.Contains(8));
-  EXPECT_FALSE(span.Contains(10));
+  EXPECT_FALSE(span.contains(0));
+  EXPECT_TRUE(span.contains(2));
+  EXPECT_TRUE(span.contains(5));
+  EXPECT_TRUE(span.contains(8));
+  EXPECT_FALSE(span.contains(10));
 }
 
 TEST(Span, FindIndex) {

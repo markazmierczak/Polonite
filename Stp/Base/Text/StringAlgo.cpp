@@ -21,10 +21,10 @@ inline CharLookupTable BuildLookupTable(StringSpan s) {
 
 } // namespace
 
-int IndexOfAny(StringSpan s, StringSpan a) {
+int indexOfAny(StringSpan s, StringSpan a) {
   // Avoid the cost of BuildLookupTable() for a single-character search.
   if (a.size() <= 1)
-    return !a.IsEmpty() ? s.IndexOf(a[0]) : -1;
+    return !a.IsEmpty() ? s.indexOf(a[0]) : -1;
 
   CharLookupTable lookup = BuildLookupTable(a);
   for (int i = 0; i < s.size(); ++i) {
@@ -34,10 +34,10 @@ int IndexOfAny(StringSpan s, StringSpan a) {
   return -1;
 }
 
-int LastIndexOfAny(StringSpan s, StringSpan a) {
+int lastIndexOfAny(StringSpan s, StringSpan a) {
   // Avoid the cost of BuildLookupTable() for a single-character search.
   if (a.size() <= 1)
-    return !a.IsEmpty() ? s.LastIndexOf(a[0]) : -1;
+    return !a.IsEmpty() ? s.lastIndexOf(a[0]) : -1;
 
   CharLookupTable lookup = BuildLookupTable(a);
   for (int i = s.size() - 1; i >= 0; --i) {
@@ -47,7 +47,7 @@ int LastIndexOfAny(StringSpan s, StringSpan a) {
   return -1;
 }
 
-int IndexOfAnyBut(StringSpan s, StringSpan a) {
+int indexOfAnyBut(StringSpan s, StringSpan a) {
   for (int i = 0; i < s.size(); ++i) {
     bool found = false;
     for (int j = 0; j < a.size(); ++j) {
@@ -62,7 +62,7 @@ int IndexOfAnyBut(StringSpan s, StringSpan a) {
   return -1;
 }
 
-int LastIndexOfAnyBut(StringSpan s, StringSpan a) {
+int lastIndexOfAnyBut(StringSpan s, StringSpan a) {
   for (int i = s.size() - 1; i >= 0; --i) {
     bool found = false;
     for (int j = 0; j < a.size(); ++j) {

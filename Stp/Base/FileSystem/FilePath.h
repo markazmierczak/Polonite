@@ -63,12 +63,12 @@ class BASE_EXPORT FilePath {
 
   void StripTrailingSeparators();
 
-  int IndexOfSeparator() const { return toSpan().IndexOfSeparator(); }
-  int IndexOfSeparator(int begin) const { return toSpan().IndexOfSeparator(begin); }
-  int LastIndexOfSeparator() const { return toSpan().LastIndexOfSeparator(); }
-  int LastIndexOfSeparator(int end) const { return toSpan().LastIndexOfSeparator(end); }
+  int indexOfSeparator() const { return toSpan().indexOfSeparator(); }
+  int indexOfSeparator(int begin) const { return toSpan().indexOfSeparator(begin); }
+  int lastIndexOfSeparator() const { return toSpan().lastIndexOfSeparator(); }
+  int lastIndexOfSeparator(int end) const { return toSpan().lastIndexOfSeparator(end); }
 
-  int IndexOfDriveLetter() const { return toSpan().IndexOfDriveLetter(); }
+  int indexOfDriveLetter() const { return toSpan().indexOfDriveLetter(); }
 
   StringSpan GetExtension() const { return toSpan().GetExtension(); }
   bool MatchesExtension(StringSpan extension) const { return toSpan().MatchesExtension(extension); }
@@ -92,7 +92,7 @@ class BASE_EXPORT FilePath {
 
   int GetRootLength() const { return toSpan().GetRootLength(); }
   int GetDirectoryNameLength() const { return toSpan().GetDirectoryNameLength(); }
-  int IndexOfExtension() const { return toSpan().IndexOfExtension(); }
+  int indexOfExtension() const { return toSpan().indexOfExtension(); }
   int CountTrailingSeparators() const { return toSpan().CountTrailingSeparators(); }
 
   friend bool operator<=(const FilePath& l, const FilePathSpan& r) { return l.toSpan() <= r; }

@@ -29,7 +29,7 @@ namespace debug {
 
 // Scans |proc_maps| starting from |pos| returning true if the gate VMA was
 // found, otherwise returns false.
-static bool ContainsGateVMA(std::string* proc_maps, size_t pos) {
+static bool containsGateVMA(std::string* proc_maps, size_t pos) {
   #if CPU(ARM_FAMILY)
   // The gate VMA on ARM kernels is the interrupt vectors page.
   return proc_maps->find(" [vectors]\n", pos) != std::string::npos;
@@ -84,7 +84,7 @@ bool ReadProcMaps(std::string* proc_maps) {
     // entries including the gate VMA again.
     //
     // Avoid this by searching for the gate VMA and breaking early.
-    if (ContainsGateVMA(proc_maps, pos))
+    if (containsGateVMA(proc_maps, pos))
       break;
   }
 

@@ -48,8 +48,8 @@ class BASE_EXPORT LinearAllocator {
 
   // Returns true if the specified address is within one of the chunks, and
   // has at least 1-byte following the address (i.e. if |ptr| points to the
-  // end of a chunk, then Contains() will return false).
-  bool Contains(const void* ptr) const;
+  // end of a chunk, then contains() will return false).
+  bool contains(const void* ptr) const;
 
   ALWAYS_INLINE size_t GetTotalCapacity() const { return total_capacity_; }
   ALWAYS_INLINE size_t GetTotalUsed() const { return total_used_; }

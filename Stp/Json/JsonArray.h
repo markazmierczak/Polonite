@@ -74,7 +74,7 @@ class BASE_EXPORT JsonArray : public JsonValue {
 
   void RemoveRange(int at, int n);
 
-  bool Contains(const JsonValue& item) const;
+  bool contains(const JsonValue& item) const;
 
   static bool Parse(
       StringSpan input,

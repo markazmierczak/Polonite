@@ -73,11 +73,11 @@ class Span {
   constexpr void RemoveSuffix(int n) { Truncate(size_ - n); }
 
   template<typename U>
-  int IndexOf(const U& item) const { return IndexOfItem(data_, size_, item); }
+  int indexOf(const U& item) const { return indexOfItem(data_, size_, item); }
   template<typename U>
-  int LastIndexOf(const U& item) const { return LastIndexOfItem(data_, size_, item); }
+  int lastIndexOf(const U& item) const { return lastIndexOfItem(data_, size_, item); }
   template<typename U>
-  bool Contains(const U& item) const { return IndexOf(item) >= 0; }
+  bool contains(const U& item) const { return indexOf(item) >= 0; }
 
   friend bool operator==(const Span& lhs, const Span& rhs) {
     return lhs.size_ == rhs.size() && Equals(lhs.data_, rhs.data_, lhs.size_);
@@ -167,11 +167,11 @@ class MutableSpan {
   constexpr void RemoveSuffix(int n) { Truncate(size_ - n); }
 
   template<typename U>
-  int IndexOf(const U& item) const { return IndexOfItem(data_, size_, item); }
+  int indexOf(const U& item) const { return indexOfItem(data_, size_, item); }
   template<typename U>
-  int LastIndexOf(const U& item) const { return LastIndexOfItem(data_, size_, item); }
+  int lastIndexOf(const U& item) const { return lastIndexOfItem(data_, size_, item); }
   template<typename U>
-  bool Contains(const U& item) const { return IndexOf(item) >= 0; }
+  bool contains(const U& item) const { return indexOf(item) >= 0; }
 
   friend bool operator==(const MutableSpan& lhs, const Span<T>& rhs) {
     return lhs.size_ == rhs.size() && Equals(lhs.data_, rhs.data(), lhs.size_);

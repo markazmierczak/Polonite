@@ -120,8 +120,8 @@ bool Debugger::isPresent() {
   StringSpan status(buf, num_read);
   StringSpan tracer("TracerPid:\t");
 
-  // FIXME support for IndexOfRange
-  int pid_index = -1; // IndexOfRange(status, tracer);
+  // FIXME support for indexOfRange
+  int pid_index = -1; // indexOfRange(status, tracer);
   if (pid_index < 0)
     return false;
 

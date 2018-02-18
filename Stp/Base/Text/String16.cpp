@@ -9,7 +9,7 @@ namespace stp {
 
 template<typename T>
 static inline const T* ToNullTerminatedTmpl(const List<T>& string) {
-  ASSERT(!string.Contains('\0'));
+  ASSERT(!string.contains('\0'));
   if (string.capacity() != 0) {
     auto* cstr = string.data();
     *(const_cast<T*>(cstr) + string.size()) = '\0';

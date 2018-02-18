@@ -27,7 +27,7 @@ int CompareIgnoreCaseAscii(const char* lhs, const char* rhs, int size) {
 
 } // namespace detail
 
-int IndexOfIgnoreCaseAscii(StringSpan str, char c) {
+int indexOfIgnoreCaseAscii(StringSpan str, char c) {
   c = toLowerAscii(c);
 
   for (int i = 0 ; i < str.size(); ++i) {
@@ -37,7 +37,7 @@ int IndexOfIgnoreCaseAscii(StringSpan str, char c) {
   return -1;
 }
 
-int LastIndexOfIgnoreCaseAscii(StringSpan str, char c) {
+int lastIndexOfIgnoreCaseAscii(StringSpan str, char c) {
   c = toLowerAscii(c);
 
   for (int i = str.size() - 1; i >= 0; --i) {
@@ -47,7 +47,7 @@ int LastIndexOfIgnoreCaseAscii(StringSpan str, char c) {
   return -1;
 }
 
-int IndexOfIgnoreCaseAscii(StringSpan haystack, StringSpan needle) {
+int indexOfIgnoreCaseAscii(StringSpan haystack, StringSpan needle) {
   if (needle.IsEmpty())
     return 0;
 
@@ -57,7 +57,7 @@ int IndexOfIgnoreCaseAscii(StringSpan haystack, StringSpan needle) {
   StringSpan needle_rest = needle.getSlice(1);
 
   while (haystack.size() >= needle.size()) {
-    int found = IndexOfIgnoreCaseAscii(haystack, first_char);
+    int found = indexOfIgnoreCaseAscii(haystack, first_char);
     if (found < 0)
       return -1;
 
@@ -68,7 +68,7 @@ int IndexOfIgnoreCaseAscii(StringSpan haystack, StringSpan needle) {
   return -1;
 }
 
-int LastIndexOfIgnoreCaseAscii(StringSpan haystack, StringSpan needle) {
+int lastIndexOfIgnoreCaseAscii(StringSpan haystack, StringSpan needle) {
   if (needle.IsEmpty())
     return haystack.size();
 
@@ -76,7 +76,7 @@ int LastIndexOfIgnoreCaseAscii(StringSpan haystack, StringSpan needle) {
   StringSpan needle_rest = needle.getSlice(0, needle.size() - 1);
 
   while (haystack.size() >= needle.size()) {
-    int found = LastIndexOfIgnoreCaseAscii(haystack, last_char);
+    int found = lastIndexOfIgnoreCaseAscii(haystack, last_char);
     if (found < 0)
       return -1;
 

@@ -10,8 +10,8 @@
 
 namespace stp {
 
-TEST(RectTest, Contains) {
-  static const struct ContainsCase {
+TEST(RectTest, contains) {
+  static const struct containsCase {
     int rect_x;
     int rect_y;
     int rect_width;
@@ -30,9 +30,9 @@ TEST(RectTest, Contains) {
     {0, 0, -10, -10, 0, 0, false},
   };
   for (const auto& test : tests) {
-    const ContainsCase& value = test;
+    const containsCase& value = test;
     IntRect rect(value.rect_x, value.rect_y, value.rect_width, value.rect_height);
-    EXPECT_EQ(value.contained, rect.Contains(value.point_x, value.point_y));
+    EXPECT_EQ(value.contained, rect.contains(value.point_x, value.point_y));
   }
 }
 

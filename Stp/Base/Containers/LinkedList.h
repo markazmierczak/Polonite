@@ -79,7 +79,7 @@ class LinkedList {
   void RemoveFirst() { Remove(getFirst()); }
   void RemoveLast() { Remove(getLast()); }
 
-  bool Contains(const T& value) const { return Find(value) != nullptr; }
+  bool contains(const T& value) const { return Find(value) != nullptr; }
 
   T* Find(const T& value) const;
   T* FindLast(const T& value) const;

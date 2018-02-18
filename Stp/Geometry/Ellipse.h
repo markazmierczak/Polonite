@@ -30,8 +30,8 @@ struct BASE_EXPORT Ellipse {
 
   Bounds2 GetBounds() const { return Bounds2(center - radii, center + radii); }
 
-  bool Contains(Point2 point) const;
-  bool Contains(float x, float y) const { return Contains(Point2(x, y)); }
+  bool contains(Point2 point) const;
+  bool contains(float x, float y) const { return contains(Point2(x, y)); }
 
   void Scale(float x_scale, float y_scale) { radii.Scale(x_scale, y_scale); }
 

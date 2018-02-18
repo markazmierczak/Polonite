@@ -28,10 +28,10 @@ TEST(HashMapTest, Add) {
   EXPECT_TRUE(map.TryAdd(4, 8));
   EXPECT_EQ(8, map[4]);
 
-  EXPECT_FALSE(map.ContainsKey(3));
+  EXPECT_FALSE(map.containsKey(3));
   EXPECT_TRUE(map.TryAdd(3, 7));
   EXPECT_EQ(7, map[3]);
-  EXPECT_TRUE(map.ContainsKey(3));
+  EXPECT_TRUE(map.containsKey(3));
 }
 
 TEST(HashMapTest, Remove) {
@@ -50,7 +50,7 @@ TEST(HashMapTest, Remove) {
 TEST(HashMapTest, String) {
   HashMap<String, int> map;
   EXPECT_TRUE(map.TryAdd("abc", 1));
-  EXPECT_TRUE(map.ContainsKey("abc"));
+  EXPECT_TRUE(map.containsKey("abc"));
   EXPECT_EQ(1, map["abc"]);
   map["abc"] = 2;
   EXPECT_EQ(2, map["abc"]);

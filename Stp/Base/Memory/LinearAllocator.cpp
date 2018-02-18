@@ -28,7 +28,7 @@ struct LinearAllocator::Block {
   const char* GetData() const { return reinterpret_cast<const char*>(this + 1); }
   char* GetData() { return reinterpret_cast<char*>(this + 1); }
 
-  bool Contains(const void* addr) const {
+  bool contains(const void* addr) const {
     auto* ptr = reinterpret_cast<const char*>(addr);
     return GetData() <= ptr && ptr < free_ptr;
   }
@@ -157,7 +157,7 @@ size_t LinearAllocator::FreeRecent(void* ptr) {
   Block* block = block_list_;
   if (block) {
     char* c_ptr = reinterpret_cast<char*>(ptr);
-    ASSERT(block->Contains(ptr));
+    ASSERT(block->contains(ptr));
     bytes = block->free_ptr - c_ptr;
     total_used_ -= bytes;
     block->free_size += bytes;
@@ -193,9 +193,9 @@ LinearAllocator::Block* LinearAllocator::NewBlock(size_t size) {
   return block;
 }
 
-bool LinearAllocator::Contains(const void* ptr) const {
+bool LinearAllocator::contains(const void* ptr) const {
   for (const Block* block = block_list_; block; block = block->next) {
-    if (block->Contains(ptr))
+    if (block->contains(ptr))
       return true;
   }
   return false;

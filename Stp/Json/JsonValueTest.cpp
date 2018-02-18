@@ -96,8 +96,8 @@ TEST(JsonValueTest, Array) {
   JsonValue not_found_value(false);
 
   // Attempt to search in the mixed array.
-  ASSERT_TRUE(mixed_array.Contains(sought_value));
-  ASSERT_FALSE(mixed_array.Contains(not_found_value));
+  ASSERT_TRUE(mixed_array.contains(sought_value));
+  ASSERT_FALSE(mixed_array.contains(not_found_value));
 }
 
 } // namespace stp

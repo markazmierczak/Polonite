@@ -77,12 +77,12 @@ class BASE_EXPORT FilePathSpan {
 
   void StripTrailingSeparators();
 
-  int IndexOfSeparator() const;
-  int IndexOfSeparator(int begin) const;
-  int LastIndexOfSeparator() const;
-  int LastIndexOfSeparator(int end) const;
+  int indexOfSeparator() const;
+  int indexOfSeparator(int begin) const;
+  int lastIndexOfSeparator() const;
+  int lastIndexOfSeparator(int end) const;
 
-  int IndexOfDriveLetter() const;
+  int indexOfDriveLetter() const;
 
   bool HasExtension() const;
   String GetExtension() const;
@@ -96,7 +96,7 @@ class BASE_EXPORT FilePathSpan {
 
   int GetRootLength() const;
   int GetDirectoryNameLength() const;
-  int IndexOfExtension() const;
+  int indexOfExtension() const;
   int CountTrailingSeparators() const;
 
   friend bool operator<=(const FilePathSpan& l, const FilePathSpan& r) { return l.CompareTo(r) <= 0; }

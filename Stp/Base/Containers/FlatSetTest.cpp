@@ -16,19 +16,19 @@ TEST(FlatSetTest, Add) {
 
   set.TryAdd(2);
 
-  EXPECT_TRUE(set.Contains(1));
-  EXPECT_TRUE(set.Contains(2));
+  EXPECT_TRUE(set.contains(1));
+  EXPECT_TRUE(set.contains(2));
   EXPECT_FALSE(set.TryAdd(1));
   EXPECT_FALSE(set.TryAdd(2));
 
-  EXPECT_FALSE(set.Contains(5));
+  EXPECT_FALSE(set.contains(5));
   EXPECT_TRUE(set.TryAdd(5));
-  EXPECT_TRUE(set.Contains(5));
+  EXPECT_TRUE(set.contains(5));
 
   EXPECT_TRUE(set.TryAdd(4));
-  EXPECT_TRUE(set.Contains(4));
+  EXPECT_TRUE(set.contains(4));
 
-  EXPECT_FALSE(set.Contains(3));
+  EXPECT_FALSE(set.contains(3));
 }
 
 TEST(FlatSetTest, Remove) {
@@ -47,8 +47,8 @@ TEST(FlatSetTest, Remove) {
 TEST(FlatSetTest, String) {
   FlatSet<String> map;
   map.TryAdd(String("abc"));
-  EXPECT_TRUE(map.Contains(StringSpan("abc")));
-  EXPECT_FALSE(map.Contains(StringSpan("def")));
+  EXPECT_TRUE(map.contains(StringSpan("abc")));
+  EXPECT_FALSE(map.contains(StringSpan("def")));
   map.TryAdd(String("def"));
 }
 

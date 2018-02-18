@@ -29,7 +29,7 @@ struct BASE_EXPORT Quad2 {
   // This assumes that the quad is convex, and that no three points are collinear.
   bool IsCounterClockwise() const;
 
-  bool Contains(const Point2& point) const;
+  bool contains(const Point2& point) const;
 
   void Scale(float x_scale, float y_scale);
 

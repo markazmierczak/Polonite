@@ -212,7 +212,7 @@ TEST(QuadTest, IsCounterClockwise) {
   EXPECT_TRUE(Quad2(c5, b5, a5, d5).IsCounterClockwise());
 }
 
-TEST(QuadTest, ContainsPoint) {
+TEST(QuadTest, containsPoint) {
   Point2 a(1.3f, 1.4f);
   Point2 b(-0.8f, 4.4f);
   Point2 c(1.8f, 6.1f);
@@ -226,38 +226,38 @@ TEST(QuadTest, ContainsPoint) {
   Vector2 bd_center = d - b;
   bd_center *= 0.5f;
 
-  EXPECT_TRUE(Quad2(a, b, c, d).Contains(a + ac_center));
-  EXPECT_TRUE(Quad2(a, b, c, d).Contains(b + bd_center));
-  EXPECT_TRUE(Quad2(a, b, c, d).Contains(c - ac_center));
-  EXPECT_TRUE(Quad2(a, b, c, d).Contains(d - bd_center));
-  EXPECT_FALSE(Quad2(a, b, c, d).Contains(a - ac_center));
-  EXPECT_FALSE(Quad2(a, b, c, d).Contains(b - bd_center));
-  EXPECT_FALSE(Quad2(a, b, c, d).Contains(c + ac_center));
-  EXPECT_FALSE(Quad2(a, b, c, d).Contains(d + bd_center));
+  EXPECT_TRUE(Quad2(a, b, c, d).contains(a + ac_center));
+  EXPECT_TRUE(Quad2(a, b, c, d).contains(b + bd_center));
+  EXPECT_TRUE(Quad2(a, b, c, d).contains(c - ac_center));
+  EXPECT_TRUE(Quad2(a, b, c, d).contains(d - bd_center));
+  EXPECT_FALSE(Quad2(a, b, c, d).contains(a - ac_center));
+  EXPECT_FALSE(Quad2(a, b, c, d).contains(b - bd_center));
+  EXPECT_FALSE(Quad2(a, b, c, d).contains(c + ac_center));
+  EXPECT_FALSE(Quad2(a, b, c, d).contains(d + bd_center));
 
-  EXPECT_TRUE(Quad2(a, b, c, d).Contains(a));
-  EXPECT_FALSE(Quad2(a, b, c, d).Contains(a - epsilon_x));
-  EXPECT_FALSE(Quad2(a, b, c, d).Contains(a - epsilon_y));
-  EXPECT_FALSE(Quad2(a, b, c, d).Contains(a + epsilon_x));
-  EXPECT_TRUE(Quad2(a, b, c, d).Contains(a + epsilon_y));
+  EXPECT_TRUE(Quad2(a, b, c, d).contains(a));
+  EXPECT_FALSE(Quad2(a, b, c, d).contains(a - epsilon_x));
+  EXPECT_FALSE(Quad2(a, b, c, d).contains(a - epsilon_y));
+  EXPECT_FALSE(Quad2(a, b, c, d).contains(a + epsilon_x));
+  EXPECT_TRUE(Quad2(a, b, c, d).contains(a + epsilon_y));
 
-  EXPECT_TRUE(Quad2(a, b, c, d).Contains(b));
-  EXPECT_FALSE(Quad2(a, b, c, d).Contains(b - epsilon_x));
-  EXPECT_FALSE(Quad2(a, b, c, d).Contains(b - epsilon_y));
-  EXPECT_TRUE(Quad2(a, b, c, d).Contains(b + epsilon_x));
-  EXPECT_FALSE(Quad2(a, b, c, d).Contains(b + epsilon_y));
+  EXPECT_TRUE(Quad2(a, b, c, d).contains(b));
+  EXPECT_FALSE(Quad2(a, b, c, d).contains(b - epsilon_x));
+  EXPECT_FALSE(Quad2(a, b, c, d).contains(b - epsilon_y));
+  EXPECT_TRUE(Quad2(a, b, c, d).contains(b + epsilon_x));
+  EXPECT_FALSE(Quad2(a, b, c, d).contains(b + epsilon_y));
 
-  EXPECT_TRUE(Quad2(a, b, c, d).Contains(c));
-  EXPECT_FALSE(Quad2(a, b, c, d).Contains(c - epsilon_x));
-  EXPECT_TRUE(Quad2(a, b, c, d).Contains(c - epsilon_y));
-  EXPECT_FALSE(Quad2(a, b, c, d).Contains(c + epsilon_x));
-  EXPECT_FALSE(Quad2(a, b, c, d).Contains(c + epsilon_y));
+  EXPECT_TRUE(Quad2(a, b, c, d).contains(c));
+  EXPECT_FALSE(Quad2(a, b, c, d).contains(c - epsilon_x));
+  EXPECT_TRUE(Quad2(a, b, c, d).contains(c - epsilon_y));
+  EXPECT_FALSE(Quad2(a, b, c, d).contains(c + epsilon_x));
+  EXPECT_FALSE(Quad2(a, b, c, d).contains(c + epsilon_y));
 
-  EXPECT_TRUE(Quad2(a, b, c, d).Contains(d));
-  EXPECT_TRUE(Quad2(a, b, c, d).Contains(d - epsilon_x));
-  EXPECT_FALSE(Quad2(a, b, c, d).Contains(d - epsilon_y));
-  EXPECT_FALSE(Quad2(a, b, c, d).Contains(d + epsilon_x));
-  EXPECT_FALSE(Quad2(a, b, c, d).Contains(d + epsilon_y));
+  EXPECT_TRUE(Quad2(a, b, c, d).contains(d));
+  EXPECT_TRUE(Quad2(a, b, c, d).contains(d - epsilon_x));
+  EXPECT_FALSE(Quad2(a, b, c, d).contains(d - epsilon_y));
+  EXPECT_FALSE(Quad2(a, b, c, d).contains(d + epsilon_x));
+  EXPECT_FALSE(Quad2(a, b, c, d).contains(d + epsilon_y));
 
   // Test a simple square.
   Point2 s1(-1, -1);
@@ -265,36 +265,36 @@ TEST(QuadTest, ContainsPoint) {
   Point2 s3(1, 1);
   Point2 s4(-1, 1);
   // Top edge.
-  EXPECT_FALSE(Quad2(s1, s2, s3, s4).Contains(Point2(-1.1f, -1.0f)));
-  EXPECT_TRUE(Quad2(s1, s2, s3, s4).Contains(Point2(-1.0f, -1.0f)));
-  EXPECT_TRUE(Quad2(s1, s2, s3, s4).Contains(Point2(0.0f, -1.0f)));
-  EXPECT_TRUE(Quad2(s1, s2, s3, s4).Contains(Point2(1.0f, -1.0f)));
-  EXPECT_FALSE(Quad2(s1, s2, s3, s4).Contains(Point2(1.1f, -1.0f)));
+  EXPECT_FALSE(Quad2(s1, s2, s3, s4).contains(Point2(-1.1f, -1.0f)));
+  EXPECT_TRUE(Quad2(s1, s2, s3, s4).contains(Point2(-1.0f, -1.0f)));
+  EXPECT_TRUE(Quad2(s1, s2, s3, s4).contains(Point2(0.0f, -1.0f)));
+  EXPECT_TRUE(Quad2(s1, s2, s3, s4).contains(Point2(1.0f, -1.0f)));
+  EXPECT_FALSE(Quad2(s1, s2, s3, s4).contains(Point2(1.1f, -1.0f)));
   // Bottom edge.
-  EXPECT_FALSE(Quad2(s1, s2, s3, s4).Contains(Point2(-1.1f, 1.0f)));
-  EXPECT_TRUE(Quad2(s1, s2, s3, s4).Contains(Point2(-1.0f, 1.0f)));
-  EXPECT_TRUE(Quad2(s1, s2, s3, s4).Contains(Point2(0.0f, 1.0f)));
-  EXPECT_TRUE(Quad2(s1, s2, s3, s4).Contains(Point2(1.0f, 1.0f)));
-  EXPECT_FALSE(Quad2(s1, s2, s3, s4).Contains(Point2(1.1f, 1.0f)));
+  EXPECT_FALSE(Quad2(s1, s2, s3, s4).contains(Point2(-1.1f, 1.0f)));
+  EXPECT_TRUE(Quad2(s1, s2, s3, s4).contains(Point2(-1.0f, 1.0f)));
+  EXPECT_TRUE(Quad2(s1, s2, s3, s4).contains(Point2(0.0f, 1.0f)));
+  EXPECT_TRUE(Quad2(s1, s2, s3, s4).contains(Point2(1.0f, 1.0f)));
+  EXPECT_FALSE(Quad2(s1, s2, s3, s4).contains(Point2(1.1f, 1.0f)));
   // Left edge.
-  EXPECT_FALSE(Quad2(s1, s2, s3, s4).Contains(Point2(-1.0f, -1.1f)));
-  EXPECT_TRUE(Quad2(s1, s2, s3, s4).Contains(Point2(-1.0f, -1.0f)));
-  EXPECT_TRUE(Quad2(s1, s2, s3, s4).Contains(Point2(-1.0f, 0.0f)));
-  EXPECT_TRUE(Quad2(s1, s2, s3, s4).Contains(Point2(-1.0f, 1.0f)));
-  EXPECT_FALSE(Quad2(s1, s2, s3, s4).Contains(Point2(-1.0f, 1.1f)));
+  EXPECT_FALSE(Quad2(s1, s2, s3, s4).contains(Point2(-1.0f, -1.1f)));
+  EXPECT_TRUE(Quad2(s1, s2, s3, s4).contains(Point2(-1.0f, -1.0f)));
+  EXPECT_TRUE(Quad2(s1, s2, s3, s4).contains(Point2(-1.0f, 0.0f)));
+  EXPECT_TRUE(Quad2(s1, s2, s3, s4).contains(Point2(-1.0f, 1.0f)));
+  EXPECT_FALSE(Quad2(s1, s2, s3, s4).contains(Point2(-1.0f, 1.1f)));
   // Right edge.
-  EXPECT_FALSE(Quad2(s1, s2, s3, s4).Contains(Point2(1.0f, -1.1f)));
-  EXPECT_TRUE(Quad2(s1, s2, s3, s4).Contains(Point2(1.0f, -1.0f)));
-  EXPECT_TRUE(Quad2(s1, s2, s3, s4).Contains(Point2(1.0f, 0.0f)));
-  EXPECT_TRUE(Quad2(s1, s2, s3, s4).Contains(Point2(1.0f, 1.0f)));
-  EXPECT_FALSE(Quad2(s1, s2, s3, s4).Contains(Point2(1.0f, 1.1f)));
+  EXPECT_FALSE(Quad2(s1, s2, s3, s4).contains(Point2(1.0f, -1.1f)));
+  EXPECT_TRUE(Quad2(s1, s2, s3, s4).contains(Point2(1.0f, -1.0f)));
+  EXPECT_TRUE(Quad2(s1, s2, s3, s4).contains(Point2(1.0f, 0.0f)));
+  EXPECT_TRUE(Quad2(s1, s2, s3, s4).contains(Point2(1.0f, 1.0f)));
+  EXPECT_FALSE(Quad2(s1, s2, s3, s4).contains(Point2(1.0f, 1.1f)));
   // Centered inside.
-  EXPECT_TRUE(Quad2(s1, s2, s3, s4).Contains(Point2(0, 0)));
+  EXPECT_TRUE(Quad2(s1, s2, s3, s4).contains(Point2(0, 0)));
   // Centered outside.
-  EXPECT_FALSE(Quad2(s1, s2, s3, s4).Contains(Point2(-1.1f, 0)));
-  EXPECT_FALSE(Quad2(s1, s2, s3, s4).Contains(Point2(1.1f, 0)));
-  EXPECT_FALSE(Quad2(s1, s2, s3, s4).Contains(Point2(0, -1.1f)));
-  EXPECT_FALSE(Quad2(s1, s2, s3, s4).Contains(Point2(0, 1.1f)));
+  EXPECT_FALSE(Quad2(s1, s2, s3, s4).contains(Point2(-1.1f, 0)));
+  EXPECT_FALSE(Quad2(s1, s2, s3, s4).contains(Point2(1.1f, 0)));
+  EXPECT_FALSE(Quad2(s1, s2, s3, s4).contains(Point2(0, -1.1f)));
+  EXPECT_FALSE(Quad2(s1, s2, s3, s4).contains(Point2(0, 1.1f)));
 }
 
 TEST(QuadTest, Scale) {

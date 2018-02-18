@@ -41,11 +41,11 @@ struct BASE_EXPORT IntRect {
   // Returns true if the point identified by point_x and point_y falls inside
   // this rectangle.  The point (x, y) is inside the rectangle, but the
   // point (x + width, y + height) is not.
-  bool Contains(int point_x, int point_y) const;
-  bool Contains(IntPoint2 point) const { return Contains(point.x, point.y); }
+  bool contains(int point_x, int point_y) const;
+  bool contains(IntPoint2 point) const { return contains(point.x, point.y); }
 
   // If either rect is empty returns false.
-  bool Contains(const IntRect& rect) const;
+  bool contains(const IntRect& rect) const;
 
   // An empty rectangle doesn't intersect any rectangle.
   static bool Intersects(const IntRect& a, const IntRect& b) WARN_UNUSED_RESULT;
