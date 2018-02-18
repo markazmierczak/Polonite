@@ -6,7 +6,6 @@
 
 #include "Base/Export.h"
 #include "Base/Type/FormattableFwd.h"
-#include "Base/Type/HashableFwd.h"
 #include "Base/Type/Limits.h"
 
 namespace stp {

@@ -16,7 +16,7 @@ constexpr ParseIntegerErrorCode TryParse(StringSpan input, T& output);
 template<typename TResult, typename = void>
 struct ParseTmpl {
   constexpr void operator()(StringSpan text, TResult& rv) {
-    if (!TryParse(text, rv))
+    if (!tryParse(text, rv))
       throw FormatException();
   }
 };
@@ -25,14 +25,14 @@ template<typename T>
 struct ParseTmpl<T, TEnableIf<TIsInteger<T>>>;
 
 template<typename TResult>
-constexpr void Parse(StringSpan text, TResult& result) {
+constexpr void parse(StringSpan text, TResult& result) {
   ParseTmpl<TResult>()(text, result);
 }
 
 template<typename TResult>
-constexpr TResult ParseTo(StringSpan text) {
+constexpr TResult parseTo(StringSpan text) {
   auto result = TResult();
-  Parse(text, result);
+  parse(text, result);
   return result;
 }
 

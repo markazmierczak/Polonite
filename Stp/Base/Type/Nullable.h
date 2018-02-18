@@ -7,7 +7,7 @@
 #include "Base/Debug/Assert.h"
 #include "Base/Type/Comparable.h"
 #include "Base/Type/FormattableFwd.h"
-#include "Base/Type/HashableFwd.h"
+#include "Base/Type/Hashable.h"
 #include "Base/Type/NullableFwd.h"
 #include "Base/Type/Variable.h"
 

@@ -7,7 +7,6 @@
 #include "Base/Compiler/Cpu.h"
 #include "Base/Debug/Assert.h"
 #include "Base/Type/FormattableFwd.h"
-#include "Base/Type/HashableFwd.h"
 #include "Base/Type/NullableFwd.h"
 #include "Base/Type/Variable.h"
 #include "Base/Util/DelegateFwd.h"
@@ -231,7 +230,6 @@ class Delegate<TResult(TArgs...)> {
   explicit operator bool() const { return gmethod_ != nullptr; }
   bool IsNull() const { return gmethod_ == nullptr; }
 
-  friend HashCode Hash(const Delegate& x) { return Hash(x.gmethod_); }
   friend void Format(TextWriter& out, const Delegate& x, const StringSpan& opts) {
     delegate_impl::FormatDelegate(out, opts, reinterpret_cast<void*>(x.gmethod_));
   }

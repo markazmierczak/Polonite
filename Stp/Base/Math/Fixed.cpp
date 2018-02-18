@@ -111,18 +111,19 @@ int32_t RSqrtFixed16(int32_t xs) {
   return static_cast<int32_t>(r);
 }
 
-void FormatFixedPoint(
-    TextWriter& out, const StringSpan& opts,
-    int32_t value, int point) {
+
+void FormatFixedPoint(TextWriter& out, int32_t value, int point) {
+  out << (static_cast<double>(value) / (1 << point));
+}
+
+void FormatFixedPoint(TextWriter& out, const StringSpan& opts, int32_t value, int point) {
   if (opts.size() == 1 && ToUpperAscii(opts[0]) == 'X') {
     char int_options[3] = { opts[0], '8', '\0' };
     Format(out, static_cast<uint32_t>(value), StringSpan(int_options));
   } else {
     if (!opts.IsEmpty())
       throw FormatException("Fixed");
-
-    auto x = static_cast<double>(value) / (1 << point);
-    Format(out, x, opts);
+    FormatFixedPoint(out, value, point);
   }
 }
 

@@ -4,6 +4,7 @@
 #ifndef STP_BASE_TYPE_VARIABLE_H_
 #define STP_BASE_TYPE_VARIABLE_H_
 
+#include "Base/Export.h"
 #include "Base/Type/Array.h"
 
 namespace stp {
@@ -517,6 +518,8 @@ struct TIsTriviallyEqualityComparableTmpl :
 
 template<typename T>
 constexpr bool TIsTriviallyEqualityComparable = TIsTriviallyEqualityComparableTmpl<T>::Value;
+
+BASE_EXPORT HashCode HashBuffer(const void* data, int size) noexcept;
 
 } // namespace stp
 

@@ -4,16 +4,12 @@
 #ifndef STP_BASE_CONTAINERS_SPAN_H_
 #define STP_BASE_CONTAINERS_SPAN_H_
 
-#include "Base/Debug/Assert.h"
 #include "Base/Containers/ArrayOps.h"
 #include "Base/Containers/SpanFwd.h"
-#include "Base/Type/Variable.h"
 
 #include <initializer_list>
 
 namespace stp {
-
-BASE_EXPORT HashCode HashBuffer(const void* data, int size) noexcept;
 
 template<typename T>
 using InitializerList = std::initializer_list<T>;

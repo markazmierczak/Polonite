@@ -37,7 +37,7 @@ NativeProcessHandle ProcCommon::ProcessForDirectoryName(const char* d_name) {
   if (i == NAME_MAX)
     return 0;
 
-  return ParseTo<pid_t>(StringSpan(d_name, i));
+  return parseTo<pid_t>(StringSpan(d_name, i));
 }
 
 } // namespace linux

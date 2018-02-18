@@ -11,17 +11,17 @@
 
 namespace stp {
 
-void Version::SetComponentAt(int at, int value) {
+void Version::setPart(int at, int value) {
   ASSERT(value >= 0);
-  if (at >= components_.size())
-    components_.AddRepeat(0, at - components_.size() + 1);
-  components_[at] = value;
+  if (at >= parts_.size())
+    parts_.AddRepeat(0, at - parts_.size() + 1);
+  parts_[at] = value;
 }
 
 int Version::CompareTo(const Version& other) const {
-  int max_count = Max(components_.size(), other.components_.size());
+  int max_count = Max(parts_.size(), other.parts_.size());
   for (int i = 0; i < max_count; ++i) {
-    int rv = compare(GetComponentAt(i), other.GetComponentAt(i));
+    int rv = compare(getPartAt(i), other.getPartAt(i));
     if (rv)
       return rv;
   }
@@ -29,44 +29,44 @@ int Version::CompareTo(const Version& other) const {
 }
 
 HashCode Version::HashImpl() const {
-  return HashBuffer(components_.data(), components_.size());
+  return HashBuffer(parts_.data(), parts_.size() * isizeof(PartType));
 }
 
 void Version::FormatImpl(TextWriter& out) const {
-  for (int i = 0, e = components_.size(); i < e; ++i) {
+  for (int i = 0, e = parts_.size(); i < e; ++i) {
     if (i != 0)
       out << '.';
-    out << components_[i];
+    out << parts_[i];
   }
 }
 
-bool TryParse(StringSpan str, Version& out) {
-  out.components_.Clear();
+bool tryParse(StringSpan str, Version& out) {
+  out.parts_.Clear();
 
   int index = 0;
   for (; !str.IsEmpty(); ++index) {
     int dot_pos = str.IndexOf('.');
 
-    StringSpan part;
+    StringSpan part_str;
     if (dot_pos < 0) {
-      swap(part, str);
+      swap(part_str, str);
     } else {
-      part = str.GetSlice(0, dot_pos);
+      part_str = str.GetSlice(0, dot_pos);
       str.RemovePrefix(dot_pos + 1);
       // Dot at end ?
       if (str.IsEmpty())
         return false;
     }
 
-    if (StartsWith(part, "+"))
+    if (StartsWith(part_str, "+"))
       return false;
 
-    int component;
-    if (TryParse(part, component) != ParseIntegerErrorCode::Ok)
+    int part;
+    if (TryParse(part_str, part) != ParseIntegerErrorCode::Ok)
       return false;
-    if (component < 0)
+    if (part < 0)
       return false;
-    out.components_.Add(component);
+    out.parts_.Add(part);
   }
 
   if (index == 0) {

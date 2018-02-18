@@ -4,7 +4,6 @@
 #ifndef STP_BASE_TYPE_HASHABLE_H_
 #define STP_BASE_TYPE_HASHABLE_H_
 
-#include "Base/Type/HashableFwd.h"
 #include "Base/Type/Sign.h"
 #include "Base/Type/Variable.h"
 
@@ -14,24 +13,7 @@ BASE_EXPORT HashCode Combine(HashCode first, HashCode second);
 
 BASE_EXPORT HashCode Finalize(HashCode code);
 
-inline HashCode HashMany() { return HashCode::Zero; }
-
-template<typename T>
-inline HashCode HashMany(const T& v) { return Hash(v); }
-
-template<typename T, typename... Ts>
-inline HashCode HashMany(const T& v, const Ts&... vs) {
-  return Combine(HashMany(vs...), Hash(v));
-}
-
-struct DefaultHasher {
-  template<typename T>
-  HashCode operator()(const T& x) const {
-    return Finalize(Hash(x));
-  }
-};
-
-template<typename T, TEnableIf<TIsScalar<T>>*>
+template<typename T, TEnableIf<TIsScalar<T>>* = nullptr>
 inline HashCode Hash(T x) {
   if constexpr (TIsInteger<T>) {
     if constexpr (sizeof(T) <= sizeof(HashCode)) {
@@ -70,6 +52,33 @@ inline HashCode Hash(T x) {
     return HashCode::Zero;
   }
 }
+
+namespace detail {
+
+template<typename T>
+using THashableConcept = decltype(Hash(declval<const T&>()));
+
+} // namespace detail
+
+template<typename T>
+constexpr bool TIsHashable = TsAreSame<HashCode, TDetect<detail::THashableConcept, T>>;
+
+inline HashCode HashMany() { return HashCode::Zero; }
+
+template<typename T>
+inline HashCode HashMany(const T& v) { return Hash(v); }
+
+template<typename T, typename... Ts>
+inline HashCode HashMany(const T& v, const Ts&... vs) {
+  return Combine(HashMany(vs...), Hash(v));
+}
+
+struct DefaultHasher {
+  template<typename T>
+  HashCode operator()(const T& x) const {
+    return Finalize(Hash(x));
+  }
+};
 
 } // namespace stp
 

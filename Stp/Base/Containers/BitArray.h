@@ -7,7 +7,6 @@
 #include "Base/Debug/Assert.h"
 #include "Base/Math/Bits.h"
 #include "Base/Type/FormattableFwd.h"
-#include "Base/Type/HashableFwd.h"
 #include "Base/Type/Variable.h"
 
 #include <string.h>
@@ -24,9 +23,9 @@ BASE_EXPORT void FormatBitArray(
 class BitReference {
  public:
   // uintptr_t is selected as Word type for maximum performance.
-  typedef uintptr_t Word;
+  typedef uintptr_t WordType;
 
-  BitReference(Word* word, Word bit) noexcept
+  BitReference(WordType* word, WordType bit) noexcept
       : word_(word), bit_(bit) {}
 
   BitReference(const BitReference&) = default;
@@ -48,13 +47,13 @@ class BitReference {
   bool operator~() const { return (*word_ & bit_) == 0; }
 
  private:
-  Word* word_;
-  Word bit_;
+  WordType* word_;
+  WordType bit_;
 };
 
 class ConstBitReference {
  public:
-  typedef BitReference::Word Word;
+  typedef BitReference::WordType Word;
 
   ConstBitReference(const Word* word, Word bit)
       : word_(word), bit_(bit) {}
@@ -138,38 +137,38 @@ class BitArray {
   friend int compare(const BitArray& l, const BitArray& r) {
     return ::memcmp(l.words_, r.words_, sizeof(words_));
   }
-  friend HashCode Hash(const BitArray& x) { return Hash(x.words_, N); }
+  friend HashCode Hash(const BitArray& x) { return HashBuffer(x.words_, N * isizeof(WordType)); }
   friend void Format(TextWriter& out, const BitArray& x, const StringSpan& opts) {
     detail::FormatBitArray(out, opts, x.words_, N);
   }
 
  private:
-  typedef BitReference::Word Word;
+  typedef BitReference::WordType WordType;
 
   // Make it unsigned to force fast modulo for power-of-2 divisor.
-  static constexpr unsigned BitsPerWord = sizeof(Word) * 8;
+  static constexpr unsigned BitsPerWord = sizeof(WordType) * 8;
 
   static constexpr int WordCount = (N + BitsPerWord - 1) / BitsPerWord;
 
-  Word words_[WordCount];
+  WordType words_[WordCount];
 
-  static constexpr Word ComputeUnusedBits() {
+  static constexpr WordType ComputeUnusedBits() {
     unsigned used_bits = N % BitsPerWord;
     if (used_bits == 0)
       return 0; // All bits used.
-    return ~((Word(1) << used_bits) - 1);
+    return ~((WordType(1) << used_bits) - 1);
   }
 
-  static constexpr Word UnusedBitsMask = ComputeUnusedBits();
+  static constexpr WordType UnusedBitsMask = ComputeUnusedBits();
 
   ConstBitReference MakeRef(unsigned index) const {
     ASSERT(index < static_cast<unsigned>(N));
-    return ConstBitReference(words_ + index / BitsPerWord, Word(1) << (index % BitsPerWord));
+    return ConstBitReference(words_ + index / BitsPerWord, WordType(1) << (index % BitsPerWord));
   }
 
   BitReference MakeRef(unsigned index) {
     ASSERT(index < static_cast<unsigned>(N));
-    return BitReference(words_ + index / BitsPerWord, Word(1) << (index % BitsPerWord));
+    return BitReference(words_ + index / BitsPerWord, WordType(1) << (index % BitsPerWord));
   }
 
   constexpr void ClearUnusedBits() {
@@ -188,9 +187,9 @@ struct TIsTriviallyEqualityComparableTmpl<BitArray<N>> : TTrue {};
 template<int N>
 constexpr BitArray<N>::BitArray(uint64_t x) noexcept : words_() {
   for (int i = 0; i < WordCount; ++i) {
-    if (sizeof(Word) == sizeof(uint64_t)) {
+    if (sizeof(WordType) == sizeof(uint64_t)) {
       words_[i] = x;
-    } else if (sizeof(Word) == sizeof(uint32_t)) {
+    } else if (sizeof(WordType) == sizeof(uint32_t)) {
       if (i & 1)
         words_[i] = static_cast<uint32_t>(x >> 32);
       else
@@ -220,7 +219,7 @@ inline void BitArray<N>::Flip(int index) {
 template<int N>
 inline void BitArray<N>::SetAll() {
   for (int i = 0; i < WordCount; ++i)
-    words_[i] = static_cast<Word>(-1);
+    words_[i] = static_cast<WordType>(-1);
   ClearUnusedBits();
 }
 
@@ -292,10 +291,10 @@ inline int BitArray<N>::FindNextSet(int prev) {
 
   int word_index = prev / BitsPerWord;
   int bit_index = prev % BitsPerWord;
-  Word copy = words_[word_index];
+  WordType copy = words_[word_index];
 
   // Mask off previous bits.
-  copy &= ~Word(0) << bit_index;
+  copy &= ~WordType(0) << bit_index;
 
   if (copy != 0)
     return word_index * BitsPerWord + FindFirstOneBit(copy);
@@ -326,11 +325,11 @@ inline int BitArray<N>::FindPrevSet(int next) {
 
   int word_index = next / BitsPerWord;
   int bit_index = (next % BitsPerWord) + 1;
-  Word copy = words_[word_index];
+  WordType copy = words_[word_index];
 
   // Mask off previous bits.
   if (bit_index != BitsPerWord)
-    copy &= (Word(1) << bit_index) - 1;
+    copy &= (WordType(1) << bit_index) - 1;
 
   if (copy != 0)
     return word_index * BitsPerWord + FindLastOneBit(copy);
@@ -348,7 +347,7 @@ inline int BitArray<N>::FindPrevSet(int next) {
 template<int N>
 inline bool BitArray<N>::AllTrue() const {
   for (int i = 0; i < WordCount - 1; ++i) {
-    if (words_[i] != ~static_cast<Word>(0))
+    if (words_[i] != ~static_cast<WordType>(0))
       return false;
   }
   return words_[WordCount - 1] == ~UnusedBitsMask;

@@ -412,7 +412,6 @@ component("Base") {
     "Type/FormattableFwd.h",
     "Type/Hashable.cpp",
     "Type/Hashable.h",
-    "Type/HashableFwd.h",
     "Type/IntegerSelection.h",
     "Type/Limits.h",
     "Type/Nullable.h",

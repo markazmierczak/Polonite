@@ -11,22 +11,24 @@ namespace stp {
 
 class Version;
 
-BASE_EXPORT bool TryParse(StringSpan text, Version& version);
+BASE_EXPORT bool tryParse(StringSpan text, Version& version);
 
 // Version represents a dotted version number, like "1.2.3.4", supporting
 // parsing and comparison.
 class BASE_EXPORT Version {
  public:
+  using PartType = int;
+
   Version() = default;
-  Version(int major_part, int minor_part, int micro_part)
-      : components_({major_part, minor_part, micro_part}) {}
+  Version(PartType major_part, PartType minor_part, PartType micro_part)
+      : parts_({major_part, minor_part, micro_part}) {}
 
-  int GetMajor() const { return GetComponentAt(0); }
-  int GetMinor() const { return GetComponentAt(1); }
-  int GetMicro() const { return GetComponentAt(2); }
+  PartType getMajor() const { return getPartAt(0); }
+  PartType getMinor() const { return getPartAt(1); }
+  PartType getMicro() const { return getPartAt(2); }
 
-  void SetComponentAt(int at, int value);
-  int GetComponentAt(int at) const { return at < components_.size() ? components_[at] : 0; }
+  void setPart(int at, PartType value);
+  PartType getPartAt(int at) const { return at < parts_.size() ? parts_[at] : 0; }
 
   bool operator==(const Version& other) const { return CompareTo(other) == 0; }
   bool operator!=(const Version& other) const { return CompareTo(other) != 0; }
@@ -44,14 +46,14 @@ class BASE_EXPORT Version {
     x.FormatImpl(out);
   }
 
-  friend bool TryParse(StringSpan text, Version& out);
+  friend bool tryParse(StringSpan text, Version& out);
 
  private:
   int CompareTo(const Version& other) const;
   void FormatImpl(TextWriter& out) const;
   HashCode HashImpl() const;
 
-  InlineList<int, 4> components_;
+  InlineList<PartType, 4> parts_;
 };
 
 } // namespace stp

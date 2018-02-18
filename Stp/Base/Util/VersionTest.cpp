@@ -40,17 +40,17 @@ TEST(VersionTest, Parse) {
   };
   for (const auto& test : cases) {
     Version version;
-    EXPECT_EQ(test.success, TryParse(test.input, version));
+    EXPECT_EQ(test.success, tryParse(test.input, version));
     if (test.success) {
-      EXPECT_EQ(test.firstpart, version.GetMajor());
+      EXPECT_EQ(test.firstpart, version.getMajor());
     }
   }
 
-  auto version = ParseTo<Version>("15.5.28.130162");
-  EXPECT_EQ(15, version.GetMajor());
-  EXPECT_EQ(5, version.GetMinor());
-  EXPECT_EQ(28, version.GetComponentAt(2));
-  EXPECT_EQ(130162, version.GetComponentAt(3));
+  auto version = parseTo<Version>("15.5.28.130162");
+  EXPECT_EQ(15, version.getMajor());
+  EXPECT_EQ(5, version.getMinor());
+  EXPECT_EQ(28, version.getPartAt(2));
+  EXPECT_EQ(130162, version.getPartAt(3));
 }
 
 TEST(VersionTest, Compare) {
@@ -73,8 +73,8 @@ TEST(VersionTest, Compare) {
     {"11.0.10", "15.5.28.130162", -1},
   };
   for (const auto& test : cases) {
-    auto lhs = ParseTo<Version>(test.lhs);
-    auto rhs = ParseTo<Version>(test.rhs);
+    auto lhs = parseTo<Version>(test.lhs);
+    auto rhs = parseTo<Version>(test.rhs);
     EXPECT_EQ(test.expected, compare(lhs, rhs));
 
     switch (test.expected) {

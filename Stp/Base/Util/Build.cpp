@@ -36,11 +36,11 @@ Time Build::TranslationTime() {
   if (day_str[0] == ' ')
     day_str.RemovePrefix(1);
 
-  Parse(day_str, exploded.day_of_month);
-  Parse(date_str.GetSlice(7, 4), exploded.year);
-  Parse(time_str.GetSlice(0, 2), exploded.hour);
-  Parse(time_str.GetSlice(3, 2), exploded.minute);
-  Parse(time_str.GetSlice(6, 2), exploded.second);
+  parse(day_str, exploded.day_of_month);
+  parse(date_str.GetSlice(7, 4), exploded.year);
+  parse(time_str.GetSlice(0, 2), exploded.hour);
+  parse(time_str.GetSlice(3, 2), exploded.minute);
+  parse(time_str.GetSlice(6, 2), exploded.second);
   exploded.day_of_week = -1;
 
   Time result;

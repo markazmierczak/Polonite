@@ -4,11 +4,11 @@
 #ifndef STP_BASE_MATH_FIXED_H_
 #define STP_BASE_MATH_FIXED_H_
 
+#include "Base/Containers/SpanFwd.h"
 #include "Base/Math/Safe.h"
-#include "Base/Type/FormattableFwd.h"
-#include "Base/Type/HashableFwd.h"
 
 namespace stp {
+
 namespace detail {
 
 BASE_EXPORT int32_t SqrtFixed(int32_t value, int count);
@@ -16,8 +16,8 @@ BASE_EXPORT int64_t LSqrtFixed(int64_t value, int count);
 
 BASE_EXPORT int32_t RSqrtFixed16(int32_t x);
 
-BASE_EXPORT void FormatFixedPoint(
-    TextWriter& writer, const StringSpan& opts, int32_t value, int point);
+BASE_EXPORT void FormatFixedPoint(TextWriter& writer, int32_t value, int point);
+BASE_EXPORT void FormatFixedPoint(TextWriter& writer, const StringSpan& opts, int32_t value, int point);
 
 } // namespace detail
 
@@ -130,6 +130,9 @@ class Fixed {
 
   friend void Format(TextWriter& out, const Fixed& x, const StringSpan& opts) {
     detail::FormatFixedPoint(out, opts, x.bits_, P);
+  }
+  friend TextWriter& operator<<(TextWriter& out, const Fixed& x) {
+    detail::FormatFixedPoint(out, x.bits_, P); return out;
   }
 
   friend Fixed Abs(Fixed x) { return x.bits_ >= 0 ? x : -x; }
