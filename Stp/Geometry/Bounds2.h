@@ -135,16 +135,16 @@ inline bool Bounds2::Contains(float x, float y) const {
 
 inline void IntBounds2::Sort() {
   if (min.x > max.x)
-    Swap(min.x, max.x);
+    swap(min.x, max.x);
   if (min.y > max.y)
-    Swap(min.y, max.y);
+    swap(min.y, max.y);
 }
 
 inline void Bounds2::Sort() {
   if (min.x > max.x)
-    Swap(min.x, max.x);
+    swap(min.x, max.x);
   if (min.y > max.y)
-    Swap(min.y, max.y);
+    swap(min.y, max.y);
 }
 
 inline IntBounds2 IntBounds2::operator+(const IntVector2& offset) const {

@@ -50,7 +50,7 @@ class TupleLeaf {
   }
 
   int SwapWith(TupleLeaf& other) {
-    Swap(value, other.value);
+    swap(value, other.value);
     return 0;
   }
 
@@ -78,7 +78,7 @@ class TupleLeaf<I, H, true> : private H {
   }
 
   int SwapWith(TupleLeaf& other) {
-    Swap(get(), other.get());
+    swap(get(), other.get());
     return 0;
   }
 

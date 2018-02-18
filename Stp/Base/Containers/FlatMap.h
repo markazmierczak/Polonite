@@ -141,7 +141,7 @@ class FlatMap {
   }
   ListType TakeList() { return move(list_); }
 
-  friend void Swap(FlatMap& l, FlatMap& r) { Swap(l.list_, r.list_); }
+  friend void swap(FlatMap& l, FlatMap& r) { swap(l.list_, r.list_); }
   friend bool operator==(const FlatMap& l, const FlatMap& r) { return l.list_ == r.list_; }
   friend bool operator!=(const FlatMap& l, const FlatMap& r) { return !(l == r); }
   friend HashCode Hash(const FlatMap& x) { return Hash(x.list_); }

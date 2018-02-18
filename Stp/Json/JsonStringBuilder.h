@@ -58,10 +58,10 @@ class BASE_EXPORT JsonStringBuilder {
 
   bool OwnsData() const { return capacity_ >= 0; }
 
-  friend void Swap(JsonStringBuilder& lhs, JsonStringBuilder& rhs) {
-    Swap(lhs.data_, rhs.data_);
-    Swap(lhs.size_, rhs.size_);
-    Swap(lhs.capacity_, rhs.capacity_);
+  friend void swap(JsonStringBuilder& lhs, JsonStringBuilder& rhs) {
+    swap(lhs.data_, rhs.data_);
+    swap(lhs.size_, rhs.size_);
+    swap(lhs.capacity_, rhs.capacity_);
   }
 
  private:

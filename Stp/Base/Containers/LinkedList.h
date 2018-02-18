@@ -87,8 +87,8 @@ class LinkedList {
   // Really slow, that's because it's not named size().
   int Count() const;
 
-  friend void Swap(LinkedList& lhs, LinkedList& rhs) {
-    Swap(lhs.root_, rhs.root_);
+  friend void swap(LinkedList& lhs, LinkedList& rhs) {
+    swap(lhs.root_, rhs.root_);
   }
 
  private:

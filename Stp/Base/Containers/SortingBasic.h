@@ -46,7 +46,7 @@ constexpr void Reverse(TContainer& sequence) {
   auto* d = sequence.data();
   int s = sequence.size();
   for (int i = 0; i < (s >> 1); ++i)
-    Swap(d[i], d[s - 1 - i]);
+    swap(d[i], d[s - 1 - i]);
 }
 
 } // namespace stp

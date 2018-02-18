@@ -16,6 +16,7 @@ template<class T, class TAllocator = DefaultAllocator>
 class OwnPtr {
  public:
   static_assert(!TIsVoid<T>, "void type");
+  static_assert(!TIsArray<T>, "C arrays disallowed, use List class instead");
 
   typedef T ElementType;
 
@@ -23,18 +24,18 @@ class OwnPtr {
   ~OwnPtr() { if (ptr_) Destroy(ptr_); }
 
   template<class U, TEnableIf<!TIsArray<U> && TIsConvertibleTo<U*, T*>>* = nullptr>
-  OwnPtr(OwnPtr<U>&& u) noexcept : ptr_(u.Release()) {}
+  OwnPtr(OwnPtr<U>&& u) noexcept : ptr_(u.release()) {}
   template<class U, TEnableIf<!TIsArray<U> && TIsConvertibleTo<U*, T*>>* = nullptr>
-  OwnPtr& operator=(OwnPtr<U>&& u) noexcept { Reset(u.Release()); return *this; }
+  OwnPtr& operator=(OwnPtr<U>&& u) noexcept { Reset(u.release()); return *this; }
 
   OwnPtr(nullptr_t) noexcept {}
   OwnPtr& operator=(nullptr_t) noexcept { Reset(); return *this; }
 
   explicit OwnPtr(T* ptr) noexcept : ptr_(ptr) { ASSERT(ptr_ != nullptr); }
-  [[nodiscard]] T* Release() noexcept { return Exchange(ptr_, nullptr); }
+  [[nodiscard]] T* release() noexcept { return exchange(ptr_, nullptr); }
 
   void Reset(T* new_ptr = nullptr) {
-    T* tmp = Exchange(ptr_, new_ptr);
+    T* tmp = exchange(ptr_, new_ptr);
     if (tmp)
       Destroy(tmp);
   }
@@ -49,8 +50,7 @@ class OwnPtr {
   template<typename... TArgs>
   static OwnPtr New(TArgs&&... args);
 
-  friend void Swap(OwnPtr& l, OwnPtr& r) { Swap(l.ptr_, r.ptr_); }
-  friend T* ToPointer(const OwnPtr& x) { return x.ptr_; }
+  friend void swap(OwnPtr& l, OwnPtr& r) { swap(l.ptr_, r.ptr_); }
 
   friend bool operator==(const OwnPtr& l, const OwnPtr& r) { return l.ptr_ == r.ptr_; }
   friend bool operator!=(const OwnPtr& l, const OwnPtr& r) { return l.ptr_ != r.ptr_; }
@@ -59,6 +59,11 @@ class OwnPtr {
   friend bool operator!=(const OwnPtr& l, T* r) { return l.ptr_ != r; }
   friend bool operator==(T* l, const OwnPtr& r) { return l == r.ptr_; }
   friend bool operator!=(T* l, const OwnPtr& r) { return l != r.ptr_; }
+
+  friend bool operator==(const OwnPtr& l, nullptr_t) { return l.ptr_ == nullptr; }
+  friend bool operator!=(const OwnPtr& l, nullptr_t) { return l.ptr_ != nullptr; }
+  friend bool operator==(nullptr_t, const OwnPtr& r) { return nullptr == r.ptr_; }
+  friend bool operator!=(nullptr_t, const OwnPtr& r) { return nullptr != r.ptr_; }
 
  private:
   void Destroy(T* ptr) {
@@ -71,17 +76,12 @@ class OwnPtr {
   DISALLOW_COPY_AND_ASSIGN(OwnPtr);
 };
 
-template<class T, class TAllocator> bool operator==(const OwnPtr<T, TAllocator>&, nullptr_t) = delete;
-template<class T, class TAllocator> bool operator!=(const OwnPtr<T, TAllocator>&, nullptr_t) = delete;
-template<class T, class TAllocator> bool operator==(nullptr_t, const OwnPtr<T, TAllocator>&) = delete;
-template<class T, class TAllocator> bool operator!=(nullptr_t, const OwnPtr<T, TAllocator>&) = delete;
-
 template<typename T>
 struct NullableTmpl<OwnPtr<T>> {
   typedef OwnPtr<T> Type;
 };
 
-template<typename T, typename TAllocator>
+template<typename T, class TAllocator>
 template<typename... TArgs>
 inline OwnPtr<T, TAllocator> OwnPtr<T, TAllocator>::New(TArgs&&... args) {
   if constexpr (TIsNoexceptConstructible<T, TArgs...>) {
@@ -100,18 +100,12 @@ inline OwnPtr<T, TAllocator> OwnPtr<T, TAllocator>::New(TArgs&&... args) {
   }
 }
 
-template<typename T, typename TAllocator>
-struct TIsZeroConstructibleTmpl<OwnPtr<T, TAllocator>> : TTrue {};
-template<typename T, typename TAllocator>
-struct TIsTriviallyRelocatableTmpl<OwnPtr<T, TAllocator>> : TTrue {};
-template<typename T, typename TAllocator>
-struct TIsTriviallyEqualityComparableTmpl<OwnPtr<T, TAllocator>> : TTrue {};
-
 template<typename T, class TAllocator>
-class OwnPtr<T[], TAllocator> {
- public:
-  static_assert(!TIsArray<T[]>, "C arrays disallowed, use List class instead");
-};
+struct TIsZeroConstructibleTmpl<OwnPtr<T, TAllocator>> : TTrue {};
+template<typename T, class TAllocator>
+struct TIsTriviallyRelocatableTmpl<OwnPtr<T, TAllocator>> : TTrue {};
+template<typename T, class TAllocator>
+struct TIsTriviallyEqualityComparableTmpl<OwnPtr<T, TAllocator>> : TTrue {};
 
 // Helper to transfer ownership of a raw pointer to a OwnPtr<T>.
 template<typename T>

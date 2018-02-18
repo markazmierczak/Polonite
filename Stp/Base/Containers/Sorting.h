@@ -63,7 +63,7 @@ void HeapSort(TContainer& sequence, TComparer&& comparer = DefaultComparer()) {
     detail::DownHeap(d, i, n, comparer);
   }
   for (int i = n - 1; i > 0; --i) {
-    Swap(d[0], d[i]);
+    swap(d[0], d[i]);
     detail::DownHeap(d, 1, i, comparer);
   }
 }
@@ -74,7 +74,7 @@ template<typename T, typename TComparer>
 constexpr void SwapIfGreater(T* d, int a, int b, TComparer&& comparer) {
   ASSERT(a != b);
   if (comparer(d[a], d[b]) > 0)
-    Swap(d[a], d[b]);
+    swap(d[a], d[b]);
 }
 
 template<typename T, typename TComparer>
@@ -90,7 +90,7 @@ int PickPivotAndPartition(T* d, int lo, int hi, TComparer&& comparer) {
   int left = lo;
   int right = hi - 1;
 
-  Swap(d[mid], d[right]);
+  swap(d[mid], d[right]);
   const T& pivot = d[right];
 
   while (left < right) {
@@ -108,10 +108,10 @@ int PickPivotAndPartition(T* d, int lo, int hi, TComparer&& comparer) {
     if (left >= right)
       break;
 
-    Swap(d[left], d[right]);
+    swap(d[left], d[right]);
   }
   // Move pivot to the right location.
-  Swap(d[left], d[hi - 1]);
+  swap(d[left], d[hi - 1]);
   return left;
 }
 

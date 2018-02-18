@@ -470,22 +470,22 @@ struct TIsSwappableTmpl;
 } // namespace detail
 
 template<typename T, TEnableIf<detail::TIsGenericSwappable<T>>* = nullptr>
-constexpr void Swap(T& x, T& y) noexcept {
+constexpr void swap(T& x, T& y) noexcept {
   T t(move(x));
   x = move(y);
   y = move(t);
 }
 
 template<typename T, int N, TEnableIf<detail::TIsSwappableTmpl<T>::Value>* = nullptr>
-constexpr void Swap(T (&a)[N], T (&b)[N]) noexcept {
+constexpr void swap(T (&a)[N], T (&b)[N]) noexcept {
   for (int i = 0; i < N; ++i)
-    Swap(a[i], b[i]);
+    swap(a[i], b[i]);
 }
 
 namespace detail {
 
 template<typename T>
-using TSwappableConcept = decltype(Swap(declval<T&>(), declval<T&>()));
+using TSwappableConcept = decltype(swap(declval<T&>(), declval<T&>()));
 
 template<typename T>
 struct TIsSwappableTmpl : TBoolConstant<THasDetected<detail::TSwappableConcept, T>> {};

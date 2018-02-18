@@ -22,9 +22,9 @@ class KeyValuePair {
   const T& value() const { return value_; }
   T& value() { return value_; }
 
-  friend void Swap(KeyValuePair& l, KeyValuePair& r) noexcept {
-    Swap(l.key_, r.key_);
-    Swap(l.value_, r.value_);
+  friend void swap(KeyValuePair& l, KeyValuePair& r) noexcept {
+    swap(l.key_, r.key_);
+    swap(l.value_, r.value_);
   }
   friend bool operator==(const KeyValuePair& l, const KeyValuePair& r) {
     return l.key_ == r.key_ && l.value_ == r.value_;

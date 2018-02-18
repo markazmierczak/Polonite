@@ -13,7 +13,7 @@
 
 namespace stp {
 
-// Basic test to make sure that *Acquire()/*Release() don't crash.
+// Basic test to make sure that *Acquire()/*release() don't crash.
 
 class BasicReadWriteLockTestThread : public Thread {
  public:

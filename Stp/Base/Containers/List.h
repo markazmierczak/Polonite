@@ -98,10 +98,10 @@ class List {
   List& operator+=(T item) { Add(move(item)); return *this; }
   List& operator+=(SpanType range) { Append(range); return *this; }
 
-  friend void Swap(List& l, List& r) noexcept {
-    Swap(l.data_, r.data_);
-    Swap(l.size_, r.size_);
-    Swap(l.capacity_, r.capacity_);
+  friend void swap(List& l, List& r) noexcept {
+    swap(l.data_, r.data_);
+    swap(l.size_, r.size_);
+    swap(l.capacity_, r.capacity_);
   }
   friend bool operator==(const List& l, const SpanType& r) { return l.ToSpan() == r; }
   friend bool operator!=(const List& l, const SpanType& r) { return l.ToSpan() != r; }
@@ -197,16 +197,16 @@ BASE_EXPORT const char* ToNullTerminated(const List<char>& string);
 
 template<typename T>
 inline List<T>::List(List&& other) noexcept
-    : data_(Exchange(other.data_, nullptr)),
-      size_(Exchange(other.size_, 0)),
-      capacity_(Exchange(other.capacity_, 0)) {}
+    : data_(exchange(other.data_, nullptr)),
+      size_(exchange(other.size_, 0)),
+      capacity_(exchange(other.capacity_, 0)) {}
 
 template<typename T>
 inline List<T>& List<T>::operator=(List&& other) noexcept {
   DestroyAndFree(data_, size_, capacity_);
-  data_ = Exchange(other.data_, nullptr);
-  size_ = Exchange(other.size_, 0);
-  capacity_ = Exchange(other.capacity_, 0);
+  data_ = exchange(other.data_, nullptr);
+  size_ = exchange(other.size_, 0);
+  capacity_ = exchange(other.capacity_, 0);
   return *this;
 }
 
@@ -244,7 +244,7 @@ inline void List<T>::ResizeStorage(int new_capacity) {
   } else {
     T* new_data = Allocate<T>(new_capacity + CapacityIncrement_);
     capacity_ = new_capacity;
-    T* old_data = Exchange(data_, new_data);
+    T* old_data = exchange(data_, new_data);
     if (old_data) {
       UninitializedRelocate(new_data, old_data, size_);
       Free(old_data);
@@ -271,7 +271,7 @@ inline void List<T>::ShrinkCapacity(int request) {
     ResizeStorage(request);
   } else {
     capacity_ = 0;
-    Free(Exchange(data_, nullptr));
+    Free(exchange(data_, nullptr));
   }
 }
 
@@ -371,7 +371,7 @@ inline void List<T>::RemoveRange(int at, int n) {
   ASSERT(0 <= at && at <= size_);
   ASSERT(0 <= n && n <= size_ - at);
   Destroy(data_ + at, n);
-  int old_size = Exchange(size_, size_ - n);
+  int old_size = exchange(size_, size_ - n);
   UninitializedRelocate(data_ + at, data_ + at + n, old_size - n - at);
 }
 
@@ -494,7 +494,7 @@ template<typename T>
 inline T* List<T>::ReleaseMemory() {
   size_ = 0;
   capacity_ = 0;
-  return Exchange(data_, nullptr);
+  return exchange(data_, nullptr);
 }
 
 template<typename T>

@@ -60,7 +60,7 @@ bool TryParse(StringSpan str, Version& out) {
 
     StringSpan part;
     if (dot_pos < 0) {
-      Swap(part, str);
+      swap(part, str);
     } else {
       part = str.GetSlice(0, dot_pos);
       str.RemovePrefix(dot_pos + 1);

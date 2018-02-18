@@ -132,7 +132,7 @@ inline bool operator==(const ExceptionPtr& l, const ExceptionPtr& r) noexcept {
   return __ExceptionPtrCompare(&l, &r);
 }
 
-inline void Swap(ExceptionPtr& lhs, ExceptionPtr& rhs) noexcept {
+inline void swap(ExceptionPtr& lhs, ExceptionPtr& rhs) noexcept {
   __ExceptionPtrSwap(&rhs, &lhs);
 }
 
@@ -160,7 +160,7 @@ inline ExceptionPtr& ExceptionPtr::operator=(const ExceptionPtr& other) noexcept
   return *this;
 }
 
-inline void Swap(ExceptionPtr& lhs, ExceptionPtr& rhs) noexcept {
+inline void swap(ExceptionPtr& lhs, ExceptionPtr& rhs) noexcept {
   ExceptionPtr tmp = lhs;
   lhs = rhs;
   rhs = tmp;

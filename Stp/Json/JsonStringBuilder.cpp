@@ -22,11 +22,11 @@ JsonStringBuilder& JsonStringBuilder::operator=(const JsonStringBuilder& other) 
 }
 
 JsonStringBuilder::JsonStringBuilder(JsonStringBuilder&& other) {
-  Swap(*this, other);
+  swap(*this, other);
 }
 
 JsonStringBuilder& JsonStringBuilder::operator=(JsonStringBuilder&& other) {
-  Swap(*this, other);
+  swap(*this, other);
   return *this;
 }
 
@@ -83,7 +83,7 @@ char* JsonStringBuilder::AppendUninitialized(int n) {
     capacity_ = RecommendCapacity(new_length);
     data_ = Reallocate(data_, capacity_);
   }
-  return data_ + Exchange(size_, new_length);
+  return data_ + exchange(size_, new_length);
 }
 
 int JsonStringBuilder::RecommendCapacity(int new_length) {

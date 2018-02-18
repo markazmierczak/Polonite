@@ -34,7 +34,7 @@ class BasicSpinLock {
 
   // Releases the lock.
   // The lock must be held by calling thread.
-  ALWAYS_INLINE void Release() {
+  ALWAYS_INLINE void release() {
     subtle::Release_Store(&lock_, Free);
   }
 
@@ -83,7 +83,7 @@ class AutoSpinLock {
 
   ~AutoSpinLock() {
     lock_.AssertAcquired();
-    lock_.Release();
+    lock_.release();
   }
 
  private:

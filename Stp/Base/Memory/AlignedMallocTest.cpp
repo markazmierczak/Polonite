@@ -35,8 +35,8 @@ TEST(AlignedMemory, DynamicAllocation) {
 
 TEST(AlignedMemory, ScopedDynamicAllocation) {
   auto p = OwnPtr<double, AlignedAllocator<double>>::New(8);
-  EXPECT_TRUE(ToPointer(p));
-  EXPECT_ALIGNED(ToPointer(p), 4);
+  EXPECT_TRUE(p != nullptr);
+  EXPECT_ALIGNED(p.get(), 4);
 }
 
 } // namespace stp

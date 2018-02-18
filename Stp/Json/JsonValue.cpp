@@ -46,7 +46,7 @@ JsonValue& JsonValue::operator=(JsonValue&& other) {
 
 // FIXME rewrite
 void JsonValue::SwapWith(JsonValue& other) {
-  Swap(type_, other.type_);
+  swap(type_, other.type_);
 
   static_assert(TIsTriviallyRelocatable<StringData>, "!");
   static_assert(TIsTriviallyRelocatable<ArrayData>, "!");

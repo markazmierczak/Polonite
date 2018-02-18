@@ -320,7 +320,7 @@ bool JsonParser::ConsumeStringRaw(JsonStringBuilder& out) {
       return ReportError(JsonError::UnsupportedEncoding, 1);
 
     if (next_char == '"') {
-      Swap(out, string);
+      swap(out, string);
       return true;
     }
 

@@ -122,7 +122,7 @@ void BufferedStream::Close() {
     read_len_ = 0;
   }
 
-  Stream* underlying = Exchange(underlying_, nullptr);
+  Stream* underlying = exchange(underlying_, nullptr);
   if (owned_) {
     // Call Close directly instead of indirectly through destructor.
     // This enables exception chaining.

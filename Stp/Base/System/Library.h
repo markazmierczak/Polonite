@@ -75,10 +75,10 @@ class BASE_EXPORT Library {
 
   explicit Library(NativeLibrary native) : native_(native) {}
 
-  Library(Library&& other) : native_(Exchange(other.native_, NullNativeLibrary)) {}
-  Library& operator=(Library&& other) { Reset(other.Release()); return *this; }
+  Library(Library&& other) : native_(exchange(other.native_, NullNativeLibrary)) {}
+  Library& operator=(Library&& other) { Reset(other.release()); return *this; }
 
-  friend void Swap(Library& lhs, Library& rhs) { Swap(lhs.native_, rhs.native_); }
+  friend void swap(Library& lhs, Library& rhs) { swap(lhs.native_, rhs.native_); }
 
   void Reset(NativeLibrary native = NullNativeLibrary);
 
@@ -93,7 +93,7 @@ class BASE_EXPORT Library {
 
   // Returns the native library handle and removes it from this object.
   // The caller must manage the lifetime of the handle.
-  NativeLibrary Release();
+  NativeLibrary release();
 
   // Returns the full platform specific name for a native library.
   // |name| must be ASCII.
@@ -122,7 +122,7 @@ inline void Library::Reset(NativeLibrary native) {
   native_ = native;
 }
 
-inline NativeLibrary Library::Release() {
+inline NativeLibrary Library::release() {
   NativeLibrary result = native_;
   native_ = NullNativeLibrary;
   return result;

@@ -276,11 +276,11 @@ inline HashMap<K, T>& HashMap<K, T>::operator=(HashMap&& other) {
 
 template<typename K, typename T>
 inline void HashMap<K, T>::SwapWith(HashMap& other) {
-  Swap(buckets_, other.buckets_);
-  Swap(free_nodes_, other.free_nodes_);
-  Swap(sentinel_, other.sentinel_);
-  Swap(bucket_count_, other.bucket_count_);
-  Swap(size_, other.size_);
+  swap(buckets_, other.buckets_);
+  swap(free_nodes_, other.free_nodes_);
+  swap(sentinel_, other.sentinel_);
+  swap(bucket_count_, other.bucket_count_);
+  swap(size_, other.size_);
 }
 
 template<typename K, typename T>

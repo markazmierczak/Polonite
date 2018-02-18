@@ -52,7 +52,7 @@ void DirectoryEnumerator::Close() noexcept {
   ASSERT(IsOpen());
   pattern_.Clear();
   if (status_ != Status::Empty) {
-    HANDLE handle = Exchange(find_handle_, INVALID_HANDLE_VALUE);
+    HANDLE handle = exchange(find_handle_, INVALID_HANDLE_VALUE);
     if (::FindClose(handle) == 0)
       ASSERT(false);
   }

@@ -14,6 +14,8 @@ class List;
 template<typename T>
 struct TIsContiguousContainerTmpl<List<T>> : TTrue {};
 
+using String = List<char>;
+
 } // namespace stp
 
 #endif // STP_BASE_CONTAINERS_LISTFWD_H_

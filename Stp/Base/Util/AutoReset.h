@@ -23,12 +23,12 @@ class AutoReset {
   template<typename U>
   AutoReset(T* var, U&& new_value)
       : scoped_variable_(var),
-        original_value_(Exchange(*var, Forward<U>(new_value))) {
+        original_value_(exchange(*var, Forward<U>(new_value))) {
   }
 
   ~AutoReset() {
     if (scoped_variable_)
-      Swap(*scoped_variable_, original_value_);
+      swap(*scoped_variable_, original_value_);
   }
 
   // The change will be permanent - no rollback happen at destruction.

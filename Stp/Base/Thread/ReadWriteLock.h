@@ -30,11 +30,11 @@ class BASE_EXPORT BasicReadWriteLock {
  public:
   // Reader lock functions.
   void ReadAcquire();
-  void ReadRelease();
+  void Readrelease();
 
   // Writer lock functions.
   void WriteAcquire();
-  void WriteRelease();
+  void Writerelease();
 
   void Init();
   void Fini();
@@ -62,7 +62,7 @@ class AutoReadLock {
     lock_.ReadAcquire();
   }
   ~AutoReadLock() {
-    lock_.ReadRelease();
+    lock_.Readrelease();
   }
 
  private:
@@ -76,7 +76,7 @@ class AutoWriteLock {
     lock_.WriteAcquire();
   }
   ~AutoWriteLock() {
-    lock_.WriteRelease();
+    lock_.Writerelease();
   }
 
  private:
@@ -100,7 +100,7 @@ inline void BasicReadWriteLock::ReadAcquire() {
   ::AcquireSRWLockShared(&native_handle_);
 }
 
-inline void BasicReadWriteLock::ReadRelease() {
+inline void BasicReadWriteLock::Readrelease() {
   ::ReleaseSRWLockShared(&native_handle_);
 }
 
@@ -108,7 +108,7 @@ inline void BasicReadWriteLock::WriteAcquire() {
   ::AcquireSRWLockExclusive(&native_handle_);
 }
 
-inline void BasicReadWriteLock::WriteRelease() {
+inline void BasicReadWriteLock::Writerelease() {
   ::ReleaseSRWLockExclusive(&native_handle_);
 }
 
@@ -131,7 +131,7 @@ inline void BasicReadWriteLock::ReadAcquire() {
   ASSERT_UNUSED(result == 0, result);
 }
 
-inline void BasicReadWriteLock::ReadRelease() {
+inline void BasicReadWriteLock::Readrelease() {
   int result = pthread_rwlock_unlock(&native_handle_);
   ASSERT_UNUSED(result == 0, result);
 }
@@ -141,7 +141,7 @@ inline void BasicReadWriteLock::WriteAcquire() {
   ASSERT_UNUSED(result == 0, result);
 }
 
-inline void BasicReadWriteLock::WriteRelease() {
+inline void BasicReadWriteLock::Writerelease() {
   int result = pthread_rwlock_unlock(&native_handle_);
   ASSERT_UNUSED(result == 0, result);
 }

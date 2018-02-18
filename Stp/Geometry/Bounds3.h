@@ -91,20 +91,20 @@ inline bool Bounds3::Contains(float x, float y, float z) const {
 
 inline void IntBounds3::Sort() {
   if (min.x > max.x)
-    Swap(min.x, max.x);
+    swap(min.x, max.x);
   if (min.y > max.y)
-    Swap(min.y, max.y);
+    swap(min.y, max.y);
   if (min.z > max.z)
-    Swap(min.z, max.z);
+    swap(min.z, max.z);
 }
 
 inline void Bounds3::Sort() {
   if (min.x > max.x)
-    Swap(min.x, max.x);
+    swap(min.x, max.x);
   if (min.y > max.y)
-    Swap(min.y, max.y);
+    swap(min.y, max.y);
   if (min.z > max.z)
-    Swap(min.z, max.z);
+    swap(min.z, max.z);
 }
 
 inline IntBounds3 IntBounds3::operator+(const IntVector3& offset) const {

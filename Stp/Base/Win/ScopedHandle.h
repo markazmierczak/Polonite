@@ -28,15 +28,15 @@ class BASE_EXPORT ScopedHandle {
       : handle_(handle) {}
 
   ScopedHandle(ScopedHandle&& other) noexcept
-      : handle_(other.Release()) {}
+      : handle_(other.release()) {}
 
   ScopedHandle& operator=(ScopedHandle&& other) noexcept {
     if (this != &other)
-      Reset(other.Release());
+      Reset(other.release());
     return *this;
   }
 
-  void SwapSwith(ScopedHandle& other) noexcept { Swap(handle_, other.handle_); }
+  void SwapSwith(ScopedHandle& other) noexcept { swap(handle_, other.handle_); }
 
   bool IsValid() const { return handle_ != INVALID_HANDLE_VALUE; }
 
@@ -46,7 +46,7 @@ class BASE_EXPORT ScopedHandle {
   ALWAYS_INLINE HANDLE get() const { return handle_; }
 
   // Transfers ownership away from this object.
-  HANDLE Release() WARN_UNUSED_RESULT { return Exchange(handle_, INVALID_HANDLE_VALUE); }
+  HANDLE release() WARN_UNUSED_RESULT { return exchange(handle_, INVALID_HANDLE_VALUE); }
 
  private:
   HANDLE handle_;

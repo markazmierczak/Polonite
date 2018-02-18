@@ -28,7 +28,7 @@ TEST(TemporaryDirectory, FullPath) {
     EXPECT_TRUE(dir.Set(test_path));
     // Now the dir doesn't exist, so ensure that it gets created.
     EXPECT_TRUE(DirectoryExists(test_path));
-    // When we call Release(), it shouldn't get destroyed when leaving scope.
+    // When we call release(), it shouldn't get destroyed when leaving scope.
     FilePath path = dir.Take();
     EXPECT_EQ(path.chars, test_path.chars);
     EXPECT_FALSE(dir.IsValid());

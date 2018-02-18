@@ -12,7 +12,7 @@ namespace posix {
 
 FileDescriptor& FileDescriptor::operator=(FileDescriptor&& other) noexcept {
   ASSERT(this != &other);
-  FileDescriptor tmp(Exchange(fd_, Exchange(other.fd_, InvalidFd)));
+  FileDescriptor tmp(exchange(fd_, exchange(other.fd_, InvalidFd)));
   return *this;
 }
 

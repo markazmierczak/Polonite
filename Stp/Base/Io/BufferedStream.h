@@ -28,7 +28,7 @@ class BASE_EXPORT BufferedStream final : public Stream {
 
   void FlushBuffers();
 
-  void Open(OwnPtr<Stream> underlying) { OpenInternal(underlying.Release(), true); }
+  void Open(OwnPtr<Stream> underlying) { OpenInternal(underlying.release(), true); }
   void Open(Stream* underlying) { OpenInternal(underlying, false); }
 
   void Close() override;

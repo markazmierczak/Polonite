@@ -45,7 +45,7 @@ struct Array {
   template<typename U>
   bool Contains(const U& item) const { return IndexOf(item) >= 0; }
 
-  friend constexpr void Swap(Array& lhs, Array& rhs) noexcept { Swap(lhs.data_, rhs.data_); }
+  friend constexpr void swap(Array& lhs, Array& rhs) noexcept { swap(lhs.data_, rhs.data_); }
   friend constexpr bool operator==(const Array& lhs, SpanType rhs) { return operator==(lhs.ToSpan(), rhs); }
   friend constexpr bool operator!=(const Array& lhs, SpanType rhs) { return operator==(lhs.ToSpan(), rhs); }
   friend int Compare(const Array& lhs, SpanType rhs) { return Compare(lhs.ToSpan(), rhs); }

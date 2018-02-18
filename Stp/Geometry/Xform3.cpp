@@ -891,12 +891,12 @@ bool Xform3::IsBackFaceVisible() const {
 }
 
 void Xform3::Transpose() {
-  Swap(d_[0][1], d_[1][0]);
-  Swap(d_[0][2], d_[2][0]);
-  Swap(d_[0][3], d_[3][0]);
-  Swap(d_[1][2], d_[2][1]);
-  Swap(d_[1][3], d_[3][1]);
-  Swap(d_[2][3], d_[3][2]);
+  swap(d_[0][1], d_[1][0]);
+  swap(d_[0][2], d_[2][0]);
+  swap(d_[0][3], d_[3][0]);
+  swap(d_[1][2], d_[2][1]);
+  swap(d_[1][3], d_[3][1]);
+  swap(d_[2][3], d_[3][2]);
 
   if (!TriviallyIsIdentity())
     DirtyTypeMask();

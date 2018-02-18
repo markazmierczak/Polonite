@@ -88,7 +88,7 @@ class BASE_EXPORT FileStream final : public Stream {
 
   ALWAYS_INLINE NativeFile GetNativeFile() const { return native_.get(); }
 
-  NativeFile ReleaseNativeFile() { return native_.Release(); }
+  NativeFile ReleaseNativeFile() { return native_.release(); }
 
  private:
   bool CanSeekInternal();

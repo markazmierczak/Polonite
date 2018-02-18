@@ -75,10 +75,10 @@ class Buffer {
 
   Buffer& operator+=(SpanType range) { Append(range); return *this; }
 
-  friend void Swap(Buffer& l, Buffer& r) noexcept {
-    Swap(l.data_, r.data_);
-    Swap(l.size_, r.size_);
-    Swap(l.capacity_, r.capacity_);
+  friend void swap(Buffer& l, Buffer& r) noexcept {
+    swap(l.data_, r.data_);
+    swap(l.size_, r.size_);
+    swap(l.capacity_, r.capacity_);
   }
   friend bool operator==(const Buffer& l, const SpanType& r) { return l.ToSpan() == r; }
   friend bool operator!=(const Buffer& l, const SpanType& r) { return l.ToSpan() != r; }
@@ -160,15 +160,15 @@ inline Buffer MakeBuffer(List<T>&& list) {
 }
 
 inline Buffer::Buffer(Buffer&& other) noexcept
-    : data_(Exchange(other.data_, nullptr)),
-      size_(Exchange(other.size_, 0)),
-      capacity_(Exchange(other.capacity_, 0)) {}
+    : data_(exchange(other.data_, nullptr)),
+      size_(exchange(other.size_, 0)),
+      capacity_(exchange(other.capacity_, 0)) {}
 
 inline Buffer& Buffer::operator=(Buffer&& other) noexcept {
   FreeIfNotNull(data_);
-  data_ = Exchange(other.data_, nullptr);
-  size_ = Exchange(other.size_, 0);
-  capacity_ = Exchange(other.capacity_, 0);
+  data_ = exchange(other.data_, nullptr);
+  size_ = exchange(other.size_, 0);
+  capacity_ = exchange(other.capacity_, 0);
   return *this;
 }
 
@@ -198,7 +198,7 @@ inline void Buffer::ResizeStorage(int new_capacity) {
   if (size_) {
     data_ = Reallocate(data_, ToUnsigned(new_capacity));
   } else {
-    byte_t* old_data = Exchange(data_, Allocate<byte_t>(new_capacity));
+    byte_t* old_data = exchange(data_, Allocate<byte_t>(new_capacity));
     FreeIfNotNull(old_data);
   }
   capacity_ = new_capacity;
@@ -217,7 +217,7 @@ inline void Buffer::ShrinkCapacity(int request) {
     ResizeStorage(request);
   } else {
     capacity_ = 0;
-    Free(Exchange(data_, nullptr));
+    Free(exchange(data_, nullptr));
   }
 }
 
@@ -329,7 +329,7 @@ inline void Buffer::RemoveRange(int at, int n) {
   ASSERT(0 <= at && at <= size_);
   ASSERT(0 <= n && n <= size_ - at);
   if (n) {
-    int old_size = Exchange(size_, size_ - n);
+    int old_size = exchange(size_, size_ - n);
     ::memcpy(data_ + at, data_ + at + n, ToUnsigned(old_size - n - at));
   }
 }
@@ -351,7 +351,7 @@ inline Buffer Buffer::AdoptMemory(void* ptr, int size, int capacity) {
 inline void* Buffer::ReleaseMemory() {
   size_ = 0;
   capacity_ = 0;
-  return Exchange(data_, nullptr);
+  return exchange(data_, nullptr);
 }
 
 } // namespace stp

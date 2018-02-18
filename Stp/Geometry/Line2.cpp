@@ -67,7 +67,7 @@ static inline bool NestedLT(float a, float b, float dim) {
 template<typename T>
 static T PinUnsorted(T value, T limit0, T limit1) {
   if (limit1 < limit0) {
-    Swap(limit0, limit1);
+    swap(limit0, limit1);
   }
   // now the limits are sorted
   ASSERT(limit0 <= limit1);

@@ -125,9 +125,6 @@ template<typename T>
 using TRemoveCVAndPointer = TRemoveCV<TRemovePointer<T>>;
 
 template<typename T>
-constexpr T* ToPointer(T* ptr) { return ptr; }
-
-template<typename T>
 constexpr bool TIsBoolean = TsAreSame<bool, TRemoveCV<T>>;
 
 template<typename T>

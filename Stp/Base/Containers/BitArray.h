@@ -131,7 +131,7 @@ class BitArray {
     BitArray rv = lhs; rv ^= rhs; return rv;
   }
 
-  friend void Swap(BitArray& l, BitArray& r) noexcept { Swap(l.words_, r.words_); }
+  friend void swap(BitArray& l, BitArray& r) noexcept { swap(l.words_, r.words_); }
   friend bool operator==(const BitArray& l, const BitArray& r) {
     return memcmp(l.words_, r.words_, sizeof(words_)) == 0;
   }

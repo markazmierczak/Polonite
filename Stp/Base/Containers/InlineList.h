@@ -205,7 +205,7 @@ class InlineList : public InlineListBase<T> {
   void ShrinkCapacity(int request);
   void ShrinkToFit() { ShrinkCapacity(this->size_); }
 
-  friend void Swap(InlineList& l, InlineList& r) noexcept { l.SwapWith(r); }
+  friend void swap(InlineList& l, InlineList& r) noexcept { l.SwapWith(r); }
 
  private:
   detail::InlineListStorage<T, N> additional_items_;
@@ -231,24 +231,24 @@ void InlineList<T, N>::SwapWith(InlineList& other) noexcept {
       InlineList& small = this->size_ < other.size_ ? *this : other;
       InlineList& large = this->size_ < other.size_ ? other : *this;
       for (int i = 0; i < small.size_; ++i) {
-        Swap(small[i], large[i]);
+        swap(small[i], large[i]);
       }
       UninitializedRelocate(
           small.data_ + small.size_,
           large.data_ + small.size_,
           large.size_ - small.size_);
     } else {
-      Swap(this->data_, other.data_);
+      swap(this->data_, other.data_);
     }
   } else {
     InlineList& inl = this->IsInline() ? *this : other;
     InlineList& ext = this->IsInline() ? other : *this;
-    auto* heap = Exchange(ext.data_, ext.GetInlineData());
+    auto* heap = exchange(ext.data_, ext.GetInlineData());
     UninitializedRelocate(ext.data_, inl.data_, inl.size_);
     inl.data_ = heap;
   }
-  Swap(this->size_, other.size_);
-  Swap(this->capacity_, other.capacity_);
+  swap(this->size_, other.size_);
+  swap(this->capacity_, other.capacity_);
 }
 
 template<typename T, int N>
@@ -256,10 +256,10 @@ inline InlineList<T, N>::InlineList(InlineList&& other) noexcept : InlineListBas
   if (other.IsInline()) {
     UninitializedRelocate(this->data_, other.data_, other.size_);
   } else {
-    this->data_ = Exchange(other.data_, nullptr);
-    this->capacity_ = Exchange(other.capacity_, 0);
+    this->data_ = exchange(other.data_, nullptr);
+    this->capacity_ = exchange(other.capacity_, 0);
   }
-  this->size_ = Exchange(other.size_, 0);
+  this->size_ = exchange(other.size_, 0);
 }
 
 template<typename T, int N>
@@ -271,10 +271,10 @@ inline InlineList<T, N>& InlineList<T, N>::operator=(InlineList&& other) noexcep
     this->capacity_ = N;
     UninitializedRelocate(this->data_, other.data_, other.size_);
   } else {
-    this->data_ = Exchange(other.data_, other.GetInlineData());
-    this->capacity_ = Exchange(other.capacity_, N);
+    this->data_ = exchange(other.data_, other.GetInlineData());
+    this->capacity_ = exchange(other.capacity_, N);
   }
-  this->size_ = Exchange(other.size_, 0);
+  this->size_ = exchange(other.size_, 0);
   return *this;
 }
 
@@ -341,7 +341,7 @@ inline void InlineList<T, N>::ShrinkCapacity(int request) {
   if (request > N) {
     this->ResizeStorage(request);
   } else if (!this->IsInline()) {
-    T* heap = Exchange(this->data_, this->GetInlineData());
+    T* heap = exchange(this->data_, this->GetInlineData());
     this->capacity_ = N;
     UninitializedRelocate(this->data_, heap, this->size_);
     Free(heap);
@@ -441,7 +441,7 @@ inline void InlineListBase<T>::RemoveRange(int at, int n) {
   ASSERT(0 <= at && at <= size_);
   ASSERT(0 <= n && n <= size_ - at);
   Destroy(data_ + at, n);
-  int old_size = Exchange(size_, size_ - n);
+  int old_size = exchange(size_, size_ - n);
   UninitializedRelocate(data_ + at, data_ + at + n, old_size - n - at);
 }
 

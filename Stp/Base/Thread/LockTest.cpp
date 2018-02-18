@@ -12,7 +12,7 @@
 
 namespace stp {
 
-// Basic test to make sure that Acquire()/Release()/Try() don't crash ----------
+// Basic test to make sure that Acquire()/release()/Try() don't crash ----------
 
 class BasicLockTestThread : public Thread {
  public:
@@ -22,19 +22,19 @@ class BasicLockTestThread : public Thread {
     for (int i = 0; i < 10; i++) {
       lock_->Acquire();
       acquired_++;
-      lock_->Release();
+      lock_->release();
     }
     for (int i = 0; i < 10; i++) {
       lock_->Acquire();
       acquired_++;
       ThisThread::SleepFor(TimeDelta::FromMilliseconds(rand() % 20));
-      lock_->Release();
+      lock_->release();
     }
     for (int i = 0; i < 10; i++) {
       if (lock_->TryAcquire()) {
         acquired_++;
         ThisThread::SleepFor(TimeDelta::FromMilliseconds(rand() % 20));
-        lock_->Release();
+        lock_->release();
       }
     }
     return 0;
@@ -58,26 +58,26 @@ TEST(LockTest, Basic) {
   for (int i = 0; i < 5; i++) {
     lock.Acquire();
     acquired++;
-    lock.Release();
+    lock.release();
   }
   for (int i = 0; i < 10; i++) {
     lock.Acquire();
     acquired++;
     ThisThread::SleepFor(TimeDelta::FromMilliseconds(rand() % 20));
-    lock.Release();
+    lock.release();
   }
   for (int i = 0; i < 10; i++) {
     if (lock.TryAcquire()) {
       acquired++;
       ThisThread::SleepFor(TimeDelta::FromMilliseconds(rand() % 20));
-      lock.Release();
+      lock.release();
     }
   }
   for (int i = 0; i < 5; i++) {
     lock.Acquire();
     acquired++;
     ThisThread::SleepFor(TimeDelta::FromMilliseconds(rand() % 20));
-    lock.Release();
+    lock.release();
   }
 
   thread.Join();
@@ -95,7 +95,7 @@ class TryLockTestThread : public Thread {
   int Main() override {
     got_lock_ = lock_->TryAcquire();
     if (got_lock_)
-      lock_->Release();
+      lock_->release();
     return 0;
   }
 
@@ -122,7 +122,7 @@ TEST(LockTest, TryLock) {
     ASSERT_FALSE(thread.got_lock());
   }
 
-  lock.Release();
+  lock.release();
 
   // This thread will....
   {
@@ -135,7 +135,7 @@ TEST(LockTest, TryLock) {
     ASSERT_TRUE(lock.TryAcquire());
   }
 
-  lock.Release();
+  lock.release();
 }
 
 // Tests that locks actually exclude -------------------------------------------
@@ -151,7 +151,7 @@ class MutexLockTestThread : public Thread {
       int v = *value;
       ThisThread::SleepFor(TimeDelta::FromMilliseconds(rand() % 10));
       *value = v + 1;
-      lock->Release();
+      lock->release();
     }
   }
 

@@ -38,7 +38,7 @@ class HashSet {
   template<typename U>
   bool Contains(const U& value) const { return map_.Contains(value); }
 
-  friend void Swap(HashSet& lhs, HashSet& rhs) { Swap(lhs.map_, rhs.map_); }
+  friend void swap(HashSet& lhs, HashSet& rhs) { swap(lhs.map_, rhs.map_); }
 
  private:
   HashMap<T, DummyEmpty> map_;

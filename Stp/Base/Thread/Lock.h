@@ -44,7 +44,7 @@ class BASE_EXPORT BasicLock {
 
   // Release the lock.  This must only be called by the lock's holder: after
   // a successful call to Try, or a call to Lock.
-  void Release();
+  void release();
 
   void AssertAcquired() const;
 
@@ -78,7 +78,7 @@ class BASE_EXPORT Lock : public BasicLock {
 
   using BasicLock::TryAcquire;
   using BasicLock::Acquire;
-  using BasicLock::Release;
+  using BasicLock::release;
 
  private:
   using BasicLock::native_object_;
@@ -100,7 +100,7 @@ class AutoLock {
 
   ~AutoLock() {
     lock_.AssertAcquired();
-    lock_.Release();
+    lock_.release();
   }
 
  private:
@@ -109,14 +109,14 @@ class AutoLock {
   DISALLOW_COPY_AND_ASSIGN(AutoLock);
 };
 
-// AutoUnlock is a helper that will Release() the |lock| argument in the
+// AutoUnlock is a helper that will release() the |lock| argument in the
 // constructor, and re-Acquire() it in the destructor.
 class AutoUnlock {
  public:
   explicit AutoUnlock(BasicLock* lock) : lock_(*lock) {
     // We require our caller to have the lock.
     lock_.AssertAcquired();
-    lock_.Release();
+    lock_.release();
   }
 
   ~AutoUnlock() {
@@ -131,7 +131,7 @@ class AutoUnlock {
 #if !ASSERT_IS_ON()
 inline bool BasicLock::TryAcquire() { return NativeLock::TryAcquire(&native_object_); }
 inline void BasicLock::Acquire() { NativeLock::Acquire(&native_object_); }
-inline void BasicLock::Release() { NativeLock::Release(&native_object_); }
+inline void BasicLock::release() { NativeLock::Release(&native_object_); }
 inline void BasicLock::AssertAcquired() const {}
 #endif
 

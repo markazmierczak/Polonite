@@ -59,7 +59,7 @@ class FlatSet {
   }
   ListType TakeList() { return move(list_); }
 
-  friend void Swap(FlatSet& l, FlatSet& r) noexcept { Swap(l.list_, r.list_); }
+  friend void swap(FlatSet& l, FlatSet& r) noexcept { swap(l.list_, r.list_); }
   friend bool operator==(const FlatSet& l, const FlatSet& r) { return l.list_ == r.list_; }
   friend bool operator!=(const FlatSet& l, const FlatSet& r) { return !(l == r); }
   friend int Compare(const FlatSet& l, const FlatSet& r) { return Compare(l.list_, r.list_); }

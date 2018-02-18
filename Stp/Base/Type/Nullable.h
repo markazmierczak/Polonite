@@ -132,10 +132,10 @@ class NullableValue {
   constexpr NullableValue(nullptr_t) noexcept {}
   constexpr NullableValue& operator=(nullptr_t) noexcept { Reset(); return *this; }
 
-  friend void Swap(NullableValue& l, NullableValue& r) noexcept {
+  friend void swap(NullableValue& l, NullableValue& r) noexcept {
     if (l.IsValid() == r.IsValid()) {
       if (l.IsValid())
-        Swap(*l, *r);
+        swap(*l, *r);
     } else {
       if (l.IsValid())
         r.Relocate(l);
@@ -160,8 +160,8 @@ class NullableValue {
   friend constexpr int Compare(const NullableValue& l, nullptr_t r) { return l ? 1 : 0; }
   friend constexpr int Compare(nullptr_t l, const NullableValue& r) { return r ? -1 : 0; }
 
-  constexpr const T* ToPointer(const NullableValue& x) { return x.IsValid() ? x.operator->() : nullptr; }
-  constexpr T* ToPointer(NullableValue& x) { return x.IsValid() ? x.operator->() : nullptr; }
+  constexpr const T* tryGet(const NullableValue& x) { return x.IsValid() ? x.operator->() : nullptr; }
+  constexpr T* tryGet(NullableValue& x) { return x.IsValid() ? x.operator->() : nullptr; }
 
  private:
   detail::NullableValueStorage<T> storage_;

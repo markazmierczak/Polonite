@@ -153,13 +153,13 @@ TEST_F(ConditionVariableTest, StartupShutdownTest) {
   lock.Acquire();
   cv.TimedWait(kTenMs);  // Wait for 10 ms.
   cv.TimedWait(kTenMs);  // Wait for 10 ms.
-  lock.Release();
+  lock.release();
 
   lock.Acquire();
   cv.TimedWait(kTenMs);  // Wait for 10 ms.
   cv.TimedWait(kTenMs);  // Wait for 10 ms.
   cv.TimedWait(kTenMs);  // Wait for 10 ms.
-  lock.Release();
+  lock.release();
 } // Call for cv destruction.
 
 TEST_F(ConditionVariableTest, TimeoutTest) {
@@ -178,7 +178,7 @@ TEST_F(ConditionVariableTest, TimeoutTest) {
   // required stream conversion.
   EXPECT_TRUE(duration >= WAIT_TIME);
 
-  lock.Release();
+  lock.release();
 }
 
 

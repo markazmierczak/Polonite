@@ -76,7 +76,7 @@ class BASE_EXPORT JsonParser {
 
   // Assuming that the parser is wound to a double quote, this parses a string,
   // decoding any escape sequences and converts UTF-16 to UTF-8. Returns true on
-  // success and Swap()s the result into |out|. Returns false on failure with
+  // success and swap()s the result into |out|. Returns false on failure with
   // error information set.
   bool ConsumeStringRaw(JsonStringBuilder& out);
   // Helper function for ConsumeStringRaw() that consumes the next four or 10

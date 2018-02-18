@@ -302,7 +302,7 @@ TEST(BitArrayTest, Swap) {
   BitArray<256> source = test;
 
   BitArray<256> destination;
-  Swap(source, destination);
+  swap(source, destination);
 
   EXPECT_EQ(destination, test);
   EXPECT_FALSE(source.AnyTrue());

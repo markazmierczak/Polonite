@@ -25,7 +25,7 @@ void BasicLock::Acquire() {
   CheckUnheldAndMark();
 }
 
-void BasicLock::Release() {
+void BasicLock::release() {
   CheckHeldAndUnmark();
   NativeLock::Release(&native_object_);
 }

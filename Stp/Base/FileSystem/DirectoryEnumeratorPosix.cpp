@@ -25,7 +25,7 @@ SystemErrorCode DirectoryEnumerator::TryOpen(const FilePath& path) {
 
 void DirectoryEnumerator::Close() noexcept {
   ASSERT(IsOpen());
-  DIR* dir = Exchange(current_dir_, nullptr);
+  DIR* dir = exchange(current_dir_, nullptr);
   if (::closedir(dir) != 0)
     ASSERT(false);
 }

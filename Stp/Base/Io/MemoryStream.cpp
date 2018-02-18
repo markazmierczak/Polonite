@@ -44,11 +44,11 @@ void MemoryStream::OpenInternal(void* data, int length, bool writable) {
   length_ = length;
 }
 
-Buffer MemoryStream::CloseAndRelease() {
+Buffer MemoryStream::CloseAndrelease() {
   ASSERT(expandable_);
-  byte_t* ptr = Exchange(memory_, nullptr);
-  int size = Exchange(length_, 0);
-  int capacity = Exchange(capacity_, 0);
+  byte_t* ptr = exchange(memory_, nullptr);
+  int size = exchange(length_, 0);
+  int capacity = exchange(capacity_, 0);
   return Buffer::AdoptMemory(ptr, size, capacity);
 }
 

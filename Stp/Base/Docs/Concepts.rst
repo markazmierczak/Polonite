@@ -5,7 +5,7 @@
 
 **Swappable**
 
-   ``void Swap(T& x, T& y)``
+   ``void swap(T& x, T& y)``
 
 **Relocatable**
 

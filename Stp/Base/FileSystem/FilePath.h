@@ -100,7 +100,7 @@ class BASE_EXPORT FilePath {
   friend bool operator< (const FilePath& l, const FilePathSpan& r) { return l.ToSpan() <  r; }
   friend bool operator> (const FilePath& l, const FilePathSpan& r) { return l.ToSpan() >  r; }
 
-  friend void Swap(FilePath& l, FilePath& r) noexcept { Swap(l.chars_, r.chars_); }
+  friend void swap(FilePath& l, FilePath& r) noexcept { swap(l.chars_, r.chars_); }
   friend bool operator==(const FilePath& l, FilePathSpan r) { return l.ToSpan() == r; }
   friend bool operator!=(const FilePath& l, FilePathSpan r) { return !operator==(l, r); }
   friend HashCode Hash(const FilePath& x) { return Hash(x.ToSpan()); }

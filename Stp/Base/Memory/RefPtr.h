@@ -26,10 +26,10 @@ class RefPtr {
 
   RefPtr(T* ptr) noexcept : ptr_(ptr) { IncRefIfNotNull(ptr); }
 
-  RefPtr(RefPtr&& o) noexcept : ptr_(Exchange(o.ptr_, nullptr)) {}
+  RefPtr(RefPtr&& o) noexcept : ptr_(exchange(o.ptr_, nullptr)) {}
 
   RefPtr& operator=(RefPtr&& o) noexcept {
-    T* old_ptr = Exchange(ptr_, Exchange(o.ptr_, nullptr));
+    T* old_ptr = exchange(ptr_, exchange(o.ptr_, nullptr));
     DecRefIfNotNull(old_ptr);
     return *this;
   }
@@ -43,11 +43,11 @@ class RefPtr {
   RefPtr(nullptr_t) noexcept : ptr_(nullptr) {}
   RefPtr& operator=(nullptr_t) noexcept { Reset(); return *this; }
 
-  [[nodiscard]] T* Release() { return Exchange(ptr_, nullptr); }
+  [[nodiscard]] T* release() { return exchange(ptr_, nullptr); }
 
   void Reset(T* new_ptr = nullptr) {
     IncRefIfNotNull(new_ptr);
-    DecRefIfNotNull(Exchange(ptr_, new_ptr));
+    DecRefIfNotNull(exchange(ptr_, new_ptr));
   }
 
   ALWAYS_INLINE T* get() const { return ptr_; }
@@ -58,7 +58,7 @@ class RefPtr {
   ALWAYS_INLINE bool operator!() const { return !ptr_; }
   ALWAYS_INLINE explicit operator bool() const { return ptr_ != nullptr; }
 
-  friend void Swap(RefPtr& lhs, RefPtr& rhs) { Swap(lhs.ptr_, rhs.ptr_); }
+  friend void swap(RefPtr& lhs, RefPtr& rhs) { swap(lhs.ptr_, rhs.ptr_); }
 
  private:
   friend RefPtr AdoptRef<T>(T* ptr);

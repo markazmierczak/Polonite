@@ -19,12 +19,12 @@ class BASE_EXPORT FileDescriptor {
   FileDescriptor() = default;
   ~FileDescriptor();
 
-  FileDescriptor(FileDescriptor&& other) noexcept : fd_(Exchange(other.fd_, InvalidFd)) {}
+  FileDescriptor(FileDescriptor&& other) noexcept : fd_(exchange(other.fd_, InvalidFd)) {}
   FileDescriptor& operator=(FileDescriptor&& other) noexcept;
 
   explicit FileDescriptor(int fd) noexcept : fd_(fd) {}
 
-  [[nodiscard]] int Release() noexcept { return Exchange(fd_, InvalidFd); }
+  [[nodiscard]] int release() noexcept { return exchange(fd_, InvalidFd); }
 
   void Reset(int new_fd = InvalidFd);
 
@@ -49,7 +49,7 @@ class BASE_EXPORT FileDescriptor {
   int TryReadNoBestEffort(MutableBufferSpan buffer);
   int TryWriteNoBestEffort(BufferSpan buffer);
 
-  friend void Swap(FileDescriptor& l, FileDescriptor& r) { Swap(l.fd_, r.fd_); }
+  friend void swap(FileDescriptor& l, FileDescriptor& r) { swap(l.fd_, r.fd_); }
 
  private:
   static constexpr int InvalidFd = -1;
@@ -68,7 +68,7 @@ inline FileDescriptor::~FileDescriptor() {
 
 inline void FileDescriptor::Reset(int new_fd) {
   FileDescriptor tmp(new_fd);
-  Swap(*this, tmp);
+  swap(*this, tmp);
 }
 
 inline int FileDescriptor::TryReadNoBestEffort(MutableBufferSpan buffer) {

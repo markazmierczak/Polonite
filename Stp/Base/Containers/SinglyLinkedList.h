@@ -63,9 +63,9 @@ class SinglyLinkedList {
   // Really slow, that's because it's not named size().
   int Count() const;
 
-  friend void Swap(SinglyLinkedList& lhs, SinglyLinkedList& rhs) {
-    Swap(lhs.head_, rhs.head_);
-    Swap(lhs.tail_, rhs.tail_);
+  friend void swap(SinglyLinkedList& lhs, SinglyLinkedList& rhs) {
+    swap(lhs.head_, rhs.head_);
+    swap(lhs.tail_, rhs.tail_);
   }
 
  private:

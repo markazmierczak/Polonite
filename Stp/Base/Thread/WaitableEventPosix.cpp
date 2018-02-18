@@ -152,7 +152,7 @@ bool WaitableEvent::TimedWaitUntilInternal(const TimeTicks* end_time) {
       kernel_->signaled_ = false;
     }
 
-    kernel_->lock_.Release();
+    kernel_->lock_.release();
     return true;
   }
 
@@ -160,7 +160,7 @@ bool WaitableEvent::TimedWaitUntilInternal(const TimeTicks* end_time) {
   sw.lock()->Acquire();
 
   Enqueue(&sw);
-  kernel_->lock_.Release();
+  kernel_->lock_.release();
   // We are violating locking order here by holding the SyncWaiter lock but not
   // the WaitableEvent lock. However, this is safe because we don't lock @lock_
   // again before unlocking it.
@@ -177,7 +177,7 @@ bool WaitableEvent::TimedWaitUntilInternal(const TimeTicks* end_time) {
       // signal would be lost on an auto-reset WaitableEvent. Thus we call
       // Disable which makes sw::Fire return false.
       sw.Disable();
-      sw.lock()->Release();
+      sw.lock()->release();
 
       // This is a bug that has been enshrined in the interface of
       // WaitableEvent now: |Dequeue| is called even when |sw.fired()| is true,
@@ -186,7 +186,7 @@ bool WaitableEvent::TimedWaitUntilInternal(const TimeTicks* end_time) {
       // means that a WaitableEvent can synchronise its own destruction.
       kernel_->lock_.Acquire();
       kernel_->Dequeue(&sw, &sw);
-      kernel_->lock_.Release();
+      kernel_->lock_.release();
 
       return return_value;
     }
@@ -240,7 +240,7 @@ int WaitableEvent::WaitMany(WaitableEvent** raw_waitables, int count) {
   sw.lock()->Acquire();
     // Release the WaitableEvent locks in the reverse order
     for (int i = 0; i < count; ++i) {
-      waitables[count - (1 + i)].waitable->kernel_->lock_.Release();
+      waitables[count - (1 + i)].waitable->kernel_->lock_.release();
     }
     for (;;) {
       if (sw.fired())
@@ -248,7 +248,7 @@ int WaitableEvent::WaitMany(WaitableEvent** raw_waitables, int count) {
 
       sw.cv()->Wait();
     }
-  sw.lock()->Release();
+  sw.lock()->release();
 
   // The address of the WaitableEvent which fired is stored in the SyncWaiter.
   WaitableEvent* signaled_event = sw.signaling_event();
@@ -264,13 +264,13 @@ int WaitableEvent::WaitMany(WaitableEvent** raw_waitables, int count) {
         // because it lives on the stack. Thus the tag value is just the pointer
         // value again.
         raw_waitables[i]->kernel_->Dequeue(&sw, &sw);
-      raw_waitables[i]->kernel_->lock_.Release();
+      raw_waitables[i]->kernel_->lock_.release();
     } else {
       // By taking this lock here we ensure that |Signal| has completed by the
       // time we return, because |Signal| holds this lock. This matches the
       // behaviour of |Wait| and |TimedWait|.
       raw_waitables[i]->kernel_->lock_.Acquire();
-      raw_waitables[i]->kernel_->lock_.Release();
+      raw_waitables[i]->kernel_->lock_.release();
       signaled_index = i;
     }
   }
@@ -293,13 +293,13 @@ int WaitableEvent::EnqueueMany(WaiterAndIndex* waitables, int count, Waiter* wai
   if (waitables[0].waitable->kernel_->signaled_) {
     if (!waitables[0].waitable->kernel_->manual_reset_)
       waitables[0].waitable->kernel_->signaled_ = false;
-    waitables[0].waitable->kernel_->lock_.Release();
+    waitables[0].waitable->kernel_->lock_.release();
     return count;
   }
 
   const int r = EnqueueMany(waitables + 1, count - 1, waiter);
   if (r)
-    waitables[0].waitable->kernel_->lock_.Release();
+    waitables[0].waitable->kernel_->lock_.release();
   else
     waitables[0].waitable->Enqueue(waiter);
   return r;

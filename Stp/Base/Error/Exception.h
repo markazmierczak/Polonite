@@ -34,7 +34,7 @@ class BASE_EXPORT Exception {
 
   Exception& operator=(Exception other) noexcept {
     // Implemented in terms of swap for simplicity (rarely used).
-    Swap(*this, other); return *this;
+    swap(*this, other); return *this;
   }
 
   Exception(const Exception& other);
@@ -66,10 +66,10 @@ class BASE_EXPORT Exception {
     exception.AddMessage(message, N, true);
   }
 
-  friend void Swap(Exception& l, Exception& r) noexcept {
-    Swap(l.msg_data_, r.msg_data_);
-    Swap(l.msg_size_, r.msg_size_);
-    Swap(l.msg_capacity_, r.msg_capacity_);
+  friend void swap(Exception& l, Exception& r) noexcept {
+    swap(l.msg_data_, r.msg_data_);
+    swap(l.msg_size_, r.msg_size_);
+    swap(l.msg_capacity_, r.msg_capacity_);
   }
   friend void Format(TextWriter& out, const Exception& x, const StringSpan& opts) {
     x.FormatImpl(out);
@@ -93,9 +93,9 @@ class BASE_EXPORT Exception {
 };
 
 inline Exception::Exception(Exception&& other) noexcept
-    : msg_data_(Exchange(other.msg_data_, nullptr)),
-      msg_size_(Exchange(other.msg_size_, 0)),
-      msg_capacity_(Exchange(other.msg_capacity_, 0)) {}
+    : msg_data_(exchange(other.msg_data_, nullptr)),
+      msg_size_(exchange(other.msg_size_, 0)),
+      msg_capacity_(exchange(other.msg_capacity_, 0)) {}
 
 } // namespace stp
 

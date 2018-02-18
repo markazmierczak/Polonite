@@ -626,7 +626,7 @@ TEST(WeakPtrDeathTest, NonOwnerThreadDeletesWeakPtrAfterReference) {
 
   // |target.reset()| died so |target| still holds the object, so we
   // must pass it to the background thread to teardown.
-  background.DeleteTarget(target.Release());
+  background.DeleteTarget(target.release());
 }
 
 TEST(WeakPtrDeathTest, NonOwnerThreadDeletesObjectAfterReference) {
@@ -645,7 +645,7 @@ TEST(WeakPtrDeathTest, NonOwnerThreadDeletesObjectAfterReference) {
   // Background thread tries to delete target, volating thread binding.
   BackgroundThread background;
   background.Start();
-  ASSERT_ASSERT_DEATH(background.DeleteTarget(target.Release()));
+  ASSERT_ASSERT_DEATH(background.DeleteTarget(target.release()));
 }
 
 TEST(WeakPtrDeathTest, NonOwnerThreadReferencesObjectAfterDeletion) {
@@ -662,7 +662,7 @@ TEST(WeakPtrDeathTest, NonOwnerThreadReferencesObjectAfterDeletion) {
   // Background thread tries to delete target, binding the object to the thread.
   BackgroundThread background;
   background.Start();
-  background.DeleteTarget(target.Release());
+  background.DeleteTarget(target.release());
 
   // Main thread attempts to dereference the target, violating thread binding.
   ASSERT_ASSERT_DEATH(arrow.target.get());

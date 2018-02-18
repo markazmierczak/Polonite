@@ -58,7 +58,7 @@ void AtExitManager::ProcessCallbacksNow() {
   Stack<Callback> tasks;
   {
     AutoLock lock(&g_top_manager_->lock_);
-    Swap(tasks, g_top_manager_->stack_);
+    swap(tasks, g_top_manager_->stack_);
     g_top_manager_->processing_callbacks_ = true;
   }
 

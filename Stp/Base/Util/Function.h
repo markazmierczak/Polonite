@@ -79,7 +79,7 @@ struct Manager {
         delete &that.AsHeap<TFunction>();
         break;
       case MoveOperation:
-        Swap(that.heap, other->heap);
+        swap(that.heap, other->heap);
         break;
       case GetMemorySpaceOperation:
         return 2;
@@ -143,7 +143,7 @@ class Function<TResult(TArgs...)> {
       ::new (this) Function(Forward<TFunction>(fn));
     } else {
       Function tmp(Forward<TFunction>(fn));
-      Swap(tmp, *this);
+      swap(tmp, *this);
     }
     return *this;
   }
@@ -167,8 +167,8 @@ class Function<TResult(TArgs...)> {
 
   void Init(Function&& other) {
     other.manager_(ManagerType::MoveOperation, storage_, &other.storage_);
-    Swap(invoker_, other.invoker_);
-    Swap(manager_, other.manager_);
+    swap(invoker_, other.invoker_);
+    swap(manager_, other.manager_);
   }
   void Destroy(bool in_dtor) {
     manager_(ManagerType::DestroyOperation, storage_, nullptr);

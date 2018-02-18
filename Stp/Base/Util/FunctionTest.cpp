@@ -79,25 +79,25 @@ TEST(Function, Swap) {
   EXPECT_EQ(125, mf1(100));
   EXPECT_EQ(211, mf2(100));
 
-  Swap(mf1, mf2);
+  swap(mf1, mf2);
   EXPECT_EQ(125, mf2(100));
   EXPECT_EQ(211, mf1(100));
 
   Function<int(int)> mf3(nullptr);
   EXPECT_EQ(mf3, nullptr);
 
-  Swap(mf1, mf3);
+  swap(mf1, mf3);
   EXPECT_EQ(211, mf3(100));
   EXPECT_EQ(nullptr, mf1);
 
   Function<int(int)> mf4([](int x) { return x + 222; });
   EXPECT_EQ(322, mf4(100));
 
-  Swap(mf4, mf3);
+  swap(mf4, mf3);
   EXPECT_EQ(211, mf4(100));
   EXPECT_EQ(322, mf3(100));
 
-  Swap(mf3, mf1);
+  swap(mf3, mf1);
   EXPECT_EQ(nullptr, mf3);
   EXPECT_EQ(322, mf1(100));
 }

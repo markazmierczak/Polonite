@@ -20,7 +20,7 @@ FileStream::~FileStream() {
     if (lifetime_ == AutoClose)
       native_.Reset();
     else
-      IgnoreResult(native_.Release());
+      IgnoreResult(native_.release());
   }
 }
 
@@ -62,7 +62,7 @@ void FileStream::OpenNative(NativeFile native_file, FileAccess access, NativeFil
 void FileStream::Close() {
   ASSERT(IsOpen());
 
-  auto nf = native_.Release();
+  auto nf = native_.release();
   lifetime_ = AutoClose;
   seekable_ = -1;
 
