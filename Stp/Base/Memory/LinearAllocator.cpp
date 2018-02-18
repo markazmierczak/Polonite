@@ -45,7 +45,7 @@ LinearAllocator::LinearAllocator(size_t min_block_size) {
   chunk_size_ = min_block_size_;
   total_capacity_ = 0;
   total_used_ = 0;
-  #if ASSERT_IS_ON()
+  #if ASSERT_IS_ON
   total_lost_ = 0;
   block_count_ = 0;
   #endif
@@ -82,12 +82,12 @@ void LinearAllocator::Clear() {
 
     largest->Reset();
     total_capacity_ = largest->GetSize();
-    #if ASSERT_IS_ON()
+    #if ASSERT_IS_ON
     block_count_ = 1;
     #endif
   } else {
     total_capacity_ = 0;
-    #if ASSERT_IS_ON()
+    #if ASSERT_IS_ON
     block_count_ = 0;
     #endif
   }
@@ -95,7 +95,7 @@ void LinearAllocator::Clear() {
   block_list_ = largest;
   chunk_size_ = min_block_size_; // Reset to our initial min_block_size_.
   total_used_ = 0;
-  #if ASSERT_IS_ON()
+  #if ASSERT_IS_ON
   total_lost_ = 0;
   #endif
   Validate();
@@ -107,7 +107,7 @@ void LinearAllocator::Reset() {
   chunk_size_ = min_block_size_; // Reset to our initial min_block_size_.
   total_capacity_ = 0;
   total_used_ = 0;
-  #if ASSERT_IS_ON()
+  #if ASSERT_IS_ON
   total_lost_ = 0;
   block_count_ = 0;
   #endif
@@ -137,7 +137,7 @@ void* LinearAllocator::TryAllocate(size_t size, size_t alignment) {
   if (rv == nullptr) {
     // Include alignment to guarantee further success.
     Block* block = NewBlock(size + alignment);
-    #if ASSERT_IS_ON()
+    #if ASSERT_IS_ON
     if (block_list_)
       total_lost_ += block_list_->free_size;
     #endif
@@ -183,7 +183,7 @@ LinearAllocator::Block* LinearAllocator::NewBlock(size_t size) {
   block->free_ptr = block->GetData();
 
   total_capacity_ += size;
-  #if ASSERT_IS_ON()
+  #if ASSERT_IS_ON
   block_count_ += 1;
   #endif
 
@@ -202,7 +202,7 @@ bool LinearAllocator::Contains(const void* ptr) const {
   return false;
 }
 
-#if ASSERT_IS_ON()
+#if ASSERT_IS_ON
 void LinearAllocator::Validate() const {
   size_t computed_block_count = 0;
   size_t computed_total_capacity = 0;

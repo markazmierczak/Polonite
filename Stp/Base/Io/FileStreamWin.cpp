@@ -68,7 +68,7 @@ SystemErrorCode FileStream::TryOpenInternal(const FilePath& path, FileMode mode,
 
   native_.Reset(handle);
   access_ = access;
-  #if ASSERT_IS_ON()
+  #if ASSERT_IS_ON
   append_ = mode == FileMode::Append;
   #endif
   return SystemErrorCode::Success;

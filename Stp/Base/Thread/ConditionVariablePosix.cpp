@@ -14,7 +14,7 @@ namespace stp {
 
 ConditionVariable::ConditionVariable(BasicLock* user_lock)
     : user_mutex_(&user_lock->native_object_)
-    #if ASSERT_IS_ON()
+    #if ASSERT_IS_ON
     , user_lock_(user_lock)
     #endif
 {
@@ -56,21 +56,21 @@ ConditionVariable::~ConditionVariable() {
 }
 
 void ConditionVariable::Wait() {
-  #if ASSERT_IS_ON()
-  user_lock_->CheckHeldAndUnmark();
+  #if ASSERT_IS_ON
+  user_lock_->checkHeldAndUnmark();
   #endif
   int rv = pthread_cond_wait(&condition_, user_mutex_);
   ASSERT_UNUSED(rv == 0, rv);
-  #if ASSERT_IS_ON()
-  user_lock_->CheckUnheldAndMark();
+  #if ASSERT_IS_ON
+  user_lock_->checkUnheldAndMark();
   #endif
 }
 
 void ConditionVariable::TimedWait(TimeDelta max_time) {
   struct timespec relative_time = max_time.ToTimeSpec();
 
-  #if ASSERT_IS_ON()
-  user_lock_->CheckHeldAndUnmark();
+  #if ASSERT_IS_ON
+  user_lock_->checkHeldAndUnmark();
   #endif
 
   #if OS(DARWIN)
@@ -100,8 +100,8 @@ void ConditionVariable::TimedWait(TimeDelta max_time) {
   // On failure, we only expect the CV to timeout. Any other error value means
   // that we've unexpectedly woken up.
   ASSERT_UNUSED(rv == 0 || rv == ETIMEDOUT, rv);
-  #if ASSERT_IS_ON()
-  user_lock_->CheckUnheldAndMark();
+  #if ASSERT_IS_ON
+  user_lock_->checkUnheldAndMark();
   #endif
 }
 

@@ -1,7 +1,5 @@
 // Copyright 2017 Polonite Authors. All rights reserved.
-// Copyright (c) 2011 The Chromium Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
+// Distributed under MIT license that can be found in the LICENSE file.
 
 #ifndef STP_BASE_THREAD_LOCK_H_
 #define STP_BASE_THREAD_LOCK_H_
@@ -11,52 +9,26 @@
 
 namespace stp {
 
-#if ASSERT_IS_ON()
-#define BASIC_LOCK_INITIALIZER { \
-    NATIVE_LOCK_INITIALIZER, \
-    stp::InvalidNativeThreadHandle \
-  }
+#if ASSERT_IS_ON
+#define BASIC_LOCK_INITIALIZER { NATIVE_LOCK_INITIALIZER, stp::InvalidNativeThreadHandle }
 #else
 #define BASIC_LOCK_INITIALIZER { NATIVE_LOCK_INITIALIZER }
 #endif
 
-// This class implements the underlying platform-specific spin-lock mechanism
-// used for the Lock class.
-//
-// The only real intelligence in this class is in debug mode for the support for the
-// AssertAcquired() method.
-//
-// NOTE: Only use BasicLock directly (with BASIC_LOCK_INITIALIZER) when global lock is needed.
-//       Otherwise use Lock class.
-class BASE_EXPORT BasicLock {
+class BasicLock {
  public:
-  // If the lock is not held, take it and return true. If the lock is already
-  // held by another thread, immediately return false. This must not be called
-  // by a thread already holding the lock (what happens is undefined and an
-  // assertion may fail).
-  bool TryAcquire();
+  BASE_EXPORT bool tryAcquire();
 
-  // Take the lock, blocking until it is available if necessary.
-  //
-  // NOTE: We do not permit recursive locks and will commonly fire a ASSERT() if
-  // a thread attempts to acquire the lock a second time (while already holding it).
-  void Acquire();
+  BASE_EXPORT void acquire();
+  BASE_EXPORT void release();
 
-  // Release the lock.  This must only be called by the lock's holder: after
-  // a successful call to Try, or a call to Lock.
-  void release();
-
-  void AssertAcquired() const;
+  BASE_EXPORT void assertAcquired() const;
 
   NativeLockObject native_object_;
 
-  #if ASSERT_IS_ON()
-  // Members and routines taking care of locks assertions.
-  // Note that this checks for recursive locks and allows them if the variable is set.
-  // This is allowed by the underlying implementation on windows but not on POSIX,
-  // so we're doing unneeded checks on POSIX. It's worth it to share the code.
-  void CheckHeldAndUnmark();
-  void CheckUnheldAndMark();
+  #if ASSERT_IS_ON
+  void checkHeldAndUnmark();
+  void checkUnheldAndMark();
 
   NativeThreadHandle owning_thread_;
   #endif
@@ -65,74 +37,72 @@ class BASE_EXPORT BasicLock {
 class BASE_EXPORT Lock : public BasicLock {
  public:
   Lock() {
-    NativeLock::Init(&native_object_);
-    #if ASSERT_IS_ON()
+    NativeLock::init(&native_object_);
+    #if ASSERT_IS_ON
     owning_thread_ = InvalidNativeThreadHandle;
     #endif
   }
 
   ~Lock() {
     ASSERT(owning_thread_ == InvalidNativeThreadHandle);
-    NativeLock::Fini(&native_object_);
+    NativeLock::fini(&native_object_);
   }
 
-  using BasicLock::TryAcquire;
-  using BasicLock::Acquire;
+  DISALLOW_COPY_AND_ASSIGN(Lock);
+
+  using BasicLock::tryAcquire;
+  using BasicLock::acquire;
   using BasicLock::release;
 
  private:
   using BasicLock::native_object_;
-
-  DISALLOW_COPY_AND_ASSIGN(Lock);
 };
 
 class AutoLock {
  public:
-  struct AlreadyAcquired {};
+  enum AlreadyAcquiredTag { AlreadyAcquired };
 
   explicit AutoLock(BasicLock* lock) : lock_(*lock) {
-    lock_.Acquire();
+    lock_.acquire();
   }
 
-  AutoLock(BasicLock& lock, AlreadyAcquired) : lock_(lock) {
-    lock_.AssertAcquired();
+  AutoLock(BasicLock& lock, AlreadyAcquiredTag) : lock_(lock) {
+    lock_.assertAcquired();
   }
 
   ~AutoLock() {
-    lock_.AssertAcquired();
+    lock_.assertAcquired();
     lock_.release();
   }
 
+  DISALLOW_COPY_AND_ASSIGN(AutoLock);
+
  private:
   BasicLock& lock_;
-
-  DISALLOW_COPY_AND_ASSIGN(AutoLock);
 };
 
-// AutoUnlock is a helper that will release() the |lock| argument in the
-// constructor, and re-Acquire() it in the destructor.
 class AutoUnlock {
  public:
   explicit AutoUnlock(BasicLock* lock) : lock_(*lock) {
-    // We require our caller to have the lock.
-    lock_.AssertAcquired();
+    lock_.assertAcquired();
     lock_.release();
   }
 
   ~AutoUnlock() {
-    lock_.Acquire();
+    lock_.acquire();
   }
+
+  DISALLOW_COPY_AND_ASSIGN(AutoUnlock);
 
  private:
   BasicLock& lock_;
-  DISALLOW_COPY_AND_ASSIGN(AutoUnlock);
 };
 
-#if !ASSERT_IS_ON()
-inline bool BasicLock::TryAcquire() { return NativeLock::TryAcquire(&native_object_); }
-inline void BasicLock::Acquire() { NativeLock::Acquire(&native_object_); }
-inline void BasicLock::release() { NativeLock::Release(&native_object_); }
-inline void BasicLock::AssertAcquired() const {}
+#if !ASSERT_IS_ON
+inline bool BasicLock::tryAcquire() { return NativeLock::tryAcquire(&native_object_); }
+inline void BasicLock::acquire() { NativeLock::acquire(&native_object_); }
+inline void BasicLock::release() { NativeLock::release(&native_object_); }
+inline void BasicLock::assertAcquired() const {}
 #endif
 
 } // namespace stp

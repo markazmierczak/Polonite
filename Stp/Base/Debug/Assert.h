@@ -12,9 +12,9 @@ namespace stp {
 class TextWriter;
 
 #if defined(NDEBUG) && !defined(HAVE_ASSERT_ALWAYS_ON)
-# define ASSERT_IS_ON() 0
+# define ASSERT_IS_ON 0
 #else
-# define ASSERT_IS_ON() 1
+# define ASSERT_IS_ON 1
 #endif
 
 BASE_EXPORT void AssertFail(const char* file, int line, const char* expr);
@@ -26,7 +26,7 @@ BASE_EXPORT void AssertWrapUp(TextWriter& out);
 
 } // namespace stp
 
-#if ASSERT_IS_ON()
+#if ASSERT_IS_ON
 
 # define ASSERT(expr, ...) \
   ((expr) \

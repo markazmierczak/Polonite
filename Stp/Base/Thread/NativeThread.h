@@ -88,7 +88,7 @@ class BASE_EXPORT NativeThread {
 
   // Gets the current thread handle.
   // Can be used to check if we're on the right thread quickly.
-  static NativeThreadHandle CurrentHandle();
+  static NativeThreadHandle currentHandle();
 
   // Gets the current thread ID, which may be useful for logging purposes.
   static NativeThreadId CurrentId();
@@ -141,7 +141,7 @@ class BASE_EXPORT NativeThread {
   #endif
 };
 
-inline NativeThreadHandle NativeThread::CurrentHandle() {
+inline NativeThreadHandle NativeThread::currentHandle() {
   #if OS(WIN)
   return ::GetCurrentThreadId();
   #elif OS(POSIX)

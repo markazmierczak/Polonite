@@ -14,7 +14,7 @@ void CheckAlloc(
     unsigned capacity, unsigned used, unsigned num_blocks) {
   EXPECT_GE(allocator.GetTotalCapacity(), capacity);
   EXPECT_EQ(allocator.GetTotalUsed(), used);
-  #if ASSERT_IS_ON()
+  #if ASSERT_IS_ON
   EXPECT_EQ(allocator.GetBlockCount(), num_blocks);
   #endif
 }

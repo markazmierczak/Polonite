@@ -66,7 +66,7 @@ void TextWriter::OnWriteRune(char32_t rune) {
   OnWriteString(StringSpan(units, n));
 }
 
-#if ASSERT_IS_ON()
+#if ASSERT_IS_ON
 bool TextWriter::IsValidChar(char c) {
   return IsAscii(c);
 }

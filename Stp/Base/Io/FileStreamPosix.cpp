@@ -69,7 +69,7 @@ SystemErrorCode FileStream::TryOpenInternal(
 
   native_.Reset(descriptor);
   access_ = access;
-  #if ASSERT_IS_ON()
+  #if ASSERT_IS_ON
   append_ = mode == FileMode::Append;
   #endif
   return SystemErrorCode::Ok;

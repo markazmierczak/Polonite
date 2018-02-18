@@ -219,7 +219,7 @@ TimeTicks TimeTicks::Now() {
 }
 
 ThreadTicks ThreadTicks::Now() {
-  return ThreadTicks::GetForThread(NativeThread::CurrentHandle());
+  return ThreadTicks::GetForThread(NativeThread::currentHandle());
 }
 
 ThreadTicks ThreadTicks::GetForThread(HANDLE thread_handle) {

@@ -49,7 +49,7 @@ void BasicSpinLock::AcquireSlow() {
         YIELD_PROCESSOR;
 
         if (subtle::NoBarrier_Load(&lock_) == Free) {
-          if (LIKELY(TryAcquire()))
+          if (LIKELY(tryAcquire()))
             return;
         }
       }
@@ -59,7 +59,7 @@ void BasicSpinLock::AcquireSlow() {
 
     } while (subtle::NoBarrier_Load(&lock_) != Free);
 
-  } while (UNLIKELY(!TryAcquire()));
+  } while (UNLIKELY(!tryAcquire()));
 }
 
 } // namespace stp

@@ -86,14 +86,14 @@ bool IsPrimeNumber64(uint64_t x) {
   return IsPrimeHelper(x);
 }
 
-#if ASSERT_IS_ON()
+#if ASSERT_IS_ON
 static inline bool CheckPrimeOverflow(uint32_t x) {
   return x > UINT32_C(0xFFFFFFFB);
 }
 static inline bool CheckPrimeOverflow(uint64_t x) {
   return x > UINT64_C(0xFFFFFFFFFFFFFFC5);
 }
-#endif // ASSERT_IS_ON()
+#endif // ASSERT_IS_ON
 
 template<typename T>
 static inline T NextPrimeHelper(T x) {

@@ -45,7 +45,7 @@ class ScopedComInitializer {
 
  private:
   void Initialize(COINIT init) {
-    #if ASSERT_IS_ON()
+    #if ASSERT_IS_ON
     thread_id_ = GetCurrentThreadId();
     #endif
     hr_ = CoInitializeEx(NULL, init);

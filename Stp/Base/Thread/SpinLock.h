@@ -23,12 +23,12 @@ namespace stp {
 
 class BasicSpinLock {
  public:
-  ALWAYS_INLINE bool TryAcquire() {
+  ALWAYS_INLINE bool tryAcquire() {
     return subtle::Acquire_CompareAndSwap(&lock_, Free, Held) == Free;
   }
 
   ALWAYS_INLINE void Acquire() {
-    if (UNLIKELY(!TryAcquire()))
+    if (UNLIKELY(!tryAcquire()))
       AcquireSlow();
   }
 
@@ -42,7 +42,7 @@ class BasicSpinLock {
     return subtle::NoBarrier_Load(&lock_) != Free;
   }
 
-  void AssertAcquired() {
+  void assertAcquired() {
     ASSERT(IsHeld());
   }
 
@@ -78,11 +78,11 @@ class AutoSpinLock {
   }
 
   AutoSpinLock(SpinLock& lock, AlreadyAcquired) : lock_(lock) {
-    lock_.AssertAcquired();
+    lock_.assertAcquired();
   }
 
   ~AutoSpinLock() {
-    lock_.AssertAcquired();
+    lock_.assertAcquired();
     lock_.release();
   }
 

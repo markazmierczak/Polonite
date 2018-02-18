@@ -32,7 +32,7 @@ class BASE_EXPORT WeakReference {
     static Flag* Null;
 
     void Invalidate() {
-      #if ASSERT_IS_ON()
+      #if ASSERT_IS_ON
       if (this == Null) {
         // The null flag does not participate in the sequence checks below.
         // Since its state never changes, it can be accessed from any thread.
@@ -48,7 +48,7 @@ class BASE_EXPORT WeakReference {
     }
 
     uintptr_t GetValidMask() const {
-      #if ASSERT_IS_ON()
+      #if ASSERT_IS_ON
       if (this == Null) {
         ASSERT(valid_ == 0);
         return 0;
@@ -64,13 +64,13 @@ class BASE_EXPORT WeakReference {
     friend class RefCountedThreadSafe<Flag>;
 
     uintptr_t valid_;
-    #if ASSERT_IS_ON()
+    #if ASSERT_IS_ON
     ThreadChecker thread_checker_;
     #endif
 
     explicit Flag(uintptr_t valid = ~static_cast<uintptr_t>(0))
         : valid_(valid) {
-      #if ASSERT_IS_ON()
+      #if ASSERT_IS_ON
       // Flags only become bound when checked for validity, or invalidated,
       // so that we can check that later validity/invalidation operations on
       // the same Flag take place on the same sequenced thread.

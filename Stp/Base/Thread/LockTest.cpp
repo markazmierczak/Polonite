@@ -20,18 +20,18 @@ class BasicLockTestThread : public Thread {
 
   int Main() override {
     for (int i = 0; i < 10; i++) {
-      lock_->Acquire();
+      lock_->acquire();
       acquired_++;
       lock_->release();
     }
     for (int i = 0; i < 10; i++) {
-      lock_->Acquire();
+      lock_->acquire();
       acquired_++;
       ThisThread::SleepFor(TimeDelta::FromMilliseconds(rand() % 20));
       lock_->release();
     }
     for (int i = 0; i < 10; i++) {
-      if (lock_->TryAcquire()) {
+      if (lock_->tryAcquire()) {
         acquired_++;
         ThisThread::SleepFor(TimeDelta::FromMilliseconds(rand() % 20));
         lock_->release();
@@ -56,25 +56,25 @@ TEST(LockTest, Basic) {
 
   int acquired = 0;
   for (int i = 0; i < 5; i++) {
-    lock.Acquire();
+    lock.acquire();
     acquired++;
     lock.release();
   }
   for (int i = 0; i < 10; i++) {
-    lock.Acquire();
+    lock.acquire();
     acquired++;
     ThisThread::SleepFor(TimeDelta::FromMilliseconds(rand() % 20));
     lock.release();
   }
   for (int i = 0; i < 10; i++) {
-    if (lock.TryAcquire()) {
+    if (lock.tryAcquire()) {
       acquired++;
       ThisThread::SleepFor(TimeDelta::FromMilliseconds(rand() % 20));
       lock.release();
     }
   }
   for (int i = 0; i < 5; i++) {
-    lock.Acquire();
+    lock.acquire();
     acquired++;
     ThisThread::SleepFor(TimeDelta::FromMilliseconds(rand() % 20));
     lock.release();
@@ -93,7 +93,7 @@ class TryLockTestThread : public Thread {
   explicit TryLockTestThread(Lock* lock) : lock_(lock), got_lock_(false) {}
 
   int Main() override {
-    got_lock_ = lock_->TryAcquire();
+    got_lock_ = lock_->tryAcquire();
     if (got_lock_)
       lock_->release();
     return 0;
@@ -111,7 +111,7 @@ class TryLockTestThread : public Thread {
 TEST(LockTest, TryLock) {
   Lock lock;
 
-  ASSERT_TRUE(lock.TryAcquire());
+  ASSERT_TRUE(lock.tryAcquire());
   // We now have the lock....
 
   // This thread will not be able to get the lock.
@@ -132,7 +132,7 @@ TEST(LockTest, TryLock) {
 
     ASSERT_TRUE(thread.got_lock());
     // But it released it....
-    ASSERT_TRUE(lock.TryAcquire());
+    ASSERT_TRUE(lock.tryAcquire());
   }
 
   lock.release();
@@ -147,7 +147,7 @@ class MutexLockTestThread : public Thread {
   // Static helper which can also be called from the main thread.
   static void DoStuff(Lock* lock, int* value) {
     for (int i = 0; i < 40; i++) {
-      lock->Acquire();
+      lock->acquire();
       int v = *value;
       ThisThread::SleepFor(TimeDelta::FromMilliseconds(rand() % 10));
       *value = v + 1;

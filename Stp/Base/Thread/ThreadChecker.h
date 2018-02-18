@@ -29,7 +29,7 @@
 
 namespace stp {
 
-#if ASSERT_IS_ON()
+#if ASSERT_IS_ON
 
 class BASE_EXPORT ThreadChecker {
  public:
@@ -67,7 +67,7 @@ class ThreadChecker {
   void DetachFromThread() {}
 };
 
-#endif // ASSERT_IS_ON()
+#endif // ASSERT_IS_ON
 
 } // namespace stp
 

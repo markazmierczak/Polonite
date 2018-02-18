@@ -93,7 +93,7 @@ class BASE_EXPORT Thread : private NativeThread::Delegate {
 class BASE_EXPORT ThisThread {
   STATIC_ONLY(ThisThread);
  public:
-  static Thread::Handle GetHandle() { return NativeThread::CurrentHandle(); }
+  static Thread::Handle GetHandle() { return NativeThread::currentHandle(); }
 
   static void Yield() { NativeThread::Yield(); }
 

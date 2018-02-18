@@ -11,7 +11,7 @@ namespace stp {
 
 ConditionVariable::ConditionVariable(BasicLock& user_lock)
     : srwlock_(&user_lock.native_object_)
-    #if ASSERT_IS_ON()
+    #if ASSERT_IS_ON
     , user_lock_(&user_lock)
     #endif
 {
@@ -27,8 +27,8 @@ void ConditionVariable::Wait() {
 void ConditionVariable::TimedWait(TimeDelta max_time) {
   DWORD timeout = static_cast<DWORD>(max_time.InMilliseconds());
 
-  #if ASSERT_IS_ON()
-  user_lock_->CheckHeldAndUnmark();
+  #if ASSERT_IS_ON
+  user_lock_->checkHeldAndUnmark();
   #endif
 
   if (!SleepConditionVariableSRW(&cv_, srwlock_, timeout, 0)) {
@@ -40,8 +40,8 @@ void ConditionVariable::TimedWait(TimeDelta max_time) {
     ASSERT(GetLastError() == static_cast<DWORD>(ERROR_TIMEOUT));
   }
 
-  #if ASSERT_IS_ON()
-  user_lock_->CheckUnheldAndMark();
+  #if ASSERT_IS_ON
+  user_lock_->checkUnheldAndMark();
   #endif
 }
 

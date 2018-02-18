@@ -104,7 +104,7 @@ class BASE_EXPORT FileStream final : public Stream {
   // Whether file is seekable - lazy initialized.
   // -1=unknown, 0=not seekable, 1=seekable
   int8_t seekable_ = -1;
-  #if ASSERT_IS_ON()
+  #if ASSERT_IS_ON
   bool append_ = false;
   #endif
 

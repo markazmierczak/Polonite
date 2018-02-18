@@ -150,12 +150,12 @@ TEST_F(ConditionVariableTest, StartupShutdownTest) {
   // Exercise with at least a few waits.
   ConditionVariable cv(&lock);
 
-  lock.Acquire();
+  lock.acquire();
   cv.TimedWait(kTenMs);  // Wait for 10 ms.
   cv.TimedWait(kTenMs);  // Wait for 10 ms.
   lock.release();
 
-  lock.Acquire();
+  lock.acquire();
   cv.TimedWait(kTenMs);  // Wait for 10 ms.
   cv.TimedWait(kTenMs);  // Wait for 10 ms.
   cv.TimedWait(kTenMs);  // Wait for 10 ms.
@@ -165,7 +165,7 @@ TEST_F(ConditionVariableTest, StartupShutdownTest) {
 TEST_F(ConditionVariableTest, TimeoutTest) {
   Lock lock;
   ConditionVariable cv(&lock);
-  lock.Acquire();
+  lock.acquire();
 
   TimeTicks start = TimeTicks::Now();
   const TimeDelta WAIT_TIME = TimeDelta::FromMilliseconds(300);
@@ -498,7 +498,7 @@ bool WorkQueue::allow_help_requests() const {
 }
 
 bool WorkQueue::shutdown() const {
-  lock_.AssertAcquired();
+  lock_.assertAcquired();
   return shutdown_;
 }
 
@@ -515,7 +515,7 @@ bool WorkQueue::ThreadSafeCheckShutdown(int thread_count) {
 }
 
 void WorkQueue::thread_shutting_down() {
-  lock_.AssertAcquired();
+  lock_.assertAcquired();
   shutdown_task_count_++;
 }
 
@@ -592,7 +592,7 @@ void WorkQueue::SetAllowHelp(bool allow) {
 }
 
 void WorkQueue::SetShutdown() {
-  lock_.AssertAcquired();
+  lock_.assertAcquired();
   shutdown_ = true;
 }
 

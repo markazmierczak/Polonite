@@ -102,7 +102,7 @@ class BASE_EXPORT ConditionVariable {
   pthread_mutex_t* user_mutex_;
   #endif
 
-  #if ASSERT_IS_ON()
+  #if ASSERT_IS_ON
   BasicLock* const user_lock_;  // Needed to adjust shadow lock state on wait.
   #endif
 

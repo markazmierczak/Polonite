@@ -54,7 +54,7 @@ class BASE_EXPORT LinearAllocator {
   ALWAYS_INLINE size_t GetTotalCapacity() const { return total_capacity_; }
   ALWAYS_INLINE size_t GetTotalUsed() const { return total_used_; }
 
-  #if ASSERT_IS_ON()
+  #if ASSERT_IS_ON
   ALWAYS_INLINE size_t GetBlockCount() const { return block_count_; }
   ALWAYS_INLINE size_t GetTotalLost() const { return total_lost_; }
   #endif
@@ -64,7 +64,7 @@ class BASE_EXPORT LinearAllocator {
   void FreeChain(Block* block);
   void* TryAllocateWithinBlock(Block* block, size_t size, size_t alignment);
 
-  #if ASSERT_IS_ON()
+  #if ASSERT_IS_ON
   void Validate() const;
   #else
   void Validate() const {}
@@ -75,7 +75,7 @@ class BASE_EXPORT LinearAllocator {
   size_t chunk_size_;
   size_t total_capacity_;
   size_t total_used_;
-  #if ASSERT_IS_ON()
+  #if ASSERT_IS_ON
   size_t block_count_;
   size_t total_lost_;
   #endif

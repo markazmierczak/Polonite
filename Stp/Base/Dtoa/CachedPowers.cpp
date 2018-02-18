@@ -134,7 +134,7 @@ static const CachedPower CachedPowers[] = {
     {UINT64_2PART_C(0xaf87023b, 9bf0ee6b), 1066, 340},
 };
 
-#if ASSERT_IS_ON()
+#if ASSERT_IS_ON
 static constexpr int CachedPowersLength = ArraySizeOf(CachedPowers);
 #endif
 

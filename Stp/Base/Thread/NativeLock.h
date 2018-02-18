@@ -26,36 +26,32 @@ using NativeLockObject = pthread_mutex_t;
 class NativeLock {
   STATIC_ONLY(NativeLock);
  public:
-  static void Init(NativeLockObject* object);
-
-  static void Fini(NativeLockObject* object);
-
-  static bool TryAcquire(NativeLockObject* object);
-
-  static void Acquire(NativeLockObject* object);
-
-  static void Release(NativeLockObject* object);
+  static void init(NativeLockObject* object);
+  static void fini(NativeLockObject* object);
+  static bool tryAcquire(NativeLockObject* object);
+  static void acquire(NativeLockObject* object);
+  static void release(NativeLockObject* object);
 };
 
 #if OS(WIN)
 
 #define NATIVE_LOCK_INITIALIZER SRWLOCK_INIT
 
-inline void NativeLock::Init(NativeLockObject* object) {
+inline void NativeLock::init(NativeLockObject* object) {
   InitializeSRWLock(object);
 }
 
-inline void NativeLock::Fini(NativeLockObject* object) {}
+inline void NativeLock::fini(NativeLockObject* object) {}
 
-inline bool NativeLock::TryAcquire(NativeLockObject* object) {
+inline bool NativeLock::tryAcquire(NativeLockObject* object) {
   return !!::TryAcquireSRWLockExclusive(object);
 }
 
-inline void NativeLock::Acquire(NativeLockObject* object) {
+inline void NativeLock::acquire(NativeLockObject* object) {
   ::AcquireSRWLockExclusive(object);
 }
 
-inline void NativeLock::Release(NativeLockObject* object) {
+inline void NativeLock::release(NativeLockObject* object) {
   ::ReleaseSRWLockExclusive(object);
 }
 
@@ -63,8 +59,8 @@ inline void NativeLock::Release(NativeLockObject* object) {
 
 #define NATIVE_LOCK_INITIALIZER PTHREAD_MUTEX_INITIALIZER
 
-inline void NativeLock::Init(NativeLockObject* object) {
-  #if ASSERT_IS_ON()
+inline void NativeLock::init(NativeLockObject* object) {
+  #if ASSERT_IS_ON
   // In debug, setup attributes for lock error checking.
   pthread_mutexattr_t mta;
   int rv = pthread_mutexattr_init(&mta);
@@ -81,23 +77,23 @@ inline void NativeLock::Init(NativeLockObject* object) {
   #endif
 }
 
-inline void NativeLock::Fini(NativeLockObject* object) {
+inline void NativeLock::fini(NativeLockObject* object) {
   int rv = pthread_mutex_destroy(object);
   ASSERT_UNUSED(rv == 0, rv);
 }
 
-inline bool NativeLock::TryAcquire(NativeLockObject* object) {
+inline bool NativeLock::tryAcquire(NativeLockObject* object) {
   int rv = pthread_mutex_trylock(object);
   ASSERT(rv == 0 || rv == EBUSY);
   return rv == 0;
 }
 
-inline void NativeLock::Acquire(NativeLockObject* object) {
+inline void NativeLock::acquire(NativeLockObject* object) {
   int rv = pthread_mutex_lock(object);
   ASSERT_UNUSED(rv == 0, rv);
 }
 
-inline void NativeLock::Release(NativeLockObject* object) {
+inline void NativeLock::release(NativeLockObject* object) {
   int rv = pthread_mutex_unlock(object);
   ASSERT_UNUSED(rv == 0, rv);
 }

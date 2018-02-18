@@ -57,7 +57,7 @@ class BASE_EXPORT TextWriter {
   virtual void OnFlush();
 
  private:
-  #if ASSERT_IS_ON()
+  #if ASSERT_IS_ON
   static bool IsValidChar(char c);
   #endif
 

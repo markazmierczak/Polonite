@@ -144,7 +144,7 @@ bool WaitableEvent::TimedWaitUntil(TimeTicks end_time) {
 bool WaitableEvent::TimedWaitUntilInternal(const TimeTicks* end_time) {
   const bool finite_time = end_time != nullptr;
 
-  kernel_->lock_.Acquire();
+  kernel_->lock_.acquire();
   if (kernel_->signaled_) {
     if (!kernel_->manual_reset_) {
       // In this case we were signaled when we had no waiters. Now that
@@ -157,7 +157,7 @@ bool WaitableEvent::TimedWaitUntilInternal(const TimeTicks* end_time) {
   }
 
   SyncWaiter sw;
-  sw.lock()->Acquire();
+  sw.lock()->acquire();
 
   Enqueue(&sw);
   kernel_->lock_.release();
@@ -184,7 +184,7 @@ bool WaitableEvent::TimedWaitUntilInternal(const TimeTicks* end_time) {
       // even though it'll always return false in that case. However, taking
       // the lock ensures that |Signal| has completed before we return and
       // means that a WaitableEvent can synchronise its own destruction.
-      kernel_->lock_.Acquire();
+      kernel_->lock_.acquire();
       kernel_->Dequeue(&sw, &sw);
       kernel_->lock_.release();
 
@@ -237,7 +237,7 @@ int WaitableEvent::WaitMany(WaitableEvent** raw_waitables, int count) {
 
   // At this point, we hold the locks on all the WaitableEvents and we have
   // enqueued our waiter in them all.
-  sw.lock()->Acquire();
+  sw.lock()->acquire();
     // Release the WaitableEvent locks in the reverse order
     for (int i = 0; i < count; ++i) {
       waitables[count - (1 + i)].waitable->kernel_->lock_.release();
@@ -259,7 +259,7 @@ int WaitableEvent::WaitMany(WaitableEvent** raw_waitables, int count) {
   // remove our SyncWaiter from the wait-list
   for (int i = 0; i < count; ++i) {
     if (raw_waitables[i] != signaled_event) {
-      raw_waitables[i]->kernel_->lock_.Acquire();
+      raw_waitables[i]->kernel_->lock_.acquire();
         // There's no possible ABA issue with the address of the SyncWaiter here
         // because it lives on the stack. Thus the tag value is just the pointer
         // value again.
@@ -269,7 +269,7 @@ int WaitableEvent::WaitMany(WaitableEvent** raw_waitables, int count) {
       // By taking this lock here we ensure that |Signal| has completed by the
       // time we return, because |Signal| holds this lock. This matches the
       // behaviour of |Wait| and |TimedWait|.
-      raw_waitables[i]->kernel_->lock_.Acquire();
+      raw_waitables[i]->kernel_->lock_.acquire();
       raw_waitables[i]->kernel_->lock_.release();
       signaled_index = i;
     }
@@ -289,7 +289,7 @@ int WaitableEvent::EnqueueMany(WaiterAndIndex* waitables, int count, Waiter* wai
   if (!count)
     return 0;
 
-  waitables[0].waitable->kernel_->lock_.Acquire();
+  waitables[0].waitable->kernel_->lock_.acquire();
   if (waitables[0].waitable->kernel_->signaled_) {
     if (!waitables[0].waitable->kernel_->manual_reset_)
       waitables[0].waitable->kernel_->signaled_ = false;

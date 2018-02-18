@@ -5,7 +5,7 @@
 
 #include "Base/Thread/ThreadChecker.h"
 
-#if ASSERT_IS_ON()
+#if ASSERT_IS_ON
 
 namespace stp {
 
@@ -18,7 +18,7 @@ ThreadChecker::~ThreadChecker() {}
 bool ThreadChecker::CalledOnValidThread() const {
   EnsureThreadIdAssigned();
   AutoLock auto_lock(&lock_);
-  return valid_thread_ == NativeThread::CurrentHandle();
+  return valid_thread_ == NativeThread::currentHandle();
 }
 
 void ThreadChecker::DetachFromThread() {
@@ -29,9 +29,9 @@ void ThreadChecker::DetachFromThread() {
 void ThreadChecker::EnsureThreadIdAssigned() const {
   AutoLock auto_lock(&lock_);
   if (valid_thread_ == InvalidNativeThreadHandle)
-    valid_thread_ = NativeThread::CurrentHandle();
+    valid_thread_ = NativeThread::currentHandle();
 }
 
 } // namespace stp
 
-#endif // ASSERT_IS_ON()
+#endif // ASSERT_IS_ON
