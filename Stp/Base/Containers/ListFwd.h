@@ -11,9 +11,6 @@ namespace stp {
 template<typename T>
 class List;
 
-template<typename T>
-struct TIsContiguousContainerTmpl<List<T>> : TTrue {};
-
 using String = List<char>;
 
 } // namespace stp

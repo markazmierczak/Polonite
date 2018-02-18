@@ -9,9 +9,8 @@
 
 namespace stp {
 
-template<typename TContainer, typename TComparer = DefaultComparer,
-         TEnableIf<TIsContiguousContainer<TContainer>>* = nullptr>
-constexpr void InsertionSort(TContainer& sequence, TComparer&& comparer = DefaultComparer()) {
+template<typename T, typename TComparer = DefaultComparer>
+constexpr void insertionSortSpan(MutableSpan<T> sequence, TComparer&& comparer = DefaultComparer()) {
   int right = sequence.size() - 1;
   auto* d = sequence.data();
 
@@ -29,7 +28,7 @@ constexpr void InsertionSort(TContainer& sequence, TComparer&& comparer = Defaul
 namespace detail {
 
 template<typename T, typename TComparer>
-void DownHeap(T* d, int i, int n, TComparer&& comparer) {
+void downHeap(T* d, int i, int n, TComparer&& comparer) {
   ASSERT(i > 0);
   ASSERT(n >= 0);
 
@@ -52,40 +51,39 @@ void DownHeap(T* d, int i, int n, TComparer&& comparer) {
 
 } // namespace detail
 
-template<typename TContainer, typename TComparer = DefaultComparer,
-         TEnableIf<TIsContiguousContainer<TContainer>>* = nullptr>
-void HeapSort(TContainer& sequence, TComparer&& comparer = DefaultComparer()) {
+template<typename T, typename TComparer = DefaultComparer>
+void heapSortSpan(MutableSpan<T> sequence, TComparer&& comparer = DefaultComparer()) {
   auto* d = sequence.data();
   int n = sequence.size();
 
   // Cannot perfect forward comparer since it is used in multiple places.
   for (int i = n >> 1; i > 0; --i) {
-    detail::DownHeap(d, i, n, comparer);
+    detail::downHeap(d, i, n, comparer);
   }
   for (int i = n - 1; i > 0; --i) {
     swap(d[0], d[i]);
-    detail::DownHeap(d, 1, i, comparer);
+    detail::downHeap(d, 1, i, comparer);
   }
 }
 
 namespace detail {
 
 template<typename T, typename TComparer>
-constexpr void SwapIfGreater(T* d, int a, int b, TComparer&& comparer) {
+constexpr void swapIfGreater(T* d, int a, int b, TComparer&& comparer) {
   ASSERT(a != b);
   if (comparer(d[a], d[b]) > 0)
     swap(d[a], d[b]);
 }
 
 template<typename T, typename TComparer>
-int PickPivotAndPartition(T* d, int lo, int hi, TComparer&& comparer) {
+int pickPivotAndPartition(T* d, int lo, int hi, TComparer&& comparer) {
   ASSERT(lo < hi);
 
-  int mid = GetMiddleIndex(lo, hi);
+  int mid = getMiddleIndex(lo, hi);
 
-  SwapIfGreater(d, lo , mid, comparer);
-  SwapIfGreater(d, lo , hi , comparer);
-  SwapIfGreater(d, mid, hi , comparer);
+  swapIfGreater(d, lo , mid, comparer);
+  swapIfGreater(d, lo , hi , comparer);
+  swapIfGreater(d, mid, hi , comparer);
 
   int left = lo;
   int right = hi - 1;
@@ -116,7 +114,7 @@ int PickPivotAndPartition(T* d, int lo, int hi, TComparer&& comparer) {
 }
 
 template<typename T, typename TComparer>
-void IntroSort(T* d, int lo, int hi, int depth, TComparer&& comparer) {
+void introSort(T* d, int lo, int hi, int depth, TComparer&& comparer) {
   constexpr int PartitionSizeTreshold = 16;
 
   while (hi > lo) {
@@ -126,43 +124,42 @@ void IntroSort(T* d, int lo, int hi, int depth, TComparer&& comparer) {
         return;
 
       if (partition_size == 2) {
-        SwapIfGreater(d, lo, hi, comparer);
+        swapIfGreater(d, lo, hi, comparer);
         return;
       }
       if (partition_size == 3) {
-        SwapIfGreater(d, lo, hi - 1, comparer);
-        SwapIfGreater(d, lo, hi, comparer);
-        SwapIfGreater(d, hi - 1, hi, comparer);
+        swapIfGreater(d, lo, hi - 1, comparer);
+        swapIfGreater(d, lo, hi, comparer);
+        swapIfGreater(d, hi - 1, hi, comparer);
         return;
       }
       auto sub = MutableSpan<T>(d + lo, partition_size);
-      InsertionSort(sub, Forward<TComparer>(comparer));
+      insertionSortSpan(sub, Forward<TComparer>(comparer));
       return;
     }
 
     if (depth == 0) {
       auto sub = MutableSpan<T>(d + lo, partition_size);
-      HeapSort(sub, Forward<TComparer>(comparer));
+      heapSortSpan(sub, Forward<TComparer>(comparer));
       return;
     }
     --depth;
 
-    int p = PickPivotAndPartition(d, lo, hi, comparer);
-    IntroSort(d, p + 1, hi, depth, comparer);
+    int p = pickPivotAndPartition(d, lo, hi, comparer);
+    introSort(d, p + 1, hi, depth, comparer);
     hi = p - 1;
   }
 }
 
 } // namespace detail
 
-template<typename TContainer, typename TComparer = DefaultComparer,
-         TEnableIf<TIsContiguousContainer<TContainer>>* = nullptr>
-inline void Sort(TContainer& sequence, TComparer&& comparer = DefaultComparer()) {
+template<typename T, typename TComparer = DefaultComparer>
+inline void sortSpan(MutableSpan<T> sequence, TComparer&& comparer = DefaultComparer()) {
   if (sequence.size() <= 1)
     return;
   // use IntroSort as default algorithm.
   int depth_limit = 2 * Log2Floor(sequence.size());
-  detail::IntroSort(
+  detail::introSort(
       sequence.data(), 0, sequence.size() - 1,
       depth_limit,
       Forward<TComparer>(comparer));

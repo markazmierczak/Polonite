@@ -33,7 +33,7 @@ class BufferSpan {
       ASSERT(array[N - 1] == '\0');
   }
 
-  template<typename T, TEnableIf<TIsContiguousContainer<T>>* = nullptr>
+  template<typename T>
   explicit constexpr BufferSpan(const T& container) noexcept
       : BufferSpan(container.data(), container.size()) {}
 
@@ -121,7 +121,7 @@ class MutableBufferSpan {
       ASSERT(array[N - 1] == '\0');
   }
 
-  template<typename T, TEnableIf<TIsContiguousContainer<T>>* = nullptr>
+  template<typename T>
   explicit constexpr MutableBufferSpan(const T& container) noexcept
       : MutableBufferSpan(container.data(), container.size()) {}
 
@@ -227,7 +227,7 @@ constexpr MutableBufferSpan MakeBufferSpan(T (&array)[N]) {
   return MutableBufferSpan(array);
 }
 
-template<typename T, TEnableIf<TIsContiguousContainer<T>>* = nullptr>
+template<typename T>
 constexpr auto MakeBufferSpan(T& container) {
   return MakeBufferSpan(container.data(), container.size());
 }

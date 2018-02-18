@@ -12,7 +12,7 @@ TEST(Sorting, Reverse) {
   int reversed[] = { 7, 6, 6, 5, 4, 3, 2, 1 };
   MutableSpan<int> porig = orig;
   MutableSpan<int> preversed = reversed;
-  Reverse(porig);
+  reverseSpan(porig);
   EXPECT_EQ(preversed, porig);
 }
 
@@ -21,7 +21,7 @@ TEST(Sorting, Sort) {
   int unsorted[] = { 5, 4, 2, 5, 5, 6, 7, 5, 2, 8 };
   MutableSpan<int> psorted = sorted;
   MutableSpan<int> punsorted = unsorted;
-  Sort(punsorted);
+  sortSpan(punsorted);
   EXPECT_EQ(psorted, punsorted);
 }
 

@@ -16,8 +16,6 @@ class FlatSet {
   using ValueType = T;
   using ListType = TList;
 
-  static_assert(TIsContiguousContainer<ListType>, "!");
-
   FlatSet() = default;
   ~FlatSet() = default;
 
@@ -45,7 +43,7 @@ class FlatSet {
   bool TryRemove(const U& value);
 
   template<typename U>
-  int indexOf(const U& value) const { return BinarySearch(list_, value); }
+  int indexOf(const U& value) const { return binarySearchInSpan(list_.toSpan(), value); }
 
   void RemoveAt(int at) { list_.RemoveAt(at); }
   void RemoveRange(int at, int n) { list_.RemoveRange(at, n); }

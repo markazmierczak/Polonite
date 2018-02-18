@@ -12,16 +12,15 @@ namespace stp {
 
 namespace detail {
 
-constexpr int GetMiddleIndex(int lower, int upper) {
+constexpr int getMiddleIndex(int lower, int upper) {
   ASSERT(lower <= upper);
   return lower + ((upper - lower) >> 1);
 }
 
 } // namespace detail
 
-template<typename TContainer, typename TComparer = DefaultComparer,
-         TEnableIf<TIsContiguousContainer<TContainer>>* = nullptr>
-constexpr bool IsSorted(TContainer& sequence, TComparer&& comparer = DefaultComparer()) {
+template<typename T, typename TComparer = DefaultComparer>
+constexpr bool isSortedSpan(Span<T> sequence, TComparer&& comparer = DefaultComparer()) {
   const auto* d = sequence.data();
   for (int i = 1, s = sequence.size(); i < s; ++i) {
     if (comparer(d[i - 1], d[i]) > 0)
@@ -30,9 +29,8 @@ constexpr bool IsSorted(TContainer& sequence, TComparer&& comparer = DefaultComp
   return true;
 }
 
-template<typename TContainer, typename TEqualComparer = DefaultEqualityComparer,
-         TEnableIf<TIsContiguousContainer<TContainer>>* = nullptr>
-constexpr bool HasDuplicatesAlreadySorted(TContainer& sequence, TEqualComparer&& comparer = DefaultEqualityComparer()) {
+template<typename T, typename TEqualComparer = DefaultEqualityComparer>
+constexpr bool hasDuplicatesAlreadySortedInSpan(Span<T> sequence, TEqualComparer&& comparer = DefaultEqualityComparer()) {
   const auto* d = sequence.data();
   for (int i = 1, s = sequence.size(); i < s; ++i) {
     if (comparer(d[i - 1], d[i]))
@@ -41,8 +39,8 @@ constexpr bool HasDuplicatesAlreadySorted(TContainer& sequence, TEqualComparer&&
   return false;
 }
 
-template<typename TContainer, TEnableIf<TIsContiguousContainer<TContainer>>* = nullptr>
-constexpr void Reverse(TContainer& sequence) {
+template<typename T>
+constexpr void reverseSpan(MutableSpan<T> sequence) {
   auto* d = sequence.data();
   int s = sequence.size();
   for (int i = 0; i < (s >> 1); ++i)

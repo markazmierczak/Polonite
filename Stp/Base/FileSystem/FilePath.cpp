@@ -3,7 +3,7 @@
 
 #include "Base/FileSystem/FilePath.h"
 
-#include "Base/Containers/ContiguousAlgo.h"
+#include "Base/Containers/SpanAlgo.h"
 #include "Base/Math/Alignment.h"
 #include "Base/Text/AsciiString.h"
 #include "Base/Text/Wtf.h"
@@ -136,7 +136,7 @@ namespace detail {
 FilePath CombineFilePaths(Span<FilePathSpan> components) {
   int n = components.size();
   FilePath result;
-  result.EnsureCapacity(Accumulate(components, n, [](int init, const FilePathSpan& component) {
+  result.EnsureCapacity(accumulateSpan(components, n, [](int init, const FilePathSpan& component) {
     return init + component.size();
   }));
   for (int i = 0; i < n; ++i)

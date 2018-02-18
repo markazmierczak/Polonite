@@ -223,56 +223,6 @@ inline void CopyNonOverlapping(T* dst, const T* src, int count) noexcept(TIsNoex
   }
 }
 
-template<typename T, typename U>
-inline int indexOfItem(const T* items, int size, const U& item) noexcept {
-  ASSERT(size >= 0);
-  for (int i = 0; i < size; ++i) {
-    if (items[i] == item)
-      return i;
-  }
-  return -1;
-}
-
-template<typename T, typename U>
-inline int lastIndexOfItem(const T* items, int size, const U& item) noexcept {
-  ASSERT(size >= 0);
-  for (int i = size - 1; i >= 0; --i) {
-    if (items[i] == item)
-      return i;
-  }
-  return -1;
-}
-
-template<typename T, typename U>
-int Count(const T* items, int size, const U& item) noexcept {
-  ASSERT(size >= 0);
-  int count = 0;
-  while (size > 0) {
-    int pos = indexOfItem(items, size, item);
-    if (pos < 0)
-      break;
-
-    ++count;
-
-    items += pos + 1;
-    size -= pos + 1;
-  }
-  return count;
-}
-
-template<typename T, typename TBefore, typename TAfter>
-inline int Replace(T* data, int size, const TBefore& before, const TAfter& after) {
-  ASSERT(size >= 0);
-  int count = 0;
-  for (int i = 0; i < size; ++i) {
-    if (data[i] == before) {
-      data[i] = after;
-      ++count;
-    }
-  }
-  return count;
-}
-
 } // namespace stp
 
 #endif // STP_BASE_CONTAINERS_ARRAYOPS_H_

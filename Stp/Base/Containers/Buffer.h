@@ -97,6 +97,9 @@ class Buffer {
   friend void* begin(Buffer& x) { return x.data_; }
   friend void* end(Buffer& x) { return x.data_ + x.size_; }
 
+  SpanType toSpan() const { return SpanType(data_, size_); }
+  MutableSpanType toSpan() { return MutableSpanType(data_, size_); }
+
   friend SpanType makeSpan(const Buffer& x) { return x.toSpan(); }
   friend MutableSpanType makeSpan(Buffer& x) { return x.toSpan(); }
 
@@ -113,9 +116,6 @@ class Buffer {
     if (data)
       freeMemory(data);
   }
-
-  SpanType toSpan() const { return SpanType(data_, size_); }
-  MutableSpanType toSpan() { return MutableSpanType(data_, size_); }
 
   bool IsSourceOf(const void* ptr_) const {
     auto ptr = static_cast<const byte_t*>(ptr_);

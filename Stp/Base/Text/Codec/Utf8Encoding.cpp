@@ -3,7 +3,7 @@
 
 #include "Base/Text/Codec/Utf8Encoding.h"
 
-#include "Base/Containers/ContiguousAlgo.h"
+#include "Base/Containers/SpanAlgo.h"
 #include "Base/Math/Alignment.h"
 #include "Base/Text/Utf.h"
 

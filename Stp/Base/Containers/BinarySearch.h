@@ -8,16 +8,15 @@
 
 namespace stp {
 
-template<typename TContainer, typename TItem, typename TComparer = DefaultComparer,
-         TEnableIf<TIsContiguousContainer<TContainer>>* = nullptr>
-constexpr int LowerBound(
-    TContainer& sequence, const TItem& item, TComparer&& comparer = DefaultComparer()) {
+template<typename T, typename TItem, typename TComparer = DefaultComparer>
+constexpr int lowerBoundOfSpan(
+    Span<T> sequence, const TItem& item, TComparer&& comparer = DefaultComparer()) {
   const auto* d = sequence.data();
   int lo = 0;
   int hi = sequence.size() - 1;
 
   while (lo < hi) {
-    int i = detail::GetMiddleIndex(lo, hi);
+    int i = detail::getMiddleIndex(lo, hi);
 
     int c = comparer(d[i], item);
     if (c == 0) {
@@ -35,16 +34,15 @@ constexpr int LowerBound(
   return lo;
 }
 
-template<typename TContainer, typename TItem, typename TComparer = DefaultComparer,
-         TEnableIf<TIsContiguousContainer<TContainer>>* = nullptr>
-constexpr int UpperBound(
-    TContainer& sequence, const TItem& item, TComparer&& comparer = DefaultComparer()) {
+template<typename T, typename TItem, typename TComparer = DefaultComparer>
+constexpr int upperBoundOfSpan(
+    Span<T> sequence, const TItem& item, TComparer&& comparer = DefaultComparer()) {
   const auto* d = sequence.data();
   int lo = 0;
   int hi = sequence.size() - 1;
 
   while (lo < hi) {
-    int i = detail::GetMiddleIndex(lo, hi);
+    int i = detail::getMiddleIndex(lo, hi);
 
     int c = comparer(d[i], item);
     if (c == 0) {
@@ -62,16 +60,15 @@ constexpr int UpperBound(
   return lo;
 }
 
-template<typename TContainer, typename TItem, typename TComparer = DefaultComparer,
-         TEnableIf<TIsContiguousContainer<TContainer>>* = nullptr>
-constexpr int BinarySearch(
-    TContainer& sequence, const TItem& item, TComparer&& comparer = DefaultComparer()) {
+template<typename T, typename TItem, typename TComparer = DefaultComparer>
+constexpr int binarySearchInSpan(
+    Span<T> sequence, const TItem& item, TComparer&& comparer = DefaultComparer()) {
   const auto* d = sequence.data();
   int lo = 0;
   int hi = sequence.size() - 1;
 
   while (lo <= hi) {
-    int i = detail::GetMiddleIndex(lo, hi);
+    int i = detail::getMiddleIndex(lo, hi);
 
     int c = comparer(d[i], item);
     if (c == 0)

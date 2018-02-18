@@ -3,7 +3,7 @@
 
 #include "Base/Util/Version.h"
 
-#include "Base/Containers/ContiguousAlgo.h"
+#include "Base/Containers/SpanAlgo.h"
 #include "Base/Type/Comparable.h"
 #include "Base/Type/Formattable.h"
 #include "Base/Type/Hashable.h"
@@ -58,7 +58,7 @@ bool tryParse(StringSpan str, Version& out) {
         return false;
     }
 
-    if (StartsWith(part_str, "+"))
+    if (!part_str.IsEmpty() && part_str[0] == '+')
       return false;
 
     int part;

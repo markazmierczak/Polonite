@@ -8,21 +8,10 @@
 
 namespace stp {
 
-template<typename T, typename = void>
-struct TIsContiguousContainerTmpl : TFalse {};
-
-template<typename T>
-constexpr bool TIsContiguousContainer = TIsContiguousContainerTmpl<TRemoveCV<T>>::Value;
-
 template<typename T>
 class Span;
 template<typename T>
 class MutableSpan;
-
-template<typename T>
-struct TIsContiguousContainerTmpl<Span<T>> : TTrue {};
-template<typename T>
-struct TIsContiguousContainerTmpl<MutableSpan<T>> : TTrue {};
 
 using StringSpan = Span<char>;
 using String16Span = Span<char16_t>;

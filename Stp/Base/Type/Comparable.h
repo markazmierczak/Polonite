@@ -79,34 +79,6 @@ constexpr bool TIsComparableWith = TsAreSame<int, TDetect<detail::TComparableCon
 template<typename T>
 constexpr bool TIsComparable = TIsComparableWith<T, T>;
 
-namespace detail {
-
-template<typename T, bool IsEnum = TIsEnum<T>>
-struct TIsFastContiguousComparable : TFalse {};
-
-template<> struct TIsFastContiguousComparable<char> : TTrue {};
-template<> struct TIsFastContiguousComparable<unsigned char> : TTrue {};
-
-template<typename T>
-struct TIsFastContiguousComparable<T, true> : TIsFastContiguousComparable<TUnderlying<T>> {};
-
-} // namespace detail
-
-template<typename T>
-inline int CompareContiguous(const T* lhs, const T* rhs, int count) noexcept {
-  ASSERT(count >= 0);
-  if constexpr (detail::TIsFastContiguousComparable<T>::Value) {
-    return count ? ::memcmp(lhs, rhs, toUnsigned(count)) : 0;
-  } else {
-    for (int i = 0; i < count; ++i) {
-      int rv = compare(lhs[i], rhs[i]);
-      if (rv)
-        return rv;
-    }
-    return 0;
-  }
-}
-
 struct DefaultEqualityComparer {
   template<typename T, typename U>
   constexpr bool operator()(const T& x, const U& y) const noexcept {

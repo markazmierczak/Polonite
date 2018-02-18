@@ -114,12 +114,11 @@ class BASE_EXPORT FilePath {
     return ToNullTerminated(x.chars_);
   }
 
+  SpanType toSpan() const { return SpanType(chars_); }
   friend SpanType makeSpan(const FilePath& x) { return x.toSpan(); }
 
  private:
   List<CharType> chars_;
-
-  SpanType toSpan() const { return SpanType(chars_); }
 };
 
 namespace detail {

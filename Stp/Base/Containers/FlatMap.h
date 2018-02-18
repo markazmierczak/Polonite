@@ -21,8 +21,6 @@ class FlatMap {
   using PairType = KeyValuePair<K, T>;
   using ListType = TList;
 
-  static_assert(TIsContiguousContainer<ListType>, "!");
-
   struct KeyComparer {
     int operator()(const PairType& l, const PairType& r) const {
       return compare(l.key(), r.key());
@@ -119,7 +117,7 @@ class FlatMap {
   bool containsKey(const U& key) const { return indexOf(key) >= 0; }
 
   template<typename U>
-  int indexOf(const U& key) const { return BinarySearch(list_, key, KeyComparer()); }
+  int indexOf(const U& key) const { return binarySearchInSpan(list_.toSpan(), key, KeyComparer()); }
 
   template<typename U>
   void InsertAt(int at, U&& key, T value);

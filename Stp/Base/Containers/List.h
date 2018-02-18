@@ -113,6 +113,9 @@ class List {
   friend T* begin(List& x) { return x.data_; }
   friend T* end(List& x) { return x.data_ + x.size_; }
 
+  SpanType toSpan() const { return SpanType(data_, size_); }
+  MutableSpanType toSpan() { return MutableSpanType(data_, size_); }
+
   friend SpanType makeSpan(const List& x) { return x.toSpan(); }
   friend MutableSpanType makeSpan(List& x) { return x.toSpan(); }
 
@@ -131,9 +134,6 @@ class List {
       freeMemory(data);
     }
   }
-
-  SpanType toSpan() const { return SpanType(data_, size_); }
-  MutableSpanType toSpan() { return MutableSpanType(data_, size_); }
 
   void SetSizeNoGrow(int new_size);
 
@@ -173,9 +173,9 @@ inline bool operator!=(const T (&lhs)[N], const List<T>& rhs) {
   return operator!=(makeSpan(lhs), makeSpan(rhs));
 }
 
-template<typename T, TEnableIf<TIsContiguousContainer<TRemoveReference<T>>>* = nullptr>
-inline List<typename T::ItemType> MakeList(T&& list) {
-  return List<typename T::ItemType>(Forward<T>(list));
+template<typename T>
+inline List<T> makeList(Span<T> list) {
+  return List<T>(Forward<T>(list));
 }
 
 BASE_EXPORT const char* ToNullTerminated(const List<char>& string);

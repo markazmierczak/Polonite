@@ -39,7 +39,7 @@ static constexpr Array<unsigned, 48> PrimeIndices = {
 template<typename T, int SmallPrimeStartIndex = 0>
 static inline bool IsPrimeHelper(T x) {
   if (x <= SmallPrimes.getLast())
-    return BinarySearch(SmallPrimes, static_cast<unsigned>(x)) >= 0;
+    return binarySearchInSpan(SmallPrimes.toSpan(), static_cast<unsigned>(x)) >= 0;
 
   // Divide |x| by all primes or potential primes (i) until:
   //    1.  The division is even.
@@ -98,7 +98,7 @@ static inline bool CheckPrimeOverflow(uint64_t x) {
 template<typename T>
 static inline T NextPrimeHelper(T x) {
   if (x < SmallPrimes.getLast()) {
-    int yi = LowerBound(SmallPrimes, static_cast<unsigned>(x));
+    int yi = lowerBoundOfSpan(SmallPrimes.toSpan(), static_cast<unsigned>(x));
     T y = SmallPrimes[yi];
     if (x == y)
       y = SmallPrimes[yi + 1];
@@ -112,7 +112,7 @@ static inline T NextPrimeHelper(T x) {
   //   Known a-priori n >= L
   const T L = 210;
   T k0 = x / L;
-  int in = LowerBound(PrimeIndices, static_cast<unsigned>(x - k0 * L));
+  int in = lowerBoundOfSpan(PrimeIndices.toSpan(), static_cast<unsigned>(x - k0 * L));
 
   while (true) {
     x = L * k0 + PrimeIndices[in];

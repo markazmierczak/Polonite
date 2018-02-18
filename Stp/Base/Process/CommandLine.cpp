@@ -3,9 +3,10 @@
 
 #include "Base/Process/CommandLine.h"
 
-#include "Base/Containers/ContiguousAlgo.h"
+#include "Base/Containers/SpanAlgo.h"
 #include "Base/FileSystem/FilePath.h"
 #include "Base/Text/AsciiString.h"
+#include "Base/Text/StringAlgo.h"
 #include "Base/Text/Wtf.h"
 #include "Base/Type/FormattableToString.h"
 #include "Base/Type/ParseFloat.h"
@@ -106,7 +107,7 @@ bool CommandLine::ParseSwitch(StringSpan argument, String& out_name, String& out
   int prefix_size = 0;
   for (int i = 0; i < g_switch_prefix_count; ++i) {
     StringSpan prefix = SwitchPrefixes[i];
-    if (StartsWith(argument, prefix)) {
+    if (startsWith(argument, prefix)) {
       prefix_size = prefix.size();
       break;
     }

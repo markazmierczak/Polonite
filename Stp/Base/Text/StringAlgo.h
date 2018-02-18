@@ -8,6 +8,14 @@
 
 namespace stp {
 
+inline bool startsWith(StringSpan text, StringSpan prefix) {
+  return text.size() >= prefix.size() && text.getSlice(0, prefix.size()) == prefix;
+}
+
+inline bool endsWith(StringSpan text, StringSpan suffix) {
+  return text.size() >= suffix.size() && text.getSlice(text.size() - suffix.size()) == suffix;
+}
+
 BASE_EXPORT int indexOfAny(StringSpan list, StringSpan s);
 
 BASE_EXPORT int lastIndexOfAny(StringSpan list, StringSpan s);

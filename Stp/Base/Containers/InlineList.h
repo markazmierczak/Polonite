@@ -4,13 +4,21 @@
 #ifndef STP_BASE_CONTAINERS_INLINELIST_H_
 #define STP_BASE_CONTAINERS_INLINELIST_H_
 
-#include "Base/Containers/InlineListFwd.h"
 #include "Base/Containers/Span.h"
 #include "Base/Error/BasicExceptions.h"
 #include "Base/Memory/Allocate.h"
 #include "Base/Type/Limits.h"
 
 namespace stp {
+
+template<typename T>
+class InlineListBase;
+
+template<typename T, int N>
+class InlineList;
+
+template<int N>
+using InlineString = InlineList<char, N>;
 
 template<typename T>
 class InlineListBase {
@@ -89,6 +97,9 @@ class InlineListBase {
   friend T* begin(InlineListBase& x) { return x.data_; }
   friend T* end(InlineListBase& x) { return x.data_ + x.size_; }
 
+  SpanType toSpan() const { return SpanType(data_, size_); }
+  MutableSpanType toSpan() { return MutableSpanType(data_, size_); }
+
   friend SpanType makeSpan(const InlineListBase& x) { return x.toSpan(); }
   friend MutableSpanType makeSpan(InlineListBase& x) { return x.toSpan(); }
 
@@ -106,9 +117,6 @@ class InlineListBase {
   ~InlineListBase() { DestroyAndFree(data_, size_, capacity_); }
 
   void DestroyAndFree(T* data, int size, int capacity);
-
-  SpanType toSpan() const { return SpanType(data_, size_); }
-  MutableSpanType toSpan() { return MutableSpanType(data_, size_); }
 
   const T* GetInlineData() const { return reinterpret_cast<const T*>(first_item_.bytes); }
   T* GetInlineData() { return reinterpret_cast<T*>(first_item_.bytes); }

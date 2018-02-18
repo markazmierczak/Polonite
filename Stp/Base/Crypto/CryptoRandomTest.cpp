@@ -13,7 +13,7 @@ TEST(CryptoRandomTest, Bytes) {
   Array<byte_t, 50> buffer;
 
   CryptoRandom().generate(MakeBufferSpan(buffer));
-  Sort(buffer);
+  sortSpan<byte_t>(buffer);
 
   int unique_counter = 1;
   char prev = buffer[0];

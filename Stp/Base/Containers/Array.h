@@ -9,13 +9,6 @@
 
 namespace stp {
 
-// FIXME remove
-template<typename T, int N>
-struct Array;
-
-template<typename T, int N>
-struct TIsContiguousContainerTmpl<Array<T, N>> : TTrue {};
-
 template<typename T, int N>
 struct Array {
   typedef T ItemType;
@@ -45,11 +38,11 @@ struct Array {
   constexpr MutableSpanType getSlice(int at, int n) { return toSpan().getSlice(at, n); }
 
   template<typename U>
-  int indexOf(const U& item) const { return indexOfItem(data_, N, item); }
+  int indexOf(const U& item) const { return toSpan().indexOf(item); }
   template<typename U>
-  int lastIndexOf(const U& item) const { return lastIndexOfItem(data_, N, item); }
+  int lastIndexOf(const U& item) const { return toSpan().lastIndexOf(item); }
   template<typename U>
-  bool contains(const U& item) const { return indexOf(item) >= 0; }
+  bool contains(const U& item) const { return toSpan().contains(item); }
 
   friend constexpr void swap(Array& lhs, Array& rhs) noexcept { swap(lhs.data_, rhs.data_); }
   friend constexpr bool operator==(const Array& lhs, SpanType rhs) { return operator==(lhs.toSpan(), rhs); }
@@ -61,12 +54,10 @@ struct Array {
   friend constexpr T* begin(Array& x) { return x.data_; }
   friend constexpr T* end(Array& x) { return x.data_ + N; }
 
-  friend SpanType makeSpan(const Array& x) { return x.toSpan(); }
-  friend MutableSpanType makeSpan(Array& x) { return x.toSpan(); }
-
- private:
   constexpr SpanType toSpan() const { return SpanType(data_, N); }
   constexpr MutableSpanType toSpan() { return MutableSpanType(data_, N); }
+  friend SpanType makeSpan(const Array& x) { return x.toSpan(); }
+  friend MutableSpanType makeSpan(Array& x) { return x.toSpan(); }
 };
 
 template<typename T, int N>

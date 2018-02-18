@@ -5,7 +5,6 @@
 #define STP_BASE_CONTAINERS_STACK_H_
 
 #include "Base/Containers/List.h"
-#include "Base/Containers/InlineListFwd.h"
 
 namespace stp {
 
@@ -59,9 +58,6 @@ inline T Stack<T, TList>::Pop() {
   list_.RemoveLast();
   return value;
 }
-
-template<typename T, int N>
-using InlineStack = Stack<T, InlineList<T, N>>;
 
 } // namespace stp
 

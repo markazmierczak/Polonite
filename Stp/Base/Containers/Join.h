@@ -10,9 +10,6 @@ namespace stp {
 
 template<typename TResult, typename TArray>
 inline TResult Concat(const TArray& inputs) {
-  static_assert(TIsContiguousContainer<TArray>, "!");
-  static_assert(TIsContiguousContainer<TResult>, "!");
-
   TResult result;
 
   int result_length = 0;
@@ -35,9 +32,6 @@ inline TResult ConcatMany(const TArgs&... args) {
 
 template<typename TResult, typename TArray>
 inline TResult Join(typename TResult::ItemType separator, const TArray& inputs) {
-  static_assert(TIsContiguousContainer<TArray>, "!");
-  static_assert(TIsContiguousContainer<TResult>, "!");
-
   TResult result;
   // Must check for empty due to later decrement when computing output length.
   if (!inputs.IsEmpty()) {
@@ -67,9 +61,6 @@ inline TResult JoinMany(typename TResult::ItemType separator, const TArgs&... ar
 
 template<typename TResult, typename TArray>
 inline TResult Join(Span<typename TResult::ItemType> separator, const TArray& inputs) {
-  static_assert(TIsContiguousContainer<TArray>, "!");
-  static_assert(TIsContiguousContainer<TResult>, "!");
-
   TResult result;
   // Must check for empty due to later decrement when computing output length.
   if (!inputs.IsEmpty()) {

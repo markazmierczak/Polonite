@@ -73,9 +73,9 @@ class Span {
   constexpr void RemoveSuffix(int n) { Truncate(size_ - n); }
 
   template<typename U>
-  int indexOf(const U& item) const { return indexOfItem(data_, size_, item); }
+  int indexOf(const U& item) const noexcept;
   template<typename U>
-  int lastIndexOf(const U& item) const { return lastIndexOfItem(data_, size_, item); }
+  int lastIndexOf(const U& item) const noexcept;
   template<typename U>
   bool contains(const U& item) const { return indexOf(item) >= 0; }
 
@@ -179,10 +179,6 @@ class MutableSpan {
   friend bool operator!=(const MutableSpan& lhs, const Span<T>& rhs) {
     return !operator==(lhs, rhs);
   }
-  friend int compare(const MutableSpan& lhs, const Span<T>& rhs) {
-    int rv = CompareContiguous(lhs.data_, rhs.data(), lhs.size_ <= rhs.size() ? lhs.size_ : rhs.size());
-    return rv ? rv : (lhs.size_ - rhs.size());
-  }
   friend constexpr const T* begin(const MutableSpan& x) { return x.data_; }
   friend constexpr const T* end(const MutableSpan& x) { return x.data_ + x.size_; }
   friend constexpr T* begin(MutableSpan& x) { return x.data_; }
@@ -247,6 +243,28 @@ inline int compare(StringSpan lhs, StringSpan rhs) noexcept {
 }
 
 inline HashCode partialHash(StringSpan text) noexcept { return hashBuffer(text.data(), text.size()); }
+
+template<typename T>
+template<typename U>
+inline int Span<T>::indexOf(const U& item) const noexcept {
+  const T* d = data_;
+  for (int i = 0, s = size_; i < s; ++i) {
+    if (d[i] == item)
+      return i;
+  }
+  return -1;
+}
+
+template<typename T>
+template<typename U>
+inline int Span<T>::lastIndexOf(const U& item) const noexcept {
+  const T* d = data_;
+  for (int i = size_ - 1; i >= 0; --i) {
+    if (d[i] == item)
+      return i;
+  }
+  return -1;
+}
 
 } // namespace stp
 

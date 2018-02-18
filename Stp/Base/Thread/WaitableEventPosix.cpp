@@ -214,7 +214,7 @@ int WaitableEvent::WaitMany(WaitableEvent** raw_waitables, int count) {
 
   ASSERT(count == waitables.size());
 
-  Sort(waitables, [](const WaiterAndIndex& lhs, const WaiterAndIndex& rhs) {
+  sortSpan(waitables.toSpan(), [](const WaiterAndIndex& lhs, const WaiterAndIndex& rhs) {
     return signum(reinterpret_cast<intptr_t>(lhs.waitable) - reinterpret_cast<intptr_t>(rhs.waitable));
   });
 
