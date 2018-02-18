@@ -75,9 +75,9 @@ void TestSuite::onDidInit() {
   #endif
 
   // In some cases, we do not want to see standard error dialogs.
-  if (!Debugger::IsPresent()) {
+  if (!Debugger::isPresent()) {
     SuppressErrorDialogs();
-    Debugger::SetSuppressDebugUI(true);
+    Debugger::setSuppressDebugUi(true);
   }
   CatchMaybeTests();
 }

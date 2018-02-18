@@ -16,13 +16,13 @@ void TextWriter::OnEndLine() {
 
 void TextWriter::OnFlush() {}
 
-bool TextWriter::IsConsoleWriter() const {
+bool TextWriter::isConsoleWriter() const {
   return false;
 }
 
 void TextWriter::WriteRune(char32_t rune) {
   ASSERT(unicode::IsValidRune(rune));
-  if (IsAscii(rune)) {
+  if (isAscii(rune)) {
     OnWriteChar(static_cast<char>(rune));
   } else {
     OnWriteRune(rune);
@@ -68,7 +68,7 @@ void TextWriter::OnWriteRune(char32_t rune) {
 
 #if ASSERT_IS_ON
 bool TextWriter::IsValidChar(char c) {
-  return IsAscii(c);
+  return isAscii(c);
 }
 #endif
 

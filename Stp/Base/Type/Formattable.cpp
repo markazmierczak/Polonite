@@ -156,11 +156,11 @@ static inline void FormatIntTmpl(TextWriter& out, T x, const StringSpan& opts) {
     sign = *o_begin++;
 
   // Parse variant specifier if any.
-  if (o_begin != o_end && IsAlphaAscii(*o_begin)) {
+  if (o_begin != o_end && isAlphaAscii(*o_begin)) {
     char variant_char = *o_begin++;
-    if (IsLowerAscii(variant_char)) {
+    if (isLowerAscii(variant_char)) {
       uppercase = false;
-      variant_char = ToUpperAscii(variant_char);
+      variant_char = toUpperAscii(variant_char);
     }
     if (variant_char == 'D' || variant_char == 'X' || variant_char == 'O')
       variant = static_cast<Variant>(variant_char);
@@ -242,11 +242,11 @@ void FormatFloat(TextWriter& out, double x, const StringSpan& opts) {
       sign = *o_begin++;
 
     // Parse variant specifier if any.
-    if (o_begin != o_end && IsAlphaAscii(*o_begin)) {
+    if (o_begin != o_end && isAlphaAscii(*o_begin)) {
       char variant_char = *o_begin++;
-      if (IsLowerAscii(variant_char)) {
+      if (isLowerAscii(variant_char)) {
         uppercase = false;
-        variant_char = ToUpperAscii(variant_char);
+        variant_char = toUpperAscii(variant_char);
       }
       if (variant_char < 'E' || (variant_char > 'G' && variant_char == 'P'))
         ok = false;
@@ -381,8 +381,8 @@ void FormatBuffer(TextWriter& out, const void* data, int size) {
 
 static void FormatByte(TextWriter& out, byte_t b) {
   char string[3];
-  string[0] = NibbleToHexDigitUpper((b >> 4) & 0x0F);
-  string[1] = NibbleToHexDigitUpper((b >> 0) & 0x0F);
+  string[0] = nibbleToHexDigitUpper((b >> 4) & 0x0F);
+  string[1] = nibbleToHexDigitUpper((b >> 0) & 0x0F);
   string[2] = '\0';
   out << string;
 }
@@ -398,7 +398,7 @@ void FormatBuffer(TextWriter& out, const void* data, int size, const StringSpan&
     switch (c) {
       case 'x':
       case 'X':
-        uppercase = IsUpperAscii(c);
+        uppercase = isUpperAscii(c);
         break;
       case 'd':
       case 'D':
@@ -432,7 +432,7 @@ void FormatBuffer(TextWriter& out, const void* data, int size, const StringSpan&
       if (i >= size)
         break;
       char c = static_cast<char>(bytes[i]);
-      if (!IsPrintAscii(c))
+      if (!isPrintAscii(c))
         c = '.';
       out << c;
     }

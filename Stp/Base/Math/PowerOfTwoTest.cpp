@@ -28,7 +28,7 @@ TEST(BitsTest, Log2Floor32) {
 
   CryptoRandom rng;
   for (int i = 0; i < 100; ++i) {
-    uint32_t x = rng.NextUInt32();
+    uint32_t x = rng.nextUint32();
     if (!x)
       continue;
     EXPECT_EQ(slow(x), Log2Floor(x));
@@ -56,7 +56,7 @@ TEST(BitsTest, Log2Floor64) {
 
   CryptoRandom rng;
   for (int i = 0; i < 100; ++i) {
-    uint64_t x = rng.NextUInt64();
+    uint64_t x = rng.nextUint64();
     if (!x)
       continue;
     EXPECT_EQ(slow(x), Log2Floor(x));
@@ -84,7 +84,7 @@ TEST(BitsTest, Log2Ceil32) {
 
   CryptoRandom rng;
   for (int i = 0; i < 100; ++i) {
-    uint32_t x = rng.NextUInt32();
+    uint32_t x = rng.nextUint32();
     if (!x)
       continue;
     EXPECT_EQ(slow(x), Log2Ceil(x));
@@ -113,7 +113,7 @@ TEST(BitsTest, Log2Ceil64) {
 
   CryptoRandom rng;
   for (int i = 0; i < 100; ++i) {
-    uint64_t x = rng.NextUInt64();
+    uint64_t x = rng.nextUint64();
     if (!x)
       continue;
     EXPECT_EQ(slow(x), Log2Ceil(x));
@@ -142,7 +142,7 @@ TEST(BitsTest, IsPowerOfTwo) {
 
   CryptoRandom rng;
   for (int i = 0; i < 100; ++i) {
-    uint32_t x = rng.NextUInt32();
+    uint32_t x = rng.nextUint32();
     if (!x)
       continue;
     EXPECT_EQ(slow(x), IsPowerOfTwo(x));
@@ -180,7 +180,7 @@ TEST(BitsTest, RoundDownToPowerOfTwo32) {
 
   CryptoRandom rng;
   for (int i = 0; i < 100; ++i) {
-    uint32_t x = rng.NextUInt32();
+    uint32_t x = rng.nextUint32();
     EXPECT_EQ(slow(x), RoundDownToPowerOfTwo(x));
   }
 }
@@ -211,7 +211,7 @@ TEST(BitsTest, RoundDownToPowerOfTwo64) {
 
   CryptoRandom rng;
   for (int i = 0; i < 100; ++i) {
-    uint64_t x = rng.NextUInt64();
+    uint64_t x = rng.nextUint64();
     EXPECT_EQ(slow(x), RoundDownToPowerOfTwo(x));
   }
 }
@@ -236,7 +236,7 @@ TEST(BitsTest, RoundUpToPowerOfTwo32) {
   CryptoRandom rng;
   for (int i = 0; i < 100; ++i) {
     // Shift one right to have last bit cleared.
-    uint32_t x = rng.NextUInt32() >> 1;
+    uint32_t x = rng.nextUint32() >> 1;
     EXPECT_EQ(slow(x), RoundUpToPowerOfTwo(x));
   }
 }
@@ -261,7 +261,7 @@ TEST(BitsTest, RoundUpToPowerOfTwo64) {
   CryptoRandom rng;
   for (int i = 0; i < 100; ++i) {
     // Shift one right to have last bit cleared.
-    uint64_t x = rng.NextUInt64() >> 1;
+    uint64_t x = rng.nextUint64() >> 1;
     EXPECT_EQ(slow(x), RoundUpToPowerOfTwo(x));
   }
 }

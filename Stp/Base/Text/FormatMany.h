@@ -86,12 +86,12 @@ inline detail::NamedFormatter<T> FormatArg(StringSpan name, const T& value) {
 }
 
 template<typename... Ts>
-inline void AssertFail(
+inline void assertFail(
     const char* file, int line, const char* expr,
     StringSpan fmt, const Ts&... args) {
-  TextWriter& out = AssertPrint(file, line, expr);
+  TextWriter& out = assertPrint(file, line, expr);
   FormatMany(out, fmt, args...);
-  AssertWrapUp(out);
+  assertWrapUp(out);
 }
 
 } // namespace stp

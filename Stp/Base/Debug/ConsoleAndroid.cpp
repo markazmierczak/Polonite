@@ -10,7 +10,7 @@
 
 namespace stp {
 
-static android_LogPriority GetLogPriority(LogLevel log_level) {
+static android_LogPriority getLogPriority(LogLevel log_level) {
   switch (log_level) {
     case LogLevelFATAL:
       return ANDROID_LOG_FATAL;
@@ -28,8 +28,8 @@ static android_LogPriority GetLogPriority(LogLevel log_level) {
   return ANDROID_LOG_UNKNOWN;
 }
 
-void ConsoleWriter::PrintToSystemDebugLog(StringSpan text) {
-  auto priority = GetLogPriority(log_level_);
+void ConsoleWriter::printToSystemDebugLog(StringSpan text) {
+  auto priority = getLogPriority(log_level_);
 
   InlineString<256> text_copy(text);
   const String& app_name = Application::instance().getName();

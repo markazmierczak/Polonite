@@ -13,57 +13,57 @@
 
 namespace stp {
 
-void AssertWrapUp(TextWriter& out_base) {
+void assertWrapUp(TextWriter& out_base) {
   ConsoleWriter& out = static_cast<ConsoleWriter&>(out_base);
   out << '\n';
-  out.ResetColors();
-  AssertCrash();
+  out.resetColors();
+  assertCrash();
 }
 
-void AssertFail(const char* file, int line, const char* expr) {
-  TextWriter& out = AssertPrint(file, line, expr);
-  AssertWrapUp(out);
+void assertFail(const char* file, int line, const char* expr) {
+  TextWriter& out = assertPrint(file, line, expr);
+  assertWrapUp(out);
 }
 
-void AssertFail(const char* file, int line, const char* expr, const char* msg) {
-  TextWriter& out = AssertPrint(file, line, expr);
+void assertFail(const char* file, int line, const char* expr, const char* msg) {
+  TextWriter& out = assertPrint(file, line, expr);
   out << MakeSpanFromNullTerminated(msg);
-  AssertWrapUp(out);
+  assertWrapUp(out);
 }
 
-TextWriter& AssertPrint(const char* file, int line, const char* expr) {
-  ConsoleWriter& out = Console::Err();
+TextWriter& assertPrint(const char* file, int line, const char* expr) {
+  ConsoleWriter& out = Console::err();
 
-  out.SetLogLevel(LogLevelFATAL);
+  out.setLogLevel(LogLevelFATAL);
 
   #if !defined(NDEBUG)
   // Include a stack trace on a fatal, unless a debugger is attached.
-  bool being_debugged = Debugger::IsPresent();
+  bool being_debugged = Debugger::isPresent();
   if (!being_debugged) {
     out << "Stack Trace: \n";
     // FIXME Format(out, StackTrace());
   }
   #endif
 
-  out.SetForegroundColor(ConsoleColor::Red);
+  out.setForegroundColor(ConsoleColor::Red);
   out << "Assertion failed: ";
-  out.ResetColors();
+  out.resetColors();
 
   out << '"';
   out << MakeSpanFromNullTerminated(expr);
   out << "\" at ";
   out << MakeSpanFromNullTerminated(file) << ':'  << line << '\n';
 
-  out.SetForegroundColor(ConsoleColor::Red);
+  out.setForegroundColor(ConsoleColor::Red);
   return out;
 }
 
-void AssertCrash() {
+void assertCrash() {
   static int Dummy;
-  DebugAlias(&Dummy);
+  debugAlias(&Dummy);
 
   // Crash the process to generate a dump.
-  Debugger::Break();
+  Debugger::breakpoint();
 }
 
 } // namespace stp

@@ -9,6 +9,13 @@
 
 namespace stp {
 
+/**
+ * @class StackTrace
+ * A stacktrace can be helpful in debugging. For example, you can include a
+ * stacktrace member in an object (probably around #ifndef NDEBUG) so that you
+ * can later see where the given object was created from.
+ */
+
 StackTrace::StackTrace(void* const* trace, int count) {
   count = Min(count, isizeofArray(trace_));
   if (count)
@@ -24,7 +31,7 @@ void* const* StackTrace::GetAddresses(int* count) const {
 }
 
 void StackTrace::PrintToConsole() const {
-  Format(Console::Err(), StringSpan());
+  Format(Console::err(), StringSpan());
 }
 
 void StackTrace::FormatImpl(TextWriter& out, const StringSpan& opts) const {

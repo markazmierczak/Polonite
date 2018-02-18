@@ -12,26 +12,27 @@ class Sha1Digest {
  public:
   static constexpr int Length = 20;
 
-  explicit Sha1Digest(NoInitTag) {}
+  enum NoInitTag { NoInit };
+  explicit Sha1Digest(NoInitTag) noexcept {}
 
-  explicit Sha1Digest(Span<byte_t> raw) {
+  explicit Sha1Digest(Span<byte_t> raw) noexcept {
     ASSERT(raw.size() == Length);
     UninitializedCopy(raw_, raw.data(), Length);
   }
 
-  const byte_t& operator[](int pos) const {
+  const byte_t& operator[](int pos) const noexcept {
     ASSERT(0 <= pos && pos < Length);
     return raw_[pos];
   }
-  byte_t& operator[](int pos) {
+  byte_t& operator[](int pos) noexcept {
     ASSERT(0 <= pos && pos < Length);
     return raw_[pos];
   }
 
-  friend bool operator==(const Sha1Digest& l, const Sha1Digest& r) {
+  friend bool operator==(const Sha1Digest& l, const Sha1Digest& r) noexcept {
     return MakeSpan(l.raw_) == MakeSpan(r.raw_);
   }
-  friend bool operator!=(const Sha1Digest& l, const Sha1Digest& r) {
+  friend bool operator!=(const Sha1Digest& l, const Sha1Digest& r) noexcept {
     return !operator==(l, r);
   }
 
@@ -39,27 +40,23 @@ class Sha1Digest {
   byte_t raw_[Length];
 };
 
-BASE_EXPORT Sha1Digest ComputeSha1Digest(BufferSpan input) noexcept;
-BASE_EXPORT bool TryParse(StringSpan s, Sha1Digest& out_digest) noexcept;
+BASE_EXPORT Sha1Digest computeSha1Digest(BufferSpan input) noexcept;
+BASE_EXPORT bool tryParse(StringSpan s, Sha1Digest& out_digest) noexcept;
 
 BASE_EXPORT void Format(TextWriter& out, const Sha1Digest& digest, const StringSpan& opts);
-BASE_EXPORT void Format(TextWriter& out, const Sha1Digest& digest);
-
-inline TextWriter& operator<<(TextWriter& out, const Sha1Digest& digest) {
-  Format(out, digest); return out;
-}
+BASE_EXPORT TextWriter& operator<<(TextWriter& out, const Sha1Digest& digest);
 
 class BASE_EXPORT Sha1Hasher {
  public:
-  Sha1Hasher() noexcept { Reset(); }
+  Sha1Hasher() noexcept { reset(); }
 
-  void Reset() noexcept;
-  void Update(BufferSpan input) noexcept;
-  void Finish(Sha1Digest& out_digest) noexcept;
+  void reset() noexcept;
+  void update(BufferSpan input) noexcept;
+  void finish(Sha1Digest& out_digest) noexcept;
 
  private:
-  void Pad() noexcept;
-  void Process() noexcept;
+  void pad() noexcept;
+  void process() noexcept;
 
   uint32_t a_, b_, c_, d_, e_;
 

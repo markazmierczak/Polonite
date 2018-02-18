@@ -40,13 +40,13 @@ static LazyInstance<List<VmoduleMatcher>>::LeakAtExit g_verbose_matchers = LAZY_
 void LogWrapUp(TextWriter& out_base) {
   ConsoleWriter& out = static_cast<ConsoleWriter&>(out_base);
   out << '\n';
-  out.SetLogLevel(LogLevelUSER);
+  out.setLogLevel(LogLevelUSER);
 }
 
 static void PrintLogLevel(ConsoleWriter& out, StringSpan name, ConsoleColor color) {
-  out.SetForegroundColor(color);
+  out.setForegroundColor(color);
   out << name;
-  out.ResetColors();
+  out.resetColors();
 }
 
 TextWriter* LogPrintCommon(LogLevel level, const char* file, unsigned line) {
@@ -56,7 +56,7 @@ TextWriter* LogPrintCommon(LogLevel level, const char* file, unsigned line) {
       return nullptr;
   }
 
-  ConsoleWriter& out = level <= LogLevelERROR ? Console::Err() : Console::Out();
+  ConsoleWriter& out = level <= LogLevelERROR ? Console::err() : Console::out();
 
   out << '[';
 
@@ -86,7 +86,7 @@ TextWriter* LogPrintCommon(LogLevel level, const char* file, unsigned line) {
   }
 
   // Level is restored on exit from LOG() call.
-  out.SetLogLevel(level);
+  out.setLogLevel(level);
 
   return &out;
 }

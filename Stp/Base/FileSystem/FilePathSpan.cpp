@@ -187,7 +187,7 @@ int FilePathSpan::IndexOfExtension() const {
     }
     if (IsFilePathSeparator(c))
       return -1;
-    if (!IsAscii(c))
+    if (!isAscii(c))
       return -1;
   }
   return -1;
@@ -244,7 +244,7 @@ bool FilePathSpan::MatchesExtension(StringSpan extension) const {
 
   // inline this loop since extension is usually short
   for (int i = 0; i < ext_size; ++i) {
-    if (ToLowerAscii(extension[i]) != ToLowerAscii(chars_[pos + i]))
+    if (toLowerAscii(extension[i]) != toLowerAscii(chars_[pos + i]))
       return false;
   }
   return true;

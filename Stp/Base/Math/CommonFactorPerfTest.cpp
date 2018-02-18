@@ -20,7 +20,7 @@ static List<T> GenerateTable() {
   T* dst = list.AppendUninitialized(size);
   CryptoRandom rng;
   for (int i = 0; i < size; ++i)
-    dst[i] = static_cast<T>(rng.NextUInt64());
+    dst[i] = static_cast<T>(rng.nextUint64());
   return list;
 }
 

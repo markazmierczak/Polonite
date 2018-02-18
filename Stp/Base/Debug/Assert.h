@@ -17,12 +17,12 @@ class TextWriter;
 # define ASSERT_IS_ON 1
 #endif
 
-BASE_EXPORT void AssertFail(const char* file, int line, const char* expr);
-BASE_EXPORT void AssertFail(const char* file, int line, const char* expr, const char* msg);
-BASE_EXPORT void AssertCrash();
+BASE_EXPORT void assertFail(const char* file, int line, const char* expr);
+BASE_EXPORT void assertFail(const char* file, int line, const char* expr, const char* msg);
+BASE_EXPORT void assertCrash();
 
-BASE_EXPORT TextWriter& AssertPrint(const char* file, int line, const char* expr);
-BASE_EXPORT void AssertWrapUp(TextWriter& out);
+BASE_EXPORT TextWriter& assertPrint(const char* file, int line, const char* expr);
+BASE_EXPORT void assertWrapUp(TextWriter& out);
 
 } // namespace stp
 
@@ -31,7 +31,7 @@ BASE_EXPORT void AssertWrapUp(TextWriter& out);
 # define ASSERT(expr, ...) \
   ((expr) \
    ? static_cast<void>(0) \
-   : stp::AssertFail(__FILE__, __LINE__, #expr, ##__VA_ARGS__))
+   : stp::assertFail(__FILE__, __LINE__, #expr, ##__VA_ARGS__))
 
 #define ASSERT_WITH_MESSAGE ASSERT
 

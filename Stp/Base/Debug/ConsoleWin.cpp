@@ -13,7 +13,7 @@
 namespace stp {
 
 // Converts ConsoleColor to Win32 bitmask.
-static unsigned GetColorAttribute(ConsoleColor color) {
+static unsigned getColorAttribute(ConsoleColor color) {
 
   const ConsoleColor FirstIntense = ConsoleColor::FirstIntense;
   unsigned intensity = 0;
@@ -56,26 +56,26 @@ static unsigned GetColorAttribute(ConsoleColor color) {
   return output | intensity;
 }
 
-void ConsoleWriter::SetForegroundColor(ConsoleColor color) {
-  unsigned foreground = GetColorAttribute(color);
+void ConsoleWriter::setForegroundColor(ConsoleColor color) {
+  unsigned foreground = getColorAttribute(color);
   unsigned attributes = (std_attributes_ & ~0x0F) | (foreground << 0);
-  UpdateAttributes(attributes);
+  updateAttributes(attributes);
 }
 
-void ConsoleWriter::SetBackgroundColor(ConsoleColor color) {
-  unsigned background = GetColorAttribute(color);
+void ConsoleWriter::setBackgroundColor(ConsoleColor color) {
+  unsigned background = getColorAttribute(color);
   unsigned attributes = (std_attributes_ & ~0xF0) | (background << 4);
-  UpdateAttributes(attributes);
+  updateAttributes(attributes);
 }
 
-void ConsoleWriter::SetColors(ConsoleColor foreground_, ConsoleColor background_) {
-  unsigned foreground = GetColorAttribute(foreground_);
-  unsigned background = GetColorAttribute(background_);
+void ConsoleWriter::setColors(ConsoleColor foreground_, ConsoleColor background_) {
+  unsigned foreground = getColorAttribute(foreground_);
+  unsigned background = getColorAttribute(background_);
   unsigned attributes = (std_attributes_ & ~0xFF) | (background << 4) | foreground;
-  UpdateAttributes(attributes);
+  updateAttributes(attributes);
 }
 
-void ConsoleWriter::FetchDefaultColors() {
+void ConsoleWriter::fetchDefaultColors() {
   CONSOLE_SCREEN_BUFFER_INFO buffer_info;
   if (!GetConsoleScreenBufferInfo(std_->GetNativeFile(), &buffer_info)) {
     uses_colors_ = false;
@@ -85,8 +85,8 @@ void ConsoleWriter::FetchDefaultColors() {
   std_attributes_ = default_std_attributes_;
 }
 
-void ConsoleWriter::ResetColors() {
-  UpdateAttributes(default_std_attributes_);
+void ConsoleWriter::resetColors() {
+  updateAttributes(default_std_attributes_);
 }
 
 void ConsoleWriter::UpdateAttributes(unsigned attributes) {
@@ -101,11 +101,11 @@ void ConsoleWriter::UpdateAttributes(unsigned attributes) {
   ::SetConsoleTextAttribute(std_->GetNativeFile(), attributes);
 }
 
-void ConsoleWriter::PrintToSystemDebugLog(StringSpan text) {
+void ConsoleWriter::printToSystemDebugLog(StringSpan text) {
   ::OutputDebugStringW(ToNullTerminated(ToWString(text)));
 }
 
-bool ConsoleWriter::ShouldUseColors(const FileStream& stream) {
+bool ConsoleWriter::shouldUseColors(const FileStream& stream) {
   HANDLE std_handle = stream.GetNativeFile();
   if (::GetFileType(std_handle) != FILE_TYPE_CHAR)
     return false;
@@ -115,7 +115,7 @@ bool ConsoleWriter::ShouldUseColors(const FileStream& stream) {
   return ::GetConsoleMode(std_handle, &mode) != 0;
 }
 
-FileStream* ConsoleWriter::OpenStdStream(StdDescriptor std_descriptor) {
+FileStream* ConsoleWriter::openStdStream(StdDescriptor std_descriptor) {
   // Convert std_descriptor to index for Win32 API.
   DWORD handle_index = [](StdDescriptor desc) {
     switch(desc) {
@@ -139,7 +139,7 @@ FileStream* ConsoleWriter::OpenStdStream(StdDescriptor std_descriptor) {
   return stream;
 }
 
-FileStream* Console::OpenLogFile(const FilePath& path) {
+FileStream* Console::openLogFile(const FilePath& path) {
   // The FILE_APPEND_DATA access mask ensures that the file is atomically
   // appended to across accesses from multiple threads.
   // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364399(v=vs.85).aspx

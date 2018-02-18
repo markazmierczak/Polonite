@@ -13,7 +13,6 @@ namespace stp {
 
 typedef uint8_t byte_t;
 typedef decltype(nullptr) nullptr_t;
-enum NoInitTag { NoInit };
 enum class HashCode : uint32_t { Zero = 0 };
 
 #define isizeof(x) static_cast<int>(sizeof(x))

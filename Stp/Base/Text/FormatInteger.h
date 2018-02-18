@@ -60,7 +60,7 @@ constexpr StringSpan FormatHexInteger(
   do {
     --begin;
     if (uppercase)
-      *begin = NibbleToHexDigit(value & 0xF, uppercase);
+      *begin = nibbleToHexDigit(value & 0xF, uppercase);
     value >>= 4;
   } while (value);
   if (negative) {

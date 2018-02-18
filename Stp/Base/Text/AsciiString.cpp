@@ -15,8 +15,8 @@ int CompareIgnoreCaseAscii(const char* lhs, const char* rhs, int size) {
   ASSERT(size >= 0);
 
   for (int i = 0; i < size; ++i) {
-    char lc = ToLowerAscii(lhs[i]);
-    char rc = ToLowerAscii(rhs[i]);
+    char lc = toLowerAscii(lhs[i]);
+    char rc = toLowerAscii(rhs[i]);
 
     int diff = compare(lc, rc);
     if (diff)
@@ -28,20 +28,20 @@ int CompareIgnoreCaseAscii(const char* lhs, const char* rhs, int size) {
 } // namespace detail
 
 int IndexOfIgnoreCaseAscii(StringSpan str, char c) {
-  c = ToLowerAscii(c);
+  c = toLowerAscii(c);
 
   for (int i = 0 ; i < str.size(); ++i) {
-    if (ToLowerAscii(str[i]) == c)
+    if (toLowerAscii(str[i]) == c)
       return i;
   }
   return -1;
 }
 
 int LastIndexOfIgnoreCaseAscii(StringSpan str, char c) {
-  c = ToLowerAscii(c);
+  c = toLowerAscii(c);
 
   for (int i = str.size() - 1; i >= 0; --i) {
-    if (ToLowerAscii(str[i]) == c)
+    if (toLowerAscii(str[i]) == c)
       return i;
   }
   return -1;
@@ -89,12 +89,12 @@ int LastIndexOfIgnoreCaseAscii(StringSpan haystack, StringSpan needle) {
 
 static inline void ToLowerAscii(char* output, const char* input, int length) {
   for (int i = 0; i < length; ++i)
-    output[i] = ToLowerAscii(input[i]);
+    output[i] = toLowerAscii(input[i]);
 }
 
 static inline void ToUpperAscii(char* output, const char* input, int length) {
   for (int i = 0; i < length; ++i)
-    output[i] = ToUpperAscii(input[i]);
+    output[i] = toUpperAscii(input[i]);
 }
 
 void ToLowerAsciiInplace(MutableStringSpan s) {

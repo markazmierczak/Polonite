@@ -12,26 +12,27 @@ class Md5Digest {
  public:
   static constexpr int Length = 16;
 
-  explicit Md5Digest(NoInitTag) {}
+  enum NoInitTag { NoInit };
+  explicit Md5Digest(NoInitTag) noexcept {}
 
-  explicit Md5Digest(Span<byte_t> raw) {
+  explicit Md5Digest(Span<byte_t> raw) noexcept {
     ASSERT(raw.size() == Length);
     UninitializedCopy(raw_, raw.data(), Length);
   }
 
-  const byte_t& operator[](int pos) const {
+  const byte_t& operator[](int pos) const noexcept {
     ASSERT(0 <= pos && pos < Length);
     return raw_[pos];
   }
-  byte_t& operator[](int pos) {
+  byte_t& operator[](int pos) noexcept {
     ASSERT(0 <= pos && pos < Length);
     return raw_[pos];
   }
 
-  friend bool operator==(const Md5Digest& l, const Md5Digest& r) {
+  friend bool operator==(const Md5Digest& l, const Md5Digest& r) noexcept {
     return MakeSpan(l.raw_) == MakeSpan(r.raw_);
   }
-  friend bool operator!=(const Md5Digest& l, const Md5Digest& r) {
+  friend bool operator!=(const Md5Digest& l, const Md5Digest& r) noexcept {
     return !operator==(l, r);
   }
 
@@ -39,26 +40,22 @@ class Md5Digest {
   byte_t raw_[Length];
 };
 
-BASE_EXPORT Md5Digest ComputeMd5Digest(BufferSpan input) noexcept;
-BASE_EXPORT bool TryParse(StringSpan s, Md5Digest& out_digest) noexcept;
+BASE_EXPORT Md5Digest computeMd5Digest(BufferSpan input) noexcept;
+BASE_EXPORT bool tryParse(StringSpan s, Md5Digest& out_digest) noexcept;
 
 BASE_EXPORT void Format(TextWriter& out, const Md5Digest& digest, const StringSpan& opts);
-BASE_EXPORT void Format(TextWriter& out, const Md5Digest& digest);
-
-inline TextWriter& operator<<(TextWriter& out, const Md5Digest& digest) {
-  Format(out, digest); return out;
-}
+BASE_EXPORT TextWriter& operator<<(TextWriter& out, const Md5Digest& digest);
 
 class BASE_EXPORT Md5Hasher {
  public:
-  Md5Hasher() noexcept { Reset(); }
+  Md5Hasher() noexcept { reset(); }
 
-  void Reset() noexcept;
-  void Update(BufferSpan input) noexcept;
-  void Finish(Md5Digest& out_digest) noexcept;
+  void reset() noexcept;
+  void update(BufferSpan input) noexcept;
+  void finish(Md5Digest& out_digest) noexcept;
 
  private:
-  void Transform() noexcept;
+  void transform() noexcept;
 
   uint32_t buf_[4];
   uint32_t bits_[2];

@@ -48,7 +48,7 @@ TextEncoder::Result AsciiEncoder::Encode(StringSpan input, MutableBufferSpan out
       break;
     }
     char32_t c = TryDecodeUtf(iptr, iptr_end);
-    if (UNLIKELY(!IsAscii(c))) {
+    if (UNLIKELY(!isAscii(c))) {
       c = '?';
     }
     output_data[num_wrote++] = static_cast<byte_t>(c);

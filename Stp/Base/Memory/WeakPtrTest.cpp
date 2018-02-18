@@ -5,7 +5,6 @@
 
 #include "Base/Compiler/Lsan.h"
 #include "Base/Memory/OwnPtr.h"
-#include "Base/Debug/SourceLocation.h"
 #include "Base/Test/GTestUtil.h"
 #include "Base/Thread/WaitableEvent.h"
 

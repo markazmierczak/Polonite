@@ -31,7 +31,7 @@ FilePath ProcCommon::DirectoryForProcess(NativeProcessHandle pid) {
 NativeProcessHandle ProcCommon::ProcessForDirectoryName(const char* d_name) {
   int i;
   for (i = 0; i < NAME_MAX && d_name[i]; ++i) {
-    if (!IsDigitAscii(d_name[i]))
+    if (!isDigitAscii(d_name[i]))
       return 0;
   }
   if (i == NAME_MAX)

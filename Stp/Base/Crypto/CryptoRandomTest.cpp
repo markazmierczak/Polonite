@@ -1,7 +1,5 @@
 // Copyright 2017 Polonite Authors. All rights reserved.
-// Copyright (c) 2011 The Chromium Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
+// Distributed under MIT license that can be found in the LICENSE file.
 
 #include "Base/Crypto/CryptoRandom.h"
 
@@ -14,7 +12,7 @@ namespace stp {
 TEST(CryptoRandomTest, Bytes) {
   Array<byte_t, 50> buffer;
 
-  CryptoRandom().Fill(MakeBufferSpan(buffer));
+  CryptoRandom().generate(MakeBufferSpan(buffer));
   Sort(buffer);
 
   int unique_counter = 1;
@@ -40,7 +38,7 @@ TEST(CryptoRandomTest, UInt64ProducesBothValuesOfAllBits) {
 
   CryptoRandom crypto_random;
   for (int i = 0; i < 1000; ++i) {
-    uint64_t value = crypto_random.NextUInt64();
+    uint64_t value = crypto_random.nextUint64();
     found_ones |= value;
     found_zeros &= value;
 

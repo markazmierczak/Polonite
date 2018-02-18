@@ -1,10 +1,5 @@
 // Copyright 2017 Polonite Authors. All rights reserved.
-// Copyright 2014 The Chromium Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
-//
-// This file contains the default options for various compiler-based dynamic
-// tools.
+// Distributed under MIT license that can be found in the LICENSE file.
 
 #include "Base/Compiler/Os.h"
 #include "Base/Compiler/Sanitizer.h"

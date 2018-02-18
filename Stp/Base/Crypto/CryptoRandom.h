@@ -1,7 +1,5 @@
 // Copyright 2017 Polonite Authors. All rights reserved.
-// Copyright (c) 2012 The Chromium Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
+// Distributed under MIT license that can be found in the LICENSE file.
 
 #ifndef STP_BASE_CRYPTO_CRYPTORANDOM_H_
 #define STP_BASE_CRYPTO_CRYPTORANDOM_H_
@@ -14,16 +12,16 @@ class BASE_EXPORT CryptoRandom {
  public:
   CryptoRandom() = default;
 
-  void Fill(MutableBufferSpan buffer) noexcept;
+  void generate(MutableBufferSpan buffer) noexcept;
 
-  uint32_t NextUInt32() noexcept { return GenerateTrivial<uint32_t>(); }
-  uint64_t NextUInt64() noexcept { return GenerateTrivial<uint64_t>(); }
+  uint32_t nextUint32() noexcept { return generateTrivial<uint32_t>(); }
+  uint64_t nextUint64() noexcept { return generateTrivial<uint64_t>(); }
 
  private:
   template<typename T>
-  T GenerateTrivial() noexcept {
+  T generateTrivial() noexcept {
     T x;
-    Fill(MutableBufferSpan(&x, 1));
+    generate(MutableBufferSpan(&x, 1));
     return x;
   }
 };

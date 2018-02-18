@@ -10,14 +10,14 @@
 
 namespace stp {
 
-bool TryParse(StringSpan input, Crc32Value& out) noexcept {
+bool tryParse(StringSpan input, Crc32Value& out) noexcept {
   constexpr int NibbleCount = 8;
   if (input.size() < NibbleCount)
     return false;
 
   uint32_t raw = 0;
   for (int i = 0; i < NibbleCount; ++i) {
-    int nibble = TryParseHexDigit(input[i]);
+    int nibble = tryParseHexDigit(input[i]);
     if (nibble < 0)
       return false;
     raw = (raw << 4) | nibble;
@@ -32,13 +32,14 @@ static void Format(TextWriter& out, Crc32Value value, bool uppercase) {
   auto raw = toUnderlying(value);
   Array<char, NibbleCount> text;
   for (int i = 0; i < NibbleCount; ++i) {
-    text[i] = NibbleToHexDigit(raw >> (28 - 4 * i), uppercase);
+    text[i] = nibbleToHexDigit(raw >> (28 - 4 * i), uppercase);
   }
   out << text;
 }
 
-void Format(TextWriter& out, Crc32Value value) {
+TextWriter& operator<<(TextWriter& out, Crc32Value value) {
   Format(out, value, false);
+  return out;
 }
 
 void Format(TextWriter& out, Crc32Value value, const StringSpan& opts) {
@@ -48,7 +49,7 @@ void Format(TextWriter& out, Crc32Value value, const StringSpan& opts) {
     switch (c) {
       case 'x':
       case 'X':
-        uppercase = IsUpperAscii(c);
+        uppercase = isUpperAscii(c);
         break;
 
       default:
@@ -113,7 +114,7 @@ static const uint32_t Crc32Table[256] = {
   0x2D02EF8Du
 };
 
-void Crc32Algorithm::Update(BufferSpan input) noexcept {
+void Crc32Algorithm::update(BufferSpan input) noexcept {
   uint32_t c = residue_;
 
   auto* input_bytes = static_cast<const byte_t*>(input.data());
@@ -124,10 +125,10 @@ void Crc32Algorithm::Update(BufferSpan input) noexcept {
   residue_ = c;
 }
 
-Crc32Value ComputeCrc32(BufferSpan input) noexcept {
+Crc32Value computeCrc32(BufferSpan input) noexcept {
   Crc32Algorithm algorithm;
-  algorithm.Update(input);
-  return algorithm.GetChecksum();
+  algorithm.update(input);
+  return algorithm.getChecksum();
 }
 
 } // namespace stp

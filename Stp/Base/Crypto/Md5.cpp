@@ -24,14 +24,14 @@ namespace stp {
 
 static constexpr int NibbleCount = Md5Digest::Length * 2;
 
-bool TryParse(StringSpan input, Md5Digest& out_digest) noexcept {
+bool tryParse(StringSpan input, Md5Digest& out_digest) noexcept {
   if (input.size() != NibbleCount)
     return false;
 
   byte_t* outd = &out_digest[0];
   for (int i = 0; i < Md5Digest::Length; ++i) {
-    int msb = TryParseHexDigit(input[i * 2 + 0]);
-    int lsb = TryParseHexDigit(input[i * 2 + 1]);
+    int msb = tryParseHexDigit(input[i * 2 + 0]);
+    int lsb = tryParseHexDigit(input[i * 2 + 1]);
     if (lsb < 0 || msb < 0)
       return false;
     outd[i] = static_cast<byte_t>((msb << 4) | lsb);
@@ -42,14 +42,15 @@ bool TryParse(StringSpan input, Md5Digest& out_digest) noexcept {
 static void Format(TextWriter& out, const Md5Digest& digest, bool uppercase) {
   Array<char, NibbleCount> text;
   for (int i = 0; i < Md5Digest::Length; ++i) {
-    text[i * 2 + 0] = NibbleToHexDigit((digest[i] >> 4) & 0xF, uppercase);
-    text[i * 2 + 1] = NibbleToHexDigit((digest[i] >> 0) & 0xF, uppercase);
+    text[i * 2 + 0] = nibbleToHexDigit((digest[i] >> 4) & 0xF, uppercase);
+    text[i * 2 + 1] = nibbleToHexDigit((digest[i] >> 0) & 0xF, uppercase);
   }
   out << text;
 }
 
-void Format(TextWriter& out, const Md5Digest& digest) {
+TextWriter& operator<<(TextWriter& out, const Md5Digest& digest) {
   Format(out, digest, false);
+  return out;
 }
 
 void Format(TextWriter& out, const Md5Digest& digest, const StringSpan& opts) {
@@ -59,7 +60,7 @@ void Format(TextWriter& out, const Md5Digest& digest, const StringSpan& opts) {
     switch (c) {
       case 'x':
       case 'X':
-        uppercase = IsUpperAscii(c);
+        uppercase = isUpperAscii(c);
         break;
 
       default:
@@ -81,10 +82,11 @@ void Format(TextWriter& out, const Md5Digest& digest, const StringSpan& opts) {
 #define MD5STEP(f, w, x, y, z, data, s) \
   (w += f(x, y, z) + data, w = w << s | w >> (32 - s), w += x)
 
-// The core of the MD5 algorithm, this alters an existing MD5 hash to
-// reflect the addition of 16 longwords of new data.
-// MD5Update blocks the data and converts bytes into longwords for this routine.
-void Md5Hasher::Transform() noexcept {
+/**
+ * The core of the MD5 algorithm, this alters an existing MD5 hash to
+ * reflect the addition of 16 longwords of new data.
+ */
+void Md5Hasher::transform() noexcept {
   uint32_t a, b, c, d;
 
   a = buf_[0];
@@ -168,9 +170,11 @@ void Md5Hasher::Transform() noexcept {
   buf_[3] += d;
 }
 
-// Start MD5 accumulation.
-// Set bit count to 0 and buffer to mysterious initialization constants.
-void Md5Hasher::Reset() noexcept {
+/**
+ * Start MD5 accumulation.
+ * Set bit count to 0 and buffer to mysterious initialization constants.
+ */
+void Md5Hasher::reset() noexcept {
   buf_[0] = 0x67452301;
   buf_[1] = 0xEFCDAB89;
   buf_[2] = 0x98BADCFE;
@@ -179,8 +183,10 @@ void Md5Hasher::Reset() noexcept {
   bits_[1] = 0;
 }
 
-// Update context to reflect the concatenation of another buffer full of bytes.
-void Md5Hasher::Update(BufferSpan input) noexcept {
+/**
+ * Update context to reflect the concatenation of another buffer full of bytes.
+ */
+void Md5Hasher::update(BufferSpan input) noexcept {
   // Update bitcount
 
   auto* d = static_cast<const byte_t*>(input.data());
@@ -204,7 +210,7 @@ void Md5Hasher::Update(BufferSpan input) noexcept {
       return;
     }
     memcpy(p, d, t);
-    Transform();
+    transform();
     d += t;
     size -= t;
   }
@@ -213,7 +219,7 @@ void Md5Hasher::Update(BufferSpan input) noexcept {
 
   while (size >= 64) {
     memcpy(in_, d, 64);
-    Transform();
+    transform();
     d += 64;
     size -= 64;
   }
@@ -223,9 +229,11 @@ void Md5Hasher::Update(BufferSpan input) noexcept {
   memcpy(in_, d, size);
 }
 
-// Final wrapup - pad to 64-byte boundary with the bit pattern
-// 1 0* (64-bit count of bits processed, MSB-first)
-void Md5Hasher::Finish(Md5Digest& digest) noexcept {
+/**
+ * Final wrapup - pad to 64-byte boundary with the bit pattern
+ * 1 0* (64-bit count of bits processed, MSB-first)
+ */
+void Md5Hasher::finish(Md5Digest& digest) noexcept {
   // Compute number of bytes mod 64.
   unsigned count = (bits_[0] >> 3) & 0x3F;
 
@@ -241,7 +249,7 @@ void Md5Hasher::Finish(Md5Digest& digest) noexcept {
   if (count < 8) {
     // Two lots of padding:  Pad the first block to 64 bytes.
     memset(p, 0, count);
-    Transform();
+    transform();
 
     // Now fill the next block with 56 bytes.
     memset(in_, 0, 56);
@@ -253,15 +261,15 @@ void Md5Hasher::Finish(Md5Digest& digest) noexcept {
   // Append length in bits and transform.
   CopyNonOverlapping(inw_ + 14, bits_, 2);
 
-  Transform();
+  transform();
   memcpy(&digest[0], buf_, 16);
 }
 
-Md5Digest ComputeMd5Digest(BufferSpan input) noexcept {
-  Md5Digest digest(NoInit);
+Md5Digest computeMd5Digest(BufferSpan input) noexcept {
+  Md5Digest digest(Md5Digest::NoInit);
   Md5Hasher hasher;
-  hasher.Update(input);
-  hasher.Finish(digest);
+  hasher.update(input);
+  hasher.finish(digest);
   return digest;
 }
 

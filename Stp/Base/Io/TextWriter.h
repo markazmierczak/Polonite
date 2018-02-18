@@ -28,7 +28,7 @@ class BASE_EXPORT TextWriter {
   virtual TextEncoding GetEncoding() const = 0;
 
   // Simple RTTI:
-  virtual bool IsConsoleWriter() const;
+  virtual bool isConsoleWriter() const;
 
   friend TextWriter& operator<<(TextWriter& out, char c) {
     ASSERT(TextWriter::IsValidChar(c));

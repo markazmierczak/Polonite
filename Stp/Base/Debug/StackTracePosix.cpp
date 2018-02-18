@@ -1,7 +1,5 @@
 // Copyright 2017 Polonite Authors. All rights reserved.
-// Copyright (c) 2012 The Chromium Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
+// Distributed under MIT license that can be found in the LICENSE file.
 
 #include "Base/Debug/StackTrace.h"
 
@@ -150,10 +148,10 @@ static StringSpan GetSignalName(int signal, int code) {
 }
 
 static void StackDumpSignalHandler(int signal, siginfo_t* info, void* void_context) {
-  if (Debugger::IsPresent())
-    Debugger::Break();
+  if (Debugger::isPresent())
+    Debugger::breakpoint();
 
-  ConsoleWriter& out = Console::Err();
+  ConsoleWriter& out = Console::err();
   out << "Received signal " << GetSignalName(signal, info->si_code) << '(' << signal << ')';
 
   if (signal == SIGBUS || signal == SIGFPE ||

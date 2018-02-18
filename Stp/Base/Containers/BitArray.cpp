@@ -51,7 +51,7 @@ static void FormatBitArrayAsHex(
     char* end = bit_chars + BitCountInWord;
     char* begin = end;
     for (int j = 0; j < valid_bit_count; j += 4) {
-      *--begin = NibbleToHexDigitUpper(word & 0xF);
+      *--begin = nibbleToHexDigitUpper(word & 0xF);
       word >>= 4;
     }
     writer << StringSpan(begin, end - begin);
@@ -66,10 +66,10 @@ void FormatBitArray(TextWriter& out, const StringSpan& opts, const uintptr_t* wo
 
   if (!opts.IsEmpty()) {
     bool ok = opts.size() == 1;
-    if (ToUpperAscii(opts[0]) == 'X')
+    if (toUpperAscii(opts[0]) == 'X')
       format = Format::Hexadecimal;
     else
-      ok = ToUpperAscii(opts[0]) == 'B';
+      ok = toUpperAscii(opts[0]) == 'B';
     if (!ok)
       throw FormatException("BitArray");
   }

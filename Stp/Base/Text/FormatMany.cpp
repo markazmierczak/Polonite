@@ -37,7 +37,7 @@ class FormatArgId {
       return true;
 
     // First character is digit - treat as index.
-    if (IsDigitAscii(s.GetFirst()))
+    if (isDigitAscii(s.GetFirst()))
       return TryParse(s, size_or_index_) == ParseIntegerErrorCode::Ok;
 
     // Otherwise treat as name.

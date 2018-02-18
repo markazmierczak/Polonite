@@ -7,7 +7,7 @@
 
 namespace stp {
 
-TEST(CharTest, HexDigitToNibble) {
+TEST(AsciiCharTest, tryParseHexDigit) {
   struct {
     int nibble;
     char character;
@@ -40,27 +40,27 @@ TEST(CharTest, HexDigitToNibble) {
   };
 
   for (const auto& item : cases)
-    EXPECT_EQ(item.nibble, TryParseHexDigit(item.character));
+    EXPECT_EQ(item.nibble, tryParseHexDigit(item.character));
 }
 
-TEST(CharTest, ToLower) {
-  EXPECT_EQ('c', ToLowerAscii('C'));
-  EXPECT_EQ('c', ToLowerAscii('c'));
-  EXPECT_EQ('2', ToLowerAscii('2'));
+TEST(AsciiCharTest, toLower) {
+  EXPECT_EQ('c', toLowerAscii('C'));
+  EXPECT_EQ('c', toLowerAscii('c'));
+  EXPECT_EQ('2', toLowerAscii('2'));
 
-  EXPECT_EQ(u'c', ToLowerAscii(u'C'));
-  EXPECT_EQ(u'c', ToLowerAscii(u'c'));
-  EXPECT_EQ(u'2', ToLowerAscii(u'2'));
+  EXPECT_EQ(u'c', toLowerAscii(u'C'));
+  EXPECT_EQ(u'c', toLowerAscii(u'c'));
+  EXPECT_EQ(u'2', toLowerAscii(u'2'));
 }
 
-TEST(CharTest, ToUpper) {
-  EXPECT_EQ('C', ToUpperAscii('C'));
-  EXPECT_EQ('C', ToUpperAscii('c'));
-  EXPECT_EQ('2', ToUpperAscii('2'));
+TEST(AsciiCharTest, toUpper) {
+  EXPECT_EQ('C', toUpperAscii('C'));
+  EXPECT_EQ('C', toUpperAscii('c'));
+  EXPECT_EQ('2', toUpperAscii('2'));
 
-  EXPECT_EQ(u'C', ToUpperAscii(u'C'));
-  EXPECT_EQ(u'C', ToUpperAscii(u'c'));
-  EXPECT_EQ(u'2', ToUpperAscii(u'2'));
+  EXPECT_EQ(u'C', toUpperAscii(u'C'));
+  EXPECT_EQ(u'C', toUpperAscii(u'c'));
+  EXPECT_EQ(u'2', toUpperAscii(u'2'));
 }
 
 } // namespace stp

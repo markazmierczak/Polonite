@@ -23,12 +23,12 @@ void BaseApplicationPart::init() {
   #if !defined(NDEBUG) && !OS(IOS)
   // Will wait for 60 seconds for a debugger to come to attach to the process.
   if (command_line.Has("wait-for-debugger"))
-    Debugger::WaitFor(60, true);
+    Debugger::waitFor(60, true);
   #endif
 
   CpuInfo::ClassInit();
   detail::WeakReference::Flag::ClassInit();
-  Console::ClassInit();
+  Console::classInit();
   InitLogging();
   TimeTicks::ClassInit();
   Thread::ClassInit();
@@ -36,7 +36,7 @@ void BaseApplicationPart::init() {
 
 void BaseApplicationPart::fini() {
   Thread::ClassFini();
-  Console::ClassFini();
+  Console::classFini();
 }
 
 constexpr const ApplicationPartInfo BaseApplicationPart::Info_ = makeInfo();

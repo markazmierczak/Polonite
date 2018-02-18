@@ -60,7 +60,7 @@ uint64_t RandomUtil::NextUInt64(TGenerator& generator, uint64_t range) {
 
   uint64_t value;
   do {
-    value = generator.NextUInt64();
+    value = generator.nextUint64();
   } while (value > max_acceptable_value);
 
   return value % range;

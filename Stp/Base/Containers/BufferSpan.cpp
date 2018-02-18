@@ -20,8 +20,8 @@ bool TryParse(StringSpan input, MutableBufferSpan output) {
     char mc = input[i * 2 + 0];
     char lc = input[i * 2 + 1];
 
-    int msb = TryParseHexDigit(mc);
-    int lsb = TryParseHexDigit(lc);
+    int msb = tryParseHexDigit(mc);
+    int lsb = tryParseHexDigit(lc);
     if (msb < 0 || lsb < 0)
       return false;
 

@@ -31,8 +31,8 @@ TEST(GcdTest, Gcd32) {
 
   CryptoRandom rng;
   for (int i = 0; i < 100; ++i) {
-    uint32_t x = rng.NextUInt32();
-    uint32_t y = rng.NextUInt32();
+    uint32_t x = rng.nextUint32();
+    uint32_t y = rng.nextUint32();
     EXPECT_EQ(GcdRecursive32(x, y), GreatestCommonDivisor(x, y));
   }
 }
@@ -60,8 +60,8 @@ TEST(GcdTest, Gcd64) {
 
   CryptoRandom rng;
   for (int i = 0; i < 100; ++i) {
-    uint32_t x = rng.NextUInt64();
-    uint32_t y = rng.NextUInt64();
+    uint32_t x = rng.nextUint64();
+    uint32_t y = rng.nextUint64();
     EXPECT_EQ(GcdRecursive64(x, y), GreatestCommonDivisor(x, y));
   }
 }

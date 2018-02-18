@@ -109,7 +109,7 @@ int TryEncodeUtf(char32_t c, MutableStringSpan out) {
   if (out.IsEmpty())
     return 0;
   int i = 0;
-  if (IsAscii(c)) {
+  if (isAscii(c)) {
     out[i++] = static_cast<char>(c);
   } else {
     if (out.size() < 2)

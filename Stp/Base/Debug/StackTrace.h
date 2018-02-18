@@ -1,7 +1,5 @@
 // Copyright 2017 Polonite Authors. All rights reserved.
-// Copyright (c) 2012 The Chromium Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
+// Distributed under MIT license that can be found in the LICENSE file.
 
 #ifndef STP_BASE_DEBUG_STACKTRACE_H_
 #define STP_BASE_DEBUG_STACKTRACE_H_
@@ -23,9 +21,6 @@ namespace stp {
 
 BASE_EXPORT void FormatSymbol(TextWriter& out, void* pc);
 
-// A stacktrace can be helpful in debugging. For example, you can include a
-// stacktrace member in a object (probably around #ifndef NDEBUG) so that you
-// can later see where the given object was created from.
 class BASE_EXPORT StackTrace {
  public:
   // Enables stack dump to console output on exception and signals.

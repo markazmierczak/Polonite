@@ -13,14 +13,14 @@ namespace stp {
 
 static constexpr int NibbleCount = Sha1Digest::Length * 2;
 
-bool TryParse(StringSpan input, Sha1Digest& out_digest) noexcept {
+bool tryParse(StringSpan input, Sha1Digest& out_digest) noexcept {
   if (input.size() != NibbleCount)
     return false;
 
   byte_t* outd = &out_digest[0];
   for (int i = 0; i < Sha1Digest::Length; ++i) {
-    int msb = TryParseHexDigit(input[i * 2 + 0]);
-    int lsb = TryParseHexDigit(input[i * 2 + 1]);
+    int msb = tryParseHexDigit(input[i * 2 + 0]);
+    int lsb = tryParseHexDigit(input[i * 2 + 1]);
     if (lsb < 0 || msb < 0)
       return false;
     outd[i] = static_cast<byte_t>((msb << 4) | lsb);
@@ -31,14 +31,15 @@ bool TryParse(StringSpan input, Sha1Digest& out_digest) noexcept {
 static void Format(TextWriter& out, const Sha1Digest& digest, bool uppercase) {
   Array<char, NibbleCount> text;
   for (int i = 0; i < Sha1Digest::Length; ++i) {
-    text[i * 2 + 0] = NibbleToHexDigit((digest[i] >> 4) & 0xF, uppercase);
-    text[i * 2 + 1] = NibbleToHexDigit((digest[i] >> 0) & 0xF, uppercase);
+    text[i * 2 + 0] = nibbleToHexDigit((digest[i] >> 4) & 0xF, uppercase);
+    text[i * 2 + 1] = nibbleToHexDigit((digest[i] >> 0) & 0xF, uppercase);
   }
   out << text;
 }
 
-void Format(TextWriter& out, const Sha1Digest& digest) {
+TextWriter& operator<<(TextWriter& out, const Sha1Digest& digest) {
   Format(out, digest, false);
+  return out;
 }
 
 void Format(TextWriter& out, const Sha1Digest& digest, const StringSpan& opts) {
@@ -48,7 +49,7 @@ void Format(TextWriter& out, const Sha1Digest& digest, const StringSpan& opts) {
     switch (c) {
       case 'x':
       case 'X':
-        uppercase = IsUpperAscii(c);
+        uppercase = isUpperAscii(c);
         break;
 
       default:
@@ -58,7 +59,7 @@ void Format(TextWriter& out, const Sha1Digest& digest, const StringSpan& opts) {
   Format(out, digest, uppercase);
 }
 
-void Sha1Hasher::Reset() noexcept {
+void Sha1Hasher::reset() noexcept {
   a_ = 0;
   b_ = 0;
   c_ = 0;
@@ -73,9 +74,9 @@ void Sha1Hasher::Reset() noexcept {
   h_[4] = 0xC3D2E1F0;
 }
 
-void Sha1Hasher::Finish(Sha1Digest& out_digest) noexcept {
-  Pad();
-  Process();
+void Sha1Hasher::finish(Sha1Digest& out_digest) noexcept {
+  pad();
+  process();
 
   for (int t = 0; t < 5; ++t)
     h_[t] = SwapBytes(h_[t]);
@@ -83,19 +84,19 @@ void Sha1Hasher::Finish(Sha1Digest& out_digest) noexcept {
   memcpy(&out_digest[0], h_, Sha1Digest::Length);
 }
 
-void Sha1Hasher::Update(BufferSpan buffer) noexcept {
+void Sha1Hasher::update(BufferSpan buffer) noexcept {
   auto* bytes = static_cast<const byte_t*>(buffer.data());
   int nbytes = buffer.size();
 
   while (nbytes--) {
     m_[cursor_++] = *bytes++;
     if (cursor_ >= 64)
-      Process();
+      process();
     l_ += 8;
   }
 }
 
-void Sha1Hasher::Pad() noexcept {
+void Sha1Hasher::pad() noexcept {
   m_[cursor_++] = 0x80;
 
   if (cursor_ > 64-8) {
@@ -103,7 +104,7 @@ void Sha1Hasher::Pad() noexcept {
     while (cursor_ < 64)
       m_[cursor_++] = 0;
 
-    Process();
+    process();
   }
 
   while (cursor_ < 64-8)
@@ -144,7 +145,7 @@ static inline uint32_t K(uint32_t t) {
   return 0xCA62C1D6;
 }
 
-void Sha1Hasher::Process() noexcept {
+void Sha1Hasher::process() noexcept {
   // Each a...e corresponds to a section in the FIPS 180-3 algorithm.
 
   // a.
@@ -185,11 +186,11 @@ void Sha1Hasher::Process() noexcept {
   cursor_ = 0;
 }
 
-Sha1Digest ComputeSha1Digest(BufferSpan input) noexcept {
-  Sha1Digest digest(NoInit);
+Sha1Digest computeSha1Digest(BufferSpan input) noexcept {
+  Sha1Digest digest(Sha1Digest::NoInit);
   Sha1Hasher hasher;
-  hasher.Update(input);
-  hasher.Finish(digest);
+  hasher.update(input);
+  hasher.finish(digest);
   return digest;
 }
 

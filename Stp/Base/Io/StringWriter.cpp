@@ -27,7 +27,7 @@ void StringWriter::OnWriteString(StringSpan text) {
 
 void StringWriter::OnIndent(int count, char c) {
   ASSERT(count >= 0);
-  ASSERT(IsAscii(c));
+  ASSERT(isAscii(c));
   string_.AddRepeat(c, count);
 }
 

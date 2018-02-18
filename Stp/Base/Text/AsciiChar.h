@@ -12,90 +12,90 @@ namespace stp {
 namespace detail {
 
 template<typename T, TEnableIf<TIsCharacter<T>>* = nullptr>
-constexpr bool IsInRangeAscii(T c, char lo, char hi) {
+constexpr bool isInRangeAscii(T c, char lo, char hi) {
   return (char_cast<char32_t>(c) - lo) <= static_cast<char32_t>(hi - lo);
 }
 
 } // namespace detail
 
 template<typename T, TEnableIf<TIsCharacter<T>>* = nullptr>
-constexpr bool IsAscii(T c) {
+constexpr bool isAscii(T c) {
   return char_cast<char32_t>(c) <= 0x7F;
 }
 
 template<typename T, TEnableIf<TIsCharacter<T>>* = nullptr>
-constexpr bool IsUpperAscii(T c) {
-  return detail::IsInRangeAscii(c, 'A', 'Z');
+constexpr bool isUpperAscii(T c) {
+  return detail::isInRangeAscii(c, 'A', 'Z');
 }
 
 template<typename T, TEnableIf<TIsCharacter<T>>* = nullptr>
-constexpr bool IsLowerAscii(T c) {
-  return detail::IsInRangeAscii(c, 'a', 'z');
+constexpr bool isLowerAscii(T c) {
+  return detail::isInRangeAscii(c, 'a', 'z');
 }
 
 template<typename T, TEnableIf<TIsCharacter<T>>* = nullptr>
-constexpr bool IsSpaceAscii(T c) {
+constexpr bool isSpaceAscii(T c) {
   return char_cast<char32_t>(c) <= ' ' && (c == ' ' || c == '\r' || c == '\n' || c == '\t');
 }
 
 template<typename T, TEnableIf<TIsCharacter<T>>* = nullptr>
-constexpr bool IsAlphaAscii(T c) {
-  return IsLowerAscii(c) || IsUpperAscii(c);
+constexpr bool isAlphaAscii(T c) {
+  return isLowerAscii(c) || isUpperAscii(c);
 }
 
 template<typename T, TEnableIf<TIsCharacter<T>>* = nullptr>
-constexpr bool IsDigitAscii(T c) {
-  return detail::IsInRangeAscii(c, '0', '9');
+constexpr bool isDigitAscii(T c) {
+  return detail::isInRangeAscii(c, '0', '9');
 }
 
 template<typename T, TEnableIf<TIsCharacter<T>>* = nullptr>
-constexpr bool IsAlphaNumericAscii(T c) {
-  return IsAlphaAscii(c) || IsDigitAscii(c);
+constexpr bool isAlphaNumericAscii(T c) {
+  return isAlphaAscii(c) || isDigitAscii(c);
 }
 
 template<typename T, TEnableIf<TIsCharacter<T>>* = nullptr>
-constexpr bool IsPrintAscii(T c) {
+constexpr bool isPrintAscii(T c) {
   return '\x20' <= c && c <= '\x7E';
 }
 
 template<typename T, TEnableIf<TIsCharacter<T>>* = nullptr>
-constexpr T ToLowerAscii(T c) {
-  return IsUpperAscii(c) ? char_cast<T>(c + ('a' - 'A')) : c;
+constexpr T toLowerAscii(T c) {
+  return isUpperAscii(c) ? char_cast<T>(c + ('a' - 'A')) : c;
 }
 
 template<typename T, TEnableIf<TIsCharacter<T>>* = nullptr>
-constexpr T ToUpperAscii(T c) {
-  return IsLowerAscii(c) ? char_cast<T>(c + ('A' - 'a')) : c;
+constexpr T toUpperAscii(T c) {
+  return isLowerAscii(c) ? char_cast<T>(c + ('A' - 'a')) : c;
 }
 
 template<typename T, TEnableIf<TIsCharacter<T>>* = nullptr>
-constexpr bool IsHexDigit(T c) {
-  return IsDigitAscii(c) ||
-      detail::IsInRangeAscii(c, 'A', 'F') ||
-      detail::IsInRangeAscii(c, 'a', 'f');
+constexpr bool isHexDigit(T c) {
+  return isDigitAscii(c) ||
+      detail::isInRangeAscii(c, 'A', 'F') ||
+      detail::isInRangeAscii(c, 'a', 'f');
 }
 
-constexpr char32_t NibbleToHexDigitUpper(int n) {
+constexpr char32_t nibbleToHexDigitUpper(int n) {
   ASSUME(n < 16);
   return n < 10 ? (n + '0') : ((n - 10) + 'A');
 }
 
-constexpr char32_t NibbleToHexDigitLower(int n) {
+constexpr char32_t nibbleToHexDigitLower(int n) {
   ASSUME(n < 16);
   return n < 10 ? (n + '0') : ((n - 10) + 'a');
 }
 
-constexpr char32_t NibbleToHexDigit(int n, bool uppercase) {
-  return uppercase ? NibbleToHexDigitUpper(n) : NibbleToHexDigitLower(n);
+constexpr char32_t nibbleToHexDigit(int n, bool uppercase) {
+  return uppercase ? nibbleToHexDigitUpper(n) : nibbleToHexDigitLower(n);
 }
 
 template<typename T, TEnableIf<TIsCharacter<T>>* = nullptr>
-[[nodiscard]] constexpr int TryParseHexDigit(T c) {
-  if (IsDigitAscii(c))
+[[nodiscard]] constexpr int tryParseHexDigit(T c) {
+  if (isDigitAscii(c))
     return c - '0';
-  if (detail::IsInRangeAscii(c, 'A', 'F'))
+  if (detail::isInRangeAscii(c, 'A', 'F'))
     return c - 'A' + 10;
-  if (detail::IsInRangeAscii(c, 'a', 'f'))
+  if (detail::isInRangeAscii(c, 'a', 'f'))
     return c - 'a' + 10;
   return -1;
 }

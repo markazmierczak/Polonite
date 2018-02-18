@@ -29,7 +29,7 @@ TEST(BitsTest, ExtractFirstOneBit32) {
 
   CryptoRandom rng;
   for (int i = 0; i < 100; ++i) {
-    uint32_t x = rng.NextUInt32();
+    uint32_t x = rng.nextUint32();
     EXPECT_EQ(slow(x), ExtractFirstOneBit(x));
   }
 }
@@ -55,7 +55,7 @@ TEST(BitsTest, ExtractFirstOneBit64) {
 
   CryptoRandom rng;
   for (int i = 0; i < 100; ++i) {
-    uint64_t x = rng.NextUInt64();
+    uint64_t x = rng.nextUint64();
     EXPECT_EQ(slow(x), ExtractFirstOneBit(x));
   }
 }
@@ -81,7 +81,7 @@ TEST(BitsTest, ExtractLastOneBit32) {
 
   CryptoRandom rng;
   for (int i = 0; i < 100; ++i) {
-    uint32_t x = rng.NextUInt32();
+    uint32_t x = rng.nextUint32();
     EXPECT_EQ(slow(x), ExtractLastOneBit(x));
   }
 }
@@ -107,7 +107,7 @@ TEST(BitsTest, ExtractLastOneBit64) {
 
   CryptoRandom rng;
   for (int i = 0; i < 100; ++i) {
-    uint64_t x = rng.NextUInt64();
+    uint64_t x = rng.nextUint64();
     EXPECT_EQ(slow(x), ExtractLastOneBit(x));
   }
 }
@@ -133,7 +133,7 @@ TEST(BitsTest, CountBitsPopulation32) {
 
   CryptoRandom rng;
   for (int i = 0; i < 100; ++i) {
-    uint32_t x = rng.NextUInt32();
+    uint32_t x = rng.nextUint32();
     EXPECT_EQ(slow(x), CountBitsPopulation(x));
   }
 }
@@ -159,7 +159,7 @@ TEST(BitsTest, CountBitsPopulation64) {
 
   CryptoRandom rng;
   for (int i = 0; i < 100; ++i) {
-    uint64_t x = rng.NextUInt64();
+    uint64_t x = rng.nextUint64();
     EXPECT_EQ(slow(x), CountBitsPopulation(x));
   }
 }
@@ -185,7 +185,7 @@ TEST(BitsTest, GetBitsParity32) {
 
   CryptoRandom rng;
   for (int i = 0; i < 100; ++i) {
-    uint32_t x = rng.NextUInt32();
+    uint32_t x = rng.nextUint32();
     EXPECT_EQ(slow(x), GetBitsParity(x));
   }
 }
@@ -211,7 +211,7 @@ TEST(BitsTest, GetBitsParity64) {
 
   CryptoRandom rng;
   for (int i = 0; i < 100; ++i) {
-    uint64_t x = rng.NextUInt64();
+    uint64_t x = rng.nextUint64();
     EXPECT_EQ(slow(x), GetBitsParity(x));
   }
 }
@@ -238,7 +238,7 @@ TEST(BitsTest, FindFirstOneBit32) {
 
   CryptoRandom rng;
   for (int i = 0; i < 100; ++i) {
-    uint32_t x = rng.NextUInt32();
+    uint32_t x = rng.nextUint32();
     if (!x)
       continue;
     EXPECT_EQ(slow(x), FindFirstOneBit(x));
@@ -267,7 +267,7 @@ TEST(BitsTest, FindFirstOneBit64) {
 
   CryptoRandom rng;
   for (int i = 0; i < 100; ++i) {
-    uint64_t x = rng.NextUInt64();
+    uint64_t x = rng.nextUint64();
     if (!x)
       continue;
     EXPECT_EQ(slow(x), FindFirstOneBit(x));
@@ -296,7 +296,7 @@ TEST(BitsTest, FindLastOneBit32) {
 
   CryptoRandom rng;
   for (int i = 0; i < 100; ++i) {
-    uint32_t x = rng.NextUInt32();
+    uint32_t x = rng.nextUint32();
     if (!x)
       continue;
     EXPECT_EQ(slow(x), FindLastOneBit(x));
@@ -325,7 +325,7 @@ TEST(BitsTest, FindLastOneBit64) {
 
   CryptoRandom rng;
   for (int i = 0; i < 100; ++i) {
-    uint64_t x = rng.NextUInt64();
+    uint64_t x = rng.nextUint64();
     if (!x)
       continue;
     EXPECT_EQ(slow(x), FindLastOneBit(x));
@@ -354,7 +354,7 @@ TEST(BitsTest, CountTrailingZeroBits32) {
 
   CryptoRandom rng;
   for (int i = 0; i < 100; ++i) {
-    uint32_t x = rng.NextUInt32();
+    uint32_t x = rng.nextUint32();
     EXPECT_EQ(slow(x), CountTrailingZeroBits(x));
   }
 }
@@ -381,7 +381,7 @@ TEST(BitsTest, CountTrailingZeroBits64) {
 
   CryptoRandom rng;
   for (int i = 0; i < 100; ++i) {
-    uint64_t x = rng.NextUInt64();
+    uint64_t x = rng.nextUint64();
     EXPECT_EQ(slow(x), CountTrailingZeroBits(x));
   }
 }
@@ -429,7 +429,7 @@ TEST(BitsTest, CountLeadingZeroBits32) {
 
   CryptoRandom rng;
   for (int i = 0; i < 100; ++i) {
-    uint32_t x = rng.NextUInt32();
+    uint32_t x = rng.nextUint32();
     EXPECT_EQ(slow(x), CountLeadingZeroBits(x));
   }
 }
@@ -456,7 +456,7 @@ TEST(BitsTest, CountLeadingZeroBits64) {
 
   CryptoRandom rng;
   for (int i = 0; i < 100; ++i) {
-    uint64_t x = rng.NextUInt64();
+    uint64_t x = rng.nextUint64();
     EXPECT_EQ(slow(x), CountLeadingZeroBits(x));
   }
 }
@@ -537,7 +537,7 @@ TEST(BitsTest, Reverse16) {
 
   CryptoRandom rng;
   for (int i = 0; i < 100; ++i) {
-    uint16_t x = static_cast<uint16_t>(rng.NextUInt32());
+    uint16_t x = static_cast<uint16_t>(rng.nextUint32());
     EXPECT_EQ(slow(x), ReverseBits(x));
   }
 }
@@ -566,7 +566,7 @@ TEST(BitsTest, Reverse32) {
 
   CryptoRandom rng;
   for (int i = 0; i < 100; ++i) {
-    uint32_t x = rng.NextUInt32();
+    uint32_t x = rng.nextUint32();
     EXPECT_EQ(slow(x), ReverseBits(x));
   }
 }
@@ -595,7 +595,7 @@ TEST(BitsTest, Reverse64) {
 
   CryptoRandom rng;
   for (int i = 0; i < 100; ++i) {
-    uint64_t x = rng.NextUInt64();
+    uint64_t x = rng.nextUint64();
     EXPECT_EQ(slow(x), ReverseBits(x));
   }
 }

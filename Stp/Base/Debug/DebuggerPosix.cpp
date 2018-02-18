@@ -1,7 +1,5 @@
 // Copyright 2017 Polonite Authors. All rights reserved.
-// Copyright (c) 2012 The Chromium Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
+// Distributed under MIT license that can be found in the LICENSE file.
 
 #include "Base/Debug/Debugger.h"
 
@@ -42,7 +40,7 @@ namespace stp {
 
 // Based on Apple's recommended method as described in
 // http://developer.apple.com/qa/qa2004/qa1361.html
-bool Debugger::IsPresent() {
+bool Debugger::isPresent() {
   // NOTE: This code MUST be async-signal safe (it's used by in-process
   // stack dumping signal handler). NO malloc or stdio is allowed here.
   //
@@ -99,7 +97,7 @@ bool Debugger::IsPresent() {
 // handling, so we are careful not to use the heap or have side effects.
 // Another option that is common is to try to ptrace yourself, but then we
 // can't detach without forking(), and that's not so great.
-bool Debugger::IsPresent() {
+bool Debugger::isPresent() {
   // NOTE: This code MUST be async-signal safe (it's used by in-process
   // stack dumping signal handler). NO malloc or stdio is allowed here.
 
@@ -174,8 +172,8 @@ bool Debugger::IsPresent() {
 // On other POSIX architectures, except Mac OS X, we use the same logic to
 // ensure that breakpad creates a dump on crashes while it is still possible to
 // use a debugger.
-static void DebugBreak() {
-  if (!Debugger::IsPresent()) {
+static void debugBreak() {
+  if (!Debugger::isPresent()) {
     abort();
   } else {
     #if defined(DEBUG_BREAK_ASM)
@@ -183,19 +181,22 @@ static void DebugBreak() {
     #else
     volatile int go = 0;
     while (!go) {
-      ThisThread::Sleep(TimeDelta::FromMilliseconds(100));
+      ThisThread::sleep(TimeDelta::fromMilliseconds(100));
     }
     #endif
   }
 }
-# define DEBUG_BREAK() DebugBreak()
+# define DEBUG_BREAK() debugBreak()
 #elif defined(DEBUG_BREAK_ASM)
 # define DEBUG_BREAK() DEBUG_BREAK_ASM()
 #else
 # error "don't know how to debug break on this architecture/OS"
 #endif
 
-void Debugger::Break() {
+/**
+ * Break into the debugger, assumes a debugger is present.
+ */
+void Debugger::breakpoint() {
   // NOTE: This code MUST be async-signal safe (it's used by in-process
   // stack dumping signal handler). NO malloc or stdio is allowed here.
 
@@ -203,7 +204,7 @@ void Debugger::Break() {
   // same definition (e.g. any function whose sole job is to call abort()) and
   // it may confuse the crash report processing system.
   static int static_variable_to_make_this_function_unique = 0;
-  DebugAlias(&static_variable_to_make_this_function_unique);
+  debugAlias(&static_variable_to_make_this_function_unique);
 
   DEBUG_BREAK();
   #if defined(NDEBUG)

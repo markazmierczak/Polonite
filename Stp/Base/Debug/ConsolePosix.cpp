@@ -19,7 +19,7 @@ struct AnsiColor {
   bool intense;
 };
 
-bool ConsoleWriter::ShouldUseColors(const FileStream& stream) {
+bool ConsoleWriter::shouldUseColors(const FileStream& stream) {
   int fd = stream.GetNativeFile();
 
   if (!::isatty(fd))
@@ -43,7 +43,7 @@ bool ConsoleWriter::ShouldUseColors(const FileStream& stream) {
   return SupportedTerminals.Contains(term_name);
 }
 
-static AnsiColor GetAnsiColor(ConsoleColor color) {
+static AnsiColor getAnsiColor(ConsoleColor color) {
   AnsiColor ansi_color;
 
   const ConsoleColor FirstIntense = ConsoleColor::FirstIntense;
@@ -59,25 +59,25 @@ static AnsiColor GetAnsiColor(ConsoleColor color) {
   return ansi_color;
 }
 
-void ConsoleWriter::SetForegroundColor(ConsoleColor color) {
+void ConsoleWriter::setForegroundColor(ConsoleColor color) {
   if (!uses_colors_)
     return;
   // TODO no need to flush early, just set destinations temporarily
   Flush();
 
-  AnsiColor ansi = GetAnsiColor(color);
+  AnsiColor ansi = getAnsiColor(color);
   byte_t sequence[] = "\033[;??m";
   sequence[3] = ansi.intense ? '9' : '3';
   sequence[4] = ansi.code;
   std_->Write(BufferSpan(sequence));
 }
 
-void ConsoleWriter::SetBackgroundColor(ConsoleColor color) {
+void ConsoleWriter::setBackgroundColor(ConsoleColor color) {
   if (!uses_colors_)
     return;
   Flush();
 
-  AnsiColor ansi = GetAnsiColor(color);
+  AnsiColor ansi = getAnsiColor(color);
   if (ansi.intense) {
     byte_t sequence[] = "\033[;10?m";
     sequence[5] = ansi.code;
@@ -89,14 +89,14 @@ void ConsoleWriter::SetBackgroundColor(ConsoleColor color) {
   }
 }
 
-void ConsoleWriter::SetColors(ConsoleColor foreground, ConsoleColor background) {
-  SetForegroundColor(foreground);
-  SetBackgroundColor(background);
+void ConsoleWriter::setColors(ConsoleColor foreground, ConsoleColor background) {
+  setForegroundColor(foreground);
+  setBackgroundColor(background);
 }
 
-void ConsoleWriter::FetchDefaultColors() {}
+void ConsoleWriter::fetchDefaultColors() {}
 
-void ConsoleWriter::ResetColors() {
+void ConsoleWriter::resetColors() {
   if (!uses_colors_)
     return;
   Flush();
@@ -104,7 +104,7 @@ void ConsoleWriter::ResetColors() {
   std_->Write(BufferSpan(sequence));
 }
 
-FileStream* ConsoleWriter::OpenStdStream(StdDescriptor std_descriptor) {
+FileStream* ConsoleWriter::openStdStream(StdDescriptor std_descriptor) {
   int fd = std_descriptor;
   // Check if descriptor is valid.
   if (::fcntl(fd, F_GETFD) == -1)
@@ -115,7 +115,7 @@ FileStream* ConsoleWriter::OpenStdStream(StdDescriptor std_descriptor) {
   return stream;
 }
 
-FileStream* Console::OpenLogFile(const FilePath& path) {
+FileStream* Console::openLogFile(const FilePath& path) {
   auto stream = OwnPtr<FileStream>::New();
   if (!IsOk(stream->TryCreate(path, FileMode::Create, FileAccess::WriteOnly)))
     return nullptr;

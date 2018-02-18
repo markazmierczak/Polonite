@@ -33,21 +33,21 @@ class ConsoleWriter : public TextWriter {
   ConsoleWriter(StdDescriptor std_descriptor, int active_destinations);
   ~ConsoleWriter() override;
 
-  void SetBackgroundColor(ConsoleColor color);
-  void SetForegroundColor(ConsoleColor color);
-  void SetColors(ConsoleColor foreground, ConsoleColor background);
-  void ResetColors();
+  void setBackgroundColor(ConsoleColor color);
+  void setForegroundColor(ConsoleColor color);
+  void setColors(ConsoleColor foreground, ConsoleColor background);
+  void resetColors();
 
-  ALWAYS_INLINE void SetLogLevel(LogLevel level) { log_level_ = level; }
+  void setLogLevel(LogLevel level) { log_level_ = level; }
 
   TextEncoding GetEncoding() const override;
-  bool IsConsoleWriter() const override;
+  bool isConsoleWriter() const override;
 
  private:
-  void PrintBuffer(int ready_size);
-  void PrintToSystemDebugLog(StringSpan text);
+  void printBuffer(int ready_size);
+  void printToSystemDebugLog(StringSpan text);
 
-  void FetchDefaultColors();
+  void fetchDefaultColors();
 
   void OnWriteString(StringSpan text) override;
   void OnFlush() override;
@@ -62,35 +62,35 @@ class ConsoleWriter : public TextWriter {
   #if OS(WIN)
   unsigned std_attributes_ = 0;
   unsigned default_std_attributes_ = 0;
-  void UpdateAttributes(unsigned attributes);
+  void updateAttributes(unsigned attributes);
   #endif
 
-  static bool ShouldUseColors(const FileStream& stream);
+  static bool shouldUseColors(const FileStream& stream);
 
   // The caller becomes owner of the returned stream.
-  static FileStream* OpenStdStream(StdDescriptor descriptor);
+  static FileStream* openStdStream(StdDescriptor descriptor);
 };
 
 class BASE_EXPORT Console {
   STATIC_ONLY(Console);
  public:
-  static ConsoleWriter& Out() { return *g_out_; }
-  static ConsoleWriter& Err() { return *g_err_; }
+  static ConsoleWriter& out() { return *g_out_; }
+  static ConsoleWriter& err() { return *g_err_; }
 
-  static void ClassInit();
-  static void ClassFini();
+  static void classInit();
+  static void classFini();
 
  private:
   static ConsoleWriter* g_out_;
   static ConsoleWriter* g_err_;
 
-  static FileStream* OpenLogFile(const FilePath& path);
+  static FileStream* openLogFile(const FilePath& path);
 };
 
 #if OS(WIN)
 // Output multi-process printf to the cmd.exe console.
 // This is not thread-safe: only call from main thread.
-BASE_EXPORT void RouteStdioToConsole(bool create_console_if_not_found);
+BASE_EXPORT void routeStdioToConsole(bool create_console_if_not_found);
 #endif
 
 } // namespace stp

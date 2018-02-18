@@ -27,13 +27,13 @@ static FileStream* g_log_file = nullptr;
 ConsoleWriter::ConsoleWriter(StdDescriptor std_descriptor, int active_destinations)
     : active_destinations_(active_destinations) {
   if (active_destinations_ & StandardOutputDestination) {
-    std_ = OpenStdStream(std_descriptor);
+    std_ = openStdStream(std_descriptor);
     if (!std_) {
       active_destinations_ &= ~StandardOutputDestination;
     } else {
-      uses_colors_ = ShouldUseColors(*std_);
+      uses_colors_ = shouldUseColors(*std_);
       if (uses_colors_)
-        FetchDefaultColors();
+        fetchDefaultColors();
     }
   }
 }
@@ -46,24 +46,24 @@ void ConsoleWriter::OnFlush() {
   // ConsoleWriter buffers output until newline is written.
   AutoLock auto_lock(&lock_);
   if (!buffer_.IsEmpty())
-    PrintBuffer(buffer_.size());
+    printBuffer(buffer_.size());
 }
 
-void ConsoleWriter::PrintBuffer(int ready_size) {
+void ConsoleWriter::printBuffer(int ready_size) {
   *this << buffer_.GetSlice(0, ready_size);
   buffer_.RemovePrefix(ready_size);
 }
 
 #if OS(LINUX)
-void ConsoleWriter::PrintToSystemDebugLog(StringSpan text) {
+void ConsoleWriter::printToSystemDebugLog(StringSpan text) {
 }
 #endif
 
-bool ConsoleWriter::IsConsoleWriter() const {
+bool ConsoleWriter::isConsoleWriter() const {
   return true;
 }
 
-static FilePath ResolveLogFilePath(const String* option) {
+static FilePath resolveLogFilePath(const String* option) {
   String basename;
   if (!option || option->IsEmpty())
     basename = "debug.log";
@@ -76,7 +76,7 @@ static FilePath ResolveLogFilePath(const String* option) {
   return path;
 }
 
-static int DetermineDestinations(const CommandLine& command_line) {
+static int determineDestinations(const CommandLine& command_line) {
   #if defined(NDEBUG)
   bool enable_logging = false;
   StringSpan InvertLoggingSwitch = "enable-logging";
@@ -85,8 +85,9 @@ static int DetermineDestinations(const CommandLine& command_line) {
   StringSpan InvertLoggingSwitch = "disable-logging";
   #endif
 
-  if (command_line.Has(InvertLoggingSwitch))
+  if (command_line.Has(InvertLoggingSwitch)) {
     enable_logging = !enable_logging;
+  }
 
   #if defined(NDEBUG)
   int DefaultDestinations = FileDestination;
@@ -107,20 +108,20 @@ static int DetermineDestinations(const CommandLine& command_line) {
   return destinations;
 }
 
-void Console::ClassInit() {
+void Console::classInit() {
   auto& command_line = CommandLine::ForCurrentProcess();
-  int active_destinations = DetermineDestinations(command_line);
+  int active_destinations = determineDestinations(command_line);
 
   // Initialize std streams first. One of them might be closed and
   // opening LogFile may assign std-err for example.
   if (active_destinations & FileDestination) {
     const String* option = command_line.TryGet(LogToFileSwitch);
-    FilePath path = ResolveLogFilePath(option);
+    FilePath path = resolveLogFilePath(option);
 
     // Delete old log file.
     File::Delete(path);
 
-    g_log_file = OpenLogFile(path);
+    g_log_file = openLogFile(path);
     if (!g_log_file)
       active_destinations &= ~FileDestination;
   }
@@ -128,7 +129,7 @@ void Console::ClassInit() {
   g_err_ = new ConsoleWriter(ConsoleWriter::StdErr, active_destinations);
 }
 
-void Console::ClassFini() {
+void Console::classFini() {
   delete g_out_;
   delete g_err_;
   delete g_log_file;
@@ -148,7 +149,7 @@ void ConsoleWriter::OnWriteString(StringSpan text) {
     std_->Write(data);
   if (active_destinations_ & SystemDebugLogDestination) {
     if (log_level_ != LogLevelUSER)
-      PrintToSystemDebugLog(text);
+      printToSystemDebugLog(text);
   }
   if (active_destinations_ & FileDestination)
     g_log_file->Write(data);

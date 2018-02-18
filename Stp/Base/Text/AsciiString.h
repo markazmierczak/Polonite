@@ -57,13 +57,13 @@ BASE_EXPORT String ToUpperAscii(StringSpan src) WARN_UNUSED_RESULT;
 
 template<typename TString>
 inline void TrimLeadingWhitespaceAscii(TString& str) {
-  while (!str.IsEmpty() && IsSpaceAscii(str.GetFirst()))
+  while (!str.IsEmpty() && isSpaceAscii(str.GetFirst()))
     str.RemovePrefix(1);
 }
 
 template<typename TString>
 inline void TrimTrailingWhitespaceAscii(TString& str) {
-  while (!str.IsEmpty() && IsSpaceAscii(str.GetLast()))
+  while (!str.IsEmpty() && isSpaceAscii(str.GetLast()))
     str.RemoveSuffix(1);
 }
 

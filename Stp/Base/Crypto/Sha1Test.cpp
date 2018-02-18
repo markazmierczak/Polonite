@@ -1,7 +1,5 @@
 // Copyright 2017 Polonite Authors. All rights reserved.
-// Copyright (c) 2011 The Chromium Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
+// Distributed under MIT license that can be found in the LICENSE file.
 
 #include "Base/Crypto/Sha1.h"
 
@@ -22,7 +20,7 @@ TEST(Sha1Test, OneBlockMessage) {
     0x9C, 0xD0, 0xD8, 0x9D
   });
 
-  auto output = ComputeSha1Digest(input);
+  auto output = computeSha1Digest(input);
   for (int i = 0; i < Sha1Digest::Length; i++)
     EXPECT_EQ(expected, output);
 }
@@ -39,7 +37,7 @@ TEST(Sha1Test, MultiBlockMessage) {
     0xE5, 0x46, 0x70, 0xF1
   });
 
-  auto output = ComputeSha1Digest(input);
+  auto output = computeSha1Digest(input);
   for (int i = 0; i < Sha1Digest::Length; i++)
     EXPECT_EQ(expected, output);
 }
@@ -59,7 +57,7 @@ TEST(Sha1Test, LongMessage) {
     0x65, 0x34, 0x01, 0x6F
   });
 
-  auto output = ComputeSha1Digest(input);
+  auto output = computeSha1Digest(input);
   for (int i = 0; i < Sha1Digest::Length; i++)
     EXPECT_EQ(expected, output);
 }

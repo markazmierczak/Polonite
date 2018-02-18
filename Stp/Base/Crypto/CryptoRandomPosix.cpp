@@ -1,7 +1,5 @@
 // Copyright 2017 Polonite Authors. All rights reserved.
-// Copyright (c) 2012 The Chromium Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
+// Distributed under MIT license that can be found in the LICENSE file.
 
 #include "Base/Crypto/CryptoRandom.h"
 
@@ -22,7 +20,7 @@ class URandom {
         FileMode::OpenExisting, FileAccess::ReadOnly);
   }
 
-  void Read(MutableBufferSpan buffer) { stream_.Read(buffer); }
+  void read(MutableBufferSpan buffer) { stream_.Read(buffer); }
 
  private:
   FileStream stream_;
@@ -32,8 +30,8 @@ LazyInstance<URandom>::LeakAtExit g_urandom_fd_instance = LAZY_INSTANCE_INITIALI
 
 } // namespace
 
-void CryptoRandom::Fill(MutableBufferSpan buffer) noexcept {
-  g_urandom_fd_instance->Read(buffer);
+void CryptoRandom::generate(MutableBufferSpan buffer) noexcept {
+  g_urandom_fd_instance->read(buffer);
 }
 
 } // namespace stp
