@@ -47,11 +47,11 @@ class List {
   bool isEmpty() const { return size_ == 0; }
   void clear() { truncate(0); }
 
-  void EnsureCapacity(int request);
-  void ShrinkCapacity(int request);
-  void ShrinkToFit() { ShrinkCapacity(size_); }
+  void ensureCapacity(int request);
+  void shrinkCapacity(int request);
+  void shrinkToFit() { shrinkCapacity(size_); }
 
-  void WillGrow(int n);
+  void willGrow(int n);
 
   const T& operator[](int at) const;
   T& operator[](int at);
@@ -66,23 +66,23 @@ class List {
   MutableSpanType getSlice(int at) { return toSpan().getSlice(at); }
   MutableSpanType getSlice(int at, int n) { return toSpan().getSlice(at, n); }
 
-  int Add(T item);
-  T* AppendUninitialized(int n = 1);
-  int AppendInitialized(int n = 1);
+  int add(T item);
+  T* appendUninitialized(int n = 1);
+  int appendInitialized(int n = 1);
   int AddRepeat(T item, int n);
-  int Append(SpanType other);
+  int append(SpanType other);
 
   void Insert(int at, T item);
-  T* InsertUninitialized(int at, int n = 1);
-  void InsertInitialized(int at, int n = 1);
-  void InsertRange(int at, SpanType src);
+  T* insertUninitialized(int at, int n = 1);
+  void insertInitialized(int at, int n = 1);
+  void insertRange(int at, SpanType src);
 
   void RemoveLast();
-  void RemoveAt(int at) { RemoveRange(at, 1); }
-  void RemoveRange(int at, int n);
+  void RemoveAt(int at) { removeRange(at, 1); }
+  void removeRange(int at, int n);
 
   void truncate(int at);
-  void removePrefix(int n) { RemoveRange(0, n); }
+  void removePrefix(int n) { removeRange(0, n); }
   void removeSuffix(int n) { truncate(size_ - n); }
 
   template<typename U>
@@ -92,13 +92,13 @@ class List {
   template<typename U>
   bool contains(const U& item) const { return toSpan().contains(item); }
 
-  static List AdoptMemory(T* ptr, int size, int capacity);
-  T* ReleaseMemory();
+  static List adoptMemory(T* ptr, int size, int capacity);
+  T* releaseMemory();
 
-  bool IsSourceOf(SpanType span) const { return IsSourceOf(span.data()); }
+  bool isSourceOf(SpanType span) const { return isSourceOf(span.data()); }
 
-  List& operator+=(T item) { Add(move(item)); return *this; }
-  List& operator+=(SpanType range) { Append(range); return *this; }
+  List& operator+=(T item) { add(move(item)); return *this; }
+  List& operator+=(SpanType range) { append(range); return *this; }
 
   friend void swap(List& l, List& r) noexcept {
     swap(l.data_, r.data_);
@@ -135,26 +135,26 @@ class List {
     }
   }
 
-  void SetSizeNoGrow(int new_size);
+  void setSizeNoGrow(int new_size);
 
   void AssignExternal(SpanType src);
   void AssignInternal(SpanType src);
 
-  bool IsSourceOf(const T* ptr) const { return data_ <= ptr && ptr < data_ + size_; }
+  bool isSourceOf(const T* ptr) const { return data_ <= ptr && ptr < data_ + size_; }
 
   template<typename TAction>
-  int AddMany(int n, TAction&& action);
+  int addMany(int n, TAction&& action);
   template<typename TAction>
-  void InsertMany(int at, int n, TAction&& action);
+  void insertMany(int at, int n, TAction&& action);
 
-  void ResizeStorage(int new_capacity);
+  void resizeStorage(int new_capacity);
 
-  void CheckGrow(int n) {
+  void checkGrow(int n) {
     if (MaxCapacity_ - size_ < n)
       throw LengthException();
   }
 
-  int RecommendCapacity(int request) const {
+  int recommendCapacity(int request) const {
     return (capacity_ < MaxCapacity_ / 2) ? max(request, capacity_ << 1) : MaxCapacity_;
   }
 };
@@ -211,7 +211,7 @@ inline List<T>& List<T>::operator=(InitializerList<T> ilist) {
 
 template<typename T>
 inline List<T>& List<T>::operator=(SpanType span) {
-  if (TIsTriviallyDestructible<T> || !IsSourceOf(span)) {
+  if (TIsTriviallyDestructible<T> || !isSourceOf(span)) {
     AssignExternal(span);
   } else {
     AssignInternal(span);
@@ -220,7 +220,7 @@ inline List<T>& List<T>::operator=(SpanType span) {
 }
 
 template<typename T>
-inline void List<T>::ResizeStorage(int new_capacity) {
+inline void List<T>::resizeStorage(int new_capacity) {
   ASSERT(new_capacity >= 0 && new_capacity != capacity_);
 
   if (size_ && TIsTriviallyRelocatable<T>) {
@@ -238,22 +238,22 @@ inline void List<T>::ResizeStorage(int new_capacity) {
 }
 
 template<typename T>
-inline void List<T>::EnsureCapacity(int request) {
+inline void List<T>::ensureCapacity(int request) {
   ASSERT(request >= size_);
   if (request > capacity_) {
     if (request > MaxCapacity_)
       throw LengthException();
-    ResizeStorage(request);
+    resizeStorage(request);
   }
 }
 
 template<typename T>
-inline void List<T>::ShrinkCapacity(int request) {
+inline void List<T>::shrinkCapacity(int request) {
   ASSERT(size_ <= request);
   if (request >= capacity_)
     return;
   if (request) {
-    ResizeStorage(request);
+    resizeStorage(request);
   } else {
     capacity_ = 0;
     freeMemory(exchange(data_, nullptr));
@@ -261,11 +261,11 @@ inline void List<T>::ShrinkCapacity(int request) {
 }
 
 template<typename T>
-void List<T>::WillGrow(int n) {
-  CheckGrow(n);
+void List<T>::willGrow(int n) {
+  checkGrow(n);
   int request = size_ + n;
   if (UNLIKELY(request > capacity_))
-    ResizeStorage(RecommendCapacity(request));
+    resizeStorage(recommendCapacity(request));
 }
 
 template<typename T>
@@ -284,62 +284,62 @@ template<typename T>
 inline void List<T>::truncate(int at) {
   ASSERT(0 <= at && at <= size_);
   if (TIsTriviallyDestructible<T>) {
-    SetSizeNoGrow(at);
+    setSizeNoGrow(at);
   } else {
     int old_size = size_;
     if (old_size != at) {
       destroyObjects(data_ + at, old_size - at);
-      SetSizeNoGrow(at);
+      setSizeNoGrow(at);
     }
   }
 }
 
 template<typename T>
-inline int List<T>::Add(T item) {
+inline int List<T>::add(T item) {
   int old_size = size_;
   if (UNLIKELY(capacity_ == old_size))
-    WillGrow(1);
+    willGrow(1);
   new(data_ + old_size) T(move(item));
-  SetSizeNoGrow(old_size + 1);
+  setSizeNoGrow(old_size + 1);
   return old_size;
 }
 
 template<typename T>
-inline T* List<T>::AppendUninitialized(int n) {
+inline T* List<T>::appendUninitialized(int n) {
   ASSERT(n >= 0);
   int old_size = size_;
   if (UNLIKELY(capacity_ - old_size < n))
-    WillGrow(n);
-  SetSizeNoGrow(old_size + n);
+    willGrow(n);
+  setSizeNoGrow(old_size + n);
   return data_ + old_size;
 }
 
 template<typename T>
-inline int List<T>::AppendInitialized(int n) {
-  return AddMany(n, [](T* dst, int count) { uninitializedInit(dst, count); });
+inline int List<T>::appendInitialized(int n) {
+  return addMany(n, [](T* dst, int count) { uninitializedInit(dst, count); });
 }
 
 template<typename T>
 inline int List<T>::AddRepeat(T item, int n) {
-  return AddMany(n, [&item](T* dst, int count) { uninitializedFill(dst, count, item); });
+  return addMany(n, [&item](T* dst, int count) { uninitializedFill(dst, count, item); });
 }
 
 template<typename T>
-inline int List<T>::Append(SpanType src) {
-  ASSERT(!IsSourceOf(src));
+inline int List<T>::append(SpanType src) {
+  ASSERT(!isSourceOf(src));
   const T* src_d = src.data();
-  return AddMany(src.size(), [src_d](T* dst, int count) { uninitializedCopy(dst, src_d, count); });
+  return addMany(src.size(), [src_d](T* dst, int count) { uninitializedCopy(dst, src_d, count); });
 }
 
 template<typename T>
 template<typename TAction>
-inline int List<T>::AddMany(int n, TAction&& action) {
+inline int List<T>::addMany(int n, TAction&& action) {
   ASSERT(n >= 0);
   int old_size = size_;
   if (UNLIKELY(capacity_ - old_size < n))
-    WillGrow(n);
+    willGrow(n);
   action(data_ + old_size, n);
-  SetSizeNoGrow(old_size + n);
+  setSizeNoGrow(old_size + n);
   return old_size;
 }
 
@@ -348,11 +348,11 @@ inline void List<T>::RemoveLast() {
   ASSERT(!isEmpty());
   int new_size = size_ - 1;
   destroyObject(data_ + new_size);
-  SetSizeNoGrow(new_size);
+  setSizeNoGrow(new_size);
 }
 
 template<typename T>
-inline void List<T>::RemoveRange(int at, int n) {
+inline void List<T>::removeRange(int at, int n) {
   ASSERT(0 <= at && at <= size_);
   ASSERT(0 <= n && n <= size_ - at);
   destroyObjects(data_ + at, n);
@@ -375,14 +375,14 @@ inline void List<T>::Insert(int at, T item) {
       uninitializedRelocate(old_d + at, old_d + at + 1, old_size - at);
       throw;
     }
-    SetSizeNoGrow(old_size + 1);
+    setSizeNoGrow(old_size + 1);
   } else {
-    CheckGrow(1);
+    checkGrow(1);
 
     int old_capacity = capacity_;
 
     int new_size = old_size + 1;
-    int new_capacity = RecommendCapacity(new_size);
+    int new_capacity = recommendCapacity(new_size);
     T* new_d = (T*)allocateMemory((new_capacity + CapacityIncrement_) * isizeof(T));
 
     new(new_d + at) T(move(item));
@@ -398,32 +398,32 @@ inline void List<T>::Insert(int at, T item) {
 }
 
 template<typename T>
-inline T* List<T>::InsertUninitialized(int at, int n) {
+inline T* List<T>::insertUninitialized(int at, int n) {
   ASSERT(0 <= at && at <= size_);
   ASSERT(n >= 0);
-  InsertMany(at, n, [](T* dst) {});
+  insertMany(at, n, [](T* dst) {});
   return data_ + at;
 }
 
 template<typename T>
-inline void List<T>::InsertInitialized(int at, int n) {
+inline void List<T>::insertInitialized(int at, int n) {
   ASSERT(0 <= at && at <= size_);
   ASSERT(n >= 0);
-  InsertMany(at, n, [n](T* dst) { uninitializedInit(dst, n); });
+  insertMany(at, n, [n](T* dst) { uninitializedInit(dst, n); });
 }
 
 template<typename T>
-inline void List<T>::InsertRange(int at, SpanType src) {
+inline void List<T>::insertRange(int at, SpanType src) {
   ASSERT(0 <= at && at <= size_);
-  ASSERT(!IsSourceOf(src));
-  InsertMany(at, src.size(), [src](T* dst) {
+  ASSERT(!isSourceOf(src));
+  insertMany(at, src.size(), [src](T* dst) {
     uninitializedCopy(dst, src.data(), src.size());
   });
 }
 
 template<typename T>
 template<typename TAction>
-inline void List<T>::InsertMany(int at, int n, TAction&& action) {
+inline void List<T>::insertMany(int at, int n, TAction&& action) {
   ASSERT(0 <= at && at <= size_);
   ASSERT(n >= 0);
 
@@ -438,14 +438,14 @@ inline void List<T>::InsertMany(int at, int n, TAction&& action) {
       uninitializedRelocate(old_d + at, old_d + at + n, old_size - at);
       throw;
     }
-    SetSizeNoGrow(old_size + n);
+    setSizeNoGrow(old_size + n);
   } else {
-    CheckGrow(n);
+    checkGrow(n);
 
     int old_capacity = capacity_;
 
     int new_size = old_size + n;
-    int new_capacity = RecommendCapacity(new_size);
+    int new_capacity = recommendCapacity(new_size);
     T* new_d = (T*)allocateMemory((new_capacity + CapacityIncrement_) * isizeof(T));
 
     try {
@@ -466,7 +466,7 @@ inline void List<T>::InsertMany(int at, int n, TAction&& action) {
 }
 
 template<typename T>
-inline List<T> List<T>::AdoptMemory(T* ptr, int size, int capacity) {
+inline List<T> List<T>::adoptMemory(T* ptr, int size, int capacity) {
   ASSERT(0 <= size && size <= capacity);
   List result;
   result.data_ = ptr;
@@ -476,14 +476,14 @@ inline List<T> List<T>::AdoptMemory(T* ptr, int size, int capacity) {
 }
 
 template<typename T>
-inline T* List<T>::ReleaseMemory() {
+inline T* List<T>::releaseMemory() {
   size_ = 0;
   capacity_ = 0;
   return exchange(data_, nullptr);
 }
 
 template<typename T>
-inline void List<T>::SetSizeNoGrow(int new_size) {
+inline void List<T>::setSizeNoGrow(int new_size) {
   ASSERT(0 <= new_size && new_size <= capacity_);
   size_ = new_size;
 }
@@ -494,10 +494,10 @@ inline void List<T>::AssignExternal(SpanType src) {
     if constexpr (TIsTriviallyDestructible<T>) {
       clear();
     }
-    EnsureCapacity(src.size());
+    ensureCapacity(src.size());
     copyObjectsNonOverlapping(data_, src.data(), size_);
     uninitializedCopy(data_ + size_, src.data() + size_, src.size() - size_);
-    SetSizeNoGrow(src.size());
+    setSizeNoGrow(src.size());
   } else {
     truncate(src.size());
     copyObjectsNonOverlapping(data_, src.data(), src.size());
@@ -508,7 +508,7 @@ template<typename T>
 inline void List<T>::AssignInternal(SpanType src) {
   int start = src.data() - data_;
   truncate(start + src.size());
-  RemoveRange(0, start);
+  removeRange(0, start);
 }
 
 } // namespace stp

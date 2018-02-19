@@ -44,7 +44,7 @@ Buffer File::ReadAll(const FilePath& path) {
   int64_t length = file.GetLength();
 
   Buffer output;
-  void* dst = output.AppendUninitialized(length);
+  void* dst = output.appendUninitialized(length);
 
   file.Read(MutableBufferSpan(dst, length));
   file.Close();
@@ -67,7 +67,7 @@ String File::ReadAllText(const FilePath& path, StringSpan codec) {
     return nullopt;
 
   String buffer;
-  char* dst = buffer.AppendUninitialized(size);
+  char* dst = buffer.appendUninitialized(size);
   if (file->Read(dst, size) != size)
     return nullopt;
 

@@ -38,7 +38,7 @@ TEST(JsonValueTest, Basic) {
   JsonObject new_bookmark;
   new_bookmark.SetWithPath("name", "Froogle");
   new_bookmark.SetWithPath("url", "http://froogle.com");
-  toolbar_bookmarks->Add(move(new_bookmark));
+  toolbar_bookmarks->add(move(new_bookmark));
 
   JsonArray* bookmark_array = settings.TryGetArrayWithPath("global.toolbar.bookmarks");
   ASSERT_TRUE(bookmark_array);

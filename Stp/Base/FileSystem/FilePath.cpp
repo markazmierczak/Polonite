@@ -21,12 +21,12 @@ namespace stp {
  * pathnames on different platforms.
  */
 
-void FilePath::EnsureCapacity(int request) {
-  chars_.EnsureCapacity(request);
+void FilePath::ensureCapacity(int request) {
+  chars_.ensureCapacity(request);
 }
 
-void FilePath::ShrinkToFit() {
-  chars_.ShrinkToFit();
+void FilePath::shrinkToFit() {
+  chars_.shrinkToFit();
 }
 
 bool FilePath::CdUp() {
@@ -73,8 +73,8 @@ bool FilePath::ReplaceExtension(StringSpan extension) {
   }
   if (!extension.isEmpty()) {
     if (extension[0] != '.')
-      chars_.Add('.');
-    chars_.Append(extension);
+      chars_.add('.');
+    chars_.append(extension);
   }
   return true;
 }
@@ -100,14 +100,14 @@ FilePath FilePath::FromString(StringSpan string) {
 
 void FilePath::AddComponent(FilePathSpan component) {
   ASSERT(!component.IsAbsolute());
-  ASSERT(!chars_.IsSourceOf(component.chars()));
+  ASSERT(!chars_.isSourceOf(component.chars()));
 
   bool need_separator = false;
   if (!isEmpty())
     need_separator = !IsFilePathSeparator(chars_.getLast());
 
   int length = component.size();
-  CharType* dst = chars_.AppendUninitialized(length + (need_separator ? 1 : 0));
+  CharType* dst = chars_.appendUninitialized(length + (need_separator ? 1 : 0));
 
   if (need_separator)
     *dst++ = FilePathSeparator;
@@ -123,7 +123,7 @@ void FilePath::AddComponentAscii(StringSpan component) {
 
   int length = component.size();
   auto* src = component.data();
-  CharType* dst = chars_.AppendUninitialized(length + (need_separator ? 1 : 0));
+  CharType* dst = chars_.appendUninitialized(length + (need_separator ? 1 : 0));
 
   if (need_separator)
     *dst++ = FilePathSeparator;
@@ -136,7 +136,7 @@ namespace detail {
 FilePath CombineFilePaths(Span<FilePathSpan> components) {
   int n = components.size();
   FilePath result;
-  result.EnsureCapacity(accumulateSpan(components, n, [](int init, const FilePathSpan& component) {
+  result.ensureCapacity(accumulateSpan(components, n, [](int init, const FilePathSpan& component) {
     return init + component.size();
   }));
   for (int i = 0; i < n; ++i)

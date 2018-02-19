@@ -27,17 +27,17 @@ class Stack {
   const T& Peek() const { return list_.getLast(); }
   T& Peek() { return list_.getLast(); }
 
-  void Push(T item) { list_.Add(move(item)); }
+  void Push(T item) { list_.add(move(item)); }
   T Pop();
 
   const T* TryPeek() const { return isEmpty() ? nullptr : &Peek(); }
   T* TryPeek() { return isEmpty() ? nullptr : &Peek(); }
 
-  void EnsureCapacity(int request) { list_.EnsureCapacity(request); }
-  void WillGrow(int n) { list_.WillGrow(n); }
+  void ensureCapacity(int request) { list_.ensureCapacity(request); }
+  void willGrow(int n) { list_.willGrow(n); }
 
-  void ShrinkCapacity(int request) { list_.ShrinkCapacity(request); }
-  void ShrinkToFit() { list_.ShrinkToFit(); }
+  void shrinkCapacity(int request) { list_.shrinkCapacity(request); }
+  void shrinkToFit() { list_.shrinkToFit(); }
 
   operator Span<T>() const { return list_; }
   operator MutableSpan<T>() { return list_; }

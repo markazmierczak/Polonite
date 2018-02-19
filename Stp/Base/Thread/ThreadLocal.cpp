@@ -12,7 +12,7 @@ static BasicLock g_tls_lock = BASIC_LOCK_INITIALIZER;
 static BasicThreadLocal g_tls_root = { 0, nullptr, &g_tls_root, &g_tls_root };
 static int g_with_dtor_count = 0;
 
-void BasicThreadLocal::AppendToList(BasicThreadLocal* list) {
+void BasicThreadLocal::appendToList(BasicThreadLocal* list) {
   this->next_ = list;
   this->prev_ = list->prev_;
   list->prev_->next_ = this;
@@ -35,14 +35,14 @@ void BasicThreadLocal::OnThreadExit() {
 
   {
     AutoLock guard(&g_tls_lock);
-    callbacks.EnsureCapacity(g_with_dtor_count);
+    callbacks.ensureCapacity(g_with_dtor_count);
 
     // Iterate the TLS list backwards to destroy objects in reversed order
     // of registration.
     BasicThreadLocal* it = g_tls_root.prev_;
     for (; it != &g_tls_root; it = it->prev_) {
       if (it->dtor_)
-        callbacks.Append(Callback { it->dtor_, it->Get(); });
+        callbacks.append(Callback { it->dtor_, it->Get(); });
     }
   }
 
@@ -58,7 +58,7 @@ void BasicThreadLocal::Init(void (*dtor)(void*)) {
   slot_ = NativeThreadLocal::Allocate(dtor_);
   #if OS(WIN)
   AutoLock guard(&g_tls_lock);
-  AppendToList(&g_tls_root);
+  appendToList(&g_tls_root);
   if (dtor)
     ++g_with_dtor_count;
   #endif

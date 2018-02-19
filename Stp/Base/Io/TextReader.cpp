@@ -43,7 +43,7 @@ bool TextReader::ReadLineAscii(String& out) {
         ReadAscii();
       return true;
     }
-    out.Append(static_cast<char>(ch));
+    out.append(static_cast<char>(ch));
   }
   return !out.isEmpty();
 }
@@ -62,7 +62,7 @@ bool TextReader::ReadLine(String& out) {
       return true;
     }
     int encoded_length = Utf8::EncodedLength(ch);
-    char* encoded_ch = out.AppendUninitialized(encoded_length);
+    char* encoded_ch = out.appendUninitialized(encoded_length);
     int result = Utf8::Encode(encoded_ch, ch);
     ASSERT_UNUSED(result == encoded_length, result);
   }

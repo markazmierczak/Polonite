@@ -69,7 +69,7 @@ class BASE_EXPORT CommandLine {
   void SetProgramName(StringSpan name) { program_name_ = name; }
   const String& GetProgramName() const { return program_name_; }
 
-  void Add(String positional);
+  void add(String positional);
 
   void Set(StringSpan switch_name, StringSpan value);
   void Set(StringSpan switch_name, String&& value);

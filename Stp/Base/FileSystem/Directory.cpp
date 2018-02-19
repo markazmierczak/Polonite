@@ -46,7 +46,7 @@ SystemErrorCode Directory::TryCreatePath(const FilePath& path) {
 
   FilePathSpan subpath = path;
   do {
-    subpaths.Add(subpath.size());
+    subpaths.add(subpath.size());
   } while (subpath.CdUp());
 
   int path_length = path.size();
@@ -60,7 +60,7 @@ SystemErrorCode Directory::TryCreatePath(const FilePath& path) {
 
     error_code = TryCreate(copy);
 
-    *copy.chars().AppendUninitialized(path_length - offset) = char_copy;
+    *copy.chars().appendUninitialized(path_length - offset) = char_copy;
 
     if (!IsOk(error_code))
       break;
@@ -70,7 +70,7 @@ SystemErrorCode Directory::TryCreatePath(const FilePath& path) {
 
 void Directory::RemoveRecursively(const FilePath& path) {
   List<FilePath> directories;
-  directories.Add(FilePath(path));
+  directories.add(FilePath(path));
 
   RecursiveDirectoryEnumerator enumerator;
   while (!directories.isEmpty()) {
@@ -80,7 +80,7 @@ void Directory::RemoveRecursively(const FilePath& path) {
     while (enumerator.MoveNext()) {
       FilePath full_path = enumerator.GetEntryFullPath();
       if (enumerator.base().IsDirectory()) {
-        directories.Add(move(full_path));
+        directories.add(move(full_path));
         has_nested = true;
       } else {
         File::Delete(full_path);

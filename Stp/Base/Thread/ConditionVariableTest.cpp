@@ -445,7 +445,7 @@ WorkQueue::WorkQueue(int thread_count)
   ResetHistory();
   SetTaskCount(0);
   SetWorkTime(TimeDelta::FromMilliseconds(30));
-  thread_handles_.AppendUninitialized(thread_count);
+  thread_handles_.appendUninitialized(thread_count);
 
   for (int i = 0; i < thread_count_; ++i) {
     NativeThreadObject pth = NativeThread::Create(this).object;

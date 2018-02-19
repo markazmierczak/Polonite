@@ -44,8 +44,8 @@ class FlatMap {
   FlatMap(const FlatMap& other) : list_(other.list_) {}
   FlatMap& operator=(const FlatMap& other) { list_ = other.list_; return *this; }
 
-  void WillGrow(int n) { list_.WillGrow(n); }
-  void Shrink() { list_.ShrinkToFit(); }
+  void willGrow(int n) { list_.willGrow(n); }
+  void Shrink() { list_.shrinkToFit(); }
 
   ALWAYS_INLINE int capacity() const { return list_.capacity(); }
   ALWAYS_INLINE int size() const { return list_.size(); }
@@ -92,7 +92,7 @@ class FlatMap {
     T& Get() const { return that_.list_[index_].value(); }
 
     template<typename U>
-    void Add(U&& key, T value) { that_.InsertAt(~index_, Forward<U>(key), move(value)); }
+    void add(U&& key, T value) { that_.InsertAt(~index_, Forward<U>(key), move(value)); }
 
    private:
     FlatMap& that_;
@@ -108,7 +108,7 @@ class FlatMap {
   void Set(U&& key, T value);
 
   template<typename U>
-  T* TryAdd(U&& key, T value);
+  T* tryAdd(U&& key, T value);
 
   template<typename U>
   bool TryRemove(const U& key);
@@ -123,7 +123,7 @@ class FlatMap {
   void InsertAt(int at, U&& key, T value);
 
   void RemoveAt(int at) { list_.RemoveAt(at); }
-  void RemoveRange(int at, int n) { list_.RemoveRange(at, n); }
+  void removeRange(int at, int n) { list_.removeRange(at, n); }
 
   const K& GetKeyAt(int at) const { return list_[at].key; }
 
@@ -209,7 +209,7 @@ inline void FlatMap<K, T, TList>::Set(U&& key, T new_value) {
 
 template<typename K, typename T, class TList>
 template<typename U>
-inline T* FlatMap<K, T, TList>::TryAdd(U&& key, T value) {
+inline T* FlatMap<K, T, TList>::tryAdd(U&& key, T value) {
   int pos = indexOf(key);
   if (pos >= 0)
     return nullptr;

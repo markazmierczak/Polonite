@@ -111,7 +111,7 @@ class Bignum {
   // grow. There are no checks if the stack-allocated space is sufficient.
   static const int BigitCapacity = MaxSignificantBits / BigitSize;
 
-  void EnsureCapacity(int size) {
+  void ensureCapacity(int size) {
     ASSERT(size <= BigitCapacity, "capacity is not enough");
   }
   void Align(const Bignum& other);

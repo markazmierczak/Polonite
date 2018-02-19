@@ -203,7 +203,7 @@ static void ParseMatchers(StringSpan input) {
     if (pos >= 0) {
       VmoduleMatcher matcher(String(pair.getSlice(0, pos)));
       if (tryParse(pair.getSlice(pos + 1), matcher.level) == ParseIntegerErrorCode::Ok) {
-        matchers->Add(move(matcher));
+        matchers->add(move(matcher));
         parsed = true;
       }
     }

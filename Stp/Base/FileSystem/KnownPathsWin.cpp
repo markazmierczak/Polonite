@@ -16,8 +16,8 @@
 
 namespace stp {
 
-static inline FilePath AppendAppName(FilePath&& path) {
-  path.AppendAscii(Application::instance().getName());
+static inline FilePath appendAppName(FilePath&& path) {
+  path.appendAscii(Application::instance().getName());
   return path;
 }
 
@@ -38,7 +38,7 @@ FilePath GetCurrentDirPath() {
   FilePath path;
   int buffer_length = 1;
   while (true) {
-    wchar_t* dst = path.AppendCharactersUninitialized(buffer_length - 1);
+    wchar_t* dst = path.appendCharactersUninitialized(buffer_length - 1);
     int rv = static_cast<int>(::GetCurrentDirectoryW(buffer_length, dst));
     if (rv < buffer_length) {
       if (rv == 0)
@@ -57,7 +57,7 @@ bool SetCurrentDirPath(const FilePath& directory) {
 
 FilePath GetAppUserDataPath() {
   auto provider = []() {
-    return AppendAppName(GetWinLocalAppDataPath());
+    return appendAppName(GetWinLocalAppDataPath());
   };
   static known_path::Key g_key = 0;
   return known_path::ResolveDirectory(g_key, provider, known_path::EnsureCreated);
@@ -68,7 +68,7 @@ FilePath GetAppCachePath() {
     // Windows has no notion of cache directory.
     // Use subdir in application user data.
     FilePath path = GetAppUserDataPath();
-    path.AppendAscii("Cache");
+    path.appendAscii("Cache");
     return path;
   };
   static known_path::Key g_key = 0;
@@ -87,7 +87,7 @@ static FilePath GetModuleFile(HMODULE module) {
   // stack buffer was not enough, allocate on heap
   FilePath path;
   for (int capacity = StackCapacity * 2; rv != 0; capacity *= 2) {
-    wchar_t* dst = path.AppendCharactersUninitialized(capacity - 1);
+    wchar_t* dst = path.appendCharactersUninitialized(capacity - 1);
     rv = static_cast<int>(::GetModuleFileNameW(module, dst, capacity));
     if (rv < capacity) {
       path.TruncateCharacters(rv);

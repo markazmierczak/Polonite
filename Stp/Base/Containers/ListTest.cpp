@@ -31,9 +31,9 @@ TEST(ListTest, Empty) {
 TEST(ListTest, Add) {
   List<int> list;
 
-  list.Add(2);
-  list.Add(3);
-  list.Add(4);
+  list.add(2);
+  list.add(3);
+  list.add(4);
 
   EXPECT_FALSE(list.isEmpty());
   EXPECT_EQ(3, list.size());

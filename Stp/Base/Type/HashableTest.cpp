@@ -37,7 +37,7 @@ TYPED_TEST_CASE(HashableTest, FunctionalTypes);
 
 TYPED_TEST(HashableTest, equalToImpliesSameHashCode) {
   TypeParam values[32];
-  this->rng.Fill(MakeBufferSpan(values));
+  this->rng.Fill(makeBufferSpan(values));
   for (TypeParam v1: values) {
     for (TypeParam v2: values) {
       if (v1 == v2) {

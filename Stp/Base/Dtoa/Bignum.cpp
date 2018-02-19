@@ -52,7 +52,7 @@ void Bignum::AssignUInt16(uint16_t value) {
   Zero();
   if (value == 0) return;
 
-  EnsureCapacity(1);
+  ensureCapacity(1);
   bigits_[0] = value;
   used_digits_ = 1;
 }
@@ -65,7 +65,7 @@ void Bignum::AssignUInt64(uint64_t value) {
   if (value == 0) return;
 
   int needed_bigits = UInt64Size / BigitSize + 1;
-  EnsureCapacity(needed_bigits);
+  ensureCapacity(needed_bigits);
   for (int i = 0; i < needed_bigits; ++i) {
     bigits_[i] = static_cast<Chunk>(value & BigitMask);
     value = value >> BigitSize;
@@ -137,7 +137,7 @@ void Bignum::AssignHexString(Vector<const char> value) {
   int length = value.length();
 
   int needed_bigits = length * 4 / BigitSize + 1;
-  EnsureCapacity(needed_bigits);
+  ensureCapacity(needed_bigits);
   int string_index = length - 1;
   for (int i = 0; i < needed_bigits - 1; ++i) {
     // These bigits are guaranteed to be "full".
@@ -190,7 +190,7 @@ void Bignum::AddBignum(const Bignum& other) {
   //  cccccccccccc 0000
   // In both cases we might need a carry bigit.
 
-  EnsureCapacity(1 + max(BigitLength(), other.BigitLength()) - exponent_);
+  ensureCapacity(1 + max(BigitLength(), other.BigitLength()) - exponent_);
   Chunk carry = 0;
   int bigit_pos = other.exponent_ - exponent_;
   ASSERT(bigit_pos >= 0);
@@ -243,7 +243,7 @@ void Bignum::ShiftLeft(int shift_amount) {
   if (used_digits_ == 0) return;
   exponent_ += shift_amount / BigitSize;
   int local_shift = shift_amount % BigitSize;
-  EnsureCapacity(used_digits_ + 1);
+  ensureCapacity(used_digits_ + 1);
   BigitsShiftLeft(local_shift);
 }
 
@@ -266,7 +266,7 @@ void Bignum::MultiplyByUInt32(uint32_t factor) {
     carry = (product >> BigitSize);
   }
   while (carry != 0) {
-    EnsureCapacity(used_digits_ + 1);
+    ensureCapacity(used_digits_ + 1);
     bigits_[used_digits_] = static_cast<Chunk>(carry & BigitMask);
     used_digits_++;
     carry >>= BigitSize;
@@ -293,7 +293,7 @@ void Bignum::MultiplyByUInt64(uint64_t factor) {
         (product_high << (32 - BigitSize));
   }
   while (carry != 0) {
-    EnsureCapacity(used_digits_ + 1);
+    ensureCapacity(used_digits_ + 1);
     bigits_[used_digits_] = static_cast<Chunk>(carry & BigitMask);
     used_digits_++;
     carry >>= BigitSize;
@@ -344,7 +344,7 @@ void Bignum::MultiplyByPowerOfTen(int exponent) {
 void Bignum::Square() {
   ASSERT(IsClamped());
   int product_length = 2 * used_digits_;
-  EnsureCapacity(product_length);
+  ensureCapacity(product_length);
 
   // Comba multiplication: compute each column separately.
   // Example: r = a2a1a0 * b2b1b0.
@@ -437,7 +437,7 @@ void Bignum::AssignPowerUInt16(uint16_t base, int power_exponent) {
   }
   int final_size = bit_size * power_exponent;
   // 1 extra bigit for the shifting, and one for rounded final_size.
-  EnsureCapacity(final_size / BigitSize + 2);
+  ensureCapacity(final_size / BigitSize + 2);
 
   // Left to Right exponentiation.
   int mask = 1;
@@ -705,7 +705,7 @@ void Bignum::Align(const Bignum& other) {
     // We replace some of the hidden digits (X) of a with 0 digits.
     // a:  aaaaaa000X   or a:   aaaaa0XX
     int zero_digits = exponent_ - other.exponent_;
-    EnsureCapacity(used_digits_ + zero_digits);
+    ensureCapacity(used_digits_ + zero_digits);
     for (int i = used_digits_ - 1; i >= 0; --i) {
       bigits_[i + zero_digits] = bigits_[i];
     }

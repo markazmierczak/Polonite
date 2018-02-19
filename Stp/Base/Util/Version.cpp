@@ -66,7 +66,7 @@ bool tryParse(StringSpan str, Version& out) {
       return false;
     if (part < 0)
       return false;
-    out.parts_.Add(part);
+    out.parts_.add(part);
   }
 
   if (index == 0) {

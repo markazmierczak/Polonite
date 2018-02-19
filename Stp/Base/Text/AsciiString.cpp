@@ -106,14 +106,14 @@ void ToUpperAsciiInplace(MutableStringSpan s) {
 
 String ToLowerAscii(StringSpan src) {
   String rv;
-  char* dst = rv.AppendUninitialized(src.size());
+  char* dst = rv.appendUninitialized(src.size());
   ToLowerAscii(dst, src.data(), src.size());
   return rv;
 }
 
 String ToUpperAscii(StringSpan src) {
   String rv;
-  char* dst = rv.AppendUninitialized(src.size());
+  char* dst = rv.appendUninitialized(src.size());
   ToLowerAscii(dst, src.data(), src.size());
   return rv;
 }

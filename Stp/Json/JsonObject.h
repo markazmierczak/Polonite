@@ -23,7 +23,7 @@ class BASE_EXPORT JsonObject : public JsonValue {
 
   void clear();
 
-  void WillGrow(int count);
+  void willGrow(int count);
   void Shrink();
 
   // The value must be already present (asserts).
@@ -46,10 +46,10 @@ class BASE_EXPORT JsonObject : public JsonValue {
   template<typename T>
   bool TryGet(StringSpan key, T& out_value) const;
 
-  bool TryAdd(StringSpan key, JsonValue value);
+  bool tryAdd(StringSpan key, JsonValue value);
 
   template<typename T>
-  bool TryAdd(StringSpan key, T&& value) { return TryAdd(key, JsonValue(Forward<T>(value))); }
+  bool tryAdd(StringSpan key, T&& value) { return tryAdd(key, JsonValue(Forward<T>(value))); }
 
   bool TryRemove(StringSpan key);
 

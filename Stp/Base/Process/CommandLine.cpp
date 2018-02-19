@@ -90,8 +90,8 @@ bool CommandLine::Equals(StringSpan name, StringSpan value) const {
   return real_value ? *real_value == value : false;
 }
 
-void CommandLine::Add(String positional) {
-  positionals_.Add(move(positional));
+void CommandLine::add(String positional) {
+  positionals_.add(move(positional));
 }
 
 void CommandLine::Set(StringSpan switch_name, StringSpan value) {
@@ -152,7 +152,7 @@ void CommandLine::ParseFromArgv(int argc, wchar_t** argv) {
     if (parse_switches && ParseSwitch(arg, switch_name, switch_value))
       Set(switch_name, move(switch_value));
     else
-      Add(move(arg));
+      add(move(arg));
   }
 }
 
@@ -207,7 +207,7 @@ void CommandLine::ParseFromArgv(int argc, char** argv) {
     if (parse_switches && ParseSwitch(arg, switch_name, switch_value))
       Set(switch_name, move(switch_value));
     else
-      Add(move(arg));
+      add(move(arg));
   }
 }
 

@@ -12,7 +12,7 @@ namespace stp {
 String Base64::Encode(BufferSpan input) {
   String out;
   int estimated = EstimateEncodedLength(input.size());
-  char* dst = out.AppendUninitialized(estimated);
+  char* dst = out.appendUninitialized(estimated);
   int dst_length = Encode(MutableStringSpan(dst, estimated), input);
   out.truncate(dst_length);
   return out;
@@ -73,7 +73,7 @@ bool Base64::TryDecode(StringSpan input, Buffer& output) {
   output.clear();
 
   int max_output_size = EstimateDecodedSize(input.size());
-  void* dst = output.AppendUninitialized(max_output_size);
+  void* dst = output.appendUninitialized(max_output_size);
 
   // Does not null terminate result since result is binary data!
   int actual_output_size = TryDecode(input, MutableBufferSpan(dst, max_output_size));

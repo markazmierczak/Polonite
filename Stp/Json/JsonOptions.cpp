@@ -12,32 +12,32 @@ JsonOptions JsonOptions::Parse(StringSpan string) {
   for (; !string.isEmpty(); string.removePrefix(1)) {
     switch (string[0]) {
       case 'R':
-        options.Add(ReferenceInput);
+        options.add(ReferenceInput);
         break;
       case 'C':
         static_assert(AllowTrailingCommas == EmitTrailingCommas, "!");
-        options.Add(AllowTrailingCommas);
+        options.add(AllowTrailingCommas);
         break;
       case 'K':
-        options.Add(UniqueKeys);
+        options.add(UniqueKeys);
         break;
       case 'N':
-        options.Add(EnableInfNaN);
+        options.add(EnableInfNaN);
         break;
       case 'P':
-        options.Add(PrettyFormatting);
+        options.add(PrettyFormatting);
         break;
       case 'U':
-        options.Add(EscapeUnicode);
+        options.add(EscapeUnicode);
         break;
       case 'L':
-        options.Add(DisallowLossOfPrecision);
+        options.add(DisallowLossOfPrecision);
         break;
       case 'I':
-        options.Add(TryIntegerForFloat);
+        options.add(TryIntegerForFloat);
         break;
       case 'E':
-        options.Add(BreakOnError);
+        options.add(BreakOnError);
         break;
 
       default:

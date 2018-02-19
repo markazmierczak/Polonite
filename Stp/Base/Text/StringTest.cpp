@@ -28,7 +28,7 @@ TEST(StringTest, Basic) {
   }
 }
 
-TEST(StringTest, Append) {
+TEST(StringTest, append) {
   // Short to Short.
   {
     auto s = String("ab");
@@ -56,9 +56,9 @@ TEST(StringTest, Append) {
 
 TEST(StringTest, Concat) {
   List<StringSpan> l;
-  l.Add("abcdef");
-  l.Add("012345");
-  l.Add("ABCDEF");
+  l.add("abcdef");
+  l.add("012345");
+  l.add("ABCDEF");
   String c = String::ConcatArray(l);
   EXPECT_EQ("abcdef012345ABCDEF", c);
 }

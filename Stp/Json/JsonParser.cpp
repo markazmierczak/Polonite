@@ -228,7 +228,7 @@ bool JsonParser::ConsumeObject(JsonValue& out_value) {
       return false;
 
     if (options_.Has(JsonOptions::UniqueKeys)) {
-      if (!object.TryAdd(key.toSpan(), move(value)))
+      if (!object.tryAdd(key.toSpan(), move(value)))
         return ReportError(JsonError::KeyAlreadyAssigned, 1);
     } else {
       object.Set(key.toSpan(), move(value));
@@ -268,7 +268,7 @@ bool JsonParser::ConsumeArray(JsonValue& out_value) {
     if (!ParseToken(token, item))
       return false;
 
-    array.Add(move(item));
+    array.add(move(item));
 
     token = GetNextToken();
     if (token == Token::ArraySeparator) {
@@ -328,9 +328,9 @@ bool JsonParser::ConsumeStringRaw(JsonStringBuilder& out) {
       // If this character is not an escape sequence...
       int length = pos_ - iter_pos;
       if (string.OwnsData())
-        string.AppendString(StringSpan(iter_pos, length));
+        string.appendString(StringSpan(iter_pos, length));
       else
-        string.AppendInPlace(iter_pos, length);
+        string.appendInPlace(iter_pos, length);
     } else {
       // And if it is an escape sequence, the input string will be adjusted
       // (either by combining the two characters of an encoded escape sequence,
@@ -357,7 +357,7 @@ bool JsonParser::ConsumeStringRaw(JsonStringBuilder& out) {
           pos_ += 2;
 
           if (IsAscii(static_cast<char32_t>(hex_digit)))
-            string.Append(static_cast<char>(hex_digit));
+            string.append(static_cast<char>(hex_digit));
           else
             DecodeUtf8(static_cast<char32_t>(hex_digit), string);
           break;
@@ -373,31 +373,31 @@ bool JsonParser::ConsumeStringRaw(JsonStringBuilder& out) {
           break;
         }
         case '"':
-          string.Append('"');
+          string.append('"');
           break;
         case '\\':
-          string.Append('\\');
+          string.append('\\');
           break;
         case '/':
-          string.Append('/');
+          string.append('/');
           break;
         case 'b':
-          string.Append('\b');
+          string.append('\b');
           break;
         case 'f':
-          string.Append('\f');
+          string.append('\f');
           break;
         case 'n':
-          string.Append('\n');
+          string.append('\n');
           break;
         case 'r':
-          string.Append('\r');
+          string.append('\r');
           break;
         case 't':
-          string.Append('\t');
+          string.append('\t');
           break;
         case 'v':  // Not listed as valid escape sequence in the RFC.
-          string.Append('\v');
+          string.append('\v');
           break;
         // All other escape squences are illegal.
         default:
@@ -465,7 +465,7 @@ bool JsonParser::DecodeUtf16(JsonStringBuilder& out) {
     offset = Utf8::Encode(code_unit8, code_unit16_high);
   }
 
-  out.AppendString(StringSpan(code_unit8, offset));
+  out.appendString(StringSpan(code_unit8, offset));
   return true;
 }
 
@@ -475,12 +475,12 @@ void JsonParser::DecodeUtf8(char32_t point, JsonStringBuilder& dest) {
   // Anything outside of the basic ASCII plane will need to be decoded from
   // int32_t to a multi-byte sequence.
   if (IsAscii(point)) {
-    dest.Append(static_cast<char>(point));
+    dest.append(static_cast<char>(point));
   } else {
     char utf8_units[4];
     int offset = Utf8::Encode(utf8_units, point);
     dest.Convert();
-    dest.AppendString(StringSpan(utf8_units, offset));
+    dest.appendString(StringSpan(utf8_units, offset));
   }
 }
 

@@ -25,8 +25,8 @@ class FlatSet {
   FlatSet(const FlatSet& other) : list_(other.list_) {}
   FlatSet& operator=(const FlatSet& other) { list_ = other; return *this; }
 
-  void WillGrow(int n) { list_.WillGrow(n); }
-  void Shrink() { list_.ShrinkToFit(); }
+  void willGrow(int n) { list_.willGrow(n); }
+  void Shrink() { list_.shrinkToFit(); }
 
   ALWAYS_INLINE int capacity() const { return list_.capacity(); }
   ALWAYS_INLINE int size() const { return list_.size(); }
@@ -38,7 +38,7 @@ class FlatSet {
   bool contains(const U& value) const { return indexOf(value) >= 0; }
 
   template<typename U>
-  bool TryAdd(U&& value);
+  bool tryAdd(U&& value);
   template<typename U>
   bool TryRemove(const U& value);
 
@@ -46,7 +46,7 @@ class FlatSet {
   int indexOf(const U& value) const { return binarySearchInSpan(list_.toSpan(), value); }
 
   void RemoveAt(int at) { list_.RemoveAt(at); }
-  void RemoveRange(int at, int n) { list_.RemoveRange(at, n); }
+  void removeRange(int at, int n) { list_.removeRange(at, n); }
 
   const ListType& list() const { return list_; }
 
@@ -80,7 +80,7 @@ struct TIsTriviallyRelocatableTmpl<FlatSet<T, TList>>
 
 template<typename T, class TList>
 template<typename U>
-inline bool FlatSet<T, TList>::TryAdd(U&& value) {
+inline bool FlatSet<T, TList>::tryAdd(U&& value) {
   int pos = indexOf(value);
   if (pos >= 0)
     return false;

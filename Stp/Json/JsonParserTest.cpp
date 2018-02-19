@@ -425,10 +425,10 @@ TEST(JsonParserTest, Reading) {
   {
     // A few thousand adjacent lists is fine.
     String not_evil = "[";
-    not_evil.EnsureCapacity(15010);
+    not_evil.ensureCapacity(15010);
     for (int i = 0; i < 5000; ++i)
-      not_evil.Append("[],");
-    not_evil.Append("[]]");
+      not_evil.append("[],");
+    not_evil.append("[]]");
     JsonArray list;
     ASSERT_TRUE(JsonArray::Parse(not_evil, list));
     EXPECT_EQ(5001, list.size());
@@ -702,7 +702,7 @@ TEST(JsonParserTest, ErrorMessages) {
     String nested_json;
     for (int i = 0; i < 101; ++i) {
       nested_json.Insert(0, '[');
-      nested_json.Add(']');
+      nested_json.add(']');
     }
     JsonParser parser;
     EXPECT_FALSE(parser.Parse(nested_json, root));

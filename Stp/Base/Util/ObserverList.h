@@ -103,7 +103,7 @@ template<class TObserver>
 void ObserverList<TObserver>::AddObserver(TObserver* obs) {
   ASSERT(obs);
   ASSERT(!observers_.contains(obs), "observers can only be added once!");
-  observers_.Add(obs);
+  observers_.add(obs);
 }
 
 template<class TObserver>

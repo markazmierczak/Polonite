@@ -44,7 +44,7 @@ class SinglyLinkedList {
   T* First() const;
   T* Last() const;
 
-  void Append(T* node);
+  void append(T* node);
   void Prepend(T* node);
 
   void RemoveFirst();
@@ -93,7 +93,7 @@ class SinglyLinkedListIterator {
 };
 
 template<typename T>
-inline void SinglyLinkedList<T>::Append(T* node) {
+inline void SinglyLinkedList<T>::append(T* node) {
   if (!tail_) {
     head_ = node;
     tail_ = node;

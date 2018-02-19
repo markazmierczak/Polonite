@@ -17,7 +17,7 @@ template<typename T>
 static List<T> GenerateTable() {
   int size = GcdBenchmarkIterations + 1;
   List<T> list;
-  T* dst = list.AppendUninitialized(size);
+  T* dst = list.appendUninitialized(size);
   CryptoRandom rng;
   for (int i = 0; i < size; ++i)
     dst[i] = static_cast<T>(rng.nextUint64());

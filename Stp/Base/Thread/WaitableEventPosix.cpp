@@ -207,10 +207,10 @@ int WaitableEvent::WaitMany(WaitableEvent** raw_waitables, int count) {
   // the array of waitables by address. We actually sort a pairs so that we can
   // map back to the original index values later.
   InlineList<WaiterAndIndex, 8> waitables;
-  waitables.EnsureCapacity(count);
+  waitables.ensureCapacity(count);
 
   for (int i = 0; i < count; ++i)
-    waitables.Add(WaiterAndIndex { raw_waitables[i], i });
+    waitables.add(WaiterAndIndex { raw_waitables[i], i });
 
   ASSERT(count == waitables.size());
 
@@ -342,7 +342,7 @@ bool WaitableEvent::SignalOne() {
 
 // Add a waiter to the list of those waiting. Called with lock held.
 void WaitableEvent::Enqueue(Waiter* waiter) {
-  kernel_->waiters_.Add(waiter);
+  kernel_->waiters_.add(waiter);
 }
 
 // Remove a waiter from the list of those waiting. Return true if the waiter was

@@ -58,7 +58,7 @@ FilePath GetCurrentDirPath() {
   FilePath path;
   for (int buffer_len = StackLength * 2; errno == ERANGE; buffer_len *= 2) {
     path.clear();
-    char* dst = path.chars().AppendUninitialized(buffer_len);
+    char* dst = path.chars().appendUninitialized(buffer_len);
     if (::getcwd(dst, buffer_len) != nullptr) {
       int real_length = makeSpanFromNullTerminated(dst).size();
       path.truncate(real_length);

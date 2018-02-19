@@ -27,7 +27,7 @@ bool Environment::TryGet(const char* name, String& out_value) {
   if (!TryGetNative(name, mbvalue))
     return false;
   out_value.clear();
-  AppendWtf(out_value, mbvalue);
+  appendWtf(out_value, mbvalue);
   #endif
   return true;
 }

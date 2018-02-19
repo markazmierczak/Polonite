@@ -45,8 +45,8 @@ class BASE_EXPORT FilePath {
   bool isEmpty() const { return chars_.isEmpty(); }
   void clear() { chars_.clear(); }
 
-  void EnsureCapacity(int request);
-  void ShrinkToFit();
+  void ensureCapacity(int request);
+  void shrinkToFit();
 
   SpanType getSlice(int at) const { return toSpan().getSlice(at); }
   SpanType getSlice(int at, int n) const { return toSpan().getSlice(at, n); }

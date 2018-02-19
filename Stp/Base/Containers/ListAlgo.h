@@ -49,7 +49,7 @@ int RemoveAllMatching(TList& list, TPredicate&& match) {
     }
     if (chunk_start != chunk_end) {
       int chunk_length = chunk_end - chunk_start;
-      list.RemoveRange(chunk_start, chunk_length);
+      list.removeRange(chunk_start, chunk_length);
       removed_count += chunk_length;
       chunk_end = chunk_start;
     }

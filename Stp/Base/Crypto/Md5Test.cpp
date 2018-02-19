@@ -47,7 +47,7 @@ TEST(Md5Test, SumLongData) {
   constexpr int Length = 10 * 1024 * 1024 + 1;
   List<byte_t> data;
 
-  auto* ptr = data.AppendUninitialized(Length);
+  auto* ptr = data.appendUninitialized(Length);
   for (int i = 0; i < Length; ++i)
     ptr[i] = i & 0xFF;
 
@@ -83,7 +83,7 @@ TEST(Md5Test, ContextWithLongData) {
   constexpr int Length = 10 * 1024 * 1024 + 1;
   List<byte_t> data;
 
-  auto* ptr = data.AppendUninitialized(Length);
+  auto* ptr = data.appendUninitialized(Length);
   for (int i = 0; i < Length; ++i)
     ptr[i] = i & 0xFF;
 
@@ -93,7 +93,7 @@ TEST(Md5Test, ContextWithLongData) {
     if (len > Length - total)
       len = Length - total;
 
-    ctx.update(MakeBufferSpan(ptr + total, len));
+    ctx.update(makeBufferSpan(ptr + total, len));
     total += len;
   }
 

@@ -276,7 +276,7 @@ TEST_F(FilePathTest, Combine) {
     EXPECT_EQ(item.expected, observed_path);
 
     String ascii = FormattableToString(leaf);
-    root.AppendAscii(ascii);
+    root.appendAscii(ascii);
     EXPECT_EQ(item.expected, root);
   }
 }
@@ -453,8 +453,8 @@ TEST_F(FilePathTest, GetComponents) {
   for (const auto& item : cases) {
     List<FilePathChar> observed;
     for (const auto& component : item.input) {
-      observed.Append('|');
-      observed.Append(component.AsCharactersUnsafe());
+      observed.append('|');
+      observed.append(component.AsCharactersUnsafe());
     }
     EXPECT_EQ(item.expected.AsCharactersUnsafe(), observed);
   }

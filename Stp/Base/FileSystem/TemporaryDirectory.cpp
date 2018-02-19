@@ -97,7 +97,7 @@ void TemporaryDirectory::CreateInternal(FilePathSpan base_dir, StringSpan prefix
   String tmpl = String::ConcatArgs(".stp.", prefix, ".XXXXXX");
 
   FilePath sub_dir;
-  sub_dir.EnsureCapacity(base_dir.size() + tmpl.size() + 1);
+  sub_dir.ensureCapacity(base_dir.size() + tmpl.size() + 1);
   sub_dir = base_dir;
 
   FilePathWriter writer(sub_dir);

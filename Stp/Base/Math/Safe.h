@@ -183,7 +183,7 @@ constexpr auto Abs(T x) {
 
 template<typename T, typename TEnabler = void>
 struct ArithmeticOpOverflow {
-  static bool Add(T x, T y) {
+  static bool add(T x, T y) {
     T dummy;
     return OverflowAdd(x, y, &dummy);
   }
@@ -213,7 +213,7 @@ struct ArithmeticOpOverflow {
 
 template<typename T>
 struct ArithmeticOpOverflow<T, TEnableIf<TIsFloatingPoint<T>>> {
-  static bool Add(T x, T y) { return false; }
+  static bool add(T x, T y) { return false; }
   static bool Sub(T x, T y) { return false; }
   static bool Mul(T x, T y) { return false; }
   static bool Div(T x, T y) { return false; }
@@ -221,9 +221,9 @@ struct ArithmeticOpOverflow<T, TEnableIf<TIsFloatingPoint<T>>> {
 };
 
 template<typename T, typename U>
-constexpr auto Add(T x, U y) {
+constexpr auto add(T x, U y) {
   using PromotedType = typename TBinaryOpPromote<T, U>::Type;
-  ASSERT(!ArithmeticOpOverflow<PromotedType>::Add(x, y));
+  ASSERT(!ArithmeticOpOverflow<PromotedType>::add(x, y));
   return static_cast<PromotedType>(x) + static_cast<PromotedType>(y);
 }
 
@@ -459,7 +459,7 @@ SAFE_UNARY_OPERATOR(-, Neg)
 SAFE_BINARY_OPERATOR(&, And)
 SAFE_BINARY_OPERATOR(|, Or)
 SAFE_BINARY_OPERATOR(^, Xor)
-SAFE_BINARY_OPERATOR(+, Add)
+SAFE_BINARY_OPERATOR(+, add)
 SAFE_BINARY_OPERATOR(-, Sub)
 SAFE_BINARY_OPERATOR(*, Mul)
 SAFE_BINARY_OPERATOR(/, Div)

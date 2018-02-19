@@ -122,14 +122,14 @@ inline char32_t Utf16::TryDecode(const char16_t*& it, const char16_t* end) {
 }
 
 template<typename TOutput>
-inline int AppendRune(TOutput& output, char32_t rune) {
+inline int appendRune(TOutput& output, char32_t rune) {
   using CharType = typename TOutput::ItemType;
   if (sizeof(CharType) == 1 && isAscii(rune)) {
     // Fast path the common case of one byte.
-    output.Add(static_cast<char>(rune));
+    output.add(static_cast<char>(rune));
     return 1;
   }
-  auto* dst = output.AppendUninitialized(4);
+  auto* dst = output.appendUninitialized(4);
   int n = EncodeUtf(dst, rune);
   output.removeSuffix(4 - n);
   return n;

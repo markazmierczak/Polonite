@@ -33,7 +33,7 @@ void MemoryStream::AdoptAndOpen(Buffer&& bytes) {
   expandable_ = true;
   length_ = bytes.size();
   capacity_ = bytes.capacity();
-  memory_ = static_cast<byte_t*>(bytes.ReleaseMemory());
+  memory_ = static_cast<byte_t*>(bytes.releaseMemory());
 }
 
 void MemoryStream::OpenInternal(void* data, int length, bool writable) {
@@ -50,7 +50,7 @@ Buffer MemoryStream::CloseAndrelease() {
   byte_t* ptr = exchange(memory_, nullptr);
   int size = exchange(length_, 0);
   int capacity = exchange(capacity_, 0);
-  return Buffer::AdoptMemory(ptr, size, capacity);
+  return Buffer::adoptMemory(ptr, size, capacity);
 }
 
 void MemoryStream::Close() {
@@ -119,7 +119,7 @@ void MemoryStream::PositionalWrite(int64_t offset, BufferSpan input) {
 
   int after_pos = static_cast<int>(offset) + n;
   if (after_pos > length_) {
-    EnsureCapacity(after_pos);
+    ensureCapacity(after_pos);
     length_ = after_pos;
   }
   if (n) {
@@ -136,7 +136,7 @@ void MemoryStream::WriteByte(byte_t byte) {
     if (new_length > capacity_) {
       if (new_length > MaxCapacity_)
         throw Exception::With(IoException(), "attempted to write past memory limit");
-      EnsureCapacity(new_length);
+      ensureCapacity(new_length);
     }
     if (position_ > length_) {
       // Clear the garbage in memory.
@@ -202,7 +202,7 @@ void MemoryStream::SetLength(int64_t new_length) {
     if (new_length >= MaxCapacity_)
       throw Exception::With(IoException(), "attempted to resize past memory limit");
 
-    EnsureCapacity(static_cast<int>(new_length));
+    ensureCapacity(static_cast<int>(new_length));
     // Zero the memory acquired by resizing up.
     uninitializedInit(memory_ + length_, new_length - length_);
   } else {
@@ -236,7 +236,7 @@ int64_t MemoryStream::GetPosition() {
   return position_;
 }
 
-void MemoryStream::EnsureCapacity(int request) {
+void MemoryStream::ensureCapacity(int request) {
   ASSERT(0 <= request && request <= MaxCapacity_);
 
   if (request <= capacity_)

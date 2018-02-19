@@ -142,7 +142,7 @@ int Thread::ThreadMain() {
 void ThisThread::AtExit(Function<void()> callback) {
   auto* data = detail::ThreadData::Current();
   ASSERT(data, "thread needs to be adopted to use this function");
-  data->at_exit.Add(move(callback));
+  data->at_exit.add(move(callback));
 }
 
 ThreadedFunction::ThreadedFunction(Function<int()> main)

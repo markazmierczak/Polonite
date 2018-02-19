@@ -46,7 +46,7 @@ TEST(Sha1Test, LongMessage) {
   // Example A.3 from FIPS 180-2: long message.
 
   Buffer input;
-  void* ptr = input.AppendUninitialized(1000000);
+  void* ptr = input.appendUninitialized(1000000);
   memset(ptr, 'a', input.size());
 
   Sha1Digest expected({

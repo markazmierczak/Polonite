@@ -42,15 +42,15 @@ class BASE_EXPORT JsonStringBuilder {
   // Either increases the |length_| of the string or copies the character if
   // the JsonStringBuilder has been converted. |c| must be in the basic ASCII
   // plane; all other characters need to be in UTF-8 units, appended with
-  // AppendString below.
-  void Append(char c);
+  // appendString below.
+  void append(char c);
 
-  char* AppendUninitialized(int n);
+  char* appendUninitialized(int n);
 
   // Must be Convert()ed to use.
-  void AppendString(StringSpan string);
+  void appendString(StringSpan string);
 
-  void AppendInPlace(const char* str, int size);
+  void appendInPlace(const char* str, int size);
 
   // Converts the builder from its default StringSpan to a full String,
   // performing a copy.
@@ -65,7 +65,7 @@ class BASE_EXPORT JsonStringBuilder {
   }
 
  private:
-  int RecommendCapacity(int n);
+  int recommendCapacity(int n);
 
   char* data_ = nullptr;
   int size_ = 0;

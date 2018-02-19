@@ -92,7 +92,7 @@ static uint64_t xgetbv(uint32_t xcr) {
 CpuInfo::Features CpuInfo::RuntimeFeatures() {
   Features features = 0;
 
-  auto Add = [&features](CpuFeature feature) {
+  auto add = [&features](CpuFeature feature) {
     features |= static_cast<Features>(feature);
   };
   #if CPU(X86_FAMILY)
@@ -100,33 +100,33 @@ CpuInfo::Features CpuInfo::RuntimeFeatures() {
 
   cpuid(1, abcd);
 
-  if (abcd[3] & (1<<25)) { Add(CpuFeature::Sse1); }
-  if (abcd[3] & (1<<26)) { Add(CpuFeature::Sse2); }
-  if (abcd[2] & (1<< 0)) { Add(CpuFeature::Sse3); }
-  if (abcd[2] & (1<< 9)) { Add(CpuFeature::Ssse3); }
-  if (abcd[2] & (1<<19)) { Add(CpuFeature::Sse41); }
-  if (abcd[2] & (1<<20)) { Add(CpuFeature::Sse42); }
+  if (abcd[3] & (1<<25)) { add(CpuFeature::Sse1); }
+  if (abcd[3] & (1<<26)) { add(CpuFeature::Sse2); }
+  if (abcd[2] & (1<< 0)) { add(CpuFeature::Sse3); }
+  if (abcd[2] & (1<< 9)) { add(CpuFeature::Ssse3); }
+  if (abcd[2] & (1<<19)) { add(CpuFeature::Sse41); }
+  if (abcd[2] & (1<<20)) { add(CpuFeature::Sse42); }
 
   if ((abcd[2] & (3<<26)) == (3<<26)         // XSAVE + OSXSAVE
       && (xgetbv(0) & (3<<1)) == (3<<1)) {  // XMM and YMM state enabled.
-    if (abcd[2] & (1<<28)) { Add(CpuFeature::Avx); }
-    if (abcd[2] & (1<<29)) { Add(CpuFeature::Cvt16); }
-    if (abcd[2] & (1<<12)) { Add(CpuFeature::Fma); }
+    if (abcd[2] & (1<<28)) { add(CpuFeature::Avx); }
+    if (abcd[2] & (1<<29)) { add(CpuFeature::Cvt16); }
+    if (abcd[2] & (1<<12)) { add(CpuFeature::Fma); }
 
     cpuidex(7, 0, abcd);
-    if (abcd[1] & (1<<5)) { Add(CpuFeature::Avx2); }
-    if (abcd[1] & (1<<3)) { Add(CpuFeature::Bmi1); }
-    if (abcd[1] & (1<<8)) { Add(CpuFeature::Bmi2); }
+    if (abcd[1] & (1<<5)) { add(CpuFeature::Avx2); }
+    if (abcd[1] & (1<<3)) { add(CpuFeature::Bmi1); }
+    if (abcd[1] & (1<<8)) { add(CpuFeature::Bmi2); }
 
     if ((xgetbv(0) & (7<<5)) == (7<<5)) {  // All ZMM state bits enabled too.
-      if (abcd[1] & (1<<16)) { Add(CpuFeature::Avx512F); }
-      if (abcd[1] & (1<<17)) { Add(CpuFeature::Avx512DQ); }
-      if (abcd[1] & (1<<21)) { Add(CpuFeature::Avx512IFMA); }
-      if (abcd[1] & (1<<26)) { Add(CpuFeature::Avx512PF); }
-      if (abcd[1] & (1<<27)) { Add(CpuFeature::Avx512ER); }
-      if (abcd[1] & (1<<28)) { Add(CpuFeature::Avx512CD); }
-      if (abcd[1] & (1<<30)) { Add(CpuFeature::Avx512BW); }
-      if (abcd[1] & (1<<31)) { Add(CpuFeature::Avx512VL); }
+      if (abcd[1] & (1<<16)) { add(CpuFeature::Avx512F); }
+      if (abcd[1] & (1<<17)) { add(CpuFeature::Avx512DQ); }
+      if (abcd[1] & (1<<21)) { add(CpuFeature::Avx512IFMA); }
+      if (abcd[1] & (1<<26)) { add(CpuFeature::Avx512PF); }
+      if (abcd[1] & (1<<27)) { add(CpuFeature::Avx512ER); }
+      if (abcd[1] & (1<<28)) { add(CpuFeature::Avx512CD); }
+      if (abcd[1] & (1<<30)) { add(CpuFeature::Avx512BW); }
+      if (abcd[1] & (1<<31)) { add(CpuFeature::Avx512VL); }
     }
   }
 
@@ -139,7 +139,7 @@ CpuInfo::Features CpuInfo::RuntimeFeatures() {
   if (num_ext_ids >= NonStopTscParameter) {
     cpuid(NonStopTscParameter, abcd);
     if (abcd[3] & (1 << 8))
-      Add(CpuFeature::NonStopTsc);
+      add(CpuFeature::NonStopTsc);
   }
 
   #elif  CPU(ARM_FAMILY)
@@ -148,16 +148,16 @@ CpuInfo::Features CpuInfo::RuntimeFeatures() {
 
   uint32_t hwcaps = getauxval(AT_HWCAP);
   if (hwcaps & HwCapVFPv4) {
-    Add(CpuFeature::Neon);
-    Add(CpuFeature::NeonFma);
-    Add(CpuFeature::Fp16);
+    add(CpuFeature::Neon);
+    add(CpuFeature::NeonFma);
+    add(CpuFeature::Fp16);
   }
 
   #elif CPU(ARM32) && __has_include(<cpu-features.h>)
   uint64_t acf = android_getCpuFeatures();
-  if (acf & ANDROID_CPU_ARM_FEATURE_NEON)     { Add(CpuFeature::Neon); }
-  if (acf & ANDROID_CPU_ARM_FEATURE_NEON_FMA) { Add(CpuFeature::NeonFma); }
-  if (acf & ANDROID_CPU_ARM_FEATURE_VFP_FP16) { Add(CpuFeature::Fp16); }
+  if (acf & ANDROID_CPU_ARM_FEATURE_NEON)     { add(CpuFeature::Neon); }
+  if (acf & ANDROID_CPU_ARM_FEATURE_NEON_FMA) { add(CpuFeature::NeonFma); }
+  if (acf & ANDROID_CPU_ARM_FEATURE_VFP_FP16) { add(CpuFeature::Fp16); }
   #endif // CPU(ARM*)
 
   #endif // CPU(*)

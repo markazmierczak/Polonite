@@ -212,26 +212,26 @@ template<>
 struct TIsZeroConstructibleTmpl<MutableBufferSpan> : TTrue {};
 
 template<typename T, TEnableIf<TIsTrivial<T> || TIsVoid<T>>* = nullptr>
-constexpr BufferSpan MakeBufferSpan(const T* data, int size) {
+constexpr BufferSpan makeBufferSpan(const T* data, int size) {
   return BufferSpan(data, size);
 }
 template<typename T, TEnableIf<TIsTrivial<T> || TIsVoid<T>>* = nullptr>
-constexpr MutableBufferSpan MakeBufferSpan(T* data, int size) {
+constexpr MutableBufferSpan makeBufferSpan(T* data, int size) {
   return MutableBufferSpan(data, size);
 }
 
 template<typename T, int N, TEnableIf<TIsTrivial<T>>* = nullptr>
-constexpr BufferSpan MakeBufferSpan(const T (&array)[N]) {
+constexpr BufferSpan makeBufferSpan(const T (&array)[N]) {
   return BufferSpan(array);
 }
 template<typename T, int N, TEnableIf<TIsTrivial<T>>* = nullptr>
-constexpr MutableBufferSpan MakeBufferSpan(T (&array)[N]) {
+constexpr MutableBufferSpan makeBufferSpan(T (&array)[N]) {
   return MutableBufferSpan(array);
 }
 
 template<typename T>
-constexpr auto MakeBufferSpan(T& container) {
-  return MakeBufferSpan(container.data(), container.size());
+constexpr auto makeBufferSpan(T& container) {
+  return makeBufferSpan(container.data(), container.size());
 }
 
 inline void MutableBufferSpan::fill(byte_t byte) {

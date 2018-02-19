@@ -32,7 +32,7 @@ class BASE_EXPORT JsonOptions {
 
   JsonOptions() {}
 
-  void Add(Option option) { Set(option, true); }
+  void add(Option option) { Set(option, true); }
 
   void Set(Option option, bool state);
 

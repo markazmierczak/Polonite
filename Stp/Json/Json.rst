@@ -73,14 +73,14 @@ Array
 
 .. note:: The naming may be confusing here, since ``Array<T>`` is not resizable but ``JsonArray`` is. ``JsonList`` was considered, but since JSON specification mention array (not list) we use same convention for consistency.
 
-To create a list of values use ``Add()`` or ``Set()``. Both of them will create a ``JsonValue`` on fly if given value is not of ``JsonValue`` type::
+To create a list of values use ``add()`` or ``Set()``. Both of them will create a ``JsonValue`` on fly if given value is not of ``JsonValue`` type::
 
    #include "Json/JsonArray.h"
 
    JsonArray CreateArray(const JsonValue& sixth_value) {
      JsonArray a;
-     a.Add(3);
-     a.Add("example string");
+     a.add(3);
+     a.add("example string");
 
      a.Set(6, sixth_value);
      return a;
@@ -105,18 +105,18 @@ Object
 
 ``JsonObject`` class is an unordered container for a pairs of string key and JSON value. It has interface similar to ``FlatMap<String, JsonValue>``, but comes with several handy methods.
 
-To fill an object with values use ``Add()``/``TryAdd()`` or ``Set()``. All of them will create a ``JsonValue`` on fly if given value is not of ``JsonValue`` type::
+To fill an object with values use ``add()``/``tryAdd()`` or ``Set()``. All of them will create a ``JsonValue`` on fly if given value is not of ``JsonValue`` type::
 
    #include "Json/JsonObject.h"
 
    JsonObject CreateObject(const JsonValue& gender) {
      JsonObject o;
      // o["age"] = 20; // assertion - key must exist for operator[]
-     o.Add("age", 30);
-     o.Add("gender", gender);
+     o.add("age", 30);
+     o.add("gender", gender);
 
-     bool ok = o.TryAdd("gender", gender); // returns false - key already present
-     // o.Add("gender", gender); // assertion
+     bool ok = o.tryAdd("gender", gender); // returns false - key already present
+     // o.add("gender", gender); // assertion
      o.Set("gender", "male"); // overwrites if exists
 
      return o;

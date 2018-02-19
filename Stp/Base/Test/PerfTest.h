@@ -32,7 +32,7 @@ void PrintResult(
     double value, const String& units,
     bool important);
 
-void AppendResult(
+void appendResult(
     String& output,
     const String& measurement, const String& modifier, const String& trace,
     size_t value, const String& units,
@@ -45,7 +45,7 @@ void PrintResult(
     const String& value, const String& units,
     bool important);
 
-void AppendResult(
+void appendResult(
     String& output,
     const String& measurement, const String& modifier, const String& trace,
     const String& value, const String& units,
@@ -59,7 +59,7 @@ void PrintResultMeanAndError(
     const String& mean_and_error, const String& units,
     bool important);
 
-void AppendResultMeanAndError(
+void appendResultMeanAndError(
     String& output,
     const String& measurement, const String& modifier, const String& trace,
     const String& mean_and_error, const String& units,
@@ -74,7 +74,7 @@ void PrintResultList(
     const String& values, const String& units,
     bool important);
 
-void AppendResultList(
+void appendResultList(
     String& output,
     const String& measurement, const String& modifier, const String& trace,
     const String& values, const String& units,

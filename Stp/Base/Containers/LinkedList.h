@@ -71,7 +71,7 @@ class LinkedList {
   void InsertBefore(NodeType* before, T* e) { e->InsertBefore(before); }
   void InsertAfter(NodeType* after, T* e) { e->InsertAfter(after); }
 
-  void Append(T* e) { InsertBefore(root(), e); }
+  void append(T* e) { InsertBefore(root(), e); }
   void Prepend(T* e) { InsertAfter(root(), e); }
 
   void Remove(T* e) { e->RemoveFromList(); }

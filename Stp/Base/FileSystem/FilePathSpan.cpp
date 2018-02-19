@@ -211,7 +211,7 @@ String FilePathSpan::GetExtension() const {
 
   // Extract extension (including dot).
   int ext_size = size() - pos;
-  char* dst = result.AppendUninitialized(ext_size);
+  char* dst = result.appendUninitialized(ext_size);
   // We already know the extension is ASCII encoded, see FindExtension().
   for (int i = 0; i < ext_size; ++i)
     dst[i] = static_cast<char>(chars_[pos + i]);

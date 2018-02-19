@@ -27,7 +27,7 @@ SystemErrorCode File::TryMakeAbsolutePath(const FilePath& input, FilePath& outpu
 
   int buffer_length = 1;
   while (true) {
-    wchar_t* dst = output.chars().AppendUninitialized(buffer_length - 1);
+    wchar_t* dst = output.chars().appendUninitialized(buffer_length - 1);
     int rv = static_cast<int>(
         ::GetFullPathNameW(ToNullTerminated(input), buffer_length, dst, nullptr));
     if (rv < buffer_length) {
@@ -46,7 +46,7 @@ SystemErrorCode File::TryMakeLongPath(const FilePath& input, FilePath& output) {
 
   int buffer_length = 1;
   while (true) {
-    wchar_t* dst = output.chars().AppendUninitialized(buffer_length - 1);
+    wchar_t* dst = output.chars().appendUninitialized(buffer_length - 1);
     int rv = static_cast<int>(
         ::GetLongPathNameW(ToNullTerminated(input), buffer_length, dst, nullptr));
     if (rv < buffer_length) {

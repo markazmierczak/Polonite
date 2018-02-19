@@ -19,7 +19,7 @@ bool Environment::TryGet(StringSpan name, String& out_value) {
   bool ok = TryGet(ToNullTerminated(ToWString(name)), wvalue);
   if (ok) {
     out_value.clear();
-    AppendWtf(out_value, wvalue);
+    appendWtf(out_value, wvalue);
   }
   return ok;
 }
@@ -28,7 +28,7 @@ bool Environment::TryGetNative(const wchar_t* name, WString& out_value) {
   int size = 1; // including null terminator
   while (true) {
     out_value.clear();
-    wchar_t* dst = out_value.AppendUninitialized(size - 1);
+    wchar_t* dst = out_value.appendUninitialized(size - 1);
 
     int rv = static_cast<int>(::GetEnvironmentVariableW(name, dst, size));
     if (rv == 0)

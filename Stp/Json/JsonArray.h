@@ -32,11 +32,11 @@ class BASE_EXPORT JsonArray : public JsonValue {
 
   void clear();
 
-  void EnsureCapacity(int request);
-  void WillGrow(int n);
+  void ensureCapacity(int request);
+  void willGrow(int n);
 
-  void ShrinkCapacity(int request);
-  void ShrinkToFit();
+  void shrinkCapacity(int request);
+  void shrinkToFit();
 
   const JsonValue& operator[](int at) const { return impl()[at]; }
   JsonValue& operator[](int at) { return impl()[at]; }
@@ -63,16 +63,16 @@ class BASE_EXPORT JsonArray : public JsonValue {
   const JsonObject* TryGetObject(int at) const;
   JsonObject* TryGetObject(int at);
 
-  void Add(JsonValue value);
+  void add(JsonValue value);
 
   template<typename T>
-  void Add(T&& arg) { Add(JsonValue(Forward<T>(arg))); }
+  void add(T&& arg) { add(JsonValue(Forward<T>(arg))); }
 
   void RemoveLast();
 
   void RemoveAt(int at);
 
-  void RemoveRange(int at, int n);
+  void removeRange(int at, int n);
 
   bool contains(const JsonValue& item) const;
 

@@ -8,8 +8,8 @@
 
 namespace stp {
 
-static FilePath AppendAppName(FilePath path) {
-  path.AppendAscii(Application::Instance().GetShortName());
+static FilePath appendAppName(FilePath path) {
+  path.appendAscii(Application::Instance().GetShortName());
   return path;
 }
 
@@ -42,7 +42,7 @@ FilePath GetExecutableFilePath() {
     ASSERT(executable_length > 1);
 
     FilePath executable_path;
-    char* data = executable_path.value.AppendCharactersUninitialized(
+    char* data = executable_path.value.appendCharactersUninitialized(
       static_cast<int>(executable_length - 1));
     int rv = _NSGetExecutablePath(writer.data(), &executable_length);
     ASSERT_UNUSED(rv == 0, rv)
@@ -59,7 +59,7 @@ FilePath GetExecutableFilePath() {
 
 FilePath GetAppUserDataPath() {
   auto provider = []() {
-    return AppendAppName(darwin::GetUserDirectory(NSApplicationSupportDirectory));
+    return appendAppName(darwin::GetUserDirectory(NSApplicationSupportDirectory));
   };
   static known_path::Key g_key = 0;
   return known_path::ResolveDirectory(g_key, provider, known_path::EnsureCreated);
@@ -67,7 +67,7 @@ FilePath GetAppUserDataPath() {
 
 FilePath GetAppCachePath() {
   auto provider = []() {
-    return AppendAppName(darwin::GetUserDirectory(NSCachesDirectory));
+    return appendAppName(darwin::GetUserDirectory(NSCachesDirectory));
   };
   static known_path::Key g_key = 0;
   return known_path::ResolveDirectory(g_key, provider, known_path::EnsureCreated);

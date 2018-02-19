@@ -96,7 +96,7 @@ TEST(TemporaryDirectory, MultipleInvocations) {
 TEST(TemporaryDirectory, LockedTempDir) {
   TemporaryDirectory dir;
   EXPECT_TRUE(dir.Create());
-  File file(dir.path().Append(FILE_PATH_LITERAL("temp")),
+  File file(dir.path().append(FILE_PATH_LITERAL("temp")),
                   File::FLAG_CREATE_ALWAYS | File::FLAG_WRITE);
   EXPECT_TRUE(file.IsValid());
   EXPECT_EQ(File::FILE_OK, file.error_details());

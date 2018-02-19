@@ -19,7 +19,7 @@ namespace stp {
  * Removes an item at the specified index.
  */
 
-/** \fn void List::RemoveRange(int at, int n)
+/** \fn void List::removeRange(int at, int n)
  * Removes a range of items.
  * The given slice must be enclosed by [0..size).
  */

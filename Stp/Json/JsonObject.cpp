@@ -13,8 +13,8 @@ void JsonObject::clear() {
   impl().clear();
 }
 
-void JsonObject::WillGrow(int n) {
-  impl().WillGrow(n);
+void JsonObject::willGrow(int n) {
+  impl().willGrow(n);
 }
 
 void JsonObject::Shrink() {
@@ -148,8 +148,8 @@ bool JsonObject::containsKey(StringSpan key) const {
   return impl().containsKey(key);
 }
 
-bool JsonObject::TryAdd(StringSpan key, JsonValue value) {
-  return impl().TryAdd(key, move(value));
+bool JsonObject::tryAdd(StringSpan key, JsonValue value) {
+  return impl().tryAdd(key, move(value));
 }
 
 bool JsonObject::TryRemove(StringSpan key) {

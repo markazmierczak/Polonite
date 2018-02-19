@@ -12,7 +12,7 @@ namespace stp {
 TEST(CryptoRandomTest, Bytes) {
   Array<byte_t, 50> buffer;
 
-  CryptoRandom().generate(MakeBufferSpan(buffer));
+  CryptoRandom().generate(makeBufferSpan(buffer));
   sortSpan<byte_t>(buffer);
 
   int unique_counter = 1;

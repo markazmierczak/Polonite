@@ -73,8 +73,8 @@ FilePath ResolveInternal(
 
   if (!CacheDisabled) {
     AutoLock scoped_lock(&g_database_lock);
-    // Must be TryAdd() instead of Add() - other thread might already resolve this path.
-    g_database->TryAdd(key, path);
+    // Must be tryAdd() instead of add() - other thread might already resolve this path.
+    g_database->tryAdd(key, path);
   }
   return path;
 }

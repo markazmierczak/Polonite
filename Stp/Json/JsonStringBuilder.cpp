@@ -11,7 +11,7 @@ namespace stp {
 
 JsonStringBuilder::JsonStringBuilder(const JsonStringBuilder& other) {
   capacity_ = 0;
-  AppendString(other.toSpan());
+  appendString(other.toSpan());
 }
 
 JsonStringBuilder& JsonStringBuilder::operator=(const JsonStringBuilder& other) {
@@ -36,29 +36,29 @@ JsonStringBuilder& JsonStringBuilder::operator=(StringSpan other) {
     data_ = nullptr;
     capacity_ = 0;
   }
-  AppendString(other);
+  appendString(other);
   return *this;
 }
 
-void JsonStringBuilder::Append(char c) {
+void JsonStringBuilder::append(char c) {
   if (capacity_ < 0) {
     ASSERT(data_[size_] == c);
     ++size_;
   } else {
-    char* dst = AppendUninitialized(1);
+    char* dst = appendUninitialized(1);
     *dst = c;
   }
 }
 
-void JsonStringBuilder::AppendString(StringSpan str) {
+void JsonStringBuilder::appendString(StringSpan str) {
   ASSERT(OwnsData());
   if (!str.isEmpty()) {
-    char* dst = AppendUninitialized(str.size());
+    char* dst = appendUninitialized(str.size());
     uninitializedCopy(dst, str.data(), str.size());
   }
 }
 
-void JsonStringBuilder::AppendInPlace(const char* str, int length) {
+void JsonStringBuilder::appendInPlace(const char* str, int length) {
   ASSERT(data_ && !OwnsData());
   size_ += length;
 }
@@ -77,16 +77,16 @@ void JsonStringBuilder::Convert() {
   }
 }
 
-char* JsonStringBuilder::AppendUninitialized(int n) {
+char* JsonStringBuilder::appendUninitialized(int n) {
   int new_length = size_ + n;
   if (capacity_ < new_length) {
-    capacity_ = RecommendCapacity(new_length);
+    capacity_ = recommendCapacity(new_length);
     data_ = Reallocate(data_, capacity_);
   }
   return data_ + exchange(size_, new_length);
 }
 
-int JsonStringBuilder::RecommendCapacity(int new_length) {
+int JsonStringBuilder::recommendCapacity(int new_length) {
   constexpr int MinCapacity = 8;
 
   int rv = (new_length > capacity_ + 4) ? new_length : (new_length * 2);

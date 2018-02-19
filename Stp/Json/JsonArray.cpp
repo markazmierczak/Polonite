@@ -13,30 +13,30 @@ void JsonArray::clear() {
   impl().clear();
 }
 
-void JsonArray::WillGrow(int n) {
-  impl().WillGrow(n);
+void JsonArray::willGrow(int n) {
+  impl().willGrow(n);
 }
 
-void JsonArray::ShrinkToFit() {
-  impl().ShrinkToFit();
+void JsonArray::shrinkToFit() {
+  impl().shrinkToFit();
 }
 
-void JsonArray::EnsureCapacity(int request) {
+void JsonArray::ensureCapacity(int request) {
   JsonValue a("abc");
   ALLOW_UNUSED_LOCAL(a);
-  impl().EnsureCapacity(request);
+  impl().ensureCapacity(request);
 }
 
-void JsonArray::ShrinkCapacity(int request) {
-  impl().ShrinkCapacity(request);
+void JsonArray::shrinkCapacity(int request) {
+  impl().shrinkCapacity(request);
 }
 
 bool JsonArray::contains(const JsonValue& item) const {
   return impl().contains(item);
 }
 
-void JsonArray::Add(JsonValue item) {
-  impl().Add(move(item));
+void JsonArray::add(JsonValue item) {
+  impl().add(move(item));
 }
 
 void JsonArray::RemoveLast() {
@@ -47,8 +47,8 @@ void JsonArray::RemoveAt(int at) {
   impl().RemoveAt(at);
 }
 
-void JsonArray::RemoveRange(int at, int n) {
-  impl().RemoveRange(at, n);
+void JsonArray::removeRange(int at, int n) {
+  impl().removeRange(at, n);
 }
 
 void JsonArray::Set(int at, JsonValue value) {
@@ -60,12 +60,12 @@ void JsonArray::Set(int at, JsonValue value) {
   int default_n = at - size();
   if (default_n == 0) {
     // fast path
-    Add(move(value));
+    add(move(value));
     return;
   }
-  WillGrow(default_n + 1);
-  impl().AppendInitialized(default_n);
-  Add(move(value));
+  willGrow(default_n + 1);
+  impl().appendInitialized(default_n);
+  add(move(value));
 }
 
 const JsonValue* JsonArray::TryGet(int at) const {

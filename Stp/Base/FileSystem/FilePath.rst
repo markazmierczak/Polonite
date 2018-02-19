@@ -40,7 +40,7 @@ An application may pass ``FilePath`` objects around internally, masking the unde
 On POSIX-like platforms, ``OpenFile`` might wrap ``fopen``, and on Windows, it might wrap ``_wfopen_s``, perhaps both by calling ``file_path.c_str()``.
 This allows each platform to pass paths around without requiring conversions between encodings, which has an impact on performance, but more importantly, has an impact on correctness on platforms that do not have well-defined encodings for paths.
 
-Several methods are available to perform common operations on a ``FilePath`` object, such as determining the parent directory (``GetDirName()``), isolating the final path component (``GetBaseName()``), and appending a relative pathname string to an existing ``FilePath`` object (``Append()``).
+Several methods are available to perform common operations on a ``FilePath`` object, such as determining the parent directory (``GetDirName()``), isolating the final path component (``GetBaseName()``), and appending a relative pathname string to an existing ``FilePath`` object (``append()``).
 These methods are highly recommended over attempting to split and concatenate strings directly. These methods are based purely on string manipulation and knowledge of platform-specific pathname conventions, and do not consult the filesystem at all, making them safe to use without fear of blocking on I/O operations.
 
 To aid in initialization of FilePath objects from string literals, a ``FILE_PATH_LITERAL`` macro is provided, which accounts for the difference between platforms.

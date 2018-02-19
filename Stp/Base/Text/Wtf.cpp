@@ -130,7 +130,7 @@ void WriteWtf(TextWriter& out, StringSpan wtf) { WriteWtfTmpl(out, wtf); }
 template<typename T>
 static inline String WtfToUtf8Tmpl(Span<T> wtf) {
   String utf;
-  utf.EnsureCapacity(wtf.size());
+  utf.ensureCapacity(wtf.size());
 
   StringWriter writer(&utf);
   WriteWtf(writer, wtf);
@@ -140,14 +140,14 @@ static inline String WtfToUtf8Tmpl(Span<T> wtf) {
 String WtfToUtf8(StringSpan wtf) { return WtfToUtf8Tmpl(wtf); }
 
 template<typename TOutput, typename TInput>
-static inline void AppendWtfTmpl(List<TOutput>& output, Span<TInput> wtf) {
+static inline void appendWtfTmpl(List<TOutput>& output, Span<TInput> wtf) {
   if constexpr (sizeof(TOutput) == sizeof(TInput)) {
-    output.EnsureCapacity(output.size() + wtf.size());
+    output.ensureCapacity(output.size() + wtf.size());
   }
   StringWriter writer(&output);
   WriteWtf(writer, wtf);
 }
 
-void AppendWtf(String& output, StringSpan wtf) { AppendWtfTmpl(output, wtf); }
+void appendWtf(String& output, StringSpan wtf) { appendWtfTmpl(output, wtf); }
 
 } // namespace stp

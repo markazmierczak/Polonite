@@ -9,14 +9,14 @@
 namespace stp {
 
 SystemErrorCode DirectoryEnumerator::TryOpen(const FilePath& path, StringSpan pattern) {
-  AppendUnicode(pattern_, pattern);
+  appendUnicode(pattern_, pattern);
   return TryOpen(path);
 }
 
 SystemErrorCode DirectoryEnumerator::TryOpen(const FilePath& path) {
   ASSERT(!IsOpen());
   search_path_.clear();
-  search_path_.EnsureCapacity(path.size() + pattern_.size() + 2);
+  search_path_.ensureCapacity(path.size() + pattern_.size() + 2);
   search_path_ = path;
 
   auto search_ops =  FindExSearchNameMatch;

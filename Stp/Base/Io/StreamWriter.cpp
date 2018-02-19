@@ -36,7 +36,7 @@ StreamWriter::StreamWriter(Stream* stream, TextEncoding encoding, int buffer_cap
   } else {
     buffer_capacity = AlignForward(buffer_capacity, isizeof(char32_t));
   }
-  buffer_.EnsureCapacity(buffer_capacity);
+  buffer_.ensureCapacity(buffer_capacity);
 }
 
 StreamWriter::~StreamWriter() {
@@ -59,7 +59,7 @@ class SimpleBufferAllocator : public PolymorphicAllocator {
  public:
   explicit SimpleBufferAllocator(Buffer& buffer) : buffer_(buffer) {}
 
-  void* Allocate(int size) override { return buffer_.AppendUninitialized(size); }
+  void* Allocate(int size) override { return buffer_.appendUninitialized(size); }
   void* Reallocate(void* ptr, int old_size, int new_size) { ASSERT(false); return nullptr; }
   void Deallocate(void* ptr, int size) { ASSERT(false); }
 
@@ -110,7 +110,7 @@ void StreamWriter::WriteToBuffer(BufferSpan input) {
   int remaining_capacity = buffer_.capacity() - buffer_.size();
 
   if (input.size() <= remaining_capacity) {
-    buffer_.Append(input);
+    buffer_.append(input);
     return;
   }
   if (input.size() >= buffer_.capacity() + remaining_capacity) {
@@ -119,13 +119,13 @@ void StreamWriter::WriteToBuffer(BufferSpan input) {
     return;
   }
 
-  buffer_.Append(input.getSlice(remaining_capacity));
+  buffer_.append(input.getSlice(remaining_capacity));
   input.removePrefix(remaining_capacity);
 
   FlushBuffer();
 
   ASSERT(input.size() < buffer_.capacity());
-  buffer_.Append(input);
+  buffer_.append(input);
 }
 
 void StreamWriter::onWriteChar(char c) {
@@ -133,7 +133,7 @@ void StreamWriter::onWriteChar(char c) {
     if (buffer_.capacity() == buffer_.size()) {
       FlushBuffer();
     }
-    buffer_.Add(static_cast<byte_t>(c));
+    buffer_.add(static_cast<byte_t>(c));
     return;
   }
   WriteIndirect(StringSpan(&c, 1));
@@ -160,7 +160,7 @@ void StreamWriter::onWriteString(StringSpan input) {
 void StreamWriter::WriteIndirect(StringSpan input) {
   while (!input.isEmpty()) {
     int remaining_capacity = buffer_.capacity() - buffer_.size();
-    void* output = buffer_.AppendUninitialized(remaining_capacity);
+    void* output = buffer_.appendUninitialized(remaining_capacity);
 
     auto result = encoder_->Encode(input, MutableBufferSpan(output, remaining_capacity));
 

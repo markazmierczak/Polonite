@@ -14,15 +14,15 @@ TextEncoding StringWriter::GetEncoding() const {
 }
 
 void StringWriter::onWriteChar(char c) {
-  string_.Add(c);
+  string_.add(c);
 }
 
 void StringWriter::onWriteRune(char32_t rune) {
-  AppendRune(string_, rune);
+  appendRune(string_, rune);
 }
 
 void StringWriter::onWriteString(StringSpan text) {
-  string_.Append(text);
+  string_.append(text);
 }
 
 void StringWriter::onIndent(int count, char c) {

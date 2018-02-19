@@ -16,10 +16,10 @@ inline TResult Concat(const TArray& inputs) {
   for (int i = 0; i < inputs.size(); ++i)
     result_length += inputs[i].size();
 
-  result.EnsureCapacity(result_length);
+  result.ensureCapacity(result_length);
 
   for (int i = 0; i < inputs.size(); ++i)
-    result.Append(inputs[i]);
+    result.append(inputs[i]);
   return result;
 }
 
@@ -40,13 +40,13 @@ inline TResult Join(typename TResult::ItemType separator, const TArray& inputs) 
       result_length += inputs[i].size();
     result_length += inputs.size() - 1;
 
-    result.EnsureCapacity(result_length);
+    result.ensureCapacity(result_length);
 
     for (int i = 0; i < inputs.size(); ++i) {
       if (i != 0) {
-        result.Add(separator);
+        result.add(separator);
       }
-      result.Append(inputs[i]);
+      result.append(inputs[i]);
     }
   }
   return result;
@@ -69,13 +69,13 @@ inline TResult Join(Span<typename TResult::ItemType> separator, const TArray& in
       result_length += inputs[i].size();
     result_length += (inputs.size() - 1) * separator.size();
 
-    result.EnsureCapacity(result_length);
+    result.ensureCapacity(result_length);
 
     for (int i = 0; i < inputs.size(); ++i) {
       if (i != 0) {
-        result.Append(separator);
+        result.append(separator);
       }
-      result.Append(inputs[i]);
+      result.append(inputs[i]);
     }
   }
   return result;

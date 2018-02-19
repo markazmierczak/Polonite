@@ -55,7 +55,7 @@ class TextEncodingRegistry {
       return provider->TryResolveByName(name);
     });
     if (encoding.IsValid())
-      find_result.Add(name, encoding);
+      find_result.add(name, encoding);
     return encoding;
   }
 
@@ -71,7 +71,7 @@ class TextEncodingRegistry {
   }
 
   void AddProvider(TextEncodingProvider* provider) {
-    providers_.Append(provider);
+    providers_.append(provider);
   }
 
  private:

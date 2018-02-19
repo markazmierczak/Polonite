@@ -36,9 +36,9 @@ TEST(JsonFormatterTest, NestedTypes) {
   JsonArray array;
   JsonObject object;
   object.SetWithPath("inner int", 10);
-  array.Add(move(object));
-  array.Add(JsonArray());
-  array.Add(true);
+  array.add(move(object));
+  array.add(JsonArray());
+  array.add(true);
   root.SetWithPath("array", move(array));
 
   // Test the pretty-printer.
@@ -110,7 +110,7 @@ TEST(JsonFormatterTest, EscapeUTF8) {
 
   // now try with a NULL in the string
   String null_prepend = "test";
-  null_prepend.Add('\0');
+  null_prepend.add('\0');
   in = null_prepend + in;
   String expected = "test\\u0000";
   expected += cases[0].escaped;

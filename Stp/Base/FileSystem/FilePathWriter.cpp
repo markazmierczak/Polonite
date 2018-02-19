@@ -25,22 +25,22 @@ void FilePathWriter::EnsureSeparator() {
     return;
   if (IsFilePathSeparator(path_.chars().getLast()))
     return;
-  path_.chars().Add(FilePathSeparator);
+  path_.chars().add(FilePathSeparator);
 }
 
 void FilePathWriter::onWriteChar(char c) {
-  path_.chars().Add(char_cast<FilePathChar>(c));
+  path_.chars().add(char_cast<FilePathChar>(c));
 }
 
 void FilePathWriter::onWriteRune(char32_t rune) {
-  AppendRune(path_.chars(), rune);
+  appendRune(path_.chars(), rune);
 }
 
 void FilePathWriter::onWriteString(StringSpan text) {
   #if OS(WIN)
   #error "not implemented"
   #elif OS(POSIX)
-  path_.chars().Append(text);
+  path_.chars().append(text);
   #endif
 }
 

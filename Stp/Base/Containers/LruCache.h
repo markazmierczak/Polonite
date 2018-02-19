@@ -25,7 +25,7 @@ class LruCache {
   T* TryGet(const InputKeyType& key);
 
   template<typename... Args>
-  T* TryAdd(const InputKeyType& key, Args&&... args);
+  T* tryAdd(const InputKeyType& key, Args&&... args);
 
   bool TryRemove(const InputKeyType& key);
 
@@ -70,8 +70,8 @@ inline T* LruCache<K, T, Traits>::TryGet(const InputKeyType& key) {
 
 template<typename K, typename T, class Traits>
 template<typename... Args>
-inline T* LruCache<K, T, Traits>::TryAdd(const InputKeyType& key, Args&&... args) {
-  T* item = map_.TryAdd(key, Forward<Args>(args)...);
+inline T* LruCache<K, T, Traits>::tryAdd(const InputKeyType& key, Args&&... args) {
+  T* item = map_.tryAdd(key, Forward<Args>(args)...);
   if (item)
     list_.Prepend(item);
 

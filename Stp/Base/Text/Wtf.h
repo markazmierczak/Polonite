@@ -63,7 +63,7 @@ BASE_EXPORT void WriteWtf(TextWriter& out, StringSpan wtf8);
 
 BASE_EXPORT String WtfToUtf8(StringSpan wtf8);
 
-BASE_EXPORT void AppendWtf(String& output, StringSpan wtf);
+BASE_EXPORT void appendWtf(String& output, StringSpan wtf);
 
 inline int Wtf8::EncodedLength(char32_t c) {
   ASSERT(c <= unicode::MaxRune);

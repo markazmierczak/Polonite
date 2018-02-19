@@ -25,7 +25,7 @@ class BASE_EXPORT MemoryStream final : public Stream {
   void Open(BufferSpan memory) { OpenInternal(const_cast<void*>(memory.data()), memory.size(), false); }
   void Open(MutableBufferSpan memory) { OpenInternal(memory.data(), memory.size(), true); }
 
-  void EnsureCapacity(int request);
+  void ensureCapacity(int request);
 
   void Close() override;
   bool IsOpen() const noexcept override;

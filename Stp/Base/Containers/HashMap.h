@@ -79,7 +79,7 @@ class HashMap : public detail::HashMapBase {
   void clear();
 
   // Returns true if the given hint triggered rehashing.
-  bool WillGrow(int n);
+  bool willGrow(int n);
 
   void Shrink();
 
@@ -94,7 +94,7 @@ class HashMap : public detail::HashMapBase {
   void Set(U&& key, T value);
 
   template<typename U>
-  T* TryAdd(U&& key, T value);
+  T* tryAdd(U&& key, T value);
 
   template<typename U>
   bool TryRemove(const U& key);
@@ -194,9 +194,9 @@ class HashMap : public detail::HashMapBase {
 
   void Assign(const HashMap& other) {
     ASSERT(isEmpty());
-    WillGrow(other.size());
+    willGrow(other.size());
     for (const auto& pair : other.Enumerate())
-      Add(pair.key, pair.value);
+      add(pair.key, pair.value);
   }
 
   void DestroyAllNodes();
@@ -308,7 +308,7 @@ inline void HashMap<K, T>::DestroyAllNodes() {
 }
 
 template<typename K, typename T>
-inline bool HashMap<K, T>::WillGrow(int n) {
+inline bool HashMap<K, T>::willGrow(int n) {
   ASSERT(n >= 0);
   int min = size_ + n;
   if (min > bucket_count_) {
@@ -397,7 +397,7 @@ inline void HashMap<K, T>::Set(U&& key, T value) {
     value.~T();
     new(&value) T(move(value));
   } else {
-    if (WillGrow(1))
+    if (willGrow(1))
       entry = FindEntry(key, hash);
     *entry = CreateNode(sentinel_, hash, Forward<U>(key), move(value));
   }
@@ -405,10 +405,10 @@ inline void HashMap<K, T>::Set(U&& key, T value) {
 
 template<typename K, typename T>
 template<typename U>
-inline T* HashMap<K, T>::TryAdd(U&& key, T value) {
+inline T* HashMap<K, T>::tryAdd(U&& key, T value) {
   // Optimistic hint to grow the bucket count.
   // Without this hint FindEntry() must be called twice.
-  WillGrow(1);
+  willGrow(1);
 
   HashCode hash;
   Entry* entry = FindEntry(key, &hash);
