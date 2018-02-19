@@ -40,11 +40,11 @@ struct VecNx<2, float> {
   static VecNx Load(const float* ptr) { return vld1_f32(ptr); }
   void Store(float* ptr) const { vst1_f32(ptr, vec_); }
 
-  bool AllTrue() const {
+  bool allTrue() const {
     auto v = vreinterpret_u32_f32(vec_);
     return vget_lane_u32(v,0) && vget_lane_u32(v,1);
   }
-  bool AnyTrue() const {
+  bool anyTrue() const {
     auto v = vreinterpret_u32_f32(vec_);
     return vget_lane_u32(v,0) || vget_lane_u32(v,1);
   }
@@ -122,12 +122,12 @@ struct VecNx<4, float> {
   static VecNx Load(const float* ptr) { return vld1q_f32(ptr); }
   void Store(float* ptr) const { vst1q_f32(ptr, vec_); }
 
-  bool AllTrue() const {
+  bool allTrue() const {
     auto v = vreinterpretq_u32_f32(vec_);
     return vgetq_lane_u32(v,0) && vgetq_lane_u32(v,1) && vgetq_lane_u32(v,2) && vgetq_lane_u32(v,3);
   }
 
-  bool AnyTrue() const {
+  bool anyTrue() const {
     auto v = vreinterpretq_u32_f32(vec_);
     return vgetq_lane_u32(v,0) || vgetq_lane_u32(v,1) || vgetq_lane_u32(v,2) || vgetq_lane_u32(v,3);
   }

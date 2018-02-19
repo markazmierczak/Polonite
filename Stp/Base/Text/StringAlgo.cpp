@@ -15,7 +15,7 @@ typedef BitArray<256> CharLookupTable;
 inline CharLookupTable BuildLookupTable(StringSpan s) {
   CharLookupTable table;
   for (int i = 0; i < s.size(); ++i)
-    table.Set(static_cast<unsigned char>(s[i]));
+    table.setBit(static_cast<unsigned char>(s[i]));
   return table;
 }
 

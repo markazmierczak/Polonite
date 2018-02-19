@@ -30,10 +30,10 @@ struct VecNx<2, float> {
   }
   void Store(float* ptr) const { _mm_storel_pi((__m64*)ptr, vec_); }
 
-  bool AllTrue() const {
+  bool allTrue() const {
     return (_mm_movemask_epi8(_mm_castps_si128(vec_)) & 0xFF) == 0xFF;
   }
-  bool AnyTrue() const {
+  bool anyTrue() const {
     return (_mm_movemask_epi8(_mm_castps_si128(vec_)) & 0xFF) != 0x00;
   }
 
@@ -83,10 +83,10 @@ struct VecNx<4, float> {
   static VecNx Load(const float* ptr) { return _mm_loadu_ps(ptr); }
   void Store(float* ptr) const { _mm_storeu_ps(ptr, vec_); }
 
-  bool AllTrue() const {
+  bool allTrue() const {
     return _mm_movemask_epi8(_mm_castps_si128(vec_)) == 0xFFFF;
   }
-  bool AnyTrue() const {
+  bool anyTrue() const {
     return _mm_movemask_epi8(_mm_castps_si128(vec_)) != 0x0000;
   }
 

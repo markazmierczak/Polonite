@@ -53,10 +53,10 @@ struct VecNx {
   }
 
   // Returns true if all components are != 0.
-  bool AllTrue() const { return lo_.AllTrue() && hi_.AllTrue(); }
+  bool allTrue() const { return lo_.allTrue() && hi_.allTrue(); }
 
   // Returns true if any component is != 0.
-  bool AnyTrue() const { return lo_.AnyTrue() || hi_.AnyTrue(); }
+  bool anyTrue() const { return lo_.anyTrue() || hi_.anyTrue(); }
 
   // Returns absolute value for each component.
   VecNx Abs() const { return { lo_.Abs(), hi_.Abs() }; }
@@ -137,8 +137,8 @@ struct VecNx<1,T> {
   static VecNx Load(const T* ptr) { return *ptr; }
   void Store(T* ptr) const { *ptr = val_; }
 
-  bool AllTrue() const { return val_ != 0; }
-  bool AnyTrue() const { return val_ != 0; }
+  bool allTrue() const { return val_ != 0; }
+  bool anyTrue() const { return val_ != 0; }
 
   VecNx Abs() const { return stp::Abs(val_); }
   VecNx Reciprocal() const { return T(1) / val_; }

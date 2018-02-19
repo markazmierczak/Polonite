@@ -27,10 +27,10 @@ auto GreatestCommonDivisor(T ai, U bi) -> TCommon<T, U> {
   if (b == 0)
     return a;
 
-  int shift = FindFirstOneBit(a | b);
-  a >>= FindFirstOneBit(a);
+  int shift = findFirstOneBit(a | b);
+  a >>= findFirstOneBit(a);
   do {
-    b >>= FindFirstOneBit(b);
+    b >>= findFirstOneBit(b);
     if (a > b) {
       auto t = b;
       b = a;

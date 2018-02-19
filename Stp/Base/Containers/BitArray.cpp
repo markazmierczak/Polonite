@@ -10,7 +10,7 @@
 namespace stp {
 namespace detail {
 
-static void FormatBitArrayAsBinary(
+static void formatBitArrayAsBinary(
     TextWriter& writer, const uintptr_t* words, int size) {
   constexpr int BitCountInWord = 8 * sizeof(uintptr_t);
   const int WordCount = (size + BitCountInWord - 1) / BitCountInWord;
@@ -35,7 +35,7 @@ static void FormatBitArrayAsBinary(
   }
 }
 
-static void FormatBitArrayAsHex(
+static void formatBitArrayAsHex(
     TextWriter& writer, const uintptr_t* words, int size) {
   constexpr int BitCountInWord = 8 * sizeof(uintptr_t);
   const int WordCount = (size + BitCountInWord - 1) / BitCountInWord;
@@ -60,7 +60,7 @@ static void FormatBitArrayAsHex(
   }
 }
 
-void FormatBitArray(TextWriter& out, const StringSpan& opts, const uintptr_t* words, int size) {
+void formatBitArray(TextWriter& out, const StringSpan& opts, const uintptr_t* words, int size) {
   enum class Format { Binary, Hexadecimal };
   Format format = Format::Binary;
 
@@ -76,10 +76,10 @@ void FormatBitArray(TextWriter& out, const StringSpan& opts, const uintptr_t* wo
 
   switch (format) {
     case Format::Binary:
-      FormatBitArrayAsBinary(out, words, size);
+      formatBitArrayAsBinary(out, words, size);
       break;
     case Format::Hexadecimal:
-      FormatBitArrayAsHex(out, words, size);
+      formatBitArrayAsHex(out, words, size);
       break;
   }
 }

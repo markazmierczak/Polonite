@@ -41,14 +41,14 @@ const uint8_t LookupForBitsReversing[256] = {
   0x1F, 0x9F, 0x5F, 0xDF, 0x3F, 0xBF, 0x7F, 0xFF
 };
 
-int CountBitsPopulationImpl(uint32_t x) {
+int countBitsPopulationImpl(uint32_t x) {
   x = x - ((x >> 1) & 0x55555555);
   x = (x & 0x33333333) + ((x >> 2) & 0x33333333);
   x = (x + (x >> 4)) & 0xF0F0F0F;
   return static_cast<int>((x * 0x1010101) >> 24);
 }
 
-int CountBitsPopulationImpl(uint64_t x) {
+int countBitsPopulationImpl(uint64_t x) {
   x = x - ((x >> 1) & UINT64_C(0x5555555555555555));
   x = (x & UINT64_C(0x3333333333333333)) + ((x >> 2) & UINT64_C(0x3333333333333333));
   x = (x + (x >> 4)) & UINT64_C(0x0F0F0F0F0F0F0F0F);
@@ -56,4 +56,53 @@ int CountBitsPopulationImpl(uint64_t x) {
 }
 
 } // namespace detail
+
+/**
+ * @fn findFirstOneBit
+ * Returns index of first (least-significant) bit that is set.
+ * -1 is returned if |x| is zero.
+ */
+
+/**
+ * @fn findLastOneBit
+ * Same as @ref findFirstOneBit but for last (most-significant) bit.
+ */
+
+/**
+ * @fn extractFirstOneBit
+ * Extracts first (least-significant) bit that is set within integral value.
+ * Note that this returns a bit at the same position
+ * and not an index as findFirstOneBit() does.
+ * 0 is returned if |x| is zero.
+ *
+ */
+
+/**
+ * @fn extractLastOneBit
+ * Same as @ref extractFirstOneBit but for last (most-significant) bit.
+ */
+
+/**
+ * @fn countTrailingZeroBits
+ * Returns the number of trailing 0-bits in given integer,
+ * starting at the least-significant bit position.
+ *
+ * If input value is zero, the number of bits in source type is returned.
+ */
+
+/**
+ * @fn countLeadingZeroBits
+ * Same as @fn countTrailingZeroBits but for leading (most-significant) 0-bits.
+ */
+
+/**
+ * @fn getBitsParity
+ * Returns true if number of bits set in input value is odd.
+ */
+
+/**
+ * @fn countBitsPopulation
+ * Returns the number of bits set in input value.
+ */
+
 } // namespace stp

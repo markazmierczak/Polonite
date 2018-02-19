@@ -62,15 +62,15 @@ static void TestTemplateVecNf() {
   assert_eq(max(a, fours), 4, 4, 5, 6);
 
   // Test some comparisons.  This is not exhaustive.
-  EXPECT_TRUE((a == b).AllTrue());
-  EXPECT_TRUE((a+b == a*b-b).AnyTrue());
-  EXPECT_FALSE((a+b == a*b-b).AllTrue());
-  EXPECT_FALSE((a+b == a*b).AnyTrue());
-  EXPECT_FALSE((a != b).AnyTrue());
-  EXPECT_TRUE((a < fours).AnyTrue());
-  EXPECT_TRUE((a <= fours).AnyTrue());
-  EXPECT_FALSE((a > fours).AllTrue());
-  EXPECT_FALSE((a >= fours).AllTrue());
+  EXPECT_TRUE((a == b).allTrue());
+  EXPECT_TRUE((a+b == a*b-b).anyTrue());
+  EXPECT_FALSE((a+b == a*b-b).allTrue());
+  EXPECT_FALSE((a+b == a*b).anyTrue());
+  EXPECT_FALSE((a != b).anyTrue());
+  EXPECT_TRUE((a < fours).anyTrue());
+  EXPECT_TRUE((a <= fours).anyTrue());
+  EXPECT_FALSE((a > fours).allTrue());
+  EXPECT_FALSE((a >= fours).allTrue());
 }
 
 TEST(VnxTest, Vecf) {

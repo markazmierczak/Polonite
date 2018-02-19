@@ -16,7 +16,7 @@ namespace stp {
 template<typename T, TEnableIf<TIsInteger<T>>* = nullptr>
 inline int Log2Floor(T x) {
   ASSERT(x >= 0);
-  return FindLastOneBit(x);
+  return findLastOneBit(x);
 }
 
 // Returns the integer i such as 2^(i-1) < n <= 2^i.
@@ -39,7 +39,7 @@ template<typename T, TEnableIf<TIsInteger<T>>* = nullptr>
 inline int WhichPowerOfTwo(T x) {
   ASSUME(x > 0);
   ASSERT(IsPowerOfTwo(x));
-  return FindFirstOneBit(x);
+  return findFirstOneBit(x);
 }
 
 // Returns the smallest power of two which is >= |x|.
@@ -49,7 +49,7 @@ inline int WhichPowerOfTwo(T x) {
 template<typename T, TEnableIf<TIsInteger<T>>* = nullptr>
 inline T RoundUpToPowerOfTwo(T x) {
   if (x > 1) {
-    int p = FindLastOneBit(x - 1) + 1;
+    int p = findLastOneBit(x - 1) + 1;
     ASSERT(p <= Limits<T>::Digits);
     return T(1) << p;
   }
@@ -61,7 +61,7 @@ inline T RoundUpToPowerOfTwo(T x) {
 template<typename T, TEnableIf<TIsInteger<T>>* = nullptr>
 inline T RoundDownToPowerOfTwo(T x) {
   ASSUME(x > 0);
-  return T(1) << FindLastOneBit(x);
+  return T(1) << findLastOneBit(x);
 }
 
 template<typename T, TEnableIf<TIsInteger<T>>* = nullptr>

@@ -24,7 +24,7 @@ inline bool IsAlignedTo(const void* x, intptr_t alignment) {
 // Clears all bits except the least significant (returns 1 for x=0).
 template<typename T>
 inline T WhichAlignment(T x) {
-  return x ? ExtractFirstOneBit(x) : 1;
+  return x ? extractFirstOneBit(x) : 1;
 }
 
 inline intptr_t WhichAlignment(const void* x) {

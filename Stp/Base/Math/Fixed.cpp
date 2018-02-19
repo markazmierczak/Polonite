@@ -92,7 +92,7 @@ int32_t RSqrtFixed16(int32_t xs) {
   ASSERT(xs > 0);
   uint32_t x = static_cast<uint32_t>(xs);
 
-  uint32_t scale = CountLeadingZeroBits(x);
+  uint32_t scale = countLeadingZeroBits(x);
   scale &= ~1;
 
   x <<= scale;

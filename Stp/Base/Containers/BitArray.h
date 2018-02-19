@@ -15,7 +15,7 @@ namespace stp {
 
 namespace detail {
 
-BASE_EXPORT void FormatBitArray(
+BASE_EXPORT void formatBitArray(
     TextWriter& out, const StringSpan& opts, const uintptr_t* words, int size);
 
 } // namespace detail
@@ -77,29 +77,29 @@ class BitArray {
 
   explicit constexpr BitArray(uint64_t x) noexcept;
 
-  bool operator[](int index) const { return MakeRef(index); }
-  BitReference operator[](int index) { return MakeRef(index); }
+  bool operator[](int index) const { return makeRef(index); }
+  BitReference operator[](int index) { return makeRef(index); }
 
   ALWAYS_INLINE constexpr int size() const { return N; }
 
-  bool Test(int index) const { return MakeRef(index); }
-  bool Test(const BitArray& other) const;
+  bool testBit(int index) const { return makeRef(index); }
+  bool testBit(const BitArray& other) const;
 
-  void Set(int index) { MakeRef(index) = true; }
-  void Unset(int index) { MakeRef(index) = false; }
-  void Flip(int index);
+  void setBit(int index) { makeRef(index) = true; }
+  void unsetBit(int index) { makeRef(index) = false; }
+  void flipBit(int index);
 
-  void SetAll();
-  void UnsetAll();
-  void FlipAll();
+  void setAll();
+  void unsetAll();
+  void flipAll();
 
-  int Count() const;
+  int countSetBits() const;
 
-  int FindFirstSet();
-  int FindNextSet(int prev);
+  int findFirstSet();
+  int findNextSet(int prev);
 
-  int FindLastSet();
-  int FindPrevSet(int next);
+  int findLastSet();
+  int findPrevSet(int next);
 
   // |amount| must be lower or equal to |Size|.
   BitArray& operator>>=(int amount);
@@ -110,8 +110,8 @@ class BitArray {
   BitArray& operator^=(const BitArray& other);
   BitArray operator~() const;
 
-  bool AllTrue() const;
-  bool AnyTrue() const;
+  bool allTrue() const;
+  bool anyTrue() const;
 
   friend BitArray operator>>(const BitArray& x, int amount) {
     BitArray rv = x; rv >>= amount; return rv;
@@ -139,7 +139,7 @@ class BitArray {
   }
   friend HashCode partialHash(const BitArray& x) { return hashBuffer(x.words_, N * isizeof(WordType)); }
   friend void format(TextWriter& out, const BitArray& x, const StringSpan& opts) {
-    detail::FormatBitArray(out, opts, x.words_, N);
+    detail::formatBitArray(out, opts, x.words_, N);
   }
 
  private:
@@ -152,26 +152,26 @@ class BitArray {
 
   WordType words_[WordCount];
 
-  static constexpr WordType ComputeUnusedBits() {
+  static constexpr WordType computeUnusedBits() {
     unsigned used_bits = N % BitsPerWord;
     if (used_bits == 0)
       return 0; // All bits used.
     return ~((WordType(1) << used_bits) - 1);
   }
 
-  static constexpr WordType UnusedBitsMask = ComputeUnusedBits();
+  static constexpr WordType UnusedBitsMask = computeUnusedBits();
 
-  ConstBitReference MakeRef(unsigned index) const {
+  ConstBitReference makeRef(unsigned index) const {
     ASSERT(index < static_cast<unsigned>(N));
     return ConstBitReference(words_ + index / BitsPerWord, WordType(1) << (index % BitsPerWord));
   }
 
-  BitReference MakeRef(unsigned index) {
+  BitReference makeRef(unsigned index) {
     ASSERT(index < static_cast<unsigned>(N));
     return BitReference(words_ + index / BitsPerWord, WordType(1) << (index % BitsPerWord));
   }
 
-  constexpr void ClearUnusedBits() {
+  constexpr void clearUnusedBits() {
     if (UnusedBitsMask != 0)
       words_[WordCount - 1] &= ~UnusedBitsMask;
   }
@@ -198,11 +198,11 @@ constexpr BitArray<N>::BitArray(uint64_t x) noexcept : words_() {
       ASSERT(false);
     }
   }
-  ClearUnusedBits();
+  clearUnusedBits();
 }
 
 template<int N>
-inline bool BitArray<N>::Test(const BitArray& other) const {
+inline bool BitArray<N>::testBit(const BitArray& other) const {
   for (int i = 0; i < WordCount; ++i) {
     if (words_[i] & other.words_[i])
       return true;
@@ -211,36 +211,36 @@ inline bool BitArray<N>::Test(const BitArray& other) const {
 }
 
 template<int N>
-inline void BitArray<N>::Flip(int index) {
-  BitReference ref = MakeRef(index);
+inline void BitArray<N>::flipBit(int index) {
+  BitReference ref = makeRef(index);
   ref = !static_cast<bool>(ref);
 }
 
 template<int N>
-inline void BitArray<N>::SetAll() {
+inline void BitArray<N>::setAll() {
   for (int i = 0; i < WordCount; ++i)
     words_[i] = static_cast<WordType>(-1);
-  ClearUnusedBits();
+  clearUnusedBits();
 }
 
 template<int N>
-inline void BitArray<N>::UnsetAll() {
+inline void BitArray<N>::unsetAll() {
   for (int i = 0; i < WordCount; ++i)
     words_[i] = 0;
 }
 
 template<int N>
-inline void BitArray<N>::FlipAll() {
+inline void BitArray<N>::flipAll() {
   for (int i = 0; i < WordCount; ++i)
     words_[i] = ~words_[i];
-  ClearUnusedBits();
+  clearUnusedBits();
 }
 
 template<int N>
-inline int BitArray<N>::Count() const {
+inline int BitArray<N>::countSetBits() const {
   int count = 0;
   for (int i = 0; i < WordCount; ++i)
-    count += CountBitsPopulation(words_[i]);
+    count += countBitsPopulation(words_[i]);
   return count;
 }
 
@@ -268,21 +268,21 @@ inline BitArray<N>& BitArray<N>::operator^=(const BitArray& other) {
 template<int N>
 inline BitArray<N> BitArray<N>::operator~() const {
   BitArray result = *this;
-  result.FlipAll();
+  result.flipAll();
   return result;
 }
 
 template<int N>
-inline int BitArray<N>::FindFirstSet() {
+inline int BitArray<N>::findFirstSet() {
   for (int i = 0; i < WordCount; ++i) {
     if (words_[i] != 0)
-      return i * BitsPerWord + FindFirstOneBit(words_[i]);
+      return i * BitsPerWord + findFirstOneBit(words_[i]);
   }
   return -1;
 }
 
 template<int N>
-inline int BitArray<N>::FindNextSet(int prev) {
+inline int BitArray<N>::findNextSet(int prev) {
   ASSERT(0 <= prev && prev < N);
 
   ++prev;
@@ -297,27 +297,27 @@ inline int BitArray<N>::FindNextSet(int prev) {
   copy &= ~WordType(0) << bit_index;
 
   if (copy != 0)
-    return word_index * BitsPerWord + FindFirstOneBit(copy);
+    return word_index * BitsPerWord + findFirstOneBit(copy);
 
   // Check subsequent words.
   for (int i = word_index + 1; i < WordCount; ++i) {
     if (words_[i] != 0)
-      return i * BitsPerWord + FindFirstOneBit(words_[i]);
+      return i * BitsPerWord + findFirstOneBit(words_[i]);
   }
   return -1;
 }
 
 template<int N>
-inline int BitArray<N>::FindLastSet() {
+inline int BitArray<N>::findLastSet() {
   for (int i = WordCount - 1; i >= 0; --i) {
     if (words_[i] != 0)
-      return i * BitsPerWord + FindLastOneBit(words_[i]);
+      return i * BitsPerWord + findLastOneBit(words_[i]);
   }
   return -1;
 }
 
 template<int N>
-inline int BitArray<N>::FindPrevSet(int next) {
+inline int BitArray<N>::findPrevSet(int next) {
   if (next == 0)
     return -1;
   --next;
@@ -332,20 +332,20 @@ inline int BitArray<N>::FindPrevSet(int next) {
     copy &= (WordType(1) << bit_index) - 1;
 
   if (copy != 0)
-    return word_index * BitsPerWord + FindLastOneBit(copy);
+    return word_index * BitsPerWord + findLastOneBit(copy);
 
   // Check subsequent words.
   if (WordCount > 1) {
     for (int i = word_index - 1; i >= 0; --i) {
       if (words_[i] != 0)
-        return i * BitsPerWord + FindLastOneBit(words_[i]);
+        return i * BitsPerWord + findLastOneBit(words_[i]);
     }
   }
   return -1;
 }
 
 template<int N>
-inline bool BitArray<N>::AllTrue() const {
+inline bool BitArray<N>::allTrue() const {
   for (int i = 0; i < WordCount - 1; ++i) {
     if (words_[i] != ~static_cast<WordType>(0))
       return false;
@@ -354,7 +354,7 @@ inline bool BitArray<N>::AllTrue() const {
 }
 
 template<int N>
-inline bool BitArray<N>::AnyTrue() const {
+inline bool BitArray<N>::anyTrue() const {
   for (int i = 0; i < WordCount; ++i) {
     if (words_[i] != 0)
       return true;
@@ -413,7 +413,7 @@ inline BitArray<N>& BitArray<N>::operator<<=(int amount) {
   for (int i = 0; i < word_amount; ++i)
     words_[i] = 0;
 
-  ClearUnusedBits();
+  clearUnusedBits();
 
   return *this;
 }
