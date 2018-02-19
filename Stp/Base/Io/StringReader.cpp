@@ -38,7 +38,7 @@ int StringReader::OnRead(char* dst, int count) {
     count = string_.size();
 
   if (count > 0) {
-    UninitializedCopy(dst, string_.data(), count);
+    uninitializedCopy(dst, string_.data(), count);
     string_.RemovePrefix(count);
   }
   return count;

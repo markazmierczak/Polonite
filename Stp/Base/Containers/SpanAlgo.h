@@ -59,7 +59,7 @@ constexpr int countMatchingInSpan(Span<T> span, const TItem& item, TPredicate&& 
 
 template<typename T, typename TItem>
 inline void fillSpan(MutableSpan<T> span, const TItem& item) {
-  Fill(span.data(), span.size(), item);
+  fillObjects(span.data(), span.size(), item);
 }
 
 template<typename T, typename TBefore, typename TAfter>

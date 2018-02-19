@@ -80,7 +80,7 @@ class Span {
   bool contains(const U& item) const { return indexOf(item) >= 0; }
 
   friend bool operator==(const Span& lhs, const Span& rhs) {
-    return lhs.size_ == rhs.size() && Equals(lhs.data_, rhs.data_, lhs.size_);
+    return lhs.size_ == rhs.size() && equalObjects(lhs.data_, rhs.data_, lhs.size_);
   }
   friend bool operator!=(const Span& lhs, const Span& rhs) { return !operator==(lhs, rhs); }
 
@@ -174,7 +174,7 @@ class MutableSpan {
   bool contains(const U& item) const { return indexOf(item) >= 0; }
 
   friend bool operator==(const MutableSpan& lhs, const Span<T>& rhs) {
-    return lhs.size_ == rhs.size() && Equals(lhs.data_, rhs.data(), lhs.size_);
+    return lhs.size_ == rhs.size() && equalObjects(lhs.data_, rhs.data(), lhs.size_);
   }
   friend bool operator!=(const MutableSpan& lhs, const Span<T>& rhs) {
     return !operator==(lhs, rhs);

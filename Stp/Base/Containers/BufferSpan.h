@@ -176,6 +176,8 @@ class MutableBufferSpan {
   }
   constexpr void RemoveSuffix(int n) { Truncate(size_ - n); }
 
+  void fill(byte_t byte);
+
   friend bool operator==(const MutableBufferSpan& lhs, const BufferSpan& rhs) {
     return BufferSpan(lhs) == rhs;
   }
@@ -232,9 +234,9 @@ constexpr auto MakeBufferSpan(T& container) {
   return MakeBufferSpan(container.data(), container.size());
 }
 
-inline void Fill(MutableBufferSpan buffer, byte_t byte) {
-  if (!buffer.IsEmpty())
-    ::memset(buffer.data(), byte, toUnsigned(buffer.size()));
+inline void MutableBufferSpan::fill(byte_t byte) {
+  if (!IsEmpty())
+    ::memset(data_, byte, toUnsigned(size_));
 }
 
 [[nodiscard]] BASE_EXPORT bool tryParse(StringSpan input, MutableBufferSpan output);

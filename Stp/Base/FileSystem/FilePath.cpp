@@ -111,7 +111,7 @@ void FilePath::AddComponent(FilePathSpan component) {
 
   if (need_separator)
     *dst++ = FilePathSeparator;
-  UninitializedCopy(dst, component.data(), length);
+  uninitializedCopy(dst, component.data(), length);
 }
 
 void FilePath::AddComponentAscii(StringSpan component) {

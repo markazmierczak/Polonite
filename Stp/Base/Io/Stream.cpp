@@ -68,7 +68,7 @@ class NullStream final : public Stream {
 };
 
 void NullStream::PositionalRead(int64_t offset, MutableBufferSpan output) {
-  Fill(output, 0);
+  output.fill(0);
 }
 
 } // namespace

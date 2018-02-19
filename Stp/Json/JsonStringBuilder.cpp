@@ -54,7 +54,7 @@ void JsonStringBuilder::AppendString(StringSpan str) {
   ASSERT(OwnsData());
   if (!str.IsEmpty()) {
     char* dst = AppendUninitialized(str.size());
-    UninitializedCopy(dst, str.data(), str.size());
+    uninitializedCopy(dst, str.data(), str.size());
   }
 }
 
@@ -71,7 +71,7 @@ void JsonStringBuilder::Convert() {
   if (size_ > 0) {
     const char* old_ptr = data_;
     data_ = Allocate<char>(capacity_);
-    UninitializedCopy(data_, old_ptr, size_);
+    uninitializedCopy(data_, old_ptr, size_);
   } else {
     data_ = nullptr;
   }

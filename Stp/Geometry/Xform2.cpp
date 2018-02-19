@@ -664,7 +664,7 @@ void Xform2::MapPointsIdent(const Xform2& m, Point2 dst[], const Point2 src[], i
   ASSERT(m.IsIdentity());
 
   if (dst != src && count > 0)
-    CopyNonOverlapping(dst, src, count);
+    copyObjectsNonOverlapping(dst, src, count);
 }
 
 void Xform2::MapPointsTrans(const Xform2& m, Point2 dst[], const Point2 src[], int count) {

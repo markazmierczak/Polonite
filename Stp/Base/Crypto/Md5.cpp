@@ -259,7 +259,7 @@ void Md5Hasher::finish(Md5Digest& digest) noexcept {
   }
 
   // Append length in bits and transform.
-  CopyNonOverlapping(inw_ + 14, bits_, 2);
+  copyObjectsNonOverlapping(inw_ + 14, bits_, 2);
 
   transform();
   memcpy(&digest[0], buf_, 16);

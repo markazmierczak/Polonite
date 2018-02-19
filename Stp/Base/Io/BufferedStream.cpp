@@ -81,7 +81,7 @@ int BufferedStream::ReadFromBuffer(MutableBufferSpan output) {
     count = in_buffer;
 
   auto* output_bytes = static_cast<byte_t*>(output.data());
-  UninitializedCopy(output_bytes, buffer_ + read_pos_, count);
+  uninitializedCopy(output_bytes, buffer_ + read_pos_, count);
   read_pos_ += count;
   return count;
 }
@@ -96,7 +96,7 @@ int BufferedStream::WriteToBuffer(BufferSpan input) {
   EnsureBufferAllocated();
 
   auto* input_bytes = static_cast<const byte_t*>(input.data());
-  UninitializedCopy(buffer_ + write_pos_, input_bytes, bytes_to_write);
+  uninitializedCopy(buffer_ + write_pos_, input_bytes, bytes_to_write);
   write_pos_ += bytes_to_write;
   return bytes_to_write;
 }

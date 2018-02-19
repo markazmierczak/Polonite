@@ -794,7 +794,7 @@ void Xform3::SetConcat(const Xform3& a, const Xform3& b) {
   }
 
   if (use_storage)
-    CopyNonOverlapping(&d_[0][0], storage, EntryCount);
+    copyObjectsNonOverlapping(&d_[0][0], storage, EntryCount);
 }
 
 void Xform3::Concat(const Xform3& other) {
@@ -964,7 +964,7 @@ void Xform3::MapMatrix4x1(float dst[4], const float src[4]) const {
   }
 
   if (storage == result)
-    CopyNonOverlapping(dst, storage, 4);
+    copyObjectsNonOverlapping(dst, storage, 4);
 }
 
 double Xform3::GetDeterminant() const {

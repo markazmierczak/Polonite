@@ -213,7 +213,7 @@ class InlineList : public InlineListBase<T> {
 
 template<typename T>
 inline void InlineListBase<T>::DestroyAndFree(T* data, int size, int capacity) {
-  Destroy(data, size);
+  destroyObjects(data, size);
   if (data != GetInlineData())
     freeMemory(data);
 }
@@ -227,7 +227,7 @@ void InlineList<T, N>::SwapWith(InlineList& other) noexcept {
       for (int i = 0; i < small.size_; ++i) {
         swap(small[i], large[i]);
       }
-      UninitializedRelocate(
+      uninitializedRelocate(
           small.data_ + small.size_,
           large.data_ + small.size_,
           large.size_ - small.size_);
@@ -238,7 +238,7 @@ void InlineList<T, N>::SwapWith(InlineList& other) noexcept {
     InlineList& inl = this->IsInline() ? *this : other;
     InlineList& ext = this->IsInline() ? other : *this;
     auto* heap = exchange(ext.data_, ext.GetInlineData());
-    UninitializedRelocate(ext.data_, inl.data_, inl.size_);
+    uninitializedRelocate(ext.data_, inl.data_, inl.size_);
     inl.data_ = heap;
   }
   swap(this->size_, other.size_);
@@ -248,7 +248,7 @@ void InlineList<T, N>::SwapWith(InlineList& other) noexcept {
 template<typename T, int N>
 inline InlineList<T, N>::InlineList(InlineList&& other) noexcept : InlineListBase<T>(N) {
   if (other.IsInline()) {
-    UninitializedRelocate(this->data_, other.data_, other.size_);
+    uninitializedRelocate(this->data_, other.data_, other.size_);
   } else {
     this->data_ = exchange(other.data_, nullptr);
     this->capacity_ = exchange(other.capacity_, 0);
@@ -263,7 +263,7 @@ inline InlineList<T, N>& InlineList<T, N>::operator=(InlineList&& other) noexcep
   if (other.IsInline()) {
     this->data_ = this->GetInlineData();
     this->capacity_ = N;
-    UninitializedRelocate(this->data_, other.data_, other.size_);
+    uninitializedRelocate(this->data_, other.data_, other.size_);
   } else {
     this->data_ = exchange(other.data_, other.GetInlineData());
     this->capacity_ = exchange(other.capacity_, N);
@@ -308,7 +308,7 @@ inline void InlineListBase<T>::ResizeStorage(int new_capacity) {
     capacity_ = new_capacity;
   } else {
     new_data = (T*)allocateMemory((new_capacity + CapacityIncrement_) * isizeof(T));
-    UninitializedRelocate(new_data, old_data, size_);
+    uninitializedRelocate(new_data, old_data, size_);
     if (!was_inline) {
       freeMemory(old_data);
     }
@@ -337,7 +337,7 @@ inline void InlineList<T, N>::ShrinkCapacity(int request) {
   } else if (!this->IsInline()) {
     T* heap = exchange(this->data_, this->GetInlineData());
     this->capacity_ = N;
-    UninitializedRelocate(this->data_, heap, this->size_);
+    uninitializedRelocate(this->data_, heap, this->size_);
     freeMemory(heap);
   }
 }
@@ -370,7 +370,7 @@ inline void InlineListBase<T>::Truncate(int at) {
   } else {
     int old_size = size_;
     if (old_size != at) {
-      Destroy(data_ + at, old_size - at);
+      destroyObjects(data_ + at, old_size - at);
       SetSizeNoGrow(at);
     }
   }
@@ -395,19 +395,19 @@ inline T* InlineListBase<T>::AppendUninitialized(int n) {
 
 template<typename T>
 inline int InlineListBase<T>::AppendInitialized(int n) {
-  return AddMany(n, [](T* dst, int count) { UninitializedInit(dst, count); });
+  return AddMany(n, [](T* dst, int count) { uninitializedInit(dst, count); });
 }
 
 template<typename T>
 inline int InlineListBase<T>::AddRepeat(T item, int n) {
-  return AddMany(n, [&item](T* dst, int count) { UninitializedFill(dst, count, item); });
+  return AddMany(n, [&item](T* dst, int count) { uninitializedFill(dst, count, item); });
 }
 
 template<typename T>
 inline int InlineListBase<T>::Append(SpanType src) {
   ASSERT(!IsSourceOf(src));
   const T* src_d = src.data();
-  return AddMany(src.size(), [src_d](T* dst, int count) { UninitializedCopy(dst, src_d, count); });
+  return AddMany(src.size(), [src_d](T* dst, int count) { uninitializedCopy(dst, src_d, count); });
 }
 
 template<typename T>
@@ -426,7 +426,7 @@ template<typename T>
 inline void InlineListBase<T>::RemoveLast() {
   ASSERT(!IsEmpty());
   int new_size = size_ - 1;
-  DestroyAt(data_ + new_size);
+  destroyObject(data_ + new_size);
   SetSizeNoGrow(new_size);
 }
 
@@ -434,9 +434,9 @@ template<typename T>
 inline void InlineListBase<T>::RemoveRange(int at, int n) {
   ASSERT(0 <= at && at <= size_);
   ASSERT(0 <= n && n <= size_ - at);
-  Destroy(data_ + at, n);
+  destroyObjects(data_ + at, n);
   int old_size = exchange(size_, size_ - n);
-  UninitializedRelocate(data_ + at, data_ + at + n, old_size - n - at);
+  uninitializedRelocate(data_ + at, data_ + at + n, old_size - n - at);
 }
 
 template<typename T>
@@ -447,11 +447,11 @@ inline void InlineListBase<T>::Insert(int at, T item) {
   int old_size = size_;
 
   if (capacity_ != size_) {
-    UninitializedRelocate(old_d + at + 1, old_d + at, old_size - at);
+    uninitializedRelocate(old_d + at + 1, old_d + at, old_size - at);
     try {
       new (old_d + at) T(move(item));
     } catch (...) {
-      UninitializedRelocate(old_d + at, old_d + at + 1, old_size - at);
+      uninitializedRelocate(old_d + at, old_d + at + 1, old_size - at);
       throw;
     }
     SetSizeNoGrow(old_size + 1);
@@ -469,8 +469,8 @@ inline void InlineListBase<T>::Insert(int at, T item) {
     size_ = new_size;
     capacity_ = new_capacity;
     if (old_capacity) {
-      UninitializedRelocate(new_d, old_d, at);
-      UninitializedRelocate(new_d + at + 1, old_d + at, old_size - at);
+      uninitializedRelocate(new_d, old_d, at);
+      uninitializedRelocate(new_d + at + 1, old_d + at, old_size - at);
       if (!was_inline) {
         freeMemory(old_d);
       }
@@ -490,7 +490,7 @@ template<typename T>
 inline void InlineListBase<T>::InsertInitialized(int at, int n) {
   ASSERT(0 <= at && at <= size_);
   ASSERT(n >= 0);
-  InsertMany(at, n, [n](T* dst) { UninitializedInit(dst, n); });
+  InsertMany(at, n, [n](T* dst) { uninitializedInit(dst, n); });
 }
 
 template<typename T>
@@ -498,7 +498,7 @@ inline void InlineListBase<T>::InsertRange(int at, SpanType src) {
   ASSERT(0 <= at && at <= size_);
   ASSERT(!IsSourceOf(src));
   InsertMany(at, src.size(), [src](T* dst) {
-    UninitializedCopy(dst, src.data(), src.size());
+    uninitializedCopy(dst, src.data(), src.size());
   });
 }
 
@@ -512,11 +512,11 @@ inline void InlineListBase<T>::InsertMany(int at, int n, TAction&& action) {
   int old_size = size_;
 
   if (capacity_ - old_size >= n) {
-    UninitializedRelocate(old_d + at + n, old_d + at, old_size - at);
+    uninitializedRelocate(old_d + at + n, old_d + at, old_size - at);
     try {
       action(old_d + at);
     } catch (...) {
-      UninitializedRelocate(old_d + at, old_d + at + n, old_size - at);
+      uninitializedRelocate(old_d + at, old_d + at + n, old_size - at);
       throw;
     }
   } else {
@@ -539,8 +539,8 @@ inline void InlineListBase<T>::InsertMany(int at, int n, TAction&& action) {
     size_ = new_size;
     capacity_ = new_capacity;
     if (old_capacity) {
-      UninitializedRelocate(new_d, old_d, at);
-      UninitializedRelocate(new_d + at + n, old_d + at, old_size - at);
+      uninitializedRelocate(new_d, old_d, at);
+      uninitializedRelocate(new_d + at + n, old_d + at, old_size - at);
       if (!was_inline) {
         freeMemory(old_d);
       }
@@ -561,12 +561,12 @@ inline void InlineListBase<T>::AssignExternal(SpanType src) {
       Clear();
     }
     EnsureCapacity(src.size());
-    CopyNonOverlapping(data_, src.data(), size_);
-    UninitializedCopy(data_ + size_, src.data() + size_, src.size() - size_);
+    copyObjectsNonOverlapping(data_, src.data(), size_);
+    uninitializedCopy(data_ + size_, src.data() + size_, src.size() - size_);
     SetSizeNoGrow(src.size());
   } else {
     Truncate(src.size());
-    CopyNonOverlapping(data_, src.data(), src.size());
+    copyObjectsNonOverlapping(data_, src.data(), src.size());
   }
 }
 

@@ -31,7 +31,7 @@ Exception::Exception(const Exception& other) {
   if (other.msg_capacity_ != 0) {
     msg_data_ = (char*)allocateMemory(other.msg_capacity_);
     msg_capacity_ = other.msg_capacity_;
-    UninitializedCopy(msg_data_, other.msg_data_, other.msg_size_);
+    uninitializedCopy(msg_data_, other.msg_data_, other.msg_size_);
   } else {
     msg_data_ = other.msg_data_;
   }
@@ -73,7 +73,7 @@ void Exception::AddMessage(const StringSpan& next, bool literal) {
     }
     if (msg_capacity_ == 0) {
       if (msg_size_ != 0)
-        UninitializedCopy(new_data, msg_data_, msg_size_);
+        uninitializedCopy(new_data, msg_data_, msg_size_);
     }
     // separate multiple messages with new-line characters.
     if (msg_size_ != 0)
@@ -82,7 +82,7 @@ void Exception::AddMessage(const StringSpan& next, bool literal) {
     msg_data_ = new_data;
     msg_capacity_ = new_capacity;
   }
-  UninitializedCopy(msg_data_ + msg_size_, next.data(), next.size());
+  uninitializedCopy(msg_data_ + msg_size_, next.data(), next.size());
   msg_size_ = total_size;
 }
 

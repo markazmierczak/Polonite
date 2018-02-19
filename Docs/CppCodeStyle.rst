@@ -298,7 +298,7 @@ The context is like ``this`` pointer for a class. For example, see ``out`` in fo
 
 Some array processing functions use different order to mimic ``memcpy``::
 
-   UninitializedCopy(int* dst, const int* src, int count);
+   uninitializedCopy(int* dst, const int* src, int count);
 
 Reference Arguments
 -------------------

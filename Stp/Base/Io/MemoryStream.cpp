@@ -85,7 +85,7 @@ int MemoryStream::ReadAtMost(MutableBufferSpan output) {
   }
   if (n) {
     auto* output_bytes = static_cast<byte_t*>(output.data());
-    UninitializedCopy(output_bytes, memory_ + position_, n);
+    uninitializedCopy(output_bytes, memory_ + position_, n);
     position_ += n;
   }
   return n;
@@ -105,7 +105,7 @@ void MemoryStream::PositionalRead(int64_t offset, MutableBufferSpan output) {
     throw EndOfStreamException();
   if (n) {
     auto* output_bytes = static_cast<byte_t*>(output.data());
-    UninitializedCopy(output_bytes, memory_ + offset, n);
+    uninitializedCopy(output_bytes, memory_ + offset, n);
   }
 }
 
@@ -124,7 +124,7 @@ void MemoryStream::PositionalWrite(int64_t offset, BufferSpan input) {
   }
   if (n) {
     auto* input_bytes = static_cast<const byte_t*>(input.data());
-    UninitializedCopy(memory_ + offset, input_bytes, n);
+    uninitializedCopy(memory_ + offset, input_bytes, n);
   }
 }
 
@@ -140,7 +140,7 @@ void MemoryStream::WriteByte(byte_t byte) {
     }
     if (position_ > length_) {
       // Clear the garbage in memory.
-      UninitializedInit(memory_, position_ - length_);
+      uninitializedInit(memory_, position_ - length_);
     }
     length_ = new_length;
   }
@@ -204,7 +204,7 @@ void MemoryStream::SetLength(int64_t new_length) {
 
     EnsureCapacity(static_cast<int>(new_length));
     // Zero the memory acquired by resizing up.
-    UninitializedInit(memory_ + length_, new_length - length_);
+    uninitializedInit(memory_ + length_, new_length - length_);
   } else {
     // See if new length make memory small enough to lower capacity.
     int new_capacity = static_cast<int>(new_length);

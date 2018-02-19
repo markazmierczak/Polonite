@@ -17,7 +17,7 @@ class Sha1Digest {
 
   explicit Sha1Digest(Span<byte_t> raw) noexcept {
     ASSERT(raw.size() == Length);
-    UninitializedCopy(raw_, raw.data(), Length);
+    uninitializedCopy(raw_, raw.data(), Length);
   }
 
   const byte_t& operator[](int pos) const noexcept {

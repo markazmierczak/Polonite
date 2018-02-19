@@ -196,14 +196,14 @@ inline T* FlatMap<K, T, TList>::TryGet(const U& key) {
 
 template<typename K, typename T, class TList>
 template<typename U>
-inline void FlatMap<K, T, TList>::Set(U&& key, T value) {
+inline void FlatMap<K, T, TList>::Set(U&& key, T new_value) {
   int pos = indexOf(key);
   if (pos >= 0) {
     auto& value = list_[pos].value();
-    DestroyAt(&value);
-    new (&value) T(move(value));
+    destroyObject(&value);
+    new (&value) T(move(new_value));
   } else {
-    InsertAt(~pos, Forward<U>(key), move(value));
+    InsertAt(~pos, Forward<U>(key), move(new_value));
   }
 }
 

@@ -493,7 +493,7 @@ inline void Vec4fStorePoints(const Vec4f& vec, Point2* points) {
 void MapPointsOptIdentity(const Affine& m, Point2* dst, const Point2* src, int count) {
   ASSERT(m.IsIdentity());
   if (dst != src && count)
-    CopyNonOverlapping(dst, src, count);
+    copyObjectsNonOverlapping(dst, src, count);
 }
 
 void MapPointsOptTranslate(const Affine& m, Point2* dst, const Point2* src, int count) {
@@ -744,11 +744,11 @@ void Affine::Recompose(const DecomposedAffine& decomposed) {
 }
 
 void Affine::Store(float data[EntryCount]) const {
-  CopyNonOverlapping(data, d_, EntryCount);
+  copyObjectsNonOverlapping(data, d_, EntryCount);
 }
 
 void Affine::Load(float data[EntryCount]) {
-  CopyNonOverlapping(d_, data, EntryCount);
+  copyObjectsNonOverlapping(d_, data, EntryCount);
   InvalidateTypes();
 }
 

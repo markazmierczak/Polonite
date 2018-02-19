@@ -99,15 +99,15 @@ void JsonValue::Fini() {
       break;
 
     case Type::String:
-      DestroyAt(&data_.string);
+      destroyObject(&data_.string);
       break;
 
     case Type::Array:
-      DestroyAt(&data_.array);
+      destroyObject(&data_.array);
       break;
 
     case Type::Object:
-      DestroyAt(&data_.object);
+      destroyObject(&data_.object);
       break;
   }
 }
