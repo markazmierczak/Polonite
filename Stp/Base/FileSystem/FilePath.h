@@ -110,8 +110,8 @@ class BASE_EXPORT FilePath {
     format(out, x.toSpan(), opts);
   }
 
-  friend const FilePathChar* ToNullTerminated(const FilePath& x) {
-    return ToNullTerminated(x.chars_);
+  friend const FilePathChar* toNullTerminated(const FilePath& x) {
+    return toNullTerminated(x.chars_);
   }
 
   SpanType toSpan() const { return SpanType(chars_); }

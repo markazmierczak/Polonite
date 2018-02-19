@@ -69,7 +69,7 @@ FilePath GetCurrentDirPath() {
 }
 
 bool SetCurrentDirPath(const FilePath& path) {
-  return ::chdir(ToNullTerminated(path)) == 0;
+  return ::chdir(toNullTerminated(path)) == 0;
 }
 
 } // namespace stp

@@ -62,8 +62,8 @@ template<typename K, typename T, class Traits>
 inline T* LruCache<K, T, Traits>::tryGet(const InputKeyType& key) {
   T* item = map_.tryGet(key);
   if (item && list_.getFirst() != item) {
-    list_.Remove(item);
-    list_.Prepend(item);
+    list_.remove(item);
+    list_.prepend(item);
   }
   return item;
 }
@@ -73,7 +73,7 @@ template<typename... Args>
 inline T* LruCache<K, T, Traits>::tryAdd(const InputKeyType& key, Args&&... args) {
   T* item = map_.tryAdd(key, Forward<Args>(args)...);
   if (item)
-    list_.Prepend(item);
+    list_.prepend(item);
 
   return item;
 }
@@ -82,8 +82,8 @@ template<typename K, typename T, class Traits>
 inline bool LruCache<K, T, Traits>::tryRemove(const InputKeyType& key) {
   T* item = map_.tryGet(key);
   if (item) {
-    list_.Remove(item);
-    map_.Remove(key);
+    list_.remove(item);
+    map_.remove(key);
   }
   return item != nullptr;;
 }

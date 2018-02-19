@@ -55,7 +55,7 @@ class Stack {
 template<typename T, class TList>
 inline T Stack<T, TList>::Pop() {
   T value = move(list_.getLast());
-  list_.RemoveLast();
+  list_.removeLast();
   return value;
 }
 

@@ -17,7 +17,7 @@ ScopedLocale::ScopedLocale(const char* locale) {
 }
 
 ScopedLocale::~ScopedLocale() {
-  auto* prev = ToNullTerminated(prev_locale_);
+  auto* prev = toNullTerminated(prev_locale_);
   EXPECT_STREQ(prev, setlocale(LC_ALL, prev));
 }
 

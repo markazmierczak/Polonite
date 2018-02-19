@@ -25,7 +25,7 @@ BASE_EXPORT String ToString(WStringSpan s);
 BASE_EXPORT String16 ToString16(WStringSpan s);
 BASE_EXPORT WString ToWString(StringSpan s);
 BASE_EXPORT WString ToWString(String16Span s);
-BASE_EXPORT const wchar_t* ToNullTerminated(const List<wchar_t>& string);
+BASE_EXPORT const wchar_t* toNullTerminated(const List<wchar_t>& string);
 #endif
 
 } // namespace stp

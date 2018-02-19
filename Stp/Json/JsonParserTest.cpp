@@ -417,8 +417,8 @@ TEST(JsonParserTest, Reading) {
   {
     // Test stack overflow
     String evil;
-    evil.AddRepeat('[', 1000000);
-    evil.AddRepeat(']', 1000000);
+    evil.addRepeat('[', 1000000);
+    evil.addRepeat(']', 1000000);
     EXPECT_FALSE(JsonValue::Parse(evil, root));
   }
 
@@ -701,7 +701,7 @@ TEST(JsonParserTest, ErrorMessages) {
   {
     String nested_json;
     for (int i = 0; i < 101; ++i) {
-      nested_json.Insert(0, '[');
+      nested_json.insert(0, '[');
       nested_json.add(']');
     }
     JsonParser parser;

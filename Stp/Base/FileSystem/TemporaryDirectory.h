@@ -36,7 +36,7 @@ class BASE_EXPORT TemporaryDirectory {
   void Create(FilePath path);
 
   // Deletes the temporary directory wrapped by this object.
-  void Remove();
+  void remove();
 
   // Caller takes ownership of the temporary directory so it won't be destroyed
   // when this object goes out of scope.

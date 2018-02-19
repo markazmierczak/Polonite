@@ -33,7 +33,7 @@ void ConsoleWriter::printToSystemDebugLog(StringSpan text) {
 
   InlineString<256> text_copy(text);
   const String& app_name = Application::instance().getName();
-  __android_log_write(priority, ToNullTerminated(app_name), ToNullTerminated(text_copy));
+  __android_log_write(priority, toNullTerminated(app_name), toNullTerminated(text_copy));
 }
 
 } // namespace stp

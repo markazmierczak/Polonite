@@ -52,7 +52,7 @@ FilePath GetCurrentDirPath() {
 }
 
 bool SetCurrentDirPath(const FilePath& directory) {
-  return ::SetCurrentDirectoryW(ToNullTerminated(directory)) != 0;
+  return ::SetCurrentDirectoryW(toNullTerminated(directory)) != 0;
 }
 
 FilePath GetAppUserDataPath() {

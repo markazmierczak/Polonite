@@ -31,7 +31,7 @@ inline bool tryRemoveOneMatching(TList& list, TPredicate&& match) {
 
 template<typename TList, typename TPredicate,
          TEnableIf<TIsContiguousContainer<TList>>* = nullptr>
-int RemoveAllMatching(TList& list, TPredicate&& match) {
+int removeAllMatching(TList& list, TPredicate&& match) {
   int removed_count = 0;
   auto* d = list.data();
   int chunk_end = list.size();
@@ -59,8 +59,8 @@ int RemoveAllMatching(TList& list, TPredicate&& match) {
 
 template<typename TList, typename TItem, typename TPredicate,
          TEnableIf<TIsContiguousContainer<TList>>* = nullptr>
-inline int RemoveAll(TList& list, const TItem& item) {
-  return RemoveAllMatching(list, [&item](decltype(*list.data()) x) {
+inline int removeAll(TList& list, const TItem& item) {
+  return removeAllMatching(list, [&item](decltype(*list.data()) x) {
     return x == item;
   });
 }

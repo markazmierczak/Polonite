@@ -6,14 +6,14 @@
 namespace stp {
 
 bool Directory::Exists(const FilePath& path) {
-  DWORD fileattr = ::GetFileAttributesW(ToNullTerminated(path));
+  DWORD fileattr = ::GetFileAttributesW(toNullTerminated(path));
   if (fileattr != INVALID_FILE_ATTRIBUTES)
     return (fileattr & FILE_ATTRIBUTE_DIRECTORY) != 0;
   return false;
 }
 
 SystemErrorCode Directory::TryCreate(const FilePath& path) {
-  if (::CreateDirectoryW(ToNullTerminated(path), nullptr) != 0)
+  if (::CreateDirectoryW(toNullTerminated(path), nullptr) != 0)
     return WinErrorCode::Success;
 
   auto error = GetLastWinErrorCode();
@@ -27,14 +27,14 @@ SystemErrorCode Directory::TryCreate(const FilePath& path) {
 }
 
 SystemErrorCode Directory::tryRemoveEmpty(const FilePath& path) {
-  if (!::RemoveDirectoryW(ToNullTerminated(path)))
+  if (!::RemoveDirectoryW(toNullTerminated(path)))
     return GetLastWinErrorCode();
   return WinErrorCode::Success;
 }
 
 SystemErrorCode Directory::tryGetDriveSpaceInfo(const FilePath& path, DriveSpaceInfo& out_space) {
   ULARGE_INTEGER available, total, free;
-  if (!::GetDiskFreeSpaceExW(ToNullTerminated(path), &available, &total, &free))
+  if (!::GetDiskFreeSpaceExW(toNullTerminated(path), &available, &total, &free))
     return GetLastWinErrorCode();
 
   auto ULargeIntToInt64 = [](ULARGE_INTEGER bytes) {

@@ -82,7 +82,7 @@ TEST(TemporaryDirectory, MultipleInvocations) {
   TemporaryDirectory dir;
   EXPECT_TRUE(dir.Create());
   EXPECT_FALSE(dir.Create());
-  EXPECT_TRUE(dir.Remove());
+  EXPECT_TRUE(dir.remove());
   EXPECT_TRUE(dir.Create());
   EXPECT_FALSE(dir.Create());
   TemporaryDirectory other_dir;
@@ -100,11 +100,11 @@ TEST(TemporaryDirectory, LockedTempDir) {
                   File::FLAG_CREATE_ALWAYS | File::FLAG_WRITE);
   EXPECT_TRUE(file.IsValid());
   EXPECT_EQ(File::FILE_OK, file.error_details());
-  EXPECT_FALSE(dir.Remove());  // We should not be able to delete.
+  EXPECT_FALSE(dir.remove());  // We should not be able to delete.
   EXPECT_FALSE(dir.path().empty());  // We should still have a valid path.
   file.Close();
   // Now, we should be able to delete.
-  EXPECT_TRUE(dir.Remove());
+  EXPECT_TRUE(dir.remove());
 }
 #endif // OS(WIN)
 

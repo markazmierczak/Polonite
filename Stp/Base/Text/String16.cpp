@@ -8,7 +8,7 @@
 namespace stp {
 
 template<typename T>
-static inline const T* ToNullTerminatedTmpl(const List<T>& string) {
+static inline const T* toNullTerminatedTmpl(const List<T>& string) {
   ASSERT(!string.contains('\0'));
   if (string.capacity() != 0) {
     auto* cstr = string.data();
@@ -27,8 +27,8 @@ WString ToWString(String16Span input) {
   // Safe - we know it will be memcpy'ied.
   return WString(reinterpret_cast<const wchar_t*>(input.data()), input.size());
 }
-const char16_t* ToNullTerminated(const List<wchar_t>& string) {
-  return ToNullTerminatedTmpl(string);
+const char16_t* toNullTerminated(const List<wchar_t>& string) {
+  return toNullTerminatedTmpl(string);
 }
 #endif
 

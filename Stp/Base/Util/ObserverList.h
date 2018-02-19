@@ -34,17 +34,17 @@ class ObserverList {
 
   // Add an observer to the list.  An observer should not be added to
   // the same list more than once.
-  void AddObserver(TObserver* obs);
+  void addObserver(TObserver* obs);
 
   // Remove an observer from the list if it is in the list.
-  void RemoveObserver(TObserver* obs);
+  void removeObserver(TObserver* obs);
 
   // Determine whether a particular observer is in the list.
-  bool HasObserver(const TObserver* observer) const;
+  bool hasObserver(const TObserver* observer) const;
 
   void clear();
 
-  bool MightHaveObservers() const { return observers_.size() != 0; }
+  bool mightHaveObservers() const { return observers_.size() != 0; }
 
  private:
   friend class ObserverList::Iterator;
@@ -55,7 +55,7 @@ class ObserverList {
   SinglyLinkedList<Iterator> iterators_;
   bool needs_compact_ = false;
 
-  void Compact();
+  void compact();
 
   DISALLOW_COPY_AND_ASSIGN(ObserverList);
 };
@@ -65,17 +65,17 @@ ObserverList<TObserver>::Iterator::Iterator(ObserverList<TObserver>* list)
     : list_(list),
       index_(0),
       max_index_(list->observers_.size()) {
-  list_->iterators_.Prepend(this);
+  list_->iterators_.prepend(this);
 }
 
 template<class TObserver>
 ObserverList<TObserver>::Iterator::~Iterator() {
   if (list_) {
     auto& iterators = list_->iterators_;
-    ASSERT(iterators.First() == this);
-    iterators.RemoveFirst();
+    ASSERT(iterators.getFirst() == this);
+    iterators.removeFirst();
     if (iterators.isEmpty() && list_->needs_compact_)
-      list_->Compact();
+      list_->compact();
   }
 }
 
@@ -100,14 +100,14 @@ inline ObserverList<TObserver>::~ObserverList() {
 }
 
 template<class TObserver>
-void ObserverList<TObserver>::AddObserver(TObserver* obs) {
+void ObserverList<TObserver>::addObserver(TObserver* obs) {
   ASSERT(obs);
   ASSERT(!observers_.contains(obs), "observers can only be added once!");
   observers_.add(obs);
 }
 
 template<class TObserver>
-void ObserverList<TObserver>::RemoveObserver(TObserver* obs) {
+void ObserverList<TObserver>::removeObserver(TObserver* obs) {
   int index = observers_.indexOf(obs);
   ASSERT(index >= 0);
   if (iterators_.isEmpty()) {
@@ -119,7 +119,7 @@ void ObserverList<TObserver>::RemoveObserver(TObserver* obs) {
 }
 
 template<class TObserver>
-bool ObserverList<TObserver>::HasObserver(const TObserver* observer) const {
+bool ObserverList<TObserver>::hasObserver(const TObserver* observer) const {
   return observers_.contains(const_cast<TObserver*>(observer));
 }
 
@@ -136,7 +136,7 @@ void ObserverList<TObserver>::clear() {
 }
 
 template<class TObserver>
-void ObserverList<TObserver>::Compact() {
+void ObserverList<TObserver>::compact() {
   ASSERT(needs_compact_);
   for (int i = observers_.size() - 1; i >= 0; --i) {
     if (observers_[i] == nullptr)
@@ -147,7 +147,7 @@ void ObserverList<TObserver>::Compact() {
 
 #define FOR_EACH_OBSERVER(TObserverType, observer_list, func) \
   do { \
-    if ((observer_list).MightHaveObservers()) { \
+    if ((observer_list).mightHaveObservers()) { \
       typename ObserverList<TObserverType>::Iterator it_inside_observer_macro(&observer_list); \
       TObserverType* obs; \
       while ((obs = it_inside_observer_macro.tryGetNext()) != nullptr) \

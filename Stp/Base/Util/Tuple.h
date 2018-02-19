@@ -49,7 +49,7 @@ class TupleLeaf {
     return *this;
   }
 
-  int SwapWith(TupleLeaf& other) {
+  int swapWith(TupleLeaf& other) {
     swap(value, other.value);
     return 0;
   }
@@ -77,7 +77,7 @@ class TupleLeaf<I, H, true> : private H {
     return *this;
   }
 
-  int SwapWith(TupleLeaf& other) {
+  int swapWith(TupleLeaf& other) {
     swap(get(), other.get());
     return 0;
   }
@@ -123,8 +123,8 @@ class EMPTY_BASES_LAYOUT TupleImpl<IndexSequence<Indices...>, Ts...>
   }
 
 
-  void SwapWith(TupleImpl& other) {
-    Swallow(TupleLeaf<Indices, Ts>::SwapWith(static_cast<TupleLeaf<Indices, Ts>&>(other))...);
+  void swapWith(TupleImpl& other) {
+    Swallow(TupleLeaf<Indices, Ts>::swapWith(static_cast<TupleLeaf<Indices, Ts>&>(other))...);
   }
 };
 
@@ -189,7 +189,7 @@ class Tuple {
     return *this;
   }
 
-  void SwapWith(Tuple& other) { base_.SwapWith(other.base_); }
+  void swapWith(Tuple& other) { base_.swapWith(other.base_); }
 
   static constexpr int size() { return sizeof...(Ts); }
 
@@ -245,7 +245,7 @@ class Tuple<> {
  public:
   constexpr Tuple() {}
 
-  void SwapWith(Tuple&) {}
+  void swapWith(Tuple&) {}
 
   static constexpr int size() { return 0; }
 };

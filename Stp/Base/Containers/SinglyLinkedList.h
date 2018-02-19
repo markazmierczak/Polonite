@@ -41,27 +41,27 @@ class SinglyLinkedList {
   // Call before destruction when you know items will no longer be used.
   void Reset();
 
-  T* First() const;
-  T* Last() const;
+  T* getFirst() const;
+  T* getLast() const;
 
   void append(T* node);
-  void Prepend(T* node);
+  void prepend(T* node);
 
-  void RemoveFirst();
+  void removeFirst();
 
   // Has O(n) complexity since it may need to iterate over whole list.
-  void Remove(T* node);
+  void remove(T* node);
 
-  void InsertAfter(T* after, T* node);
+  void insertAfter(T* after, T* node);
 
-  T* TakeFirst();
+  T* takeFirst();
 
   bool contains(const T& value) const { return find(value) != nullptr; }
 
   T* find(const T& value) const;
 
   // Really slow, that's because it's not named size().
-  int Count() const;
+  int countSlow() const;
 
   friend void swap(SinglyLinkedList& lhs, SinglyLinkedList& rhs) {
     swap(lhs.head_, rhs.head_);
@@ -104,7 +104,7 @@ inline void SinglyLinkedList<T>::append(T* node) {
 }
 
 template<typename T>
-inline void SinglyLinkedList<T>::Prepend(T* node) {
+inline void SinglyLinkedList<T>::prepend(T* node) {
   ASSERT(!node->next_);
   node->next_ = head_;
   head_ = node;
@@ -113,9 +113,9 @@ inline void SinglyLinkedList<T>::Prepend(T* node) {
 }
 
 template<typename T>
-inline void SinglyLinkedList<T>::InsertAfter(T* after, T* node) {
+inline void SinglyLinkedList<T>::insertAfter(T* after, T* node) {
   if (!after) {
-    Prepend(node);
+    prepend(node);
   } else {
     node->next_ = after->next_;
     after->next_ = node;
@@ -125,12 +125,12 @@ inline void SinglyLinkedList<T>::InsertAfter(T* after, T* node) {
 }
 
 template<typename T>
-inline void SinglyLinkedList<T>::RemoveFirst() {
-  TakeFirst();
+inline void SinglyLinkedList<T>::removeFirst() {
+  takeFirst();
 }
 
 template<typename T>
-inline void SinglyLinkedList<T>::Remove(T* node) {
+inline void SinglyLinkedList<T>::remove(T* node) {
   T* prev = nullptr;
   for (T* iter = head_; iter; prev = iter, iter = iter->next_) {
     if (iter == node) {
@@ -147,7 +147,7 @@ inline void SinglyLinkedList<T>::Remove(T* node) {
 }
 
 template<typename T>
-inline T* SinglyLinkedList<T>::TakeFirst() {
+inline T* SinglyLinkedList<T>::takeFirst() {
   ASSERT(!isEmpty());
   T* node;
   if (tail_ == head_) {
@@ -178,13 +178,13 @@ inline void SinglyLinkedList<T>::Reset() {
 }
 
 template<typename T>
-inline T* SinglyLinkedList<T>::First() const {
+inline T* SinglyLinkedList<T>::getFirst() const {
   ASSERT(!isEmpty());
   return head_;
 }
 
 template<typename T>
-inline T* SinglyLinkedList<T>::Last() const {
+inline T* SinglyLinkedList<T>::getLast() const {
   ASSERT(!isEmpty());
   return tail_;
 }
@@ -199,7 +199,7 @@ inline T* SinglyLinkedList<T>::find(const T& value) const {
 }
 
 template<typename T>
-inline int SinglyLinkedList<T>::Count() const {
+inline int SinglyLinkedList<T>::countSlow() const {
   int n = 0;
   for (auto* it = head_; it != nullptr; it = it->next_)
     ++n;

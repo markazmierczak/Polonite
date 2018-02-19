@@ -38,7 +38,7 @@ class BASE_EXPORT BasicThreadLocal {
   BasicThreadLocal* prev_;
   BasicThreadLocal* next_;
   void appendToList(BasicThreadLocal* list);
-  void RemoveFromList();
+  void removeFromList();
   #endif
 };
 

@@ -71,7 +71,7 @@ TEST(Span, Find) {
   EXPECT_FALSE(span.contains(10));
 }
 
-TEST(Span, FindIndex) {
+TEST(Span, findIndex) {
   int array[] = { 2, 2, 4, 5, 6, 7, 8 };
   int array2[] = { 11, 2, 3 };
   Span<int> span = array;
@@ -81,14 +81,14 @@ TEST(Span, FindIndex) {
   auto odd = [](int x) { return (x & 1) != 0; };
   auto gt10 = [](int x) { return x > 10; };
 
-  EXPECT_EQ(-1, span.FindIndex(gt10));
-  EXPECT_EQ(0, span.FindIndex(even));
-  EXPECT_EQ(3, span.FindIndex(odd));
+  EXPECT_EQ(-1, span.findIndex(gt10));
+  EXPECT_EQ(0, span.findIndex(even));
+  EXPECT_EQ(3, span.findIndex(odd));
 
-  EXPECT_EQ(-1, span.FindLastIndex(gt10));
-  EXPECT_EQ(6, span.FindLastIndex(even));
-  EXPECT_EQ(5, span.FindLastIndex(odd));
-  EXPECT_EQ(0, span2.FindLastIndex(gt10));
+  EXPECT_EQ(-1, span.findLastIndex(gt10));
+  EXPECT_EQ(6, span.findLastIndex(even));
+  EXPECT_EQ(5, span.findLastIndex(odd));
+  EXPECT_EQ(0, span2.findLastIndex(gt10));
 
   EXPECT_FALSE(span.Exists(gt10));
   EXPECT_TRUE(span.Exists(even));

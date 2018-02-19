@@ -10,7 +10,7 @@ namespace stp {
  * https://en.wikipedia.org/wiki/List_(abstract_data_type)
  */
 
-/** \fn void List::RemoveLast()
+/** \fn void List::removeLast()
  * Removes the last item from the list.
  * The list must not be empty.
  */
@@ -24,7 +24,7 @@ namespace stp {
  * The given slice must be enclosed by [0..size).
  */
 
-const char* ToNullTerminated(const List<char>& string) {
+const char* toNullTerminated(const List<char>& string) {
   ASSERT(!string.contains('\0'));
   if (string.capacity() != 0) {
     auto* cstr = string.data();

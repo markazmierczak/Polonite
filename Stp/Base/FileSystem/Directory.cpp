@@ -88,7 +88,7 @@ void Directory::RemoveRecursively(const FilePath& path) {
     }
     if (!has_nested) {
       RemoveEmpty(directories.getLast());
-      directories.RemoveLast();
+      directories.removeLast();
     }
     enumerator.Close();
   }

@@ -269,7 +269,7 @@ inline HashMap<K, T>& HashMap<K, T>::operator=(const HashMap& other) {
 
 template<typename K, typename T>
 inline HashMap<K, T>& HashMap<K, T>::operator=(HashMap&& other) {
-  SwapWith(other);
+  swapWith(other);
   return *this;
 }
 

@@ -142,7 +142,7 @@ static void SetThreadNameImpl(NativeThreadId thread_id, const String& name) {
 
   THREADNAME_INFO info;
   info.dwType = 0x1000;
-  info.szName = ToNullTerminated(name);
+  info.szName = toNullTerminated(name);
   info.dwThreadID = thread_id;
   info.dwFlags = 0;
 

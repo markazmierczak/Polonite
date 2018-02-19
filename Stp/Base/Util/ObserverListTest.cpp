@@ -35,7 +35,7 @@ class Disrupter : public Foo {
         doomed_(doomed) {
   }
   ~Disrupter() override {}
-  void Observe(int x) override { list_->RemoveObserver(doomed_); }
+  void Observe(int x) override { list_->removeObserver(doomed_); }
 
  private:
   FooObserverList* list_;
@@ -54,7 +54,7 @@ class AddInObserve : public Foo {
   void Observe(int x) override {
     if (!added) {
       added = true;
-      observer_list->AddObserver(&adder);
+      observer_list->addObserver(&adder);
     }
   }
 
@@ -68,17 +68,17 @@ TEST(ObserverListTest, BasicTest) {
   Adder a(1), b(-1), c(1), d(-1), e(-1);
   Disrupter evil(&observer_list, &c);
 
-  observer_list.AddObserver(&a);
-  observer_list.AddObserver(&b);
+  observer_list.addObserver(&a);
+  observer_list.addObserver(&b);
 
-  EXPECT_TRUE(observer_list.HasObserver(&a));
-  EXPECT_FALSE(observer_list.HasObserver(&c));
+  EXPECT_TRUE(observer_list.hasObserver(&a));
+  EXPECT_FALSE(observer_list.hasObserver(&c));
 
   FOR_EACH_OBSERVER(Foo, observer_list, Observe(10));
 
-  observer_list.AddObserver(&evil);
-  observer_list.AddObserver(&c);
-  observer_list.AddObserver(&d);
+  observer_list.addObserver(&evil);
+  observer_list.addObserver(&c);
+  observer_list.addObserver(&d);
 
   FOR_EACH_OBSERVER(Foo, observer_list, Observe(10));
 
@@ -94,8 +94,8 @@ TEST(ObserverListTest, Existing) {
   Adder a(1);
   AddInObserve<FooObserverList > b(&observer_list);
 
-  observer_list.AddObserver(&a);
-  observer_list.AddObserver(&b);
+  observer_list.addObserver(&a);
+  observer_list.addObserver(&b);
 
   FOR_EACH_OBSERVER(Foo, observer_list, Observe(1));
 
@@ -116,7 +116,7 @@ class AddInClearObserve : public Foo {
 
   void Observe(int /* x */) override {
     list_->clear();
-    list_->AddObserver(&adder_);
+    list_->addObserver(&adder_);
     added_ = true;
   }
 
@@ -134,7 +134,7 @@ TEST(ObserverListTest, ClearNotifyExistingOnly) {
   FooObserverList observer_list;
   AddInClearObserve a(&observer_list);
 
-  observer_list.AddObserver(&a);
+  observer_list.addObserver(&a);
 
   FOR_EACH_OBSERVER(Foo, observer_list, Observe(1));
   EXPECT_TRUE(a.added());
@@ -156,7 +156,7 @@ class ListDestructor : public Foo {
 TEST(ObserverListTest, IteratorOutlivesList) {
   FooObserverList* observer_list = new FooObserverList;
   ListDestructor a(observer_list);
-  observer_list->AddObserver(&a);
+  observer_list->addObserver(&a);
 
   FOR_EACH_OBSERVER(Foo, *observer_list, Observe(0));
   // If this test fails, there'll be Valgrind errors when this function goes out

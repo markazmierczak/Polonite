@@ -61,7 +61,7 @@ SystemErrorCode FileStream::TryOpenInternal(const FilePath& path, FileMode mode,
 
   DWORD create_flags = 0;
   NativeFile handle = ::CreateFileW(
-      ToNullTerminated(path), desired_access, sharing, NULL, disposition, create_flags, NULL);
+      toNullTerminated(path), desired_access, sharing, NULL, disposition, create_flags, NULL);
 
   if (handle == INVALID_HANDLE_VALUE)
     return GetLastWinErrorCode();

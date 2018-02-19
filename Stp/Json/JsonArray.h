@@ -68,7 +68,7 @@ class BASE_EXPORT JsonArray : public JsonValue {
   template<typename T>
   void add(T&& arg) { add(JsonValue(Forward<T>(arg))); }
 
-  void RemoveLast();
+  void removeLast();
 
   void removeAt(int at);
 

@@ -33,7 +33,7 @@ void PrintResultsImpl(
     const String& units,
     bool important) {
   fflush(stdout);
-  printf("%s", ToNullTerminated(ResultsToString(
+  printf("%s", toNullTerminated(ResultsToString(
       measurement, modifier, trace, values,
       prefix, suffix, units, important)));
   fflush(stdout);

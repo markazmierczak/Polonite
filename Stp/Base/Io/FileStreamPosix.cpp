@@ -63,7 +63,7 @@ SystemErrorCode FileStream::TryOpenInternal(
 
   int perm_flags = 0664;
   int open_flags = mode_flags | access_flags;
-  int descriptor = HANDLE_EINTR(::open(ToNullTerminated(path), open_flags, perm_flags));
+  int descriptor = HANDLE_EINTR(::open(toNullTerminated(path), open_flags, perm_flags));
   if (descriptor == -1)
     return GetLastPosixErrorCode();
 

@@ -27,7 +27,7 @@ SystemErrorCode DirectoryEnumerator::TryOpen(const FilePath& path) {
   }
 
   find_handle_ = ::FindFirstFileExW(
-      ToNullTerminated(search_path_),
+      toNullTerminated(search_path_),
       FindExInfoBasic, // Omit short name.
       &find_data_,
       search_ops,

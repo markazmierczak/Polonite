@@ -79,7 +79,7 @@ bool InitializeSymbols() {
       L";",
       GetExePath().GetDirectoryName().AsCharactersUnsafe());
 
-  if (!::SymSetSearchPathW(current_process_handle, ToNullTerminated(new_path))) {
+  if (!::SymSetSearchPathW(current_process_handle, toNullTerminated(new_path))) {
     LOG(WARN, "SymSetSearchPath failed");
     return false;
   }

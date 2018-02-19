@@ -39,8 +39,8 @@ void JsonArray::add(JsonValue item) {
   impl().add(move(item));
 }
 
-void JsonArray::RemoveLast() {
-  impl().RemoveLast();
+void JsonArray::removeLast() {
+  impl().removeLast();
 }
 
 void JsonArray::removeAt(int at) {

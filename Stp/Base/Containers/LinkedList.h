@@ -19,14 +19,14 @@ class LinkedListNode {
   constexpr LinkedListNode(LinkedListNode* prev, LinkedListNode* next)
       : prev_(prev), next_(next) {}
 
-  // Insert |this| into the linked list, before |e|.
-  void InsertBefore(LinkedListNode<T>* e);
+  // insert |this| into the linked list, before |e|.
+  void insertBefore(LinkedListNode<T>* e);
 
-  // Insert |this| into the linked list, after |e|.
-  void InsertAfter(LinkedListNode<T>* e);
+  // insert |this| into the linked list, after |e|.
+  void insertAfter(LinkedListNode<T>* e);
 
   // Remove |this| from the linked list.
-  void RemoveFromList();
+  void removeFromList();
 
   ALWAYS_INLINE LinkedListNode* prev() const { return prev_; }
   ALWAYS_INLINE LinkedListNode* next() const { return next_; }
@@ -68,24 +68,24 @@ class LinkedList {
   T* getFirst() const;
   T* getLast() const;
 
-  void InsertBefore(NodeType* before, T* e) { e->InsertBefore(before); }
-  void InsertAfter(NodeType* after, T* e) { e->InsertAfter(after); }
+  void insertBefore(NodeType* before, T* e) { e->insertBefore(before); }
+  void insertAfter(NodeType* after, T* e) { e->insertAfter(after); }
 
-  void append(T* e) { InsertBefore(root(), e); }
-  void Prepend(T* e) { InsertAfter(root(), e); }
+  void append(T* e) { insertBefore(root(), e); }
+  void prepend(T* e) { insertAfter(root(), e); }
 
-  void Remove(T* e) { e->RemoveFromList(); }
+  void remove(T* e) { e->removeFromList(); }
 
-  void RemoveFirst() { Remove(getFirst()); }
-  void RemoveLast() { Remove(getLast()); }
+  void removeFirst() { remove(getFirst()); }
+  void removeLast() { remove(getLast()); }
 
   bool contains(const T& value) const { return find(value) != nullptr; }
 
   T* find(const T& value) const;
-  T* FindLast(const T& value) const;
+  T* findLast(const T& value) const;
 
   // Really slow, that's because it's not named size().
-  int Count() const;
+  int countSlow() const;
 
   friend void swap(LinkedList& lhs, LinkedList& rhs) {
     swap(lhs.root_, rhs.root_);
@@ -118,7 +118,7 @@ class LinkedListIterator {
 };
 
 template<typename T>
-inline void LinkedListNode<T>::InsertBefore(LinkedListNode<T>* e) {
+inline void LinkedListNode<T>::insertBefore(LinkedListNode<T>* e) {
   ASSERT(!prev_ && !next_);
   this->next_ = e;
   this->prev_ = e->prev_;
@@ -127,7 +127,7 @@ inline void LinkedListNode<T>::InsertBefore(LinkedListNode<T>* e) {
 }
 
 template<typename T>
-inline void LinkedListNode<T>::InsertAfter(LinkedListNode<T>* e) {
+inline void LinkedListNode<T>::insertAfter(LinkedListNode<T>* e) {
   ASSERT(!prev_ && !next_);
   this->next_ = e->next_;
   this->prev_ = e;
@@ -136,7 +136,7 @@ inline void LinkedListNode<T>::InsertAfter(LinkedListNode<T>* e) {
 }
 
 template<typename T>
-inline void LinkedListNode<T>::RemoveFromList() {
+inline void LinkedListNode<T>::removeFromList() {
   ASSERT(prev_ && next_);
   this->prev_->next_ = this->next_;
   this->next_->prev_ = this->prev_;
@@ -147,7 +147,7 @@ inline void LinkedListNode<T>::RemoveFromList() {
 template<typename T>
 inline void LinkedList<T>::clear() {
   while (!isEmpty())
-    getFirst()->RemoveFromList();
+    getFirst()->removeFromList();
 }
 
 template<typename T>
@@ -172,7 +172,7 @@ inline T* LinkedList<T>::find(const T& value) const {
 }
 
 template<typename T>
-inline T* LinkedList<T>::FindLast(const T& value) const {
+inline T* LinkedList<T>::findLast(const T& value) const {
   for (NodeType* n = root_.prev(), e = root(); n != e; n = n->prev()) {
     if (*n->that() == value)
       return n->that();
@@ -181,7 +181,7 @@ inline T* LinkedList<T>::FindLast(const T& value) const {
 }
 
 template<typename T>
-inline int LinkedList<T>::Count() const {
+inline int LinkedList<T>::countSlow() const {
   int n = 0;
   for (auto* it = root_.next(); it != &root_; ++it)
     ++n;

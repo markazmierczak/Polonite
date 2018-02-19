@@ -8,7 +8,7 @@ namespace stp {
 bool Library::TryLoad(const FilePath& path, LibraryLoadError* out_error) {
   Reset();
 
-  NativeLibrary native = TryLoadNative(ToNullTerminated(path), out_error);
+  NativeLibrary native = TryLoadNative(toNullTerminated(path), out_error);
   if (native == NullNativeLibrary)
     return false;
   Reset(native);

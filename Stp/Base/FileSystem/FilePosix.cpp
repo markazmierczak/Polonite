@@ -21,18 +21,18 @@
 namespace stp {
 
 bool File::Exists(const FilePath& path) {
-  return ::access(ToNullTerminated(path), F_OK) == 0;
+  return ::access(toNullTerminated(path), F_OK) == 0;
 }
 
 SystemErrorCode File::tryGetInfo(const FilePath& path, FileInfo& out) {
-  if (posix::CallStat(ToNullTerminated(path), &out.stat_) != 0)
+  if (posix::CallStat(toNullTerminated(path), &out.stat_) != 0)
     return GetLastPosixErrorCode();
   return PosixErrorCode::Ok;
 }
 
 SystemErrorCode File::TryMakeAbsolutePath(const FilePath& input, FilePath& output) {
   char full_path[PATH_MAX + 1];
-  if (::realpath(ToNullTerminated(input), full_path) == nullptr)
+  if (::realpath(toNullTerminated(input), full_path) == nullptr)
     return GetLastPosixErrorCode();
 
   output = MakeFilePathSpanFromNullTerminated(full_path);
@@ -40,13 +40,13 @@ SystemErrorCode File::TryMakeAbsolutePath(const FilePath& input, FilePath& outpu
 }
 
 SystemErrorCode File::TryDelete(const FilePath& path) {
-  if (::unlink(ToNullTerminated(path)) != 0)
+  if (::unlink(toNullTerminated(path)) != 0)
     return GetLastPosixErrorCode();
   return PosixErrorCode::Ok;
 }
 
 SystemErrorCode File::TryReplace(const FilePath& from, const FilePath& to) {
-  if (::rename(ToNullTerminated(from), ToNullTerminated(to)) != 0)
+  if (::rename(toNullTerminated(from), toNullTerminated(to)) != 0)
     return GetLastPosixErrorCode();
   return PosixErrorCode::Ok;
 }
@@ -60,7 +60,7 @@ SystemErrorCode File::TryCreateTemporaryIn(const FilePath& dir, FilePath& output
   writer << ".stp." << Application::instance().getName() << ".XXXXXX";
 
   // this should be OK since mkstemp just replaces characters in place
-  char* buffer = const_cast<char*>(ToNullTerminated(output_path));
+  char* buffer = const_cast<char*>(toNullTerminated(output_path));
   int rv = HANDLE_EINTR(::mkstemp(buffer));
   if (rv == -1)
     return GetLastPosixErrorCode();
@@ -69,14 +69,14 @@ SystemErrorCode File::TryCreateTemporaryIn(const FilePath& dir, FilePath& output
 }
 
 SystemErrorCode File::TryCreateSymbolicLink(const FilePath& symlink, const FilePath& target) {
-  if (::symlink(ToNullTerminated(target), ToNullTerminated(symlink)) != 0)
+  if (::symlink(toNullTerminated(target), toNullTerminated(symlink)) != 0)
     return GetLastPosixErrorCode();
   return PosixErrorCode::Ok;
 }
 
 SystemErrorCode File::TryReadSymbolicLink(const FilePath& symlink, FilePath& out_target) {
   char buf[PATH_MAX];
-  int count = ::readlink(ToNullTerminated(symlink), buf, sizeof(buf));
+  int count = ::readlink(toNullTerminated(symlink), buf, sizeof(buf));
   ASSERT(-1 <= count && count <= PATH_MAX);
   if (count < 0)
     return GetLastPosixErrorCode();
@@ -101,7 +101,7 @@ FilePath File::ReadSymbolicLink(const FilePath& symlink) {
 
 SystemErrorCode File::tryGetPosixPermissions(const FilePath& path, int& out_mode) {
   stat_wrapper_t file_info;
-  if (posix::CallStat(ToNullTerminated(path), &file_info) != 0)
+  if (posix::CallStat(toNullTerminated(path), &file_info) != 0)
     return GetLastPosixErrorCode();
   out_mode = file_info.st_mode & 0777;
   return PosixErrorCode::Ok;
@@ -112,14 +112,14 @@ SystemErrorCode File::TrySetPosixPermissions(const FilePath& path, int mode) {
 
   // Calls stat() so that we can preserve the higher bits like S_ISGID.
   stat_wrapper_t stat_buf;
-  if (posix::CallStat(ToNullTerminated(path), &stat_buf) != 0)
+  if (posix::CallStat(toNullTerminated(path), &stat_buf) != 0)
     return GetLastPosixErrorCode();
 
   // Clears the existing permission bits, and adds the new ones.
   mode_t updated_mode_bits = stat_buf.st_mode & ~0777;
   updated_mode_bits |= mode;
 
-  if (HANDLE_EINTR(::chmod(ToNullTerminated(path), updated_mode_bits)) != 0)
+  if (HANDLE_EINTR(::chmod(toNullTerminated(path), updated_mode_bits)) != 0)
     return GetLastPosixErrorCode();
 
   return PosixErrorCode::Ok;

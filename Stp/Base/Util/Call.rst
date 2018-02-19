@@ -47,12 +47,12 @@ Example::
         virtual void OnBar(MyWidget* w, int x, int y) = 0;
       };
 
-      void AddObserver(Observer* obs) {
-        observer_list_.AddObserver(obs);
+      void addObserver(Observer* obs) {
+        observer_list_.addObserver(obs);
       }
 
-      void RemoveObserver(Observer* obs) {
-        observer_list_.RemoveObserver(obs);
+      void removeObserver(Observer* obs) {
+        observer_list_.removeObserver(obs);
       }
 
       void NotifyFoo() {

@@ -102,7 +102,7 @@ void ConsoleWriter::UpdateAttributes(unsigned attributes) {
 }
 
 void ConsoleWriter::printToSystemDebugLog(StringSpan text) {
-  ::OutputDebugStringW(ToNullTerminated(ToWString(text)));
+  ::OutputDebugStringW(toNullTerminated(ToWString(text)));
 }
 
 bool ConsoleWriter::shouldUseColors(const FileStream& stream) {
@@ -145,7 +145,7 @@ FileStream* Console::openLogFile(const FilePath& path) {
   // https://msdn.microsoft.com/en-us/library/windows/desktop/aa364399(v=vs.85).aspx
   // https://msdn.microsoft.com/en-us/library/windows/desktop/aa363858(v=vs.85).aspx
   HANDLE log_file = ::CreateFileW(
-      ToNullTerminated(path), FILE_APPEND_DATA,
+      toNullTerminated(path), FILE_APPEND_DATA,
       FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr,
       OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, nullptr);
   if (log_file == INVALID_HANDLE_VALUE)

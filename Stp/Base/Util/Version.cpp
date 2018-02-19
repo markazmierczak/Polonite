@@ -14,7 +14,7 @@ namespace stp {
 void Version::setPart(int at, int value) {
   ASSERT(value >= 0);
   if (at >= parts_.size())
-    parts_.AddRepeat(0, at - parts_.size() + 1);
+    parts_.addRepeat(0, at - parts_.size() + 1);
   parts_[at] = value;
 }
 

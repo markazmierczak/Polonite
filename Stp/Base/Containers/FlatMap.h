@@ -232,7 +232,7 @@ template<typename U>
 inline void FlatMap<K, T, TList>::insertAt(int at, U&& key, T value) {
   ASSERT(at == 0 || compare(list_[at - 1].key(), key) < 0);
   ASSERT(at == size() || compare(key, list_[at].key()) < 0);
-  list_.Insert(at, PairType(Forward<U>(key), move(value)));
+  list_.insert(at, PairType(Forward<U>(key), move(value)));
 }
 
 } // namespace stp

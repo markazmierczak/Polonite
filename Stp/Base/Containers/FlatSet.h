@@ -84,7 +84,7 @@ inline bool FlatSet<T, TList>::tryAdd(U&& value) {
   if (pos >= 0)
     return false;
 
-  list_.Insert(~pos, T(Forward<U>(value)));
+  list_.insert(~pos, T(Forward<U>(value)));
   return true;
 }
 

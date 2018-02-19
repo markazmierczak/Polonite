@@ -15,7 +15,7 @@ SystemErrorCode DirectoryEnumerator::TryOpen(const FilePath& path, StringSpan pa
 
 SystemErrorCode DirectoryEnumerator::TryOpen(const FilePath& path) {
   ASSERT(!IsOpen());
-  DIR* dir = ::opendir(ToNullTerminated(path));
+  DIR* dir = ::opendir(toNullTerminated(path));
   if (dir) {
     current_dir_ = dir;
     return PosixErrorCode::Ok;
@@ -49,7 +49,7 @@ bool DirectoryEnumerator::TryMoveNext(SystemErrorCode& out_error_code) {
       continue;
 
     if (!pattern_.isEmpty()) {
-      if (::fnmatch(ToNullTerminated(pattern_), dent->d_name, FNM_NOESCAPE) != 0)
+      if (::fnmatch(toNullTerminated(pattern_), dent->d_name, FNM_NOESCAPE) != 0)
         continue;
     }
     dirent_ = dent;

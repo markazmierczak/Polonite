@@ -16,7 +16,7 @@ namespace stp {
 
 bool Environment::tryGet(StringSpan name, String& out_value) {
   WString wvalue;
-  bool ok = tryGet(ToNullTerminated(ToWString(name)), wvalue);
+  bool ok = tryGet(toNullTerminated(ToWString(name)), wvalue);
   if (ok) {
     out_value.clear();
     appendWtf(out_value, wvalue);
@@ -41,7 +41,7 @@ bool Environment::tryGetNative(const wchar_t* name, WString& out_value) {
 }
 
 bool Environment::tryGet(StringSpan name, FilePath& out_path) {
-  return tryGet(ToNullTerminated(ToWString(name)), out_path);
+  return tryGet(toNullTerminated(ToWString(name)), out_path);
 }
 
 bool Environment::tryGet(const wchar_t* name, FilePath& out_path) {
@@ -49,7 +49,7 @@ bool Environment::tryGet(const wchar_t* name, FilePath& out_path) {
 }
 
 bool Environment::Has(StringSpan name) {
-  return Has(ToNullTerminated(ToWString(name)));
+  return Has(toNullTerminated(ToWString(name)));
 }
 
 bool Environment::Has(const wchar_t* name) {
@@ -57,11 +57,11 @@ bool Environment::Has(const wchar_t* name) {
 }
 
 bool Environment::TrySet(StringSpan name, StringSpan value) {
-  return TrySet(ToNullTerminated(ToWString(name)), ToNullTerminated(ToWString(value)));
+  return TrySet(toNullTerminated(ToWString(name)), toNullTerminated(ToWString(value)));
 }
 
 bool Environment::TrySet(StringSpan name, const FilePath& path) {
-  return TrySet(ToNullTerminated(ToWString(name)), ToNullTerminated(path));
+  return TrySet(toNullTerminated(ToWString(name)), toNullTerminated(path));
 }
 
 bool Environment::TrySet(const wchar_t* name, const wchar_t* value) {
@@ -69,7 +69,7 @@ bool Environment::TrySet(const wchar_t* name, const wchar_t* value) {
 }
 
 bool Environment::TryUnset(StringSpan name) {
-  return TryUnset(ToNullTerminated(ToWString(name)));
+  return TryUnset(toNullTerminated(ToWString(name)));
 }
 
 bool Environment::TryUnset(const wchar_t* name) {

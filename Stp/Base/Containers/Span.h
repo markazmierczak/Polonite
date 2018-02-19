@@ -216,7 +216,7 @@ inline StringSpan makeSpanFromNullTerminated(const char* cstr) {
 }
 
 template<typename T, int N, TEnableIf<TIsCharacter<T>>* = nullptr>
-inline const T* ToNullTerminated(const T (&array)[N]) {
+inline const T* toNullTerminated(const T (&array)[N]) {
   ASSERT(array[N - 1] == '\0');
   return array;
 }

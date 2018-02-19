@@ -27,7 +27,7 @@ TemporaryDirectory::TemporaryDirectory() {
 TemporaryDirectory::~TemporaryDirectory() {
   if (IsValid()) {
     try {
-      Remove();
+      remove();
     } catch (IoException& exception) {
       LOG(ERROR, "could not delete temp dir in dtor");
     }
@@ -58,7 +58,7 @@ void TemporaryDirectory::Create(FilePath path) {
   path_ = move(path);
 }
 
-void TemporaryDirectory::Remove() {
+void TemporaryDirectory::remove() {
   ASSERT(IsValid());
   FilePath path = move(path_);
   Directory::RemoveRecursively(path);
@@ -80,7 +80,7 @@ void TemporaryDirectory::CreateInternal(FilePathSpan base_dir, StringSpan prefix
     writer << '_';
     writer << rng.NextUInt32();
 
-    if (::CreateDirectoryW(ToNullTerminated(sub_dir), NULL)) {
+    if (::CreateDirectoryW(toNullTerminated(sub_dir), NULL)) {
       path_ = move(sub_dir);
       return;
     }
@@ -105,7 +105,7 @@ void TemporaryDirectory::CreateInternal(FilePathSpan base_dir, StringSpan prefix
   writer << tmpl;
 
   // this should be OK since mkdtemp just replaces characters in place
-  char* buffer = const_cast<char*>(ToNullTerminated(sub_dir));
+  char* buffer = const_cast<char*>(toNullTerminated(sub_dir));
   char* dtemp = ::mkdtemp(buffer);
   if (!dtemp)
     throw FileSystemException(GetLastPosixErrorCode());

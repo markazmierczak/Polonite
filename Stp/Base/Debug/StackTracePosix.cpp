@@ -78,7 +78,7 @@ void DemangleSymbols(TextWriter& out, StringSpan mangled) {
     // Try to demangle the mangled symbol candidate.
     int status = 0;
     OwnPtr<char> demangled_symbol_cstr(
-        abi::__cxa_demangle(ToNullTerminated(mangled_symbol), nullptr, 0, &status));
+        abi::__cxa_demangle(toNullTerminated(mangled_symbol), nullptr, 0, &status));
     if (status == 0) {  // Demangling is successful.
       auto demangled_symbol = makeSpanFromNullTerminated(demangled_symbol_cstr.get());
       out << demangled_symbol;

@@ -28,7 +28,7 @@ void StringWriter::onWriteString(StringSpan text) {
 void StringWriter::onIndent(int count, char c) {
   ASSERT(count >= 0);
   ASSERT(isAscii(c));
-  string_.AddRepeat(c, count);
+  string_.addRepeat(c, count);
 }
 
 } // namespace stp

@@ -174,7 +174,7 @@ TEST(BitArrayTest, FindFirstNextSet) {
   EXPECT_EQ(254, ba.findNextSet(1));
 }
 
-TEST(BitArrayTest, FindLastPrevSet) {
+TEST(BitArrayTest, findLastPrevSet) {
   BitArray<255> ba;
   EXPECT_EQ(-1, ba.findLastSet());
   EXPECT_EQ(-1, ba.findPrevSet(254));

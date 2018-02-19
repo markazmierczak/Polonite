@@ -35,7 +35,7 @@ class InlineListBase {
   ALWAYS_INLINE int size() const { return size_; }
   ALWAYS_INLINE int capacity() const { return capacity_; }
 
-  bool IsInline() const { return reinterpret_cast<byte_t*>(data_) == first_item_.bytes; }
+  bool isInline() const { return reinterpret_cast<byte_t*>(data_) == first_item_.bytes; }
 
   bool isEmpty() const { return size_ == 0; }
   void clear() { truncate(0); }
@@ -60,15 +60,15 @@ class InlineListBase {
   int add(T item);
   T* appendUninitialized(int n = 1);
   int appendInitialized(int n = 1);
-  int AddRepeat(T item, int n);
+  int addRepeat(T item, int n);
   int append(SpanType other);
 
-  void Insert(int at, T item);
+  void insert(int at, T item);
   T* insertUninitialized(int at, int n = 1);
   void insertInitialized(int at, int n = 1);
   void insertRange(int at, SpanType src);
 
-  void RemoveLast();
+  void removeLast();
   void removeAt(int at) { removeRange(at, 1); }
   void removeRange(int at, int n);
 
@@ -113,17 +113,17 @@ class InlineListBase {
   int capacity_;
   AlignedStorage<T> first_item_;
 
-  explicit InlineListBase(int capacity) noexcept : data_(GetInlineData()), capacity_(capacity) {}
-  ~InlineListBase() { DestroyAndFree(data_, size_, capacity_); }
+  explicit InlineListBase(int capacity) noexcept : data_(getInlineData()), capacity_(capacity) {}
+  ~InlineListBase() { destroyAndFree(data_, size_, capacity_); }
 
-  void DestroyAndFree(T* data, int size, int capacity);
+  void destroyAndFree(T* data, int size, int capacity);
 
-  const T* GetInlineData() const { return reinterpret_cast<const T*>(first_item_.bytes); }
-  T* GetInlineData() { return reinterpret_cast<T*>(first_item_.bytes); }
+  const T* getInlineData() const { return reinterpret_cast<const T*>(first_item_.bytes); }
+  T* getInlineData() { return reinterpret_cast<T*>(first_item_.bytes); }
   void setSizeNoGrow(int new_size);
 
-  void AssignExternal(SpanType src);
-  void AssignInternal(SpanType src);
+  void assignExternal(SpanType src);
+  void assignInternal(SpanType src);
 
   bool isSourceOf(const T* ptr) const { return data_ <= ptr && ptr < data_ + size_; }
 
@@ -156,7 +156,7 @@ inline bool operator!=(const T (&lhs)[N], const InlineListBase<T>& rhs) {
 }
 
 template<typename T>
-inline const T* ToNullTerminated(const InlineListBase<T>& string) {
+inline const T* toNullTerminated(const InlineListBase<T>& string) {
   auto* cstr = string.data();
   *(const_cast<T*>(cstr) + string.size()) = '\0';
   return cstr;
@@ -185,26 +185,26 @@ class InlineList : public InlineListBase<T> {
   InlineList(InlineList&& other) noexcept;
   InlineList& operator=(InlineList&& other) noexcept;
 
-  InlineList(const InlineList& other) : InlineListBase<T>(N) { this->AssignExternal(other); }
+  InlineList(const InlineList& other) : InlineListBase<T>(N) { this->assignExternal(other); }
   InlineList& operator=(const InlineList& other);
 
-  InlineList(InitializerList<T> ilist) : InlineListBase<T>(N) { this->AssignExternal(SpanType(ilist)); }
+  InlineList(InitializerList<T> ilist) : InlineListBase<T>(N) { this->assignExternal(SpanType(ilist)); }
   InlineList& operator=(InitializerList<T> ilist);
 
-  explicit InlineList(SpanType span) : InlineListBase<T>(N) { this->AssignExternal(span); }
+  explicit InlineList(SpanType span) : InlineListBase<T>(N) { this->assignExternal(span); }
   InlineList& operator=(SpanType span);
 
-  explicit InlineList(const T* data, int size) { this->AssignExternal(SpanType(data, size)); }
+  explicit InlineList(const T* data, int size) { this->assignExternal(SpanType(data, size)); }
 
   void shrinkCapacity(int request);
   void shrinkToFit() { shrinkCapacity(this->size_); }
 
-  friend void swap(InlineList& l, InlineList& r) noexcept { l.SwapWith(r); }
+  friend void swap(InlineList& l, InlineList& r) noexcept { l.swapWith(r); }
 
  private:
   detail::InlineListStorage<T, N> additional_items_;
 
-  void SwapWith(InlineList& other) noexcept;
+  void swapWith(InlineList& other) noexcept;
 };
 
 // InlineList is not zero-constructible (capacity_ must be set to N initially).
@@ -212,16 +212,16 @@ class InlineList : public InlineListBase<T> {
 
 
 template<typename T>
-inline void InlineListBase<T>::DestroyAndFree(T* data, int size, int capacity) {
+inline void InlineListBase<T>::destroyAndFree(T* data, int size, int capacity) {
   destroyObjects(data, size);
-  if (data != GetInlineData())
+  if (data != getInlineData())
     freeMemory(data);
 }
 
 template<typename T, int N>
-void InlineList<T, N>::SwapWith(InlineList& other) noexcept {
-  if (this->IsInline() == other.IsInline()) {
-    if (this->IsInline()) {
+void InlineList<T, N>::swapWith(InlineList& other) noexcept {
+  if (this->isInline() == other.isInline()) {
+    if (this->isInline()) {
       InlineList& small = this->size_ < other.size_ ? *this : other;
       InlineList& large = this->size_ < other.size_ ? other : *this;
       for (int i = 0; i < small.size_; ++i) {
@@ -235,9 +235,9 @@ void InlineList<T, N>::SwapWith(InlineList& other) noexcept {
       swap(this->data_, other.data_);
     }
   } else {
-    InlineList& inl = this->IsInline() ? *this : other;
-    InlineList& ext = this->IsInline() ? other : *this;
-    auto* heap = exchange(ext.data_, ext.GetInlineData());
+    InlineList& inl = this->isInline() ? *this : other;
+    InlineList& ext = this->isInline() ? other : *this;
+    auto* heap = exchange(ext.data_, ext.getInlineData());
     uninitializedRelocate(ext.data_, inl.data_, inl.size_);
     inl.data_ = heap;
   }
@@ -247,7 +247,7 @@ void InlineList<T, N>::SwapWith(InlineList& other) noexcept {
 
 template<typename T, int N>
 inline InlineList<T, N>::InlineList(InlineList&& other) noexcept : InlineListBase<T>(N) {
-  if (other.IsInline()) {
+  if (other.isInline()) {
     uninitializedRelocate(this->data_, other.data_, other.size_);
   } else {
     this->data_ = exchange(other.data_, nullptr);
@@ -258,14 +258,14 @@ inline InlineList<T, N>::InlineList(InlineList&& other) noexcept : InlineListBas
 
 template<typename T, int N>
 inline InlineList<T, N>& InlineList<T, N>::operator=(InlineList&& other) noexcept {
-  if (!this->IsInline())
-    DestroyAndFree(this->data_, this->size_, this->capacity_);
-  if (other.IsInline()) {
-    this->data_ = this->GetInlineData();
+  if (!this->isInline())
+    destroyAndFree(this->data_, this->size_, this->capacity_);
+  if (other.isInline()) {
+    this->data_ = this->getInlineData();
     this->capacity_ = N;
     uninitializedRelocate(this->data_, other.data_, other.size_);
   } else {
-    this->data_ = exchange(other.data_, other.GetInlineData());
+    this->data_ = exchange(other.data_, other.getInlineData());
     this->capacity_ = exchange(other.capacity_, N);
   }
   this->size_ = exchange(other.size_, 0);
@@ -275,23 +275,23 @@ inline InlineList<T, N>& InlineList<T, N>::operator=(InlineList&& other) noexcep
 template<typename T, int N>
 inline InlineList<T, N>& InlineList<T, N>::operator=(const InlineList& other) {
   if (LIKELY(this != &other)) {
-    this->AssignExternal(other);
+    this->assignExternal(other);
   }
   return *this;
 }
 
 template<typename T, int N>
 inline InlineList<T, N>& InlineList<T, N>::operator=(InitializerList<T> ilist) {
-  this->AssignExternal(SpanType(ilist));
+  this->assignExternal(SpanType(ilist));
   return *this;
 }
 
 template<typename T, int N>
 inline InlineList<T, N>& InlineList<T, N>::operator=(SpanType span) {
   if (TIsTriviallyDestructible<T> || !isSourceOf(span)) {
-    this->AssignExternal(span);
+    this->assignExternal(span);
   } else {
-    this->AssignInternal(span);
+    this->assignInternal(span);
   }
   return *this;
 }
@@ -302,7 +302,7 @@ inline void InlineListBase<T>::resizeStorage(int new_capacity) {
 
   T* old_data = data_;
   T* new_data;
-  bool was_inline = IsInline();
+  bool was_inline = isInline();
   if (!was_inline && TIsTriviallyRelocatable<T>) {
     new_data = (T*)reallocateMemory(old_data, (new_capacity + CapacityIncrement_) * isizeof(T));
     capacity_ = new_capacity;
@@ -334,8 +334,8 @@ inline void InlineList<T, N>::shrinkCapacity(int request) {
     return;
   if (request > N) {
     this->resizeStorage(request);
-  } else if (!this->IsInline()) {
-    T* heap = exchange(this->data_, this->GetInlineData());
+  } else if (!this->isInline()) {
+    T* heap = exchange(this->data_, this->getInlineData());
     this->capacity_ = N;
     uninitializedRelocate(this->data_, heap, this->size_);
     freeMemory(heap);
@@ -399,7 +399,7 @@ inline int InlineListBase<T>::appendInitialized(int n) {
 }
 
 template<typename T>
-inline int InlineListBase<T>::AddRepeat(T item, int n) {
+inline int InlineListBase<T>::addRepeat(T item, int n) {
   return addMany(n, [&item](T* dst, int count) { uninitializedFill(dst, count, item); });
 }
 
@@ -423,7 +423,7 @@ inline int InlineListBase<T>::addMany(int n, TAction&& action) {
 }
 
 template<typename T>
-inline void InlineListBase<T>::RemoveLast() {
+inline void InlineListBase<T>::removeLast() {
   ASSERT(!isEmpty());
   int new_size = size_ - 1;
   destroyObject(data_ + new_size);
@@ -440,7 +440,7 @@ inline void InlineListBase<T>::removeRange(int at, int n) {
 }
 
 template<typename T>
-inline void InlineListBase<T>::Insert(int at, T item) {
+inline void InlineListBase<T>::insert(int at, T item) {
   ASSERT(0 <= at && at < size_);
 
   T* old_d = data_;
@@ -464,7 +464,7 @@ inline void InlineListBase<T>::Insert(int at, T item) {
     int new_capacity = recommendCapacity(new_size);
     T* new_d = (T*)allocateMemory((new_capacity + CapacityIncrement_) * isizeof(T));
     new(new_d + at) T(move(item));
-    bool was_inline = IsInline();
+    bool was_inline = isInline();
     data_ = new_d;
     size_ = new_size;
     capacity_ = new_capacity;
@@ -534,7 +534,7 @@ inline void InlineListBase<T>::insertMany(int at, int n, TAction&& action) {
       freeMemory(new_d);
       throw;
     }
-    bool was_inline = IsInline();
+    bool was_inline = isInline();
     data_ = new_d;
     size_ = new_size;
     capacity_ = new_capacity;
@@ -555,7 +555,7 @@ inline void InlineListBase<T>::setSizeNoGrow(int new_size) {
 }
 
 template<typename T>
-inline void InlineListBase<T>::AssignExternal(SpanType src) {
+inline void InlineListBase<T>::assignExternal(SpanType src) {
   if (size_ < src.size()) {
     if constexpr (TIsTriviallyDestructible<T>) {
       clear();
@@ -571,7 +571,7 @@ inline void InlineListBase<T>::AssignExternal(SpanType src) {
 }
 
 template<typename T>
-inline void InlineListBase<T>::AssignInternal(SpanType src) {
+inline void InlineListBase<T>::assignInternal(SpanType src) {
   int start = src.data() - data_;
   truncate(start + src.size());
   removeRange(0, start);

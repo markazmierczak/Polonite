@@ -20,21 +20,21 @@ class List {
   typedef MutableSpan<T> MutableSpanType;
 
   List() = default;
-  ~List() { DestroyAndFree(data_, size_, capacity_); }
+  ~List() { destroyAndFree(data_, size_, capacity_); }
 
   List(List&& other) noexcept;
   List& operator=(List&& other) noexcept;
 
-  List(const List& other) { AssignExternal(other); }
+  List(const List& other) { assignExternal(other); }
   List& operator=(const List& other);
 
-  List(InitializerList<T> ilist) { AssignExternal(SpanType(ilist)); }
+  List(InitializerList<T> ilist) { assignExternal(SpanType(ilist)); }
   List& operator=(InitializerList<T> ilist);
 
-  explicit List(SpanType span) { AssignExternal(span); }
+  explicit List(SpanType span) { assignExternal(span); }
   List& operator=(SpanType span);
 
-  explicit List(const T* data, int size) { AssignExternal(SpanType(data, size)); }
+  explicit List(const T* data, int size) { assignExternal(SpanType(data, size)); }
 
   operator SpanType() const { return toSpan(); }
   operator MutableSpanType() { return toSpan(); }
@@ -69,15 +69,15 @@ class List {
   int add(T item);
   T* appendUninitialized(int n = 1);
   int appendInitialized(int n = 1);
-  int AddRepeat(T item, int n);
+  int addRepeat(T item, int n);
   int append(SpanType other);
 
-  void Insert(int at, T item);
+  void insert(int at, T item);
   T* insertUninitialized(int at, int n = 1);
   void insertInitialized(int at, int n = 1);
   void insertRange(int at, SpanType src);
 
-  void RemoveLast();
+  void removeLast();
   void removeAt(int at) { removeRange(at, 1); }
   void removeRange(int at, int n);
 
@@ -128,7 +128,7 @@ class List {
   // Needed by String -> null terminated conversion.
   static constexpr int CapacityIncrement_ = TIsCharacter<T>;
 
-  static void DestroyAndFree(T* data, int size, int capacity) {
+  static void destroyAndFree(T* data, int size, int capacity) {
     if (data) {
       destroyObjects(data, size);
       freeMemory(data);
@@ -137,8 +137,8 @@ class List {
 
   void setSizeNoGrow(int new_size);
 
-  void AssignExternal(SpanType src);
-  void AssignInternal(SpanType src);
+  void assignExternal(SpanType src);
+  void assignInternal(SpanType src);
 
   bool isSourceOf(const T* ptr) const { return data_ <= ptr && ptr < data_ + size_; }
 
@@ -178,7 +178,7 @@ inline List<T> makeList(Span<T> list) {
   return List<T>(Forward<T>(list));
 }
 
-BASE_EXPORT const char* ToNullTerminated(const List<char>& string);
+BASE_EXPORT const char* toNullTerminated(const List<char>& string);
 
 template<typename T>
 inline List<T>::List(List&& other) noexcept
@@ -188,7 +188,7 @@ inline List<T>::List(List&& other) noexcept
 
 template<typename T>
 inline List<T>& List<T>::operator=(List&& other) noexcept {
-  DestroyAndFree(data_, size_, capacity_);
+  destroyAndFree(data_, size_, capacity_);
   data_ = exchange(other.data_, nullptr);
   size_ = exchange(other.size_, 0);
   capacity_ = exchange(other.capacity_, 0);
@@ -198,23 +198,23 @@ inline List<T>& List<T>::operator=(List&& other) noexcept {
 template<typename T>
 inline List<T>& List<T>::operator=(const List& other) {
   if (LIKELY(this != &other)) {
-    AssignExternal(other);
+    assignExternal(other);
   }
   return *this;
 }
 
 template<typename T>
 inline List<T>& List<T>::operator=(InitializerList<T> ilist) {
-  AssignExternal(SpanType(ilist));
+  assignExternal(SpanType(ilist));
   return *this;
 }
 
 template<typename T>
 inline List<T>& List<T>::operator=(SpanType span) {
   if (TIsTriviallyDestructible<T> || !isSourceOf(span)) {
-    AssignExternal(span);
+    assignExternal(span);
   } else {
-    AssignInternal(span);
+    assignInternal(span);
   }
   return *this;
 }
@@ -320,7 +320,7 @@ inline int List<T>::appendInitialized(int n) {
 }
 
 template<typename T>
-inline int List<T>::AddRepeat(T item, int n) {
+inline int List<T>::addRepeat(T item, int n) {
   return addMany(n, [&item](T* dst, int count) { uninitializedFill(dst, count, item); });
 }
 
@@ -344,7 +344,7 @@ inline int List<T>::addMany(int n, TAction&& action) {
 }
 
 template<typename T>
-inline void List<T>::RemoveLast() {
+inline void List<T>::removeLast() {
   ASSERT(!isEmpty());
   int new_size = size_ - 1;
   destroyObject(data_ + new_size);
@@ -361,7 +361,7 @@ inline void List<T>::removeRange(int at, int n) {
 }
 
 template<typename T>
-inline void List<T>::Insert(int at, T item) {
+inline void List<T>::insert(int at, T item) {
   ASSERT(0 <= at && at <= size_);
 
   T* old_d = data_;
@@ -489,7 +489,7 @@ inline void List<T>::setSizeNoGrow(int new_size) {
 }
 
 template<typename T>
-inline void List<T>::AssignExternal(SpanType src) {
+inline void List<T>::assignExternal(SpanType src) {
   if (capacity_ < src.size()) {
     if constexpr (TIsTriviallyDestructible<T>) {
       clear();
@@ -505,7 +505,7 @@ inline void List<T>::AssignExternal(SpanType src) {
 }
 
 template<typename T>
-inline void List<T>::AssignInternal(SpanType src) {
+inline void List<T>::assignInternal(SpanType src) {
   int start = src.data() - data_;
   truncate(start + src.size());
   removeRange(0, start);

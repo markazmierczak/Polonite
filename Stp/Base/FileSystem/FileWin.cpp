@@ -13,11 +13,11 @@
 namespace stp {
 
 bool File::Exists(const FilePath& path) {
-  return ::GetFileAttributesW(ToNullTerminated(path)) != INVALID_FILE_ATTRIBUTES;
+  return ::GetFileAttributesW(toNullTerminated(path)) != INVALID_FILE_ATTRIBUTES;
 }
 
 SystemErrorCode File::tryGetInfo(const FilePath& path, FileInfo& out) {
-  if (!::GetFileAttributesExW(ToNullTerminated(path), GetFileExInfoStandard, &out.attr_data_))
+  if (!::GetFileAttributesExW(toNullTerminated(path), GetFileExInfoStandard, &out.attr_data_))
     return GetLastWinErrorCode();
   return WinErrorCode::Success;
 }
@@ -29,7 +29,7 @@ SystemErrorCode File::TryMakeAbsolutePath(const FilePath& input, FilePath& outpu
   while (true) {
     wchar_t* dst = output.chars().appendUninitialized(buffer_length - 1);
     int rv = static_cast<int>(
-        ::GetFullPathNameW(ToNullTerminated(input), buffer_length, dst, nullptr));
+        ::GetFullPathNameW(toNullTerminated(input), buffer_length, dst, nullptr));
     if (rv < buffer_length) {
       if (rv == 0)
         return GetLastWinErrorCode();
@@ -48,7 +48,7 @@ SystemErrorCode File::TryMakeLongPath(const FilePath& input, FilePath& output) {
   while (true) {
     wchar_t* dst = output.chars().appendUninitialized(buffer_length - 1);
     int rv = static_cast<int>(
-        ::GetLongPathNameW(ToNullTerminated(input), buffer_length, dst, nullptr));
+        ::GetLongPathNameW(toNullTerminated(input), buffer_length, dst, nullptr));
     if (rv < buffer_length) {
       if (rv == 0)
         return GetLastWinErrorCode();
@@ -61,27 +61,27 @@ SystemErrorCode File::TryMakeLongPath(const FilePath& input, FilePath& output) {
 }
 
 SystemErrorCode File::TryDelete(const FilePath& path) {
-  if (!::DeleteFileW(ToNullTerminated(path)))
+  if (!::DeleteFileW(toNullTerminated(path)))
     return GetLastWinErrorCode();
   return WinErrorCode::Success;
 }
 
 SystemErrorCode File::TryDeleteAfterReboot(const FilePath& path) {
   DWORD flags = MOVEFILE_DELAY_UNTIL_REBOOT | MOVEFILE_REPLACE_EXISTING;
-  if (!::MoveFileExW(ToNullTerminated(path), NULL, flags))
+  if (!::MoveFileExW(toNullTerminated(path), NULL, flags))
     return GetLastWinErrorCode();
   return WinErrorCode::Success;
 }
 
 SystemErrorCode File::TryReplace(const FilePath& from, const FilePath& to) {
   // Try a simple move first. It will only succeed when |to| doesn't already exist.
-  if (::MoveFileW(ToNullTerminated(from), ToNullTerminated(to)))
+  if (::MoveFileW(toNullTerminated(from), toNullTerminated(to)))
     return WinErrorCode::Success;
 
   // Try the full-blown replace if the move fails, as ReplaceFile will only
   // succeed when |to| does exist. When writing to a network share, we may
   // not be able to change the ACLs. Ignore ACL errors then (REPLACEFILE_IGNORE_MERGE_ERRORS).
-  if (::ReplaceFileW(ToNullTerminated(to), ToNullTerminated(from), NULL, REPLACEFILE_IGNORE_MERGE_ERRORS, NULL, NULL))
+  if (::ReplaceFileW(toNullTerminated(to), toNullTerminated(from), NULL, REPLACEFILE_IGNORE_MERGE_ERRORS, NULL, NULL))
     return WinErrorCode::Success;
 
   return GetLastWinErrorCode();
@@ -90,7 +90,7 @@ SystemErrorCode File::TryReplace(const FilePath& from, const FilePath& to) {
 SystemErrorCode File::TryCreateTemporaryIn(const FilePath& dir, FilePath& output_path) {
   wchar_t temp_name[MAX_PATH + 1];
 
-  if (!::GetTempFileNameW(ToNullTerminated(dir), L"", 0, temp_name))
+  if (!::GetTempFileNameW(toNullTerminated(dir), L"", 0, temp_name))
     return GetLastWinErrorCode();
 
   auto temp_cpath = FilePath::FromNullTerminated(temp_name);

@@ -19,7 +19,7 @@ void BasicThreadLocal::appendToList(BasicThreadLocal* list) {
   list->prev_ = this;
 }
 
-void BasicThreadLocal::RemoveFromList() {
+void BasicThreadLocal::removeFromList() {
   this->prev_->next_ = this->next_;
   this->next_->prev_ = this->prev_;
   this->next_ = nullptr;
@@ -68,7 +68,7 @@ void BasicThreadLocal::Fini() {
   NativeThreadLocal::Free(slot_);
   #if OS(WIN)
   AutoLock guard(&g_tls_lock);
-  RemoveFromList();
+  removeFromList();
   if (dtor_)
     --g_with_dtor_count;
   #endif

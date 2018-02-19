@@ -24,13 +24,13 @@ namespace stp {
 
 bool Directory::Exists(const FilePath& path) {
   stat_wrapper_t file_info;
-  if (posix::CallStat(ToNullTerminated(path), &file_info) == 0)
+  if (posix::CallStat(toNullTerminated(path), &file_info) == 0)
     return S_ISDIR(file_info.st_mode);
   return false;
 }
 
 SystemErrorCode Directory::TryCreate(const FilePath& path) {
-  if (::mkdir(ToNullTerminated(path), 0775) == 0)
+  if (::mkdir(toNullTerminated(path), 0775) == 0)
     return PosixErrorCode::Ok;
   auto error_code = GetLastSystemErrorCode();
   if (Exists(path))
@@ -39,7 +39,7 @@ SystemErrorCode Directory::TryCreate(const FilePath& path) {
 }
 
 SystemErrorCode Directory::tryRemoveEmpty(const FilePath& path) {
-  if (::rmdir(ToNullTerminated(path)) == 0)
+  if (::rmdir(toNullTerminated(path)) == 0)
     return PosixErrorCode::Ok;
   return GetLastPosixErrorCode();
 }
@@ -47,7 +47,7 @@ SystemErrorCode Directory::tryRemoveEmpty(const FilePath& path) {
 #if OS(LINUX)
 static bool IsStatsZeroIfUnlimited(const FilePath& path) {
   struct statfs stats;
-  if (HANDLE_EINTR(::statfs(ToNullTerminated(path), &stats)) != 0)
+  if (HANDLE_EINTR(::statfs(toNullTerminated(path), &stats)) != 0)
     return false;
 
   switch (stats.f_type) {
@@ -62,7 +62,7 @@ static bool IsStatsZeroIfUnlimited(const FilePath& path) {
 
 SystemErrorCode Directory::tryGetDriveSpaceInfo(const FilePath& path, DriveSpaceInfo& out_space) {
   struct statvfs stats;
-  if (HANDLE_EINTR(::statvfs(ToNullTerminated(path), &stats)) != 0)
+  if (HANDLE_EINTR(::statvfs(toNullTerminated(path), &stats)) != 0)
     return GetLastPosixErrorCode();
 
   #if OS(LINUX)

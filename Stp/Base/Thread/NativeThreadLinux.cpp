@@ -62,7 +62,7 @@ void NativeThread::SetName(const String& name) {
   }
 
   // Set the name for the LWP (which gets truncated to 15 characters).
-  int err = prctl(PR_SET_NAME, ToNullTerminated(name));
+  int err = prctl(PR_SET_NAME, toNullTerminated(name));
 
   auto error_code = GetLastPosixErrorCode();
   if (err < 0 && error_code != PosixErrorCode::OperationNotPermitted)
