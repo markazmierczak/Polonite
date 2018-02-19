@@ -20,7 +20,7 @@ struct BASE_EXPORT IntLine2 {
   IntLine2(const IntPoint2& p1, const IntPoint2& p2) : p1(p1), p2(p2) {}
   IntLine2(int x1, int y1, int x2, int y2) : p1(x1, y1), p2(x2, y2) {}
 
-  bool IsEmpty() const { return p2 == p1; }
+  bool isEmpty() const { return p2 == p1; }
 
   IntBounds2 GetBounds() const;
 
@@ -64,7 +64,7 @@ struct BASE_EXPORT Line2 {
 
   float GetDistanceTo(Point2 p) const;
 
-  bool IsEmpty() const { return p2 == p1; }
+  bool isEmpty() const { return p2 == p1; }
 
   float GetLength() const { return GetDelta().GetLength(); }
 

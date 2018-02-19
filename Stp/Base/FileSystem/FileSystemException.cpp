@@ -14,10 +14,10 @@ StringSpan FileSystemException::GetName() const noexcept {
 
 void FileSystemException::onFormat(TextWriter& out) const {
   out << GetErrorCode();
-  if (!path_.IsEmpty()) {
+  if (!path_.isEmpty()) {
     out << ", path=" << path_;
   }
-  if (!aux_path_.IsEmpty()) {
+  if (!aux_path_.isEmpty()) {
     out << ", aux_path=" << aux_path_;
   }
 }

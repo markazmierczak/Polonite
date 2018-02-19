@@ -25,7 +25,7 @@ void formatBool(TextWriter& out, bool b) {
 }
 
 void formatBool(TextWriter& out, bool b, const StringSpan& opts) {
-  if (opts.IsEmpty()) {
+  if (opts.isEmpty()) {
     formatBool(out, b);
     return;
   }
@@ -65,7 +65,7 @@ void formatChar(TextWriter& out, char32_t c, const StringSpan& opts) {
   bool uppercase = false;
   int size = 4;
 
-  if (!opts.IsEmpty()) {
+  if (!opts.isEmpty()) {
     bool ok = true;
     char fc = opts[0];
     switch (fc) {
@@ -134,7 +134,7 @@ void formatUint64(TextWriter& out, uint64_t x) { formatIntTmpl(out, x); }
 
 template<typename T>
 static inline void formatIntTmpl(TextWriter& out, T x, const StringSpan& opts) {
-  if (opts.IsEmpty()) {
+  if (opts.isEmpty()) {
     formatIntTmpl(out, x);
     return;
   }
@@ -200,7 +200,7 @@ static inline void formatIntTmpl(TextWriter& out, T x, const StringSpan& opts) {
     // This formatter must account for additional requirements, i.e. precision specifier.
     // Write the sign and remove from converter's output.
     ASSERT(converted[0] == '-');
-    converted.RemovePrefix(1);
+    converted.removePrefix(1);
     out << '-';
   } else {
     if (sign) {
@@ -231,7 +231,7 @@ void formatFloat(TextWriter& out, double x, const StringSpan& opts) {
   char sign = '\0';
   bool uppercase = true;
 
-  if (!opts.IsEmpty()) {
+  if (!opts.isEmpty()) {
     bool ok = true;
     const char* o_begin = begin(opts);
     const char* o_end = end(opts);
@@ -310,7 +310,7 @@ void formatFloat(TextWriter& out, double x, const StringSpan& opts) {
     // This formatter must account for additional requirements, i.e. precision specifier.
     // Write the sign and remove from converter's output.
     ASSERT(converted[0] == '-');
-    converted.RemovePrefix(1);
+    converted.removePrefix(1);
     out << '-';
   } else {
     if (sign) {

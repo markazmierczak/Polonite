@@ -16,7 +16,7 @@ TEST(ListTest, Empty) {
     List<int> list;
     EXPECT_EQ(nullptr, list.data());
     EXPECT_EQ(0, list.size());
-    EXPECT_TRUE(list.IsEmpty());
+    EXPECT_TRUE(list.isEmpty());
   }
 
   {
@@ -24,7 +24,7 @@ TEST(ListTest, Empty) {
     List<int> list(empty);
     EXPECT_EQ(nullptr, list.data());
     EXPECT_EQ(0, list.size());
-    EXPECT_TRUE(list.IsEmpty());
+    EXPECT_TRUE(list.isEmpty());
   }
 }
 
@@ -35,7 +35,7 @@ TEST(ListTest, Add) {
   list.Add(3);
   list.Add(4);
 
-  EXPECT_FALSE(list.IsEmpty());
+  EXPECT_FALSE(list.isEmpty());
   EXPECT_EQ(3, list.size());
   EXPECT_EQ(4, list.capacity());
   EXPECT_EQ(2, list[0]);

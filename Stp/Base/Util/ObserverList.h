@@ -42,7 +42,7 @@ class ObserverList {
   // Determine whether a particular observer is in the list.
   bool HasObserver(const TObserver* observer) const;
 
-  void Clear();
+  void clear();
 
   bool MightHaveObservers() const { return observers_.size() != 0; }
 
@@ -74,7 +74,7 @@ ObserverList<TObserver>::Iterator::~Iterator() {
     auto& iterators = list_->iterators_;
     ASSERT(iterators.First() == this);
     iterators.RemoveFirst();
-    if (iterators.IsEmpty() && list_->needs_compact_)
+    if (iterators.isEmpty() && list_->needs_compact_)
       list_->Compact();
   }
 }
@@ -110,7 +110,7 @@ template<class TObserver>
 void ObserverList<TObserver>::RemoveObserver(TObserver* obs) {
   int index = observers_.indexOf(obs);
   ASSERT(index >= 0);
-  if (iterators_.IsEmpty()) {
+  if (iterators_.isEmpty()) {
     observers_.RemoveAt(index);
   } else {
     observers_[index] = nullptr;
@@ -124,9 +124,9 @@ bool ObserverList<TObserver>::HasObserver(const TObserver* observer) const {
 }
 
 template<class TObserver>
-void ObserverList<TObserver>::Clear() {
-  if (iterators_.IsEmpty()) {
-    observers_.Clear();
+void ObserverList<TObserver>::clear() {
+  if (iterators_.isEmpty()) {
+    observers_.clear();
   } else {
     for (auto& observer : observers_) {
       observer = nullptr;

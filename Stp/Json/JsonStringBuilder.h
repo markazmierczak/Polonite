@@ -31,7 +31,7 @@ class BASE_EXPORT JsonStringBuilder {
 
   StringSpan toSpan() const { return StringSpan(data_, size_); }
 
-  bool IsEmpty() const { return size_ == 0; }
+  bool isEmpty() const { return size_ == 0; }
 
   ALWAYS_INLINE const char* data() const { return data_; }
   ALWAYS_INLINE int size() const { return size_; }

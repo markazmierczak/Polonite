@@ -34,7 +34,7 @@ template<typename TResult, typename TArray>
 inline TResult Join(typename TResult::ItemType separator, const TArray& inputs) {
   TResult result;
   // Must check for empty due to later decrement when computing output length.
-  if (!inputs.IsEmpty()) {
+  if (!inputs.isEmpty()) {
     int result_length = 0;
     for (int i = 0; i < inputs.size(); ++i)
       result_length += inputs[i].size();
@@ -63,7 +63,7 @@ template<typename TResult, typename TArray>
 inline TResult Join(Span<typename TResult::ItemType> separator, const TArray& inputs) {
   TResult result;
   // Must check for empty due to later decrement when computing output length.
-  if (!inputs.IsEmpty()) {
+  if (!inputs.isEmpty()) {
     int result_length = 0;
     for (int i = 0; i < inputs.size(); ++i)
       result_length += inputs[i].size();

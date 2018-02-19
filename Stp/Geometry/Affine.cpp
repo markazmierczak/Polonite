@@ -298,7 +298,7 @@ void Affine::SetSinCos(float sin_value, float cos_value) {
 }
 
 bool Affine::SetBoundsToBounds(const Bounds2& src, const Bounds2& dst, ScaleToFit scale_to_fit) {
-  if (src.IsEmpty()) {
+  if (src.isEmpty()) {
     SetIdentity();
     return false;
   }

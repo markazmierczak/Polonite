@@ -76,13 +76,13 @@ void AtExitManager::processCallbacksNow() {
     g_top_manager_->processing_callbacks_ = true;
   }
 
-  while (!tasks.IsEmpty()) {
+  while (!tasks.isEmpty()) {
     Callback task = tasks.Pop();
     task();
   }
 
   // Expect that all callbacks have been run.
-  ASSERT(g_top_manager_->stack_.IsEmpty());
+  ASSERT(g_top_manager_->stack_.isEmpty());
 }
 
 } // namespace stp

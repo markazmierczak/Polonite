@@ -24,7 +24,7 @@ struct BASE_EXPORT Ellipse {
 
   static Ellipse FromBounds(const Bounds2& bounds);
 
-  bool IsEmpty() const { return radii.x <= 0 || radii.y <= 0; }
+  bool isEmpty() const { return radii.x <= 0 || radii.y <= 0; }
 
   double GetArea() const { return MathConstants<double>::Pi * radii.x * radii.y; }
 

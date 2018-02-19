@@ -22,7 +22,7 @@ class BASE_EXPORT TemporaryDirectory {
   ~TemporaryDirectory();
 
   // Returns true if path_ is non-empty.
-  bool IsValid() const { return !path_.IsEmpty(); }
+  bool IsValid() const { return !path_.isEmpty(); }
 
   // Creates a unique directory in system-wide temporary directory,
   // and takes ownership of it.

@@ -48,7 +48,7 @@ bool DirectoryEnumerator::TryMoveNext(SystemErrorCode& out_error_code) {
     if (IsDotEntry(dent->d_name))
       continue;
 
-    if (!pattern_.IsEmpty()) {
+    if (!pattern_.isEmpty()) {
       if (::fnmatch(ToNullTerminated(pattern_), dent->d_name, FNM_NOESCAPE) != 0)
         continue;
     }

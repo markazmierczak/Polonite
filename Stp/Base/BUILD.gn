@@ -76,6 +76,7 @@ component("Base") {
     "Containers/SinglyLinkedList.h",
     "Containers/Sorting.h",
     "Containers/SortingBasic.h",
+    "Containers/Span.cpp",
     "Containers/Span.h",
     "Containers/SpanAlgo.h",
     "Containers/SpanCompare.h",

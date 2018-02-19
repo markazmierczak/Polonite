@@ -16,7 +16,7 @@ TEST(Span, Basic) {
     Span<int> span;
     EXPECT_EQ(nullptr, span.data());
     EXPECT_EQ(0, span.size());
-    EXPECT_TRUE(span.IsEmpty());
+    EXPECT_TRUE(span.isEmpty());
   }
 
   {
@@ -24,7 +24,7 @@ TEST(Span, Basic) {
     Span<int> span = array;
     EXPECT_EQ(array, span.data());
     EXPECT_EQ(3, span.size());
-    EXPECT_FALSE(span.IsEmpty());
+    EXPECT_FALSE(span.isEmpty());
   }
 
   {
@@ -118,7 +118,7 @@ TEST(Span, MuatbleBasic) {
     MutableSpan<int> span;
     EXPECT_EQ(nullptr, span.data());
     EXPECT_EQ(0, span.size());
-    EXPECT_TRUE(span.IsEmpty());
+    EXPECT_TRUE(span.isEmpty());
   }
 
   {
@@ -126,7 +126,7 @@ TEST(Span, MuatbleBasic) {
     MutableSpan<int> span(array);
     EXPECT_EQ(array, span.data());
     EXPECT_EQ(3, span.size());
-    EXPECT_FALSE(span.IsEmpty());
+    EXPECT_FALSE(span.isEmpty());
   }
 
   {

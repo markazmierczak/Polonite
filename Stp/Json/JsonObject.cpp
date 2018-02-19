@@ -9,8 +9,8 @@
 
 namespace stp {
 
-void JsonObject::Clear() {
-  impl().Clear();
+void JsonObject::clear() {
+  impl().clear();
 }
 
 void JsonObject::WillGrow(int n) {
@@ -168,7 +168,7 @@ bool JsonObject::TryRemoveWithPath(StringSpan path, EmptyHandling empty_handling
 
   StringSpan nested_path = path.getSlice(delimiter_pos + 1);
   bool removed = object->TryRemoveWithPath(nested_path, empty_handling);
-  if (removed && object->IsEmpty() && empty_handling == EraseEmpty) {
+  if (removed && object->isEmpty() && empty_handling == EraseEmpty) {
     bool empty_removed = TryRemove(object_path);
     ASSERT_UNUSED(empty_removed, empty_removed);
   }

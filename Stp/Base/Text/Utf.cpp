@@ -106,7 +106,7 @@ int Utf8::EncodeSlow(char* out, char32_t c) {
 
 int TryEncodeUtf(char32_t c, MutableStringSpan out) {
   ASSERT(unicode::IsValidRune(c));
-  if (out.IsEmpty())
+  if (out.isEmpty())
     return 0;
   int i = 0;
   if (isAscii(c)) {

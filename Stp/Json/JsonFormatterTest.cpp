@@ -96,7 +96,7 @@ TEST(JsonFormatterTest, EscapeUTF8) {
     EXPECT_EQ(escaped, out);
     EXPECT_TRUE(Utf8::Validate(out));
 
-    out.Clear();
+    out.clear();
     JsonFormatter::Escape(os, in, true);
     EXPECT_EQ(escaped, out);
     EXPECT_TRUE(Utf8::Validate(out));
@@ -114,7 +114,7 @@ TEST(JsonFormatterTest, EscapeUTF8) {
   in = null_prepend + in;
   String expected = "test\\u0000";
   expected += cases[0].escaped;
-  out.Clear();
+  out.clear();
   JsonFormatter::Escape(os, in, true);
   EXPECT_EQ(expected, out);
   EXPECT_TRUE(Utf8::Validate(out));

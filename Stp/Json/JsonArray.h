@@ -28,9 +28,9 @@ class BASE_EXPORT JsonArray : public JsonValue {
   // Clear type bits from capacity.
   ALWAYS_INLINE int capacity() const { return impl().capacity(); }
 
-  bool IsEmpty() const { return size() == 0; }
+  bool isEmpty() const { return size() == 0; }
 
-  void Clear();
+  void clear();
 
   void EnsureCapacity(int request);
   void WillGrow(int n);

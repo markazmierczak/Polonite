@@ -46,7 +46,7 @@ class BufferSpan {
   ALWAYS_INLINE constexpr const void* data() const { return data_; }
   ALWAYS_INLINE constexpr int size() const { return size_; }
 
-  constexpr bool IsEmpty() const { return size_ == 0; }
+  constexpr bool isEmpty() const { return size_ == 0; }
 
   constexpr BufferSpan getSlice(int at) const {
     ASSERT(0 <= at && at <= size_);
@@ -58,17 +58,17 @@ class BufferSpan {
     return BufferSpan(data_ + at, n);
   }
 
-  constexpr void Truncate(int at) {
+  constexpr void truncate(int at) {
     ASSERT(0 <= at && at <= size_);
     size_ = at;
   }
 
-  constexpr void RemovePrefix(int n) {
+  constexpr void removePrefix(int n) {
     ASSERT(0 <= n && n <= size_);
     data_ += n;
     size_ -= n;
   }
-  constexpr void RemoveSuffix(int n) { Truncate(size_ - n); }
+  constexpr void removeSuffix(int n) { truncate(size_ - n); }
 
   friend bool operator==(const BufferSpan& lhs, const BufferSpan& rhs) {
     return lhs.size_ == rhs.size_ && CompareData(lhs.data_, rhs.data_, lhs.size_) == 0;
@@ -142,7 +142,7 @@ class MutableBufferSpan {
   ALWAYS_INLINE constexpr void* data() { return data_; }
   ALWAYS_INLINE constexpr int size() const { return size_; }
 
-  constexpr bool IsEmpty() const { return size_ == 0; }
+  constexpr bool isEmpty() const { return size_ == 0; }
 
   constexpr BufferSpan getSlice(int at) const {
     ASSERT(0 <= at && at <= size_);
@@ -164,17 +164,17 @@ class MutableBufferSpan {
     return MutableBufferSpan(data_ + at, n);
   }
 
-  constexpr void Truncate(int at) {
+  constexpr void truncate(int at) {
     ASSERT(0 <= at && at <= size_);
     size_ = at;
   }
 
-  constexpr void RemovePrefix(int n) {
+  constexpr void removePrefix(int n) {
     ASSERT(0 <= n && n <= size_);
     data_ += n;
     size_ -= n;
   }
-  constexpr void RemoveSuffix(int n) { Truncate(size_ - n); }
+  constexpr void removeSuffix(int n) { truncate(size_ - n); }
 
   void fill(byte_t byte);
 
@@ -235,7 +235,7 @@ constexpr auto MakeBufferSpan(T& container) {
 }
 
 inline void MutableBufferSpan::fill(byte_t byte) {
-  if (!IsEmpty())
+  if (!isEmpty())
     ::memset(data_, byte, toUnsigned(size_));
 }
 

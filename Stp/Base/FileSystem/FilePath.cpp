@@ -30,18 +30,18 @@ void FilePath::ShrinkToFit() {
 }
 
 bool FilePath::CdUp() {
-  Truncate(GetDirectoryNameLength());
-  return !IsEmpty();
+  truncate(GetDirectoryNameLength());
+  return !isEmpty();
 }
 
 void FilePath::RemoveExtension() {
   int pos = indexOfExtension();
   if (pos >= 0)
-    Truncate(pos);
+    truncate(pos);
 }
 
 // Returns true if path is "", ".", or "..".
-static bool IsEmptyOrSpecialCase(Span<FilePathChar> path) {
+static bool isEmptyOrSpecialCase(Span<FilePathChar> path) {
   if (path.size() > 2)
     return false;
   for (int i = 0 ; i < path.size(); ++i) {
@@ -66,12 +66,12 @@ bool FilePath::ReplaceExtension(StringSpan extension) {
   int pos = indexOfExtension();
   if (pos < 0) {
     FilePathSpan filename = GetFileName();
-    if (IsEmptyOrSpecialCase(filename.chars()))
+    if (isEmptyOrSpecialCase(filename.chars()))
       return false;
   } else {
-    Truncate(pos);
+    truncate(pos);
   }
-  if (!extension.IsEmpty()) {
+  if (!extension.isEmpty()) {
     if (extension[0] != '.')
       chars_.Add('.');
     chars_.Append(extension);
@@ -80,7 +80,7 @@ bool FilePath::ReplaceExtension(StringSpan extension) {
 }
 
 void FilePath::StripTrailingSeparators() {
-  chars_.RemoveSuffix(CountTrailingSeparators());
+  chars_.removeSuffix(CountTrailingSeparators());
 }
 
 void FilePath::NormalizeSeparatorsTo(CharType separator) {
@@ -103,7 +103,7 @@ void FilePath::AddComponent(FilePathSpan component) {
   ASSERT(!chars_.IsSourceOf(component.chars()));
 
   bool need_separator = false;
-  if (!IsEmpty())
+  if (!isEmpty())
     need_separator = !IsFilePathSeparator(chars_.getLast());
 
   int length = component.size();
@@ -118,7 +118,7 @@ void FilePath::AddComponentAscii(StringSpan component) {
   ASSERT(IsAscii(component));
 
   bool need_separator = false;
-  if (!IsEmpty())
+  if (!isEmpty())
     need_separator = !IsFilePathSeparator(chars_.getLast());
 
   int length = component.size();

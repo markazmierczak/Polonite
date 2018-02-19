@@ -31,8 +31,8 @@ class FlatSet {
   ALWAYS_INLINE int capacity() const { return list_.capacity(); }
   ALWAYS_INLINE int size() const { return list_.size(); }
 
-  bool IsEmpty() const { return list_.IsEmpty(); }
-  void Clear() { list_.Clear(); }
+  bool isEmpty() const { return list_.isEmpty(); }
+  void clear() { list_.clear(); }
 
   template<typename U>
   bool contains(const U& value) const { return indexOf(value) >= 0; }

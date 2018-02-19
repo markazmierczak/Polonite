@@ -25,7 +25,7 @@ struct BASE_EXPORT IntBounds2 {
   int GetWidth() const { return max.x - min.x; }
   int GetHeight() const { return max.y - min.y; }
 
-  bool IsEmpty() const { return min.x >= max.x || min.y >= max.y; }
+  bool isEmpty() const { return min.x >= max.x || min.y >= max.y; }
 
   bool contains(IntPoint2 point) const { return contains(point.x, point.y); }
   bool contains(int x, int y) const;
@@ -74,7 +74,7 @@ struct BASE_EXPORT Bounds2 {
   float GetWidth() const { return max.x - min.x; }
   float GetHeight() const { return max.y - min.y; }
 
-  bool IsEmpty() const { return min.x >= max.x || min.y >= max.y; }
+  bool isEmpty() const { return min.x >= max.x || min.y >= max.y; }
 
   bool contains(Point2 point) const { return contains(point.x, point.y); }
   bool contains(float x, float y) const;
@@ -107,7 +107,7 @@ struct BASE_EXPORT Bounds2 {
   Point2 max;
 };
 
-// RoundIn()/RoundInToInt() may return unsorted rectangle - check with IsEmpty().
+// RoundIn()/RoundInToInt() may return unsorted rectangle - check with isEmpty().
 BASE_EXPORT Bounds2 RoundOut(const Bounds2& b);
 BASE_EXPORT Bounds2 RoundIn(const Bounds2& b);
 BASE_EXPORT Bounds2 RoundNearest(const Bounds2& b);

@@ -12,12 +12,12 @@ TEST(StringSpanTest, Basic) {
   {
     StringSpan s;
     EXPECT_EQ(0, s.size());
-    EXPECT_TRUE(s.IsEmpty());
+    EXPECT_TRUE(s.isEmpty());
   }
   {
     StringSpan s = "abc";
     EXPECT_EQ(3, s.size());
-    EXPECT_FALSE(s.IsEmpty());
+    EXPECT_FALSE(s.isEmpty());
     EXPECT_EQ('a', s[0]);
     EXPECT_EQ('b', s[1]);
     EXPECT_EQ('c', s[2]);
@@ -30,15 +30,15 @@ TEST(StringSpanTest, FirstLast) {
   EXPECT_EQ('c', s.getLast());
 }
 
-TEST(StringSpanTest, RemovePrefixSuffix) {
+TEST(StringSpanTest, removePrefixSuffix) {
   {
     StringSpan s = "abcd";
-    s.RemovePrefix(2);
+    s.removePrefix(2);
     EXPECT_EQ(StringSpan("cd"), s);
   }
   {
     StringSpan s = "abcd";
-    s.RemoveSuffix(1);
+    s.removeSuffix(1);
     EXPECT_EQ(StringSpan("abc"), s);
   }
 }

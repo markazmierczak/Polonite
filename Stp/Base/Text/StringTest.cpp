@@ -11,7 +11,7 @@ TEST(StringTest, Basic) {
   {
     WString s;
     EXPECT_EQ(0, s.size());
-    EXPECT_TRUE(s.IsEmpty());
+    EXPECT_TRUE(s.isEmpty());
     // Always zero terminated.
     ASSERT_NE(nullptr, ToNullTerminated(s));
     EXPECT_EQ(wchar_t(0), *ToNullTerminated(s));

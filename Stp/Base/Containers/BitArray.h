@@ -14,11 +14,9 @@
 namespace stp {
 
 namespace detail {
-
-BASE_EXPORT void formatBitArray(
-    TextWriter& out, const StringSpan& opts, const uintptr_t* words, int size);
-
-} // namespace detail
+BASE_EXPORT void formatBitArrayAsBinary(TextWriter& out, const uintptr_t* words, int size);
+BASE_EXPORT void formatBitArray(TextWriter& out, const StringSpan& opts, const uintptr_t* words, int size);
+}
 
 class BitReference {
  public:
@@ -138,6 +136,9 @@ class BitArray {
     return ::memcmp(l.words_, r.words_, sizeof(words_));
   }
   friend HashCode partialHash(const BitArray& x) { return hashBuffer(x.words_, N * isizeof(WordType)); }
+  friend TextWriter& operator<<(TextWriter& out, const BitArray& x) {
+    detail::formatBitArrayAsBinary(out, x.words_, N); return out;
+  }
   friend void format(TextWriter& out, const BitArray& x, const StringSpan& opts) {
     detail::formatBitArray(out, opts, x.words_, N);
   }

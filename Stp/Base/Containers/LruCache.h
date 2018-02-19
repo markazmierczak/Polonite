@@ -17,7 +17,7 @@ class LruCache {
  public:
   LruCache() {}
 
-  ~LruCache() { Clear(); }
+  ~LruCache() { clear(); }
 
   const T& operator[](const InputKeyType& key) const;
   T& operator[](const InputKeyType& key);
@@ -29,7 +29,7 @@ class LruCache {
 
   bool TryRemove(const InputKeyType& key);
 
-  void Clear();
+  void clear();
 
  private:
   struct Node : public LinkedListNode<Node> {
@@ -89,8 +89,8 @@ inline bool LruCache<K, T, Traits>::TryRemove(const InputKeyType& key) {
 }
 
 template<typename K, typename T, class Traits>
-inline void LruCache<K, T, Traits>::Clear() {
-  map_.Clear();
+inline void LruCache<K, T, Traits>::clear() {
+  map_.clear();
   list_.Reset();
 }
 

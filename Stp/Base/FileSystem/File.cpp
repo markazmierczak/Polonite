@@ -71,9 +71,9 @@ String File::ReadAllText(const FilePath& path, StringSpan codec) {
   if (file->Read(dst, size) != size)
     return nullopt;
 
-  if (codec.IsEmpty())
+  if (codec.isEmpty())
     codec = DetectCodec(BufferSpan(dst, size));
-  if (codec.IsEmpty())
+  if (codec.isEmpty())
     return nullopt;
 
   if (codec == Utf8Codec::Instance.name) {

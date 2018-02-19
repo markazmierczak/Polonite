@@ -22,7 +22,7 @@ bool ProcStats::Reader::OpenFile(const FilePath& path) {
 
 bool ProcStats::Reader::Parse(StringSpan content_string) {
   // Reader object cannot be reused.
-  ASSERT(content_.IsEmpty());
+  ASSERT(content_.isEmpty());
   content_ = std::move(content_string);
 
   const char* begin = content_.data();

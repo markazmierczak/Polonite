@@ -17,7 +17,7 @@ class RecursiveDirectoryEnumerator {
   void Open(FilePath root_path);
   SystemErrorCode TryOpen(FilePath root_path);
 
-  bool IsOpen() const { return base_.IsOpen() || !pending_dir_paths_.IsEmpty(); }
+  bool IsOpen() const { return base_.IsOpen() || !pending_dir_paths_.isEmpty(); }
 
   void Close();
 

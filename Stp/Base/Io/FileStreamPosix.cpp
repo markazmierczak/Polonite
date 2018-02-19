@@ -90,7 +90,7 @@ int FileStream::ReadAtMost(MutableBufferSpan output) {
     ASSERT(-1 <= prv && prv <= output.size());
     int rv = static_cast<int>(prv);
     if (rv > 0) {
-      output.RemovePrefix(rv);
+      output.removePrefix(rv);
       bytes_read += rv;
     } else {
       if (rv == 0)
@@ -98,7 +98,7 @@ int FileStream::ReadAtMost(MutableBufferSpan output) {
       if (errno != EINTR)
         throw SystemException(GetLastSystemErrorCode());
     }
-  } while (!output.IsEmpty());
+  } while (!output.isEmpty());
   return bytes_read;
 }
 
@@ -111,13 +111,13 @@ void FileStream::Write(BufferSpan input) {
     int rv = static_cast<int>(prv);
     if (rv >= 0) {
       // Conformant POSIX implementations must not return zero on error.
-      ASSERT(rv != 0 || input.IsEmpty());
-      input.RemovePrefix(rv);
+      ASSERT(rv != 0 || input.isEmpty());
+      input.removePrefix(rv);
     } else {
       if (errno != EINTR)
         throw SystemException(GetLastSystemErrorCode());
     }
-  } while (!input.IsEmpty());
+  } while (!input.isEmpty());
 }
 
 #if OS(ANDROID)
@@ -140,16 +140,16 @@ void FileStream::PositionalRead(int64_t offset, MutableBufferSpan output) {
     int rv = static_cast<int>(prv);
     if (rv > 0) {
       offset += rv;
-      output.RemovePrefix(rv);
+      output.removePrefix(rv);
     } else {
       if (rv == 0) {
-        if (!output.IsEmpty()) // zero length was requested ?
+        if (!output.isEmpty()) // zero length was requested ?
           throw EndOfStreamException();
       } else if (errno != EINTR) {
         throw SystemException(GetLastPosixErrorCode());
       }
     }
-  } while (!output.IsEmpty());
+  } while (!output.isEmpty());
 }
 
 void FileStream::PositionalWrite(int64_t offset, BufferSpan input) {
@@ -164,14 +164,14 @@ void FileStream::PositionalWrite(int64_t offset, BufferSpan input) {
     int rv = static_cast<int>(prv);
     if (rv >= 0) {
       // Conformant POSIX implementations must not return zero on error.
-      ASSERT(rv != 0 || input.IsEmpty());
+      ASSERT(rv != 0 || input.isEmpty());
       offset += rv;
-      input.RemovePrefix(rv);
+      input.removePrefix(rv);
     } else {
       if (errno != EINTR)
         throw SystemException(GetLastPosixErrorCode());
     }
-  } while (!input.IsEmpty());
+  } while (!input.isEmpty());
 }
 
 int64_t FileStream::Seek(int64_t offset, SeekOrigin origin) {

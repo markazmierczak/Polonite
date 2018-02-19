@@ -36,7 +36,7 @@ void StackTrace::PrintToConsole() const {
 
 void StackTrace::FormatImpl(TextWriter& out, const StringSpan& opts) const {
   bool symbolize = true;
-  if (!opts.IsEmpty()) {
+  if (!opts.isEmpty()) {
     bool ok = opts.size() == 1;
     char format_char = opts[0];
     if (format_char == 'X')

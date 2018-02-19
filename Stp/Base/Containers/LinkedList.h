@@ -53,13 +53,13 @@ class LinkedList {
   // list (root_.next() will point back to the start of the list,
   // and root_.prev() wraps around to the end of the list).
   constexpr LinkedList() : root_(root(), root()) {}
-  ~LinkedList() { Clear(); }
+  ~LinkedList() { clear(); }
 
   ALWAYS_INLINE NodeType* root() const { return const_cast<NodeType*>(&root_); }
 
-  ALWAYS_INLINE bool IsEmpty() const { return root_.next() == root(); }
+  ALWAYS_INLINE bool isEmpty() const { return root_.next() == root(); }
 
-  void Clear();
+  void clear();
 
   // Unlike clear it does not invalidates next/prev pointers of items.
   // Useful in cases when all items were already deleted.
@@ -145,20 +145,20 @@ inline void LinkedListNode<T>::RemoveFromList() {
 }
 
 template<typename T>
-inline void LinkedList<T>::Clear() {
-  while (!IsEmpty())
+inline void LinkedList<T>::clear() {
+  while (!isEmpty())
     getFirst()->RemoveFromList();
 }
 
 template<typename T>
 inline T* LinkedList<T>::getFirst() const {
-  ASSERT(!IsEmpty());
+  ASSERT(!isEmpty());
   return root_.next()->that();
 }
 
 template<typename T>
 inline T* LinkedList<T>::getLast() const {
-  ASSERT(!IsEmpty());
+  ASSERT(!isEmpty());
   return root_.prev()->that();
 }
 

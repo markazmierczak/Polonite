@@ -29,14 +29,14 @@ class SinglyLinkedList {
  public:
   constexpr SinglyLinkedList() {}
 
-  ~SinglyLinkedList() { Clear(); }
+  ~SinglyLinkedList() { clear(); }
 
   ALWAYS_INLINE T* head() const { return head_; }
   ALWAYS_INLINE T* tail() const { return tail_; }
 
-  ALWAYS_INLINE bool IsEmpty() const { return head_ == nullptr; }
+  ALWAYS_INLINE bool isEmpty() const { return head_ == nullptr; }
 
-  void Clear();
+  void clear();
 
   // Call before destruction when you know items will no longer be used.
   void Reset();
@@ -148,7 +148,7 @@ inline void SinglyLinkedList<T>::Remove(T* node) {
 
 template<typename T>
 inline T* SinglyLinkedList<T>::TakeFirst() {
-  ASSERT(!IsEmpty());
+  ASSERT(!isEmpty());
   T* node;
   if (tail_ == head_) {
     node = head_;
@@ -163,7 +163,7 @@ inline T* SinglyLinkedList<T>::TakeFirst() {
 }
 
 template<typename T>
-inline void SinglyLinkedList<T>::Clear() {
+inline void SinglyLinkedList<T>::clear() {
   while (head_) {
     T* node = head_;
     head_ = node->next_;
@@ -179,13 +179,13 @@ inline void SinglyLinkedList<T>::Reset() {
 
 template<typename T>
 inline T* SinglyLinkedList<T>::First() const {
-  ASSERT(!IsEmpty());
+  ASSERT(!isEmpty());
   return head_;
 }
 
 template<typename T>
 inline T* SinglyLinkedList<T>::Last() const {
-  ASSERT(!IsEmpty());
+  ASSERT(!isEmpty());
   return tail_;
 }
 

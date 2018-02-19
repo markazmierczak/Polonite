@@ -34,8 +34,8 @@ constexpr const TextEncodingData UndefinedTextEncodingData = BuildNull();
 } // namespace detail
 
 static inline StringSpan RemoveNonAlphaNumericPrefix(StringSpan s) {
-  while (!s.IsEmpty() && !isAlphaNumericAscii(s.getFirst()))
-    s.RemovePrefix(1);
+  while (!s.isEmpty() && !isAlphaNumericAscii(s.getFirst()))
+    s.removePrefix(1);
   return s;
 }
 
@@ -43,19 +43,19 @@ bool TextEncoding::AreNamesMatching(StringSpan lhs, StringSpan rhs) noexcept {
   if (lhs == rhs)
     return true;
 
-  while (!lhs.IsEmpty() && !rhs.IsEmpty()) {
+  while (!lhs.isEmpty() && !rhs.isEmpty()) {
     lhs = RemoveNonAlphaNumericPrefix(lhs);
     rhs = RemoveNonAlphaNumericPrefix(rhs);
-    if (lhs.IsEmpty() || rhs.IsEmpty())
+    if (lhs.isEmpty() || rhs.isEmpty())
       break;
 
     if (toUpperAscii(lhs.getFirst()) != toUpperAscii(rhs.getFirst()))
       return false;
 
-    lhs.RemovePrefix(1);
-    rhs.RemovePrefix(1);
+    lhs.removePrefix(1);
+    rhs.removePrefix(1);
   }
-  return lhs.IsEmpty() && rhs.IsEmpty();
+  return lhs.isEmpty() && rhs.isEmpty();
 }
 
 } // namespace stp

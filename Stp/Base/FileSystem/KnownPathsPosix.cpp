@@ -57,11 +57,11 @@ FilePath GetCurrentDirPath() {
 
   FilePath path;
   for (int buffer_len = StackLength * 2; errno == ERANGE; buffer_len *= 2) {
-    path.Clear();
+    path.clear();
     char* dst = path.chars().AppendUninitialized(buffer_len);
     if (::getcwd(dst, buffer_len) != nullptr) {
       int real_length = makeSpanFromNullTerminated(dst).size();
-      path.Truncate(real_length);
+      path.truncate(real_length);
       return path;
     }
   }

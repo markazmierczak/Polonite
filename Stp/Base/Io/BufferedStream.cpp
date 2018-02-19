@@ -146,7 +146,7 @@ int BufferedStream::ReadAtMost(MutableBufferSpan output) {
     return output.size();
 
   if (from_buffer > 0)
-    output.RemovePrefix(from_buffer);
+    output.removePrefix(from_buffer);
 
   int already_satisfied = from_buffer;
 
@@ -183,7 +183,7 @@ void BufferedStream::Write(BufferSpan input) {
     int wrote = WriteToBuffer(input);
     if (write_pos_ == buffer_size_) {
       // The source spans two buffers. Make second write.
-      input.RemovePrefix(wrote);
+      input.removePrefix(wrote);
       FlushWriteBuffer();
       wrote = WriteToBuffer(input);
     }

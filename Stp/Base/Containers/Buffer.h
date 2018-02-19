@@ -38,8 +38,8 @@ class Buffer {
   ALWAYS_INLINE int size() const { return size_; }
   ALWAYS_INLINE int capacity() const { return capacity_; }
 
-  bool IsEmpty() const { return size_ == 0; }
-  void Clear() { Truncate(0); }
+  bool isEmpty() const { return size_ == 0; }
+  void clear() { truncate(0); }
 
   void EnsureCapacity(int request);
   void ShrinkCapacity(int request);
@@ -64,9 +64,9 @@ class Buffer {
 
   void RemoveRange(int at, int n);
 
-  void Truncate(int at);
-  void RemovePrefix(int n) { RemoveRange(0, n); }
-  void RemoveSuffix(int n) { Truncate(size_ - n); }
+  void truncate(int at);
+  void removePrefix(int n) { RemoveRange(0, n); }
+  void removeSuffix(int n) { truncate(size_ - n); }
 
   static Buffer AdoptMemory(void* ptr, int size, int capacity);
   void* ReleaseMemory();
@@ -186,7 +186,7 @@ inline Buffer& Buffer::operator=(SpanType span) {
 
 inline void Buffer::Assign(SpanType src) {
   if (size_ < src.size()) {
-    Clear();
+    clear();
     EnsureCapacity(src.size());
   }
   ::memcpy(data_, src.data(), toUnsigned(src.size()));
@@ -253,7 +253,7 @@ inline int Buffer::AppendInitialized(int n) {
 inline int Buffer::Append(SpanType src) {
   ASSERT(!IsSourceOf(src));
   const void* src_d = src.data();
-  return !src.IsEmpty() ? AddMany(src.size(), [src_d](void* dst, int count) {
+  return !src.isEmpty() ? AddMany(src.size(), [src_d](void* dst, int count) {
     ::memcpy(dst, src_d, toUnsigned(count));
   }) : size_;
 }
@@ -286,7 +286,7 @@ inline void Buffer::InsertInitialized(int at, int n) {
 inline void Buffer::InsertRange(int at, SpanType src) {
   ASSERT(0 <= at && at <= size_);
   ASSERT(!IsSourceOf(src));
-  if (!src.IsEmpty()) {
+  if (!src.isEmpty()) {
     InsertMany(at, src.size(), [src](void* dst) {
       ::memcpy(dst, src.data(), toUnsigned(src.size()));
     });
@@ -334,7 +334,7 @@ inline void Buffer::RemoveRange(int at, int n) {
   }
 }
 
-inline void Buffer::Truncate(int at) {
+inline void Buffer::truncate(int at) {
   ASSERT(0 <= at && at <= size_);
   SetSizeNoGrow(at);
 }

@@ -80,17 +80,17 @@ void StreamWriter::DestroyEncoder() {
 }
 
 void StreamWriter::onFlush() {
-  if (buffer_.IsEmpty())
+  if (buffer_.isEmpty())
     return;
   FlushBuffer();
   stream_.Flush();
 }
 
 void StreamWriter::FlushBuffer() {
-  if (buffer_.IsEmpty())
+  if (buffer_.isEmpty())
     return;
   stream_.Write(buffer_);
-  buffer_.Clear();
+  buffer_.clear();
 }
 
 void StreamWriter::SetAutoFlush(bool auto_flush) {
@@ -120,7 +120,7 @@ void StreamWriter::WriteToBuffer(BufferSpan input) {
   }
 
   buffer_.Append(input.getSlice(remaining_capacity));
-  input.RemovePrefix(remaining_capacity);
+  input.removePrefix(remaining_capacity);
 
   FlushBuffer();
 
@@ -158,14 +158,14 @@ void StreamWriter::onWriteString(StringSpan input) {
 }
 
 void StreamWriter::WriteIndirect(StringSpan input) {
-  while (!input.IsEmpty()) {
+  while (!input.isEmpty()) {
     int remaining_capacity = buffer_.capacity() - buffer_.size();
     void* output = buffer_.AppendUninitialized(remaining_capacity);
 
     auto result = encoder_->Encode(input, MutableBufferSpan(output, remaining_capacity));
 
-    input.RemovePrefix(result.num_read);
-    buffer_.RemoveSuffix(remaining_capacity - result.num_wrote);
+    input.removePrefix(result.num_read);
+    buffer_.removeSuffix(remaining_capacity - result.num_wrote);
 
     if (result.more_output) {
       FlushBuffer();

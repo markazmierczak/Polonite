@@ -26,7 +26,7 @@ inline int32_t StringReader::OnReadInternal(bool advance) {
     return -1;
 
   if (advance)
-    string_.RemovePrefix(it - string_.data());
+    string_.removePrefix(it - string_.data());
 
   return static_cast<int32_t>(uc);
 }
@@ -39,7 +39,7 @@ int StringReader::OnRead(char* dst, int count) {
 
   if (count > 0) {
     uninitializedCopy(dst, string_.data(), count);
-    string_.RemovePrefix(count);
+    string_.removePrefix(count);
   }
   return count;
 }

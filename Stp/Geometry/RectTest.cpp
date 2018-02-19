@@ -171,11 +171,11 @@ TEST(RectTest, Equals) {
   ASSERT_FALSE(IntRect(0, 0, 0, 0) == IntRect(1, 0, 0, 0));
 }
 
-TEST(RectTest, IsEmpty) {
-  EXPECT_TRUE(IntRect(0, 0, 0, 0).IsEmpty());
-  EXPECT_TRUE(IntRect(0, 0, 10, 0).IsEmpty());
-  EXPECT_TRUE(IntRect(0, 0, 0, 10).IsEmpty());
-  EXPECT_FALSE(IntRect(0, 0, 10, 10).IsEmpty());
+TEST(RectTest, isEmpty) {
+  EXPECT_TRUE(IntRect(0, 0, 0, 0).isEmpty());
+  EXPECT_TRUE(IntRect(0, 0, 10, 0).isEmpty());
+  EXPECT_TRUE(IntRect(0, 0, 0, 10).isEmpty());
+  EXPECT_FALSE(IntRect(0, 0, 10, 10).isEmpty());
 }
 
 TEST(RectTest, GetCenterPoint) {

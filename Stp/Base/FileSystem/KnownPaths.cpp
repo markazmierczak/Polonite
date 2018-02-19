@@ -14,7 +14,7 @@ namespace stp {
 static FilePath GetExecutableDirPathImpl() {
   FilePath exe_path = GetExecutableFilePath();
   exe_path.CdUp();
-  ASSERT(exe_path.IsEmpty());
+  ASSERT(exe_path.isEmpty());
   return FilePath(exe_path);
 }
 FilePath GetExecutableDirPath() {

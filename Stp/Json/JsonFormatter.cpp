@@ -172,12 +172,12 @@ void JsonFormatter::EscapeSimple(TextWriter& out, StringSpan str) {
     if (EscapeSpecialCharacter(str[i], replacement)) {
       if (i > 0)
         out << str.getSlice(0, i);
-      str.RemovePrefix(i + 1);
+      str.removePrefix(i + 1);
       char escaped[2] = { '\\', replacement };
       out << escaped;
     }
   }
-  if (!str.IsEmpty()) {
+  if (!str.isEmpty()) {
     out << str;
   }
 }

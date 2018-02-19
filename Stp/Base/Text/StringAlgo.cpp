@@ -24,7 +24,7 @@ inline CharLookupTable BuildLookupTable(StringSpan s) {
 int indexOfAny(StringSpan s, StringSpan a) {
   // Avoid the cost of BuildLookupTable() for a single-character search.
   if (a.size() <= 1)
-    return !a.IsEmpty() ? s.indexOf(a[0]) : -1;
+    return !a.isEmpty() ? s.indexOf(a[0]) : -1;
 
   CharLookupTable lookup = BuildLookupTable(a);
   for (int i = 0; i < s.size(); ++i) {
@@ -37,7 +37,7 @@ int indexOfAny(StringSpan s, StringSpan a) {
 int lastIndexOfAny(StringSpan s, StringSpan a) {
   // Avoid the cost of BuildLookupTable() for a single-character search.
   if (a.size() <= 1)
-    return !a.IsEmpty() ? s.lastIndexOf(a[0]) : -1;
+    return !a.isEmpty() ? s.lastIndexOf(a[0]) : -1;
 
   CharLookupTable lookup = BuildLookupTable(a);
   for (int i = s.size() - 1; i >= 0; --i) {

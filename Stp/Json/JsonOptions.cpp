@@ -9,7 +9,7 @@ namespace stp {
 
 JsonOptions JsonOptions::Parse(StringSpan string) {
   JsonOptions options;
-  for (; !string.IsEmpty(); string.RemovePrefix(1)) {
+  for (; !string.isEmpty(); string.removePrefix(1)) {
     switch (string[0]) {
       case 'R':
         options.Add(ReferenceInput);

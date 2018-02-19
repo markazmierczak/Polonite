@@ -21,7 +21,7 @@ TextEncoding FilePathWriter::GetEncoding() const {
 }
 
 void FilePathWriter::EnsureSeparator() {
-  if (path_.IsEmpty())
+  if (path_.isEmpty())
     return;
   if (IsFilePathSeparator(path_.chars().getLast()))
     return;

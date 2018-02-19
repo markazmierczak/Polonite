@@ -10,7 +10,7 @@ namespace stp {
 
 void Angle::ToFormat(TextWriter& out, const StringSpan& opts) const {
   auto output_unit = DegreesUnit;
-  if (!opts.IsEmpty()) {
+  if (!opts.isEmpty()) {
     bool ok = opts.size() == 1;
     switch (opts[0]) {
       case 'd': case 'D':

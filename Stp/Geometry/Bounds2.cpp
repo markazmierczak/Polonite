@@ -70,10 +70,10 @@ bool Bounds2::TryIntersect(const Bounds2& other) {
 }
 
 void IntBounds2::Unite(const IntBounds2& other) {
-  if (other.IsEmpty())
+  if (other.isEmpty())
     return;
 
-  if (IsEmpty()) {
+  if (isEmpty()) {
     *this = other;
   } else {
     min.x = min(min.x, other.min.x);
@@ -84,10 +84,10 @@ void IntBounds2::Unite(const IntBounds2& other) {
 }
 
 void Bounds2::Unite(const Bounds2& other) {
-  if (other.IsEmpty())
+  if (other.isEmpty())
     return;
 
-  if (IsEmpty()) {
+  if (isEmpty()) {
     *this = other;
   } else {
     min.x = min(min.x, other.min.x);

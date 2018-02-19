@@ -42,7 +42,7 @@ class BASE_EXPORT LinearAllocator {
   // All pointers allocated through allocate() are invalidated (cannot be dereferenced).
   void Reset();
   // Like Reset() but preserves largest block.
-  void Clear();
+  void clear();
 
   void* TryAllocate(size_t size, size_t alignment);
 

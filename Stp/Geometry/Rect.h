@@ -34,7 +34,7 @@ struct BASE_EXPORT IntRect {
   IntPoint2 GetBottomLeft() const { return IntPoint2(left(), bottom()); }
   IntPoint2 GetBottomRight() const { return IntPoint2(right(), bottom()); }
 
-  bool IsEmpty() const { return size.IsEmpty(); }
+  bool isEmpty() const { return size.isEmpty(); }
 
   IntPoint2 GetCenterPoint() const { return position + size.ToVector() / 2; }
 

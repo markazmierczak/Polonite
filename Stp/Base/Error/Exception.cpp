@@ -54,7 +54,7 @@ void Exception::AddMessage(const StringSpan& next, bool literal) {
     return;
   }
 
-  if (next.IsEmpty())
+  if (next.isEmpty())
     return;
 
   int total_size = msg_size_ + next.size();
@@ -96,7 +96,7 @@ void Exception::FormatImpl(TextWriter& out) const {
   onFormat(out);
 
   auto msg = GetMessage();
-  if (!msg.IsEmpty()) {
+  if (!msg.isEmpty()) {
     out << '\n' << msg;
   }
 }

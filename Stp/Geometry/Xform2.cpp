@@ -295,7 +295,7 @@ void Xform2::SetScaleTranslate(float sx, float sy, float tx, float ty) {
 }
 
 bool Xform2::SetBoundsToBounds(const Bounds2& src, const Bounds2& dst, ScaleToFit scale_to_fit) {
-  if (src.IsEmpty()) {
+  if (src.isEmpty()) {
     SetIdentity();
     return false;
   }

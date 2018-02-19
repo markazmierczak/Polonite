@@ -52,7 +52,7 @@ SystemErrorCode File::TryReplace(const FilePath& from, const FilePath& to) {
 }
 
 SystemErrorCode File::TryCreateTemporaryIn(const FilePath& dir, FilePath& output_path) {
-  output_path.Clear();
+  output_path.clear();
   output_path = dir;
 
   FilePathWriter writer(output_path);

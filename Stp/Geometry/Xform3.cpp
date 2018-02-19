@@ -355,12 +355,12 @@ void Xform3::SetScaleTranslate2D(float sx, float sy, float tx, float ty) {
 }
 
 bool Xform3::SetBoundsToBounds(const Bounds2& src, const Bounds2& dst, ScaleToFit scale_to_fit) {
-  if (src.IsEmpty()) {
+  if (src.isEmpty()) {
     SetIdentity();
     return false;
   }
 
-  if (dst.IsEmpty()) {
+  if (dst.isEmpty()) {
     SetScale2D(0, 0);
   } else {
     float sx = dst.GetWidth() / src.GetWidth();
@@ -404,7 +404,7 @@ void Xform3::SetOrthoProjection(
     const Bounds2& bounds,
     bool flip_y,
     float near_plane, float far_plane) {
-  ASSERT(!bounds.IsEmpty() && near_plane != far_plane);
+  ASSERT(!bounds.isEmpty() && near_plane != far_plane);
   float clip = far_plane - near_plane;
   if (flip_y) {
     SetScaleTranslate(
@@ -422,7 +422,7 @@ void Xform3::SetOrthoProjection(
 }
 
 void Xform3::SetOrthoProjectionFlat(const Bounds2& bounds, bool flip_y) {
-  ASSERT(!bounds.IsEmpty());
+  ASSERT(!bounds.isEmpty());
   if (flip_y) {
     SetScaleTranslate(
         2 / bounds.GetWidth(), -2 / bounds.GetHeight(), 0,

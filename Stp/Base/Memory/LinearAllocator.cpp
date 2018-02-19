@@ -63,7 +63,7 @@ void LinearAllocator::FreeChain(Block* block) {
   }
 };
 
-void LinearAllocator::Clear() {
+void LinearAllocator::clear() {
   Validate();
 
   Block* largest = block_list_;

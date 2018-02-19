@@ -74,9 +74,9 @@ class HashMap : public detail::HashMapBase {
 
   ALWAYS_INLINE int size() const { return size_; }
 
-  ALWAYS_INLINE bool IsEmpty() const { return size_ == 0; }
+  ALWAYS_INLINE bool isEmpty() const { return size_ == 0; }
 
-  void Clear();
+  void clear();
 
   // Returns true if the given hint triggered rehashing.
   bool WillGrow(int n);
@@ -193,7 +193,7 @@ class HashMap : public detail::HashMapBase {
   void FiniSentinel();
 
   void Assign(const HashMap& other) {
-    ASSERT(IsEmpty());
+    ASSERT(isEmpty());
     WillGrow(other.size());
     for (const auto& pair : other.Enumerate())
       Add(pair.key, pair.value);
@@ -249,7 +249,7 @@ inline void HashMap<K, T>::FiniSentinel() {
 
 template<typename K, typename T>
 inline HashMap<K, T>::~HashMap() {
-  if (!IsEmpty())
+  if (!isEmpty())
     DestroyAllNodes();
   DiscardFreeNodes();
 
@@ -261,7 +261,7 @@ inline HashMap<K, T>::~HashMap() {
 
 template<typename K, typename T>
 inline HashMap<K, T>& HashMap<K, T>::operator=(const HashMap& other) {
-  Clear();
+  clear();
   Assign(other);
   return *this;
 }
@@ -282,8 +282,8 @@ inline void HashMap<K, T>::SwapWith(HashMap& other) {
 }
 
 template<typename K, typename T>
-inline void HashMap<K, T>::Clear() {
-  if (IsEmpty())
+inline void HashMap<K, T>::clear() {
+  if (isEmpty())
     return;
 
   DestroyAllNodes();

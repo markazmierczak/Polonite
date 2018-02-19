@@ -34,7 +34,7 @@ Time Build::TranslationTime() {
   StringSpan day_str = date_str.getSlice(4, 2);
   // First character of "dd" is space if day is lower than ten.
   if (day_str[0] == ' ')
-    day_str.RemovePrefix(1);
+    day_str.removePrefix(1);
 
   parse(day_str, exploded.day_of_month);
   parse(date_str.getSlice(7, 4), exploded.year);

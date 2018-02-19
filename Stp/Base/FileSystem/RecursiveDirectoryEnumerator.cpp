@@ -25,8 +25,8 @@ void RecursiveDirectoryEnumerator::Open(FilePath root_path) {
 void RecursiveDirectoryEnumerator::Close() {
   ASSERT(IsOpen());
   base_.Close();
-  current_dir_path_.Clear();
-  pending_dir_paths_.Clear();
+  current_dir_path_.clear();
+  pending_dir_paths_.clear();
 }
 
 bool RecursiveDirectoryEnumerator::TryMoveNext(SystemErrorCode& out_error_code) {
@@ -42,7 +42,7 @@ bool RecursiveDirectoryEnumerator::TryMoveNext(SystemErrorCode& out_error_code) 
       if (!IsOk(out_error_code))
         return false;
     }
-    if (pending_dir_paths_.IsEmpty()) {
+    if (pending_dir_paths_.isEmpty()) {
       out_error_code = SystemErrorCode::Ok;
       break;
     }

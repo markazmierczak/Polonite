@@ -11,10 +11,10 @@ namespace stp {
 
 TEST(HashMapTest, Add) {
   HashMap<int, int> map;
-  EXPECT_TRUE(map.IsEmpty());
+  EXPECT_TRUE(map.isEmpty());
 
   EXPECT_TRUE(map.TryAdd(1, 2));
-  EXPECT_FALSE(map.IsEmpty());
+  EXPECT_FALSE(map.isEmpty());
 
   EXPECT_TRUE(map.TryAdd(2, 3));
 

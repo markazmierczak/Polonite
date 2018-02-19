@@ -60,12 +60,12 @@ class BASE_EXPORT FilePathSpan {
   ALWAYS_INLINE const Span<CharType>& chars() const { return chars_; }
   ALWAYS_INLINE Span<CharType>& chars() { return chars_; }
 
-  constexpr bool IsEmpty() const { return chars_.IsEmpty(); }
+  constexpr bool isEmpty() const { return chars_.isEmpty(); }
 
   FilePathSpan getSlice(int at) const { return FilePathSpan(chars_.getSlice(at)); }
   FilePathSpan getSlice(int at, int n) const { return FilePathSpan(chars_.getSlice(at, n)); }
 
-  void Truncate(int at) { chars_.Truncate(at); }
+  void truncate(int at) { chars_.truncate(at); }
 
   FilePathSpan GetRoot() const;
   FilePathSpan GetDirectoryName() const;

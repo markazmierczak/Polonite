@@ -31,7 +31,7 @@ int TextReader::ReadAscii(char* data, int count) {
 }
 
 bool TextReader::ReadLineAscii(String& out) {
-  out.Clear();
+  out.clear();
 
   while (true) {
     int ch = ReadAscii();
@@ -45,11 +45,11 @@ bool TextReader::ReadLineAscii(String& out) {
     }
     out.Append(static_cast<char>(ch));
   }
-  return !out.IsEmpty();
+  return !out.isEmpty();
 }
 
 bool TextReader::ReadLine(String& out) {
-  out.Clear();
+  out.clear();
 
   while (true) {
     int32_t ch = Read();
@@ -66,7 +66,7 @@ bool TextReader::ReadLine(String& out) {
     int result = Utf8::Encode(encoded_ch, ch);
     ASSERT_UNUSED(result == encoded_length, result);
   }
-  return !out.IsEmpty();
+  return !out.isEmpty();
 }
 
 } // namespace stp

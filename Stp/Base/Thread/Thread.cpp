@@ -133,7 +133,7 @@ void Thread::Detach() {
 int Thread::ThreadMain() {
   detail::ThreadData::Register(&data_);
 
-  if (!name_.IsEmpty())
+  if (!name_.isEmpty())
     NativeThread::SetName(name_);
 
   return Main();

@@ -25,9 +25,9 @@ class HashSet {
 
   int size() const { return map_.size(); }
 
-  bool IsEmpty() const { return map_.IsEmpty(); }
+  bool isEmpty() const { return map_.isEmpty(); }
 
-  void Clear() { map_.Clear(); }
+  void clear() { map_.clear(); }
 
   template<typename U>
   bool TryAdd(U&& value) { return map_.TryAdd(Forward<U>(value), DummyEmpty()); }

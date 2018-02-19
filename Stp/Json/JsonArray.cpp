@@ -9,8 +9,8 @@
 
 namespace stp {
 
-void JsonArray::Clear() {
-  impl().Clear();
+void JsonArray::clear() {
+  impl().clear();
 }
 
 void JsonArray::WillGrow(int n) {

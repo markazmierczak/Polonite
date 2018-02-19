@@ -12,7 +12,7 @@ namespace delegate_impl {
 
 void FormatDelegate(TextWriter& out, const StringSpan& opts, void* ptr) {
   bool symbolize = true;
-  if (!opts.IsEmpty()) {
+  if (!opts.isEmpty()) {
     bool ok = opts.size() == 1;
 
     char format_char = opts[0];

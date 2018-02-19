@@ -41,7 +41,7 @@ TEST(ContiguousAllocatorTest, Basic) {
   CheckAlloc(allocator, 0, 0, 0);
 
   // rewind on empty allocator
-  allocator.Clear();
+  allocator.clear();
   CheckAlloc(allocator, 0, 0, 0);
 
   // test reset when something is allocated
@@ -55,7 +55,7 @@ TEST(ContiguousAllocatorTest, Basic) {
   // test rewind when something is allocated
   ptr = SimpleAlloc(&allocator, size);
 
-  allocator.Clear();
+  allocator.clear();
   CheckAlloc(allocator, size, 0, 1);
   EXPECT_FALSE(allocator.contains(ptr));
 

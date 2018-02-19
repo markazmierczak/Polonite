@@ -123,7 +123,7 @@ int FilePathSpan::CountTrailingSeparators() const {
 }
 
 void FilePathSpan::StripTrailingSeparators() {
-  chars_.RemoveSuffix(CountTrailingSeparators());
+  chars_.removeSuffix(CountTrailingSeparators());
 }
 
 /**
@@ -132,7 +132,7 @@ void FilePathSpan::StripTrailingSeparators() {
  */
 bool FilePathSpan::CdUp() {
   int root_length = GetRootLength();
-  chars_.Truncate(GetDirectoryNameLength());
+  chars_.truncate(GetDirectoryNameLength());
   return chars_.size() != root_length;
 }
 
@@ -228,14 +228,14 @@ bool FilePathSpan::MatchesExtension(StringSpan extension) const {
   int pos = indexOfExtension();
 
   bool no_extension = pos < 0;
-  bool expect_no_extension = extension.IsEmpty();
+  bool expect_no_extension = extension.isEmpty();
   if (no_extension || expect_no_extension)
     return no_extension == expect_no_extension;
 
   // skip dot
   ++pos;
   if (extension.getFirst() == '.')
-    extension.RemovePrefix(1);
+    extension.removePrefix(1);
 
   // compare lengths
   int ext_size = size() - pos;
@@ -257,7 +257,7 @@ bool FilePathSpan::MatchesExtension(StringSpan extension) const {
 void FilePathSpan::RemoveExtension() {
   int pos = indexOfExtension();
   if (pos >= 0)
-    chars_.Truncate(pos);
+    chars_.truncate(pos);
 }
 
 void FilePathSpan::FormatImpl(TextWriter& out) const {

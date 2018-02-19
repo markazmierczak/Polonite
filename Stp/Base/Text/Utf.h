@@ -131,7 +131,7 @@ inline int AppendRune(TOutput& output, char32_t rune) {
   }
   auto* dst = output.AppendUninitialized(4);
   int n = EncodeUtf(dst, rune);
-  output.RemoveSuffix(4 - n);
+  output.removeSuffix(4 - n);
   return n;
 }
 

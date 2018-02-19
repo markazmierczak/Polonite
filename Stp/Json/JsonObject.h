@@ -19,9 +19,9 @@ class BASE_EXPORT JsonObject : public JsonValue {
   ALWAYS_INLINE int size() const { return impl().size(); }
   ALWAYS_INLINE int capacity() const { return impl().capacity(); }
 
-  bool IsEmpty() const { return impl().IsEmpty(); }
+  bool isEmpty() const { return impl().isEmpty(); }
 
-  void Clear();
+  void clear();
 
   void WillGrow(int count);
   void Shrink();

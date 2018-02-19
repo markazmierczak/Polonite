@@ -41,10 +41,10 @@ void Version::FormatImpl(TextWriter& out) const {
 }
 
 bool tryParse(StringSpan str, Version& out) {
-  out.parts_.Clear();
+  out.parts_.clear();
 
   int index = 0;
-  for (; !str.IsEmpty(); ++index) {
+  for (; !str.isEmpty(); ++index) {
     int dot_pos = str.indexOf('.');
 
     StringSpan part_str;
@@ -52,13 +52,13 @@ bool tryParse(StringSpan str, Version& out) {
       swap(part_str, str);
     } else {
       part_str = str.getSlice(0, dot_pos);
-      str.RemovePrefix(dot_pos + 1);
+      str.removePrefix(dot_pos + 1);
       // Dot at end ?
-      if (str.IsEmpty())
+      if (str.isEmpty())
         return false;
     }
 
-    if (!part_str.IsEmpty() && part_str[0] == '+')
+    if (!part_str.isEmpty() && part_str[0] == '+')
       return false;
 
     int part;

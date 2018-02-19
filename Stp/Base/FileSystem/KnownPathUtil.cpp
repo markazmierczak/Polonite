@@ -52,7 +52,7 @@ FilePath ResolveInternal(
 
   path = (*provider)();
 
-  if (!path.IsEmpty() && !path.IsAbsolute())
+  if (!path.isEmpty() && !path.IsAbsolute())
     path = File::MakeAbsolutePath(path);
 
   if (option != NotValidated) {

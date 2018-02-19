@@ -21,7 +21,7 @@ StringSpan FormatException::GetName() const noexcept {
 
 void FormatException::onFormat(TextWriter& out) const {
   out << "invalid format specifier";
-  if (!type_name_.IsEmpty()) {
+  if (!type_name_.isEmpty()) {
     out << " for type " << type_name_;
   }
   if (argument_index_ >= 0) {

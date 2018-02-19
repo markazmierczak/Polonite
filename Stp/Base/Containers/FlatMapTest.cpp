@@ -9,10 +9,10 @@ namespace stp {
 
 TEST(FlatMapTest, Add) {
   FlatMap<int, int> map;
-  EXPECT_TRUE(map.IsEmpty());
+  EXPECT_TRUE(map.isEmpty());
 
   map.TryAdd(1, 2);
-  EXPECT_FALSE(map.IsEmpty());
+  EXPECT_FALSE(map.isEmpty());
 
   map.TryAdd(2, 3);
 

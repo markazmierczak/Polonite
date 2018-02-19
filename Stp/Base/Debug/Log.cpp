@@ -108,11 +108,11 @@ static StringSpan GetModule(StringSpan file) {
 
   int last_slash_pos = lastIndexOfAny(module, "\\/");
   if (last_slash_pos >= 0)
-    module.RemovePrefix(last_slash_pos + 1);
+    module.removePrefix(last_slash_pos + 1);
 
   int extension_start = module.lastIndexOf('.');
   if (extension_start >= 0)
-    module.Truncate(extension_start);
+    module.truncate(extension_start);
 
   return module;
 }
@@ -121,7 +121,7 @@ static bool MatchVlogPattern(StringSpan string, StringSpan pattern) {
   StringSpan p = pattern;
   StringSpan s = string;
   // Consume characters until the next star.
-  while (!p.IsEmpty() && !s.IsEmpty() && p[0] != '*') {
+  while (!p.isEmpty() && !s.isEmpty() && p[0] != '*') {
     switch (p[0]) {
       // A slash (forward or back) must match a slash (forward or back).
       case '/':
@@ -140,28 +140,28 @@ static bool MatchVlogPattern(StringSpan string, StringSpan pattern) {
           return false;
         break;
     }
-    p.RemovePrefix(1);
-    s.RemovePrefix(1);
+    p.removePrefix(1);
+    s.removePrefix(1);
   }
 
   // An empty pattern here matches only an empty string.
-  if (p.IsEmpty())
-    return s.IsEmpty();
+  if (p.isEmpty())
+    return s.isEmpty();
 
   // Coalesce runs of consecutive stars. There should be at least one.
-  while (!p.IsEmpty() && p[0] == '*')
-    p.RemovePrefix(1);
+  while (!p.isEmpty() && p[0] == '*')
+    p.removePrefix(1);
 
   // Since we moved past the stars, an empty pattern here matches anything.
-  if (p.IsEmpty())
+  if (p.isEmpty())
     return true;
 
   // Since we moved past the stars and p is non-empty, if some
   // non-empty substring of s matches p, then we ourselves match.
-  while (!s.IsEmpty()) {
+  while (!s.isEmpty()) {
     if (MatchVlogPattern(s, p))
       return true;
-    s.RemovePrefix(1);
+    s.removePrefix(1);
   }
 
   // Otherwise, we couldn't find a match.
@@ -170,7 +170,7 @@ static bool MatchVlogPattern(StringSpan string, StringSpan pattern) {
 
 int VerboseLogGetLevel(const char* file_cstr) {
   auto file = makeSpanFromNullTerminated(file_cstr);
-  if (!g_verbose_matchers->IsEmpty()) {
+  if (!g_verbose_matchers->isEmpty()) {
     for (const auto& matcher : *g_verbose_matchers) {
       bool match_file = matcher.match_target == VmoduleMatcher::MatchFile;
       StringSpan target = match_file ? file : GetModule(file);
@@ -193,7 +193,7 @@ int VerboseLogGetLevel(const char* file_cstr) {
 static void ParseMatchers(StringSpan input) {
   List<VmoduleMatcher>* matchers = g_verbose_matchers.Pointer();
 
-  while (!input.IsEmpty()) {
+  while (!input.isEmpty()) {
     int comma = input.indexOf(',');
     StringSpan pair = input.getSlice(0, comma);
 

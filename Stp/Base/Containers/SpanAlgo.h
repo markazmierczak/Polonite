@@ -41,7 +41,7 @@ inline int countInSpan(Span<T> span, const TItem& item) noexcept {
     if (pos < 0)
       break;
     ++count;
-    span.RemovePrefix(pos + 1);
+    span.removePrefix(pos + 1);
   }
   return count;
 }
@@ -57,11 +57,6 @@ constexpr int countMatchingInSpan(Span<T> span, const TItem& item, TPredicate&& 
   return n;
 }
 
-template<typename T, typename TItem>
-inline void fillSpan(MutableSpan<T> span, const TItem& item) {
-  fillObjects(span.data(), span.size(), item);
-}
-
 template<typename T, typename TBefore, typename TAfter>
 inline int replaceInSpan(MutableSpan<T> span, const TBefore& before, const TAfter& after) {
   int count = 0;
@@ -71,7 +66,7 @@ inline int replaceInSpan(MutableSpan<T> span, const TBefore& before, const TAfte
       break;
     ++count;
     span[pos] = after;
-    span.RemovePrefix(pos + 1);
+    span.removePrefix(pos + 1);
   }
   return count;
 }

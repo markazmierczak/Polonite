@@ -46,10 +46,10 @@ CommandLine::CommandLine(const Arguments& arguments) {
 
 CommandLine::~CommandLine() {}
 
-void CommandLine::Clear() {
-  program_name_.Clear();
-  switches_.Clear();
-  positionals_.Clear();
+void CommandLine::clear() {
+  program_name_.clear();
+  switches_.clear();
+  positionals_.clear();
 }
 
 bool CommandLine::Has(StringSpan name) const {
@@ -116,7 +116,7 @@ bool CommandLine::ParseSwitch(StringSpan argument, String& out_name, String& out
     return false;
 
   // Remove prefix:
-  argument.RemovePrefix(prefix_size);
+  argument.removePrefix(prefix_size);
 
   // Split pair:
   int separator_pos = argument.indexOf(SwitchValueSeparator);
@@ -182,7 +182,7 @@ void CommandLine::SetSlashIsNotASwitch() {
 #else
 
 void CommandLine::ParseFromArgv(int argc, char** argv) {
-  Clear();
+  clear();
 
   if (argc < 1)
     return;
@@ -275,7 +275,7 @@ static void FormatCommandLineArgument(TextWriter& out, StringSpan arg) {
 
 void CommandLine::FormatImpl(TextWriter& out, const StringSpan& opts) const {
   bool with_program = true;
-  if (!opts.IsEmpty()) {
+  if (!opts.isEmpty()) {
     if (opts[0] == 'L')
       with_program = false;
   }

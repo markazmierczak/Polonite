@@ -33,7 +33,7 @@ class FormatArgId {
 
   bool Parse(StringSpan s) {
     // Empty - neither name nor index.
-    if (s.IsEmpty())
+    if (s.isEmpty())
       return true;
 
     // First character is digit - treat as index.
@@ -91,7 +91,7 @@ static inline FormatAlign ParseAlign(char c) {
 }
 
 bool FormatLayout::Parse(StringSpan s) {
-  if (s.IsEmpty())
+  if (s.isEmpty())
     return true;
 
   // If s[1] is a fill char, s[0] is a pad char and s[2:...] contains the width.
@@ -101,11 +101,11 @@ bool FormatLayout::Parse(StringSpan s) {
     align = ParseAlign(s[1]);
     if (align != FormatAlign::None) {
       fill = s[0];
-      s.RemovePrefix(2);
+      s.removePrefix(2);
     } else {
       align = ParseAlign(s[0]);
       if (align != FormatAlign::None) {
-        s.RemovePrefix(1);
+        s.removePrefix(1);
       } else {
         align = FormatAlign::Right;
       }
@@ -214,7 +214,7 @@ static void FormatAndLayoutReplacement(
 void FormatManyImpl(TextWriter& out, StringSpan fmt, Span<Formatter*> args) {
   // TODO handle double }} correctly
   int implicit_index = -1;
-  while (!fmt.IsEmpty()) {
+  while (!fmt.isEmpty()) {
     int brace = fmt.indexOf('{');
     if (brace < 0) {
       out << fmt;
@@ -223,16 +223,16 @@ void FormatManyImpl(TextWriter& out, StringSpan fmt, Span<Formatter*> args) {
     if (fmt[brace + 1] == '{') {
       // handle double braces
       out << fmt.getSlice(0, brace + 1);
-      fmt.RemovePrefix(brace + 2);
+      fmt.removePrefix(brace + 2);
     } else { // handle replacement
       out << fmt.getSlice(0, brace);
-      fmt.RemovePrefix(brace + 1);
+      fmt.removePrefix(brace + 1);
 
       // Find replacement boundaries.
       int closing_brace = fmt.indexOf('}');
       ASSERT(closing_brace >= 0);
       StringSpan rep_string = fmt.getSlice(0, closing_brace);
-      fmt.RemovePrefix(closing_brace + 1);
+      fmt.removePrefix(closing_brace + 1);
 
       FormatReplacement replacement;
       if (!replacement.Parse(rep_string)) {

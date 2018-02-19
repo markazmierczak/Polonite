@@ -46,7 +46,7 @@ RefPtr<StringImpl> StringImpl::createFromLiteral(const char* text, int length) {
 }
 
 RefPtr<StringImpl> StringImpl::createNoCopy(StringSpan text) {
-  if (text.IsEmpty())
+  if (text.isEmpty())
     return StaticStringImpl::empty();
   return RefPtr<StringImpl>::create(CtorNoCopy, text);
 }

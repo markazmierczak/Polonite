@@ -56,7 +56,7 @@ void DemangleSymbols(TextWriter& out, StringSpan mangled) {
   // malloc internally).
   #if defined(__GLIBCXX__) && !defined(__UCLIBC__)
 
-  while (!mangled.IsEmpty()) {
+  while (!mangled.isEmpty()) {
     // Look for the start of a mangled symbol, from search_from.
     int mangled_start = mangled.indexOf(MangledSymbolPrefix);
     if (mangled_start < 0) {
@@ -65,7 +65,7 @@ void DemangleSymbols(TextWriter& out, StringSpan mangled) {
     }
     if (mangled_start > 0) {
       out << mangled.getSlice(0, mangled_start);
-      mangled.RemovePrefix(mangled_start);
+      mangled.removePrefix(mangled_start);
     }
 
     // Look for the end of the mangled symbol.
@@ -83,10 +83,10 @@ void DemangleSymbols(TextWriter& out, StringSpan mangled) {
       auto demangled_symbol = makeSpanFromNullTerminated(demangled_symbol_cstr.get());
       out << demangled_symbol;
 
-      mangled.RemovePrefix(mangled_end);
+      mangled.removePrefix(mangled_end);
     } else {
       // Failed to demangle.  Retry after the "_Z" we just found.
-      mangled.RemovePrefix(2);
+      mangled.removePrefix(2);
     }
   }
   #endif // defined(__GLIBCXX__) && !defined(__UCLIBC__)

@@ -9,10 +9,10 @@ namespace stp {
 
 TEST(FlatSetTest, Add) {
   FlatSet<int> set;
-  EXPECT_TRUE(set.IsEmpty());
+  EXPECT_TRUE(set.isEmpty());
 
   set.TryAdd(1);
-  EXPECT_FALSE(set.IsEmpty());
+  EXPECT_FALSE(set.isEmpty());
 
   set.TryAdd(2);
 

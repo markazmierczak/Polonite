@@ -37,8 +37,8 @@ class InlineListBase {
 
   bool IsInline() const { return reinterpret_cast<byte_t*>(data_) == first_item_.bytes; }
 
-  bool IsEmpty() const { return size_ == 0; }
-  void Clear() { Truncate(0); }
+  bool isEmpty() const { return size_ == 0; }
+  void clear() { truncate(0); }
 
   void EnsureCapacity(int request);
 
@@ -72,9 +72,9 @@ class InlineListBase {
   void RemoveAt(int at) { RemoveRange(at, 1); }
   void RemoveRange(int at, int n);
 
-  void Truncate(int at);
-  void RemovePrefix(int n) { RemoveRange(0, n); }
-  void RemoveSuffix(int n) { Truncate(size_ - n); }
+  void truncate(int at);
+  void removePrefix(int n) { RemoveRange(0, n); }
+  void removeSuffix(int n) { truncate(size_ - n); }
 
   template<typename U>
   int indexOf(const U& item) const { return toSpan().indexOf(item); }
@@ -363,7 +363,7 @@ inline const T& InlineListBase<T>::operator[](int at) const {
 }
 
 template<typename T>
-inline void InlineListBase<T>::Truncate(int at) {
+inline void InlineListBase<T>::truncate(int at) {
   ASSERT(0 <= at && at <= size_);
   if (TIsTriviallyDestructible<T>) {
     SetSizeNoGrow(at);
@@ -424,7 +424,7 @@ inline int InlineListBase<T>::AddMany(int n, TAction&& action) {
 
 template<typename T>
 inline void InlineListBase<T>::RemoveLast() {
-  ASSERT(!IsEmpty());
+  ASSERT(!isEmpty());
   int new_size = size_ - 1;
   destroyObject(data_ + new_size);
   SetSizeNoGrow(new_size);
@@ -558,14 +558,14 @@ template<typename T>
 inline void InlineListBase<T>::AssignExternal(SpanType src) {
   if (size_ < src.size()) {
     if constexpr (TIsTriviallyDestructible<T>) {
-      Clear();
+      clear();
     }
     EnsureCapacity(src.size());
     copyObjectsNonOverlapping(data_, src.data(), size_);
     uninitializedCopy(data_ + size_, src.data() + size_, src.size() - size_);
     SetSizeNoGrow(src.size());
   } else {
-    Truncate(src.size());
+    truncate(src.size());
     copyObjectsNonOverlapping(data_, src.data(), src.size());
   }
 }
@@ -573,7 +573,7 @@ inline void InlineListBase<T>::AssignExternal(SpanType src) {
 template<typename T>
 inline void InlineListBase<T>::AssignInternal(SpanType src) {
   int start = src.data() - data_;
-  Truncate(start + src.size());
+  truncate(start + src.size());
   RemoveRange(0, start);
 }
 

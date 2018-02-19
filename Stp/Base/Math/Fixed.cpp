@@ -121,7 +121,7 @@ void FormatFixedPoint(TextWriter& out, const StringSpan& opts, int32_t value, in
     char int_options[3] = { opts[0], '8', '\0' };
     format(out, static_cast<uint32_t>(value), StringSpan(int_options));
   } else {
-    if (!opts.IsEmpty())
+    if (!opts.isEmpty())
       throw FormatException("Fixed");
     FormatFixedPoint(out, value, point);
   }

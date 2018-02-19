@@ -56,7 +56,7 @@ SystemErrorCode Directory::TryCreatePath(const FilePath& path) {
   for (int i = subpaths.size() - 1; i >= 0; --i) {
     int offset = subpaths[i];
     FilePathChar char_copy = copyd[offset];
-    copy.chars().Truncate(offset);
+    copy.chars().truncate(offset);
 
     error_code = TryCreate(copy);
 
@@ -73,7 +73,7 @@ void Directory::RemoveRecursively(const FilePath& path) {
   directories.Add(FilePath(path));
 
   RecursiveDirectoryEnumerator enumerator;
-  while (!directories.IsEmpty()) {
+  while (!directories.isEmpty()) {
     enumerator.Open(directories.getLast());
 
     bool has_nested = false;

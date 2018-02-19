@@ -47,7 +47,7 @@ FilePath GetCurrentDirPath() {
       return path;
     }
     buffer_length = rv;
-    path.Clear();
+    path.clear();
   }
 }
 
@@ -93,7 +93,7 @@ static FilePath GetModuleFile(HMODULE module) {
       path.TruncateCharacters(rv);
       return path;
     }
-    path.Clear();
+    path.clear();
   }
   throw SystemException(GetLastWinErrorCode());
 }

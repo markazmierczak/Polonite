@@ -14,7 +14,7 @@ String Base64::Encode(BufferSpan input) {
   int estimated = EstimateEncodedLength(input.size());
   char* dst = out.AppendUninitialized(estimated);
   int dst_length = Encode(MutableStringSpan(dst, estimated), input);
-  out.Truncate(dst_length);
+  out.truncate(dst_length);
   return out;
 }
 
@@ -70,7 +70,7 @@ int Base64::Encode(MutableStringSpan output, BufferSpan input) {
 }
 
 bool Base64::TryDecode(StringSpan input, Buffer& output) {
-  output.Clear();
+  output.clear();
 
   int max_output_size = EstimateDecodedSize(input.size());
   void* dst = output.AppendUninitialized(max_output_size);
@@ -80,7 +80,7 @@ bool Base64::TryDecode(StringSpan input, Buffer& output) {
   if (actual_output_size < 0)
     return false;
 
-  output.Truncate(actual_output_size);
+  output.truncate(actual_output_size);
   return true;
 }
 

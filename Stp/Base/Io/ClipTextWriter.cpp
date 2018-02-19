@@ -45,15 +45,15 @@ static bool SplitsCharacterAt(StringSpan text, int at) {
 
 static void TrimLastCharacter(StringSpan& text) {
   bool lead = false;
-  while (!lead && !text.IsEmpty()) {
+  while (!lead && !text.isEmpty()) {
     lead = Utf8::IsEncodedLead(text.getLast());
-    text.RemoveSuffix(1);
+    text.removeSuffix(1);
   }
 }
 
 static void CutText(StringSpan& text, int at) {
   bool splits = SplitsCharacterAt(text, at);
-  text.Truncate(at);
+  text.truncate(at);
   if (splits)
     TrimLastCharacter(text);
 }

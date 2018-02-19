@@ -45,13 +45,13 @@ ConsoleWriter::~ConsoleWriter() {
 void ConsoleWriter::onFlush() {
   // ConsoleWriter buffers output until newline is written.
   AutoLock auto_lock(&lock_);
-  if (!buffer_.IsEmpty())
+  if (!buffer_.isEmpty())
     printBuffer(buffer_.size());
 }
 
 void ConsoleWriter::printBuffer(int ready_size) {
   *this << buffer_.getSlice(0, ready_size);
-  buffer_.RemovePrefix(ready_size);
+  buffer_.removePrefix(ready_size);
 }
 
 #if OS(LINUX)
@@ -65,7 +65,7 @@ bool ConsoleWriter::isConsoleWriter() const {
 
 static FilePath resolveLogFilePath(const String* option) {
   String basename;
-  if (!option || option->IsEmpty())
+  if (!option || option->isEmpty())
     basename = "debug.log";
   else
     basename = *option;

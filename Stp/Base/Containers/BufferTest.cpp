@@ -12,7 +12,7 @@ TEST(BufferTest, Empty) {
   Buffer empty;
   EXPECT_EQ(nullptr, empty.data());
   EXPECT_EQ(0, empty.size());
-  EXPECT_TRUE(empty.IsEmpty());
+  EXPECT_TRUE(empty.isEmpty());
 }
 
 TEST(BufferTest, Format) {

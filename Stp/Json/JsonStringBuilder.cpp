@@ -52,7 +52,7 @@ void JsonStringBuilder::Append(char c) {
 
 void JsonStringBuilder::AppendString(StringSpan str) {
   ASSERT(OwnsData());
-  if (!str.IsEmpty()) {
+  if (!str.isEmpty()) {
     char* dst = AppendUninitialized(str.size());
     uninitializedCopy(dst, str.data(), str.size());
   }

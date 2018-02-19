@@ -74,7 +74,7 @@ class BASE_EXPORT CommandLine {
   void Set(StringSpan switch_name, StringSpan value);
   void Set(StringSpan switch_name, String&& value);
 
-  void Clear();
+  void clear();
 
   String ToArgvLine(bool with_program_name = true) const;
 

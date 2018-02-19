@@ -23,7 +23,7 @@ struct BASE_EXPORT IntBounds3 {
   int GetHeight() const { return max.y - min.y; }
   int GetDepth() const { return max.z - min.z; }
 
-  bool IsEmpty() const { return min.x >= max.x || min.y >= max.y || min.z >= max.z; }
+  bool isEmpty() const { return min.x >= max.x || min.y >= max.y || min.z >= max.z; }
 
   bool contains(IntPoint3 point) const { return contains(point.x, point.y, point.z); }
   bool contains(int x, int y, int z) const;
@@ -56,7 +56,7 @@ struct BASE_EXPORT Bounds3 {
   float GetHeight() const { return max.y - min.y; }
   float GetDepth() const { return max.z - min.z; }
 
-  bool IsEmpty() const { return min.x >= max.x || min.y >= max.y || min.z >= max.z; }
+  bool isEmpty() const { return min.x >= max.x || min.y >= max.y || min.z >= max.z; }
 
   bool contains(Point3 point) const { return contains(point.x, point.y, point.z); }
   bool contains(float x, float y, float z) const;

@@ -48,7 +48,7 @@ int lastIndexOfIgnoreCaseAscii(StringSpan str, char c) {
 }
 
 int indexOfIgnoreCaseAscii(StringSpan haystack, StringSpan needle) {
-  if (needle.IsEmpty())
+  if (needle.isEmpty())
     return 0;
 
   const char* orig_data = haystack.data();
@@ -61,7 +61,7 @@ int indexOfIgnoreCaseAscii(StringSpan haystack, StringSpan needle) {
     if (found < 0)
       return -1;
 
-    haystack.RemovePrefix(found + 1);
+    haystack.removePrefix(found + 1);
     if (StartsWithIgnoreCaseAscii(haystack, needle_rest))
       return static_cast<int>(haystack.data() - orig_data - 1);
   }
@@ -69,7 +69,7 @@ int indexOfIgnoreCaseAscii(StringSpan haystack, StringSpan needle) {
 }
 
 int lastIndexOfIgnoreCaseAscii(StringSpan haystack, StringSpan needle) {
-  if (needle.IsEmpty())
+  if (needle.isEmpty())
     return haystack.size();
 
   char last_char = needle.getLast();
@@ -80,7 +80,7 @@ int lastIndexOfIgnoreCaseAscii(StringSpan haystack, StringSpan needle) {
     if (found < 0)
       return -1;
 
-    haystack.Truncate(found);
+    haystack.truncate(found);
     if (EndsWithIgnoreCaseAscii(haystack, needle_rest))
       return haystack.size() - needle_rest.size();
   }

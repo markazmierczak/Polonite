@@ -15,7 +15,7 @@ struct BASE_EXPORT IntSize2 {
   constexpr IntSize2(int width, int height)
       : width(width >= 0 ? width : 0), height(height >= 0 ? height : 0) {}
 
-  bool IsEmpty() const { return width <= 0 || height <= 0; }
+  bool isEmpty() const { return width <= 0 || height <= 0; }
 
   static IntSize2 FromVector(const IntVector2& v) { return IntSize2(v.x, v.y); }
   IntVector2 ToVector() const { return IntVector2(width, height); }

@@ -12,7 +12,7 @@ namespace {
 TEST(DirectoryTest, GetDriveSpaceInfo) {
   // We aren't actually testing that it's correct, just that it's sane.
   FilePath tmp_path = GetTempDirPath();
-  ASSERT_FALSE(tmp_path.IsEmpty());
+  ASSERT_FALSE(tmp_path.isEmpty());
 
   auto space = Directory::GetDriveSpaceInfo(tmp_path);
   EXPECT_GT(space.available, 0);

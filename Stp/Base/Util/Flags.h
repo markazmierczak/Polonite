@@ -42,7 +42,7 @@ class Flags final {
   constexpr void Toggle(Flags other) { mask_ ^= other.mask_; }
 
   constexpr bool IsZero() const { return mask_ == 0; }
-  constexpr void Clear() { mask_ = 0; }
+  constexpr void clear() { mask_ = 0; }
 
   constexpr bool Have(EnumType flag) const {
     return (mask_ & static_cast<MaskType>(flag)) != 0;

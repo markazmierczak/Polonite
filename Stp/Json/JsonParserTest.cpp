@@ -255,7 +255,7 @@ TEST(JsonParserTest, Reading) {
     // Empty array
     JsonArray list;
     ASSERT_TRUE(JsonArray::Parse("[]", list));
-    EXPECT_TRUE(list.IsEmpty());
+    EXPECT_TRUE(list.isEmpty());
   }
 
   {

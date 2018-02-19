@@ -42,8 +42,8 @@ class BASE_EXPORT FilePath {
   ALWAYS_INLINE const List<CharType>& chars() const { return chars_; }
   ALWAYS_INLINE List<CharType>& chars() { return chars_; }
 
-  bool IsEmpty() const { return chars_.IsEmpty(); }
-  void Clear() { chars_.Clear(); }
+  bool isEmpty() const { return chars_.isEmpty(); }
+  void clear() { chars_.clear(); }
 
   void EnsureCapacity(int request);
   void ShrinkToFit();
@@ -51,7 +51,7 @@ class BASE_EXPORT FilePath {
   SpanType getSlice(int at) const { return toSpan().getSlice(at); }
   SpanType getSlice(int at, int n) const { return toSpan().getSlice(at, n); }
 
-  void Truncate(int at) { chars_.Truncate(at); }
+  void truncate(int at) { chars_.truncate(at); }
 
   SpanType GetRoot() const { return toSpan().GetRoot(); }
   SpanType GetDirectoryName() const { return toSpan().GetDirectoryName(); }

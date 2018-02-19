@@ -19,14 +19,14 @@ bool IntRect::contains(const IntRect& other) const {
 }
 
 bool IntRect::Intersects(const IntRect& a, const IntRect& b) {
-  return !a.IsEmpty() && !b.IsEmpty() &&
+  return !a.isEmpty() && !b.isEmpty() &&
          a.left() < b.right() && b.left() < a.right() &&
          a.top() < b.bottom() && b.top() < a.bottom();
 }
 
 bool IntRect::TryIntersect(const IntRect& other) {
   IntRect intersection = Intersection(*this, other);
-  if (intersection.IsEmpty())
+  if (intersection.isEmpty())
     return false;
   *this = intersection;
   return true;
@@ -50,10 +50,10 @@ IntRect IntRect::Intersection(const IntRect& a, const IntRect& b) {
 }
 
 void IntRect::Unite(const IntRect& other) {
-  if (other.IsEmpty())
+  if (other.isEmpty())
     return;
 
-  if (IsEmpty()) {
+  if (isEmpty()) {
     *this = other;
     return;
   }

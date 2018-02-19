@@ -323,14 +323,14 @@ bool WaitableEvent::SignalAll() {
       signaled_at_least_one = true;
   }
 
-  kernel_->waiters_.Clear();
+  kernel_->waiters_.clear();
   return signaled_at_least_one;
 }
 
 // Try to wake a single waiter. Return true if one was woken. Called with lock held.
 bool WaitableEvent::SignalOne() {
   for (;;) {
-    if (kernel_->waiters_.IsEmpty())
+    if (kernel_->waiters_.isEmpty())
       return false;
 
     const bool r = kernel_->waiters_.getFirst()->Fire(this);

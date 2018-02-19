@@ -17,9 +17,9 @@ class Stack {
 
   ALWAYS_INLINE int size() const { return list_.size(); }
 
-  bool IsEmpty() const { return list_.IsEmpty(); }
+  bool isEmpty() const { return list_.isEmpty(); }
 
-  void Clear() { list_.Clear(); }
+  void clear() { list_.clear(); }
 
   template<typename U>
   bool contains(const U& item) const { return list_.contains(item); }
@@ -30,8 +30,8 @@ class Stack {
   void Push(T item) { list_.Add(move(item)); }
   T Pop();
 
-  const T* TryPeek() const { return IsEmpty() ? nullptr : &Peek(); }
-  T* TryPeek() { return IsEmpty() ? nullptr : &Peek(); }
+  const T* TryPeek() const { return isEmpty() ? nullptr : &Peek(); }
+  T* TryPeek() { return isEmpty() ? nullptr : &Peek(); }
 
   void EnsureCapacity(int request) { list_.EnsureCapacity(request); }
   void WillGrow(int n) { list_.WillGrow(n); }

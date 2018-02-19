@@ -156,7 +156,7 @@ void Application::fini() {
  * Must not contain any (back)slashes or colons and be non empty.
  */
 void Application::setName(StringSpan name) {
-  ASSERT(!name.IsEmpty());
+  ASSERT(!name.isEmpty());
   // Many clients depends on short name being ASCII.
   ASSERT(IsAscii(name));
   // Short name may not contain, otherwise it cannot be used in path specification.
@@ -173,7 +173,7 @@ static String ResolveNameFromExecutablePath() {
 
 const String& Application::getName() {
   AutoLock auto_lock(&g_data_lock);
-  if (name_.IsEmpty())
+  if (name_.isEmpty())
     name_ = ResolveNameFromExecutablePath();
   return name_;
 }
@@ -183,14 +183,14 @@ const String& Application::getName() {
  * UTF-8 encoded.
  */
 void Application::setDisplayName(StringSpan display_name) {
-  ASSERT(!display_name.IsEmpty());
+  ASSERT(!display_name.isEmpty());
 
   ASSERT(phase_ == Phase::Born);
   display_name_ = display_name;
 }
 
 const String& Application::getDisplayName() {
-  return !display_name_.IsEmpty() ? display_name_ : getName();
+  return !display_name_.isEmpty() ? display_name_ : getName();
 }
 
 void Application::setVersion(const Version& version) {

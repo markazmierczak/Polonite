@@ -15,12 +15,12 @@ SystemErrorCode DirectoryEnumerator::TryOpen(const FilePath& path, StringSpan pa
 
 SystemErrorCode DirectoryEnumerator::TryOpen(const FilePath& path) {
   ASSERT(!IsOpen());
-  search_path_.Clear();
+  search_path_.clear();
   search_path_.EnsureCapacity(path.size() + pattern_.size() + 2);
   search_path_ = path;
 
   auto search_ops =  FindExSearchNameMatch;
-  if (pattern_.IsEmpty()) {
+  if (pattern_.isEmpty()) {
     search_path_.AddComponent(FILE_PATH_LITERAL("*"));
   } else {
     search_path_.AddComponent(pattern_);
@@ -50,7 +50,7 @@ SystemErrorCode DirectoryEnumerator::TryOpen(const FilePath& path) {
 
 void DirectoryEnumerator::Close() noexcept {
   ASSERT(IsOpen());
-  pattern_.Clear();
+  pattern_.clear();
   if (status_ != Status::Empty) {
     HANDLE handle = exchange(find_handle_, INVALID_HANDLE_VALUE);
     if (::FindClose(handle) == 0)

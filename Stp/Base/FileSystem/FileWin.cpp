@@ -23,7 +23,7 @@ SystemErrorCode File::TryGetInfo(const FilePath& path, FileInfo& out) {
 }
 
 SystemErrorCode File::TryMakeAbsolutePath(const FilePath& input, FilePath& output) {
-  output.Clear();
+  output.clear();
 
   int buffer_length = 1;
   while (true) {
@@ -33,16 +33,16 @@ SystemErrorCode File::TryMakeAbsolutePath(const FilePath& input, FilePath& outpu
     if (rv < buffer_length) {
       if (rv == 0)
         return GetLastWinErrorCode();
-      output.Truncate(rv);
+      output.truncate(rv);
       return WinErrorCode::Success;
     }
     buffer_length = rv;
-    output.Clear();
+    output.clear();
   }
 }
 
 SystemErrorCode File::TryMakeLongPath(const FilePath& input, FilePath& output) {
-  output.Clear();
+  output.clear();
 
   int buffer_length = 1;
   while (true) {
@@ -52,11 +52,11 @@ SystemErrorCode File::TryMakeLongPath(const FilePath& input, FilePath& output) {
     if (rv < buffer_length) {
       if (rv == 0)
         return GetLastWinErrorCode();
-      output.Truncate(rv);
+      output.truncate(rv);
       return WinErrorCode::Success;
     }
     buffer_length = rv;
-    output.Clear();
+    output.clear();
   }
 }
 

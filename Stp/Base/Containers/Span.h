@@ -40,7 +40,7 @@ class Span {
   ALWAYS_INLINE constexpr const T* data() const { return data_; }
   ALWAYS_INLINE constexpr int size() const { return size_; }
 
-  constexpr bool IsEmpty() const { return size_ == 0; }
+  constexpr bool isEmpty() const { return size_ == 0; }
 
   constexpr const T& operator[](int at) const {
     ASSERT(0 <= at && at < size_);
@@ -60,17 +60,17 @@ class Span {
     return Span(data_ + at, n);
   }
 
-  constexpr void Truncate(int at) {
+  constexpr void truncate(int at) {
     ASSERT(0 <= at && at <= size_);
     size_ = at;
   }
 
-  constexpr void RemovePrefix(int n) {
+  constexpr void removePrefix(int n) {
     ASSERT(0 <= n && n <= size_);
     data_ += n;
     size_ -= n;
   }
-  constexpr void RemoveSuffix(int n) { Truncate(size_ - n); }
+  constexpr void removeSuffix(int n) { truncate(size_ - n); }
 
   template<typename U>
   int indexOf(const U& item) const noexcept;
@@ -118,7 +118,7 @@ class MutableSpan {
   ALWAYS_INLINE constexpr T* data() { return data_; }
   ALWAYS_INLINE constexpr int size() const { return size_; }
 
-  constexpr bool IsEmpty() const { return size_ == 0; }
+  constexpr bool isEmpty() const { return size_ == 0; }
 
   constexpr const T& operator[](int at) const {
     ASSERT(0 <= at && at < size_);
@@ -154,17 +154,17 @@ class MutableSpan {
     return MutableSpan(data_ + at, n);
   }
 
-  constexpr void Truncate(int at) {
+  constexpr void truncate(int at) {
     ASSERT(0 <= at && at <= size_);
     size_ = at;
   }
 
-  constexpr void RemovePrefix(int n) {
+  constexpr void removePrefix(int n) {
     ASSERT(0 <= n && n <= size_);
     data_ += n;
     size_ -= n;
   }
-  constexpr void RemoveSuffix(int n) { Truncate(size_ - n); }
+  constexpr void removeSuffix(int n) { truncate(size_ - n); }
 
   template<typename U>
   int indexOf(const U& item) const { return indexOfItem(data_, size_, item); }
@@ -172,6 +172,9 @@ class MutableSpan {
   int lastIndexOf(const U& item) const { return lastIndexOfItem(data_, size_, item); }
   template<typename U>
   bool contains(const U& item) const { return indexOf(item) >= 0; }
+
+  template<typename U>
+  void fill(const U& item) { fillObjects(data_, size_, item); }
 
   friend bool operator==(const MutableSpan& lhs, const Span<T>& rhs) {
     return lhs.size_ == rhs.size() && equalObjects(lhs.data_, rhs.data(), lhs.size_);
@@ -236,13 +239,8 @@ inline bool operator!=(const T (&lhs)[N], const MutableSpan<T>& rhs) {
   return operator!=(makeSpan(lhs), rhs);
 }
 
-inline int compare(StringSpan lhs, StringSpan rhs) noexcept {
-  if (lhs.IsEmpty() || rhs.IsEmpty())
-    return lhs.IsEmpty() == rhs.IsEmpty();
-  return ::memcmp(lhs.data(), rhs.data(), toUnsigned(lhs.size()));
-}
-
-inline HashCode partialHash(StringSpan text) noexcept { return hashBuffer(text.data(), text.size()); }
+BASE_EXPORT int compare(const StringSpan& lhs, const StringSpan& rhs) noexcept;
+inline HashCode partialHash(const StringSpan& text) noexcept { return hashBuffer(text.data(), text.size()); }
 
 template<typename T>
 template<typename U>
