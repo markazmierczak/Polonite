@@ -102,7 +102,7 @@ bool WaitableEvent::TimedWait(TimeDelta wait_delta) {
 }
 
 bool WaitableEvent::TimedWaitUntil(TimeTicks end_time) {
-  if (end_time.IsNull())
+  if (end_time.isNull())
     return IsSignaled();
 
   TimeTicks now = TimeTicks::Now();

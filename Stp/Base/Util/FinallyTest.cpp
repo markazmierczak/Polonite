@@ -16,13 +16,13 @@ TEST(FinallyTest, Basic) {
 
   auto lam = [&]{ c = true; };
   try {
-    auto v = MakeScopeFinally([&]{ a = true; });
-    auto w = MakeScopeContinue([&]{ b = true; });
-    auto x = MakeScopeCatch(lam);
+    auto v = makeScopeFinally([&]{ a = true; });
+    auto w = makeScopeContinue([&]{ b = true; });
+    auto x = makeScopeCatch(lam);
     throw 42;
   } catch(...) {
-    auto y = MakeScopeCatch([&]{ d = true; });
-    auto z = MakeScopeContinue([&]{ e = true; });
+    auto y = makeScopeCatch([&]{ d = true; });
+    auto z = makeScopeContinue([&]{ e = true; });
   }
   EXPECT_TRUE(a);
   EXPECT_FALSE(b);

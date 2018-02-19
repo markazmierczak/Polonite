@@ -37,7 +37,7 @@ typedef void (*GenericStaticMethod)(GenericClass*);
 template<int N>
 struct SimplifyMethod {
   template<class X, class XMethod, typename GMethod>
-  static GenericClass* Convert(XMethod method, X* that, GMethod& gmethod) {
+  static GenericClass* convert(XMethod method, X* that, GMethod& gmethod) {
     static_assert(N < 0, "unsupported member function pointer");
     return nullptr;
   }
@@ -49,7 +49,7 @@ template<>
 struct SimplifyMethod<sizeof(GenericMethod)> {
   template<class X, class XMethod, typename GSMethod>
   static ALWAYS_INLINE GenericClass*
-  Convert(XMethod method, const X* thatc, GSMethod& gsmethod) {
+  convert(XMethod method, const X* thatc, GSMethod& gsmethod) {
     struct GnuMemberFunction {
       union {
         // If even, it's a pointer to the function.
@@ -102,7 +102,7 @@ template<>
 struct SimplifyMethod<sizeof(GenericStaticMethod)> {
   template<class X, class XMethod, typename GSMethod>
   static ALWAYS_INLINE GenericClass*
-  Convert(XMethod method, const X* thatc, GSMethod& gsmethod) {
+  convert(XMethod method, const X* thatc, GSMethod& gsmethod) {
     gsmethod = bit_cast<GSMethod>(method);
     X* that = const_cast<X*>(thatc);
     return reinterpret_cast<GenericClass*>(that);
@@ -113,7 +113,7 @@ template<>
 struct SimplifyMethod<sizeof(GenericStaticMethod) + sizeof(int)> {
   template<class X, class XMethod, typename GSMethod>
   static ALWAYS_INLINE GenericClass*
-  Convert(XMethod method, const X* thatc, GSMethod& gsmethod) {
+  convert(XMethod method, const X* thatc, GSMethod& gsmethod) {
     struct MSVCExtendedMemberFunction {
       GSMethod function;
       int this_delta;
@@ -131,7 +131,7 @@ template<>
 struct SimplifyMethod<sizeof(GenericStaticMethod) + 2 * sizeof(int)> {
   template<class X, class XMethod, typename GSMethod>
   static ALWAYS_INLINE GenericClass*
-  Convert(XMethod method, const X* thatc, GSMethod& gsmethod) {
+  convert(XMethod method, const X* thatc, GSMethod& gsmethod) {
     struct MSVCVirtualMemberFunction {
       GSMethod function;
       int this_delta;
@@ -168,7 +168,7 @@ template<>
 struct SimplifyMethod<sizeof(MSVCUnknownMemberFunction)> {
   template<class X, class XMethod, typename GSMethod>
   static ALWAYS_INLINE GenericClass*
-  Convert(XMethod method, const X* thatc, GSMethod& gsmethod) {
+  convert(XMethod method, const X* thatc, GSMethod& gsmethod) {
     MSVCUnknownMemberFunction mf = bit_cast<MSVCUnknownMemberFunction>(method);
 
     GenericClass* gobject = reinterpret_cast<GenericClass*>(thatc);
@@ -213,7 +213,7 @@ class Delegate<TResult(TArgs...)> {
 
   template<class TClass>
   Delegate(TResult (TClass::*method)(TArgs...), TClass* object) {
-    gobject_ = delegate_impl::SimplifyMethod<sizeof(method)>::Convert(method, object, gmethod_);
+    gobject_ = delegate_impl::SimplifyMethod<sizeof(method)>::convert(method, object, gmethod_);
   }
 
   TResult operator()(TArgs... args) const {
@@ -228,7 +228,7 @@ class Delegate<TResult(TArgs...)> {
   }
 
   explicit operator bool() const { return gmethod_ != nullptr; }
-  bool IsNull() const { return gmethod_ == nullptr; }
+  bool isNull() const { return gmethod_ == nullptr; }
 
   friend void format(TextWriter& out, const Delegate& x, const StringSpan& opts) {
     delegate_impl::FormatDelegate(out, opts, reinterpret_cast<void*>(x.gmethod_));
@@ -245,7 +245,7 @@ struct NullableTmpl<Delegate<TResult(TArgs...)>> {
 };
 
 template<typename TClass, typename TThis, typename TResult, typename... TArgs>
-inline Delegate<TResult(TArgs...)> MakeDelegate(TResult(TClass::*method)(TArgs...), TThis* that) {
+inline Delegate<TResult(TArgs...)> makeDelegate(TResult(TClass::*method)(TArgs...), TThis* that) {
   TClass* thatx = that;
   return Delegate<TResult(TArgs...)>(method, thatx);
 }

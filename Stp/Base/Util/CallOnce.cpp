@@ -7,7 +7,7 @@
 
 namespace stp {
 
-bool CallOnce::NeedsCall(subtle::Atomic32* state) {
+bool CallOnce::needsCall(subtle::Atomic32* state) {
   if (subtle::NoBarrier_CompareAndSwap(state, NotStarted, Claimed) == 0)
     return true;
 

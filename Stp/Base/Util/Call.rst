@@ -6,7 +6,7 @@ Call
 Delegate.h
 ==========
 
-Delegates devirtualize pointer-to-member-function and provides interface similar to ``std::function`` (use ``MakeDelegate()`` instead of ``std::bind``).
+Delegates devirtualize pointer-to-member-function and provides interface similar to ``std::function`` (use ``makeDelegate()`` instead of ``std::bind``).
 
 Example::
 
@@ -18,14 +18,14 @@ Example::
   };
 
   void Register(Handler* handler) {
-    SetHandler(MakeDelegate(&Handler::OnCall, handler));
+    SetHandler(makeDelegate(&Handler::OnCall, handler));
   }
 
 Delegates cannot be initialized with lambdas, standalone functions or capture any values for arguments. A delegate holds a function pointer and ``this`` pointer only (possibly altered through devirtualization).
 
 Delegates are much faster than std::function because they are not allocating any memory and have direct function pointer which is called like any standalone (static) function. And most importantly they are small (only two words) - cache friendly.
 
-A ``Delegate`` class is internally nullable. A null delegate cannot be invoked. Check ``Delegate::IsNull()`` for null value.
+A ``Delegate`` class is internally nullable. A null delegate cannot be invoked. Check ``Delegate::isNull()`` for null value.
 
 .. todo:: Explain the differences between compilers/ABIs in virtual function handling.
 

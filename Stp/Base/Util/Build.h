@@ -19,7 +19,7 @@ class Build {
   static constexpr bool IsDebug = true;
   #endif
 
-  static Time TranslationTime();
+  static Time getTranslationTime();
 };
 
 } // namespace stp

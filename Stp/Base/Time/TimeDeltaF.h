@@ -63,7 +63,7 @@ class TimeDeltaF {
   // Returns true if the time delta is zero.
   bool IsZero() const { return secs_ == 0; }
 
-  bool IsNull() const { return isNaN(secs_) != 0; }
+  bool isNull() const { return isNaN(secs_) != 0; }
 
   // Returns the time delta in some unit.
   constexpr double InDaysF() const { return secs_ / SecondsPerDay; }

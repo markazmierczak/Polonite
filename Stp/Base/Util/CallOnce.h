@@ -19,7 +19,7 @@ class BASE_EXPORT CallOnce {
     if (state == Done)
       return;
 
-    if (state == NotStarted && NeedsCall(&state_)) {
+    if (state == NotStarted && needsCall(&state_)) {
       fn(Forward<TArgs>(args)...);
 
       subtle::Release_Store(&state_, Done);
@@ -34,7 +34,7 @@ class BASE_EXPORT CallOnce {
 
   subtle::Atomic32 state_;
 
-  static bool NeedsCall(subtle::Atomic32* state);
+  static bool needsCall(subtle::Atomic32* state);
 };
 
 } // namespace stp

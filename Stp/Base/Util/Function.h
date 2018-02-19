@@ -17,9 +17,9 @@ union Storage {
   Storage() noexcept : none(nullptr) {}
 
   template<typename TFunction>
-  TFunction& AsLocal() { return *reinterpret_cast<TFunction*>(local); }
+  TFunction& asLocal() { return *reinterpret_cast<TFunction*>(local); }
   template<typename TFunction>
-  TFunction& AsHeap() { return *reinterpret_cast<TFunction*>(heap); }
+  TFunction& asHeap() { return *reinterpret_cast<TFunction*>(heap); }
 
   nullptr_t none;
   AlignedStorage<void*> local[4];
@@ -41,47 +41,47 @@ static constexpr bool TRequiresHeap =
     (sizeof(TDecayed) > sizeof(Storage::local)) || !TIsNoexceptMoveConstructible<TDecayed>;
 
 template<typename T>
-constexpr bool IsNullPtr(T* p) { return p == nullptr; }
+constexpr bool isNullPtr(T* p) { return p == nullptr; }
 template <typename T>
-constexpr TFalse IsNullPtr(T&&) { return {}; }
+constexpr TFalse isNullPtr(T&&) { return {}; }
 
 struct Manager {
   enum Operation {
     DestroyOperation,
     MoveOperation,
-    GetMemorySpaceOperation,
+    getMemorySpaceOperation,
   };
 
-  static int Null(Operation op, Storage& that, Storage* other) {
+  static int doNull(Operation op, Storage& that, Storage* other) {
     return 0;
   }
 
   template<typename TFunction>
-  static int Local(Operation op, Storage& that, Storage* other) {
+  static int doLocal(Operation op, Storage& that, Storage* other) {
     switch (op) {
       case DestroyOperation:
-        that.AsLocal<TFunction>().~TFunction();
+        that.asLocal<TFunction>().~TFunction();
         break;
       case MoveOperation:
-        new (that.local) TFunction(move(other->AsLocal<TFunction>()));
-        other->AsLocal<TFunction>().~TFunction();
+        new (that.local) TFunction(move(other->asLocal<TFunction>()));
+        other->asLocal<TFunction>().~TFunction();
         break;
-      case GetMemorySpaceOperation:
+      case getMemorySpaceOperation:
         return 1;
     }
     return 0;
   }
 
   template<typename TFunction>
-  static int Heap(Operation op, Storage& that, Storage* other) {
+  static int doHeap(Operation op, Storage& that, Storage* other) {
     switch (op) {
       case DestroyOperation:
-        delete &that.AsHeap<TFunction>();
+        delete &that.asHeap<TFunction>();
         break;
       case MoveOperation:
         swap(that.heap, other->heap);
         break;
-      case GetMemorySpaceOperation:
+      case getMemorySpaceOperation:
         return 2;
     }
     return 0;
@@ -105,17 +105,17 @@ class Function<TResult(TArgs...)> {
 
  public:
   Function() = default;
-  ~Function() { Destroy(true); }
+  ~Function() { destroy(true); }
 
   // Noncopyable
   Function(const Function&) = delete;
   Function& operator=(const Function& other) = delete;
 
-  Function(Function&& other) noexcept { Init(move(other)); }
+  Function(Function&& other) noexcept { init(move(other)); }
   Function& operator=(Function&& other) noexcept;
 
   Function(nullptr_t) {}
-  Function& operator=(nullptr_t) { Destroy(false); return *this; }
+  Function& operator=(nullptr_t) { destroy(false); return *this; }
 
   template<typename TFunction,
            typename TDecayed = detail_function::TDecayIfConstructible<TFunction>,
@@ -125,13 +125,13 @@ class Function<TResult(TArgs...)> {
       noexcept(TDecayed(declval<TFunction>()))) {
     if constexpr (detail_function::TRequiresHeap<TFunction>) {
       storage_.heap = new TDecayed(Forward<TFunction>(fn));
-      invoker_ = &InvokeHeap<TDecayed>;
-      manager_ = &ManagerType::Heap<TDecayed>;
+      invoker_ = &invokeHeap<TDecayed>;
+      manager_ = &ManagerType::doHeap<TDecayed>;
     } else {
-      if (!detail_function::IsNullPtr(fn)) {
+      if (!detail_function::isNullPtr(fn)) {
         ::new (storage_.local) TDecayed(Forward<TFunction>(fn));
-        invoker_ = &InvokeLocal<TDecayed>;
-        manager_ = &ManagerType::Local<TDecayed>;
+        invoker_ = &invokeLocal<TDecayed>;
+        manager_ = &ManagerType::doLocal<TDecayed>;
       }
     }
   }
@@ -148,7 +148,7 @@ class Function<TResult(TArgs...)> {
     return *this;
   }
 
-  bool IsNull() const { return invoker_ == nullptr; }
+  bool isNull() const { return invoker_ == nullptr; }
   explicit operator bool() const { return invoker_ != nullptr; }
 
   TResult operator()(TArgs... args) {
@@ -163,56 +163,56 @@ class Function<TResult(TArgs...)> {
 
   StorageType storage_;
   InvokerType invoker_ = nullptr;
-  ManagerCallType manager_ = &ManagerType::Null;
+  ManagerCallType manager_ = &ManagerType::doNull;
 
-  void Init(Function&& other) {
+  void init(Function&& other) {
     other.manager_(ManagerType::MoveOperation, storage_, &other.storage_);
     swap(invoker_, other.invoker_);
     swap(manager_, other.manager_);
   }
-  void Destroy(bool in_dtor) {
+  void destroy(bool in_dtor) {
     manager_(ManagerType::DestroyOperation, storage_, nullptr);
     if (!in_dtor) {
       invoker_ = nullptr;
-      manager_ = &ManagerType::Null;
+      manager_ = &ManagerType::doNull;
     }
   }
 
-  int GetMemorySpace() const {
+  int getMemorySpace() const {
     return manager_(
-        ManagerType::GetMemorySpaceOperation,
+        ManagerType::getMemorySpaceOperation,
         const_cast<StorageType&>(storage_), nullptr);
   }
-  bool IsLocalAllocated() const { return GetMemorySpace() == 1; }
-  bool IsHeapAllocated() const { return GetMemorySpace() == 2; }
+  bool isLocalAllocated() const { return getMemorySpace() == 1; }
+  bool isHeapAllocated() const { return getMemorySpace() == 2; }
 
   template<typename TFunction>
-  static TResult InvokeLocal(StorageType& storage, TArgs&&... args) {
-    auto& fn = storage.AsLocal<TFunction>();
+  static TResult invokeLocal(StorageType& storage, TArgs&&... args) {
+    auto& fn = storage.asLocal<TFunction>();
     return fn(Forward<TArgs>(args)...);
   }
   template<typename TFunction>
-  static TResult InvokeHeap(StorageType& storage, TArgs&&... args) {
-    auto& fn = storage.AsHeap<TFunction>();
+  static TResult invokeHeap(StorageType& storage, TArgs&&... args) {
+    auto& fn = storage.asHeap<TFunction>();
     return fn(Forward<TArgs>(args)...);
   }
 };
 
 template <typename TFunction>
-inline bool operator==(const Function<TFunction>& fn, nullptr_t) { return fn.IsNull(); }
+inline bool operator==(const Function<TFunction>& fn, nullptr_t) { return fn.isNull(); }
 template <typename TFunction>
-inline bool operator!=(const Function<TFunction>& fn, nullptr_t) { return !fn.IsNull(); }
+inline bool operator!=(const Function<TFunction>& fn, nullptr_t) { return !fn.isNull(); }
 template <typename TFunction>
-inline bool operator==(nullptr_t, const Function<TFunction>& fn) { return fn.IsNull(); }
+inline bool operator==(nullptr_t, const Function<TFunction>& fn) { return fn.isNull(); }
 template <typename TFunction>
-inline bool operator!=(nullptr_t, const Function<TFunction>& fn) { return !fn.IsNull(); }
+inline bool operator!=(nullptr_t, const Function<TFunction>& fn) { return !fn.isNull(); }
 
 template<typename TResult, typename ... TArgs>
 inline Function<TResult(TArgs...)>& Function<TResult(TArgs...)>::operator=(
     Function&& other) noexcept {
   if (this != &other) {
-    Destroy(false);
-    Init(move(other));
+    destroy(false);
+    init(move(other));
   }
   return *this;
 }

@@ -237,9 +237,9 @@ void FileStream::GetInfo(FileStreamInfo& out) {
 }
 
 void FileStream::SetTimes(Time last_accessed, Time last_modified, Time creation_time) {
-  ASSERT(creation_time.IsNull(), "creation_time not supported on POSIX");
-  ASSERT(!last_accessed.IsNull());
-  ASSERT(!last_modified.IsNull());
+  ASSERT(creation_time.isNull(), "creation_time not supported on POSIX");
+  ASSERT(!last_accessed.isNull());
+  ASSERT(!last_modified.isNull());
 
   ASSERT(IsOpen());
 

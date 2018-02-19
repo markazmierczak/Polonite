@@ -52,9 +52,9 @@ TEST(TimeTestOutOfBounds, FromExplodedOutOfBoundsTime) {
 
     Time result;
     EXPECT_FALSE(Time::FromUTCExploded(test.explode, &result));
-    EXPECT_TRUE(result.IsNull());
+    EXPECT_TRUE(result.isNull());
     EXPECT_FALSE(Time::FromLocalExploded(test.explode, &result));
-    EXPECT_TRUE(result.IsNull());
+    EXPECT_TRUE(result.isNull());
   }
 }
 

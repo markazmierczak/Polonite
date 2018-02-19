@@ -72,7 +72,7 @@ Time Time::FromFileTime(FILETIME ft) {
 }
 
 FILETIME Time::ToFileTime() const {
-  if (IsNull())
+  if (isNull())
     return bit_cast<FILETIME, int64_t>(0);
 
   return MicrosecondsToFileTime(us_ + WindowsEpochDeltaMicroseconds);

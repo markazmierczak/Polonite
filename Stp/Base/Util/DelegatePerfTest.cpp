@@ -42,7 +42,7 @@ static void RunDelegateBenchmark(T* callback_holder, const String& trace_name) {
 
 TEST(DelegatePerfTest, Call) {
   auto delegate_holder = OwnPtr<DelegateHolder>::New();
-  delegate_holder->callback = MakeDelegate(&DelegateHolder::DoNothing, delegate_holder.get());
+  delegate_holder->callback = makeDelegate(&DelegateHolder::DoNothing, delegate_holder.get());
   RunDelegateBenchmark(delegate_holder.get(), "delegate");
 
   auto std_function_holder = OwnPtr<StdFunctionHolder>::New();

@@ -77,7 +77,7 @@ class BASE_EXPORT JsonValue {
   const JsonObject* TryCastToObject() const;
   JsonObject* TryCastToObject();
 
-  bool IsNull() const { return type() == Type::Null; }
+  bool isNull() const { return type() == Type::Null; }
   bool IsBoolean() const { return type() == Type::Boolean; }
   bool IsInteger() const { return type() == Type::Integer; }
   bool IsDouble() const { return type() == Type::Double; }

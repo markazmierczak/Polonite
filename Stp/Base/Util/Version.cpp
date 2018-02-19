@@ -18,7 +18,7 @@ void Version::setPart(int at, int value) {
   parts_[at] = value;
 }
 
-int Version::CompareTo(const Version& other) const {
+int Version::compareTo(const Version& other) const {
   int max_count = max(parts_.size(), other.parts_.size());
   for (int i = 0; i < max_count; ++i) {
     int rv = compare(getPartAt(i), other.getPartAt(i));
@@ -28,11 +28,11 @@ int Version::CompareTo(const Version& other) const {
   return 0;
 }
 
-HashCode Version::HashImpl() const {
+HashCode Version::hashImpl() const {
   return hashBuffer(parts_.data(), parts_.size() * isizeof(PartType));
 }
 
-void Version::FormatImpl(TextWriter& out) const {
+void Version::formatImpl(TextWriter& out) const {
   for (int i = 0, e = parts_.size(); i < e; ++i) {
     if (i != 0)
       out << '.';

@@ -206,7 +206,7 @@ class Tuple {
 
  private:
   template<typename F, int... I>
-  auto ApplyImpl(F&& f, IndexSequence<I...>) -> decltype(stp::Forward<F>(f)(get<I>()...)) {
+  auto applyImpl(F&& f, IndexSequence<I...>) -> decltype(stp::Forward<F>(f)(get<I>()...)) {
     return stp::Forward<F>(f)(get<I>()...);
   }
  public:
@@ -215,8 +215,8 @@ class Tuple {
   // Tuple variadically to f as if by calling f(a1, a2, ..., an) and
   // return the result.
   template<typename F>
-  auto Apply(F&& f) -> decltype(ApplyImpl(stp::Forward<F>(f), MakeIndexSequence<size()>())) {
-    return ApplyImpl(stp::Forward<F>(f), MakeIndexSequence<size()>());
+  auto apply(F&& f) -> decltype(applyImpl(stp::Forward<F>(f), MakeIndexSequence<size()>())) {
+    return applyImpl(stp::Forward<F>(f), MakeIndexSequence<size()>());
   }
 
  private:
@@ -251,23 +251,8 @@ class Tuple<> {
 };
 
 template<typename... Ts>
-constexpr auto MakeTuple(Ts&&... args) {
+constexpr auto makeTuple(Ts&&... args) {
   return Tuple<TDecay<Ts>...>(stp::Forward<Ts>(args)...);
-}
-
-template<typename... Ts>
-constexpr Tuple<Ts&...> TTie(Ts&... args) {
-  return Tuple<Ts&...>(args...);
-}
-
-template<typename T>
-struct TieIgnore {
-  template<typename U>
-  ALWAYS_INLINE constexpr const TieIgnore& operator=(U&&) const {return *this;}
-};
-
-namespace {
-  constexpr TieIgnore<unsigned char> ignore = TieIgnore<unsigned char>();
 }
 
 namespace detail {

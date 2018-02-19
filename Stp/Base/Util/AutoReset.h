@@ -32,7 +32,7 @@ class AutoReset {
   }
 
   // The change will be permanent - no rollback happen at destruction.
-  void Persist() { scoped_variable_ = nullptr; }
+  void persist() { scoped_variable_ = nullptr; }
 
  private:
   T* scoped_variable_;

@@ -24,7 +24,7 @@ constexpr Array<StringSpan, 12> MonthArray = {
   "Dec",
 };
 
-Time Build::TranslationTime() {
+Time Build::getTranslationTime() {
   StringSpan date_str(__DATE__); // "Mmm dd yyyy"
   StringSpan time_str(__TIME__); // "hh:mm:ss"
 

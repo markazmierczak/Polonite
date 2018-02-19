@@ -17,8 +17,8 @@ struct ScopeFinallyCondition {
 
   bool cancelled = false;
 
-  void Cancel() { cancelled = true; }
-  bool ShouldExecute() const { return !cancelled; }
+  void cancel() { cancelled = true; }
+  bool shouldExecute() const { return !cancelled; }
 };
 
 struct ScopeCatchCondition {
@@ -26,8 +26,8 @@ struct ScopeCatchCondition {
 
   int exception_count = CountUncaughtExceptions();
 
-  void Cancel() { exception_count = Limits<int>::Max; }
-  bool ShouldExecute() const { return exception_count < CountUncaughtExceptions(); }
+  void cancel() { exception_count = Limits<int>::Max; }
+  bool shouldExecute() const { return exception_count < CountUncaughtExceptions(); }
 };
 
 struct ScopeContinueCondition {
@@ -35,8 +35,8 @@ struct ScopeContinueCondition {
 
   int exception_count = CountUncaughtExceptions();
 
-  void Cancel() { exception_count = -1; }
-  bool ShouldExecute() const { return exception_count >= CountUncaughtExceptions(); }
+  void cancel() { exception_count = -1; }
+  bool shouldExecute() const { return exception_count >= CountUncaughtExceptions(); }
 };
 
 template<typename TAction, typename TCondition>
@@ -52,20 +52,20 @@ class ScopeGuard {
       : action_(move(action)) {}
 
   ~ScopeGuard() noexcept(!TCondition::MayThrow || noexcept(action_())) {
-    if (condition_.ShouldExecute())
+    if (condition_.shouldExecute())
       action_();
   }
 
   ScopeGuard(ScopeGuard&& other)
       : action_(move(other.action_)),
         condition_(other.condition_) {
-    other.Cancel();
+    other.cancel();
   }
 
-  void Cancel() { condition_.Cancel(); }
+  void cancel() { condition_.cancel(); }
 
   template<typename T>
-  T CancelWithResult(T x) { Cancel(); return x; }
+  T cancelWithResult(T x) { cancel(); return x; }
 
   DISALLOW_COPY_AND_ASSIGN(ScopeGuard);
 };
@@ -80,17 +80,17 @@ template<typename TAction>
 using ScopeContinue = detail::ScopeGuard<TAction, detail::ScopeContinueCondition>;
 
 template<typename TAction, typename TDecayed = TDecay<TAction>>
-inline auto MakeScopeFinally(TAction&& f) noexcept(noexcept(TDecayed(Forward<TAction>(f)))) {
+inline auto makeScopeFinally(TAction&& f) noexcept(noexcept(TDecayed(Forward<TAction>(f)))) {
   return ScopeFinally<TDecayed>(Forward<TAction>(f));
 }
 
 template<typename TAction, typename TDecayed = TDecay<TAction>>
-inline auto MakeScopeCatch(TAction&& f) noexcept(noexcept(TDecayed(Forward<TAction>(f)))) {
+inline auto makeScopeCatch(TAction&& f) noexcept(noexcept(TDecayed(Forward<TAction>(f)))) {
   return ScopeCatch<TDecayed>(Forward<TAction>(f));
 }
 
 template<typename TAction, typename TDecayed = TDecay<TAction>>
-inline auto MakeScopeContinue(TAction&& f) noexcept(noexcept(TDecayed(Forward<TAction>(f)))) {
+inline auto makeScopeContinue(TAction&& f) noexcept(noexcept(TDecayed(Forward<TAction>(f)))) {
   return ScopeContinue<TDecayed>(Forward<TAction>(f));
 }
 

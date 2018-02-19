@@ -21,9 +21,9 @@ struct DelegateTest : public testing::Test {
 
 TEST_F(DelegateTest, Result) {
   Delegate<int(int, int)> v;
-  v = MakeDelegate(&DelegateTest::CallbackWithResult, this);
+  v = makeDelegate(&DelegateTest::CallbackWithResult, this);
   EXPECT_EQ(3, v(5, 2));
-  v = MakeDelegate(&DelegateTest::NonVirtualCallbackWithResult, this);
+  v = makeDelegate(&DelegateTest::NonVirtualCallbackWithResult, this);
   EXPECT_EQ(3, v(5, 2));
 }
 
@@ -33,12 +33,12 @@ TEST_F(DelegateTest, NoResult) {
   Delegate<void(int, int)> v;
   {
     EXPECT_CALL(*this, Callback(Eq(5), Eq(2)));
-    v = MakeDelegate(&DelegateTest::Callback, this);
+    v = makeDelegate(&DelegateTest::Callback, this);
     v(5, 2);
   }
   {
     EXPECT_CALL(*this, NonVirtualCallback(Eq(3), Eq(4))).Times(2);
-    v = MakeDelegate(&DelegateTest::NonVirtualCallback, this);
+    v = makeDelegate(&DelegateTest::NonVirtualCallback, this);
     v(3, 4);
     v(3, 4);
   }

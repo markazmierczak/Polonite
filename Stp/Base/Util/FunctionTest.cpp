@@ -13,8 +13,8 @@ namespace stp {
 
 namespace {
 
-int Add25ToInt(int x) { return x + 25; }
-int Add111ToInt(int x) { return x + 111; }
+int add25ToInt(int x) { return x + 25; }
+int add111ToInt(int x) { return x + 111; }
 
 template<typename T, int N>
 struct BigFunctor {
@@ -41,7 +41,7 @@ TEST(Function, InvokeFunctor) {
 
   Function<int(int)> getter = move(func);
 
-  EXPECT_TRUE(getter.IsHeapAllocated());
+  EXPECT_TRUE(getter.isHeapAllocated());
 
   EXPECT_EQ(123, getter(5));
 }
@@ -51,7 +51,7 @@ TEST(Function, Null) {
   EXPECT_EQ(f, nullptr);
   EXPECT_EQ(nullptr, f);
   EXPECT_FALSE(f);
-  EXPECT_TRUE(f.IsNull());
+  EXPECT_TRUE(f.isNull());
 
   Function<int(int)> g([](int x) { return x + 1; });
   EXPECT_NE(g, nullptr);
@@ -59,7 +59,7 @@ TEST(Function, Null) {
   EXPECT_TRUE(bool(g));
   EXPECT_EQ(100, g(99));
 
-  Function<int(int)> h(&Add25ToInt);
+  Function<int(int)> h(&add25ToInt);
   EXPECT_NE(h, nullptr);
   EXPECT_NE(nullptr, h);
   EXPECT_TRUE(bool(h));
@@ -69,12 +69,12 @@ TEST(Function, Null) {
   EXPECT_EQ(h, nullptr);
   EXPECT_EQ(nullptr, h);
   EXPECT_FALSE(h);
-  EXPECT_TRUE(h.IsNull());
+  EXPECT_TRUE(h.isNull());
 }
 
 TEST(Function, Swap) {
-  Function<int(int)> mf1(Add25ToInt);
-  Function<int(int)> mf2(Add111ToInt);
+  Function<int(int)> mf1(add25ToInt);
+  Function<int(int)> mf2(add111ToInt);
 
   EXPECT_EQ(125, mf1(100));
   EXPECT_EQ(211, mf2(100));
@@ -119,7 +119,7 @@ TEST(Function, NonCopyableLambda) {
   EXPECT_EQ(901, functor());
 
   Function<int(void)> func = move(functor);
-  EXPECT_TRUE(func.IsHeapAllocated());
+  EXPECT_TRUE(func.isHeapAllocated());
 
   EXPECT_EQ(902, func());
 }
@@ -170,12 +170,12 @@ TEST(Function, VariadicArguments) {
 }
 
 template <typename Ret, typename... Args>
-static void DeduceArgs(Function<Ret(Args...)>) {}
+static void deduceArgs(Function<Ret(Args...)>) {}
 
 TEST(Function, DeducableArguments) {
-  DeduceArgs(Function<void()>{[] {}});
-  DeduceArgs(Function<void(int, float)>{[](int, float) {}});
-  DeduceArgs(Function<int(int, float)>{[](int i, float) { return i; }});
+  deduceArgs(Function<void()>{[] {}});
+  deduceArgs(Function<void(int, float)>{[](int, float) {}});
+  deduceArgs(Function<int(int, float)>{[](int i, float) { return i; }});
 }
 
 TEST(Function, SelfMove) {
@@ -204,7 +204,7 @@ TEST(Function, CtorWithCopy) {
   };
   auto lx = [x = X()]{};
   auto ly = [y = Y()]{};
-  EXPECT_TRUE(Function<void()>(lx).IsLocalAllocated());
+  EXPECT_TRUE(Function<void()>(lx).isLocalAllocated());
   EXPECT_TRUE(noexcept(Function<void()>(lx)));
   EXPECT_FALSE(noexcept(Function<void()>(ly)));
 }

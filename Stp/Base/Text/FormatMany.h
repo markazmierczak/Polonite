@@ -75,8 +75,8 @@ BASE_EXPORT void FormatManyImpl(TextWriter& out, StringSpan fmt, Span<Formatter*
 
 template<typename... Ts>
 inline void FormatMany(TextWriter& out, StringSpan fmt, const Ts&... args) {
-  auto formatters = MakeTuple(detail::BuildFormatter(args)...);
-  auto pargs = formatters.Apply(detail::CreateFormatterArray());
+  auto formatters = makeTuple(detail::BuildFormatter(args)...);
+  auto pargs = formatters.apply(detail::CreateFormatterArray());
   detail::FormatManyImpl(out, fmt, pargs);
 }
 

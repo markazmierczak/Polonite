@@ -79,7 +79,7 @@ void Sha1Hasher::finish(Sha1Digest& out_digest) noexcept {
   process();
 
   for (int t = 0; t < 5; ++t)
-    h_[t] = SwapBytes(h_[t]);
+    h_[t] = swapBytes(h_[t]);
 
   memcpy(&out_digest[0], h_, Sha1Digest::Length);
 }
@@ -153,7 +153,7 @@ void Sha1Hasher::process() noexcept {
   // W and M are in a union, so no need to memcpy.
   // memcpy(W, M, sizeof(M));
   for (int t = 0; t < 16; ++t)
-    w_[t] = SwapBytes(w_[t]);
+    w_[t] = swapBytes(w_[t]);
 
   // b.
   for (int t = 16; t < 80; ++t)

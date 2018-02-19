@@ -21,7 +21,7 @@ TEST(AutoResetTest, Persist) {
   {
     AutoReset<int> change(&var, 5);
     EXPECT_EQ(5, var);
-    change.Persist();
+    change.persist();
   }
   EXPECT_EQ(5, var);
 }

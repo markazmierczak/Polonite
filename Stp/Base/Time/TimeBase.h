@@ -27,7 +27,7 @@ class TimeBase {
   // Warning: Be careful when writing code that performs math on time values,
   // since it's possible to produce a valid "zero" result that should not be
   // interpreted as a "null" value.
-  bool IsNull() const { return us_ == 0; }
+  bool isNull() const { return us_ == 0; }
 
   // Made public for serialization only.
   ALWAYS_INLINE int64_t ToInternalValue() const { return us_; }

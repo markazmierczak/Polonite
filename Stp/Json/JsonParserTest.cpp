@@ -26,7 +26,7 @@ TEST(JsonParserTest, Reading) {
   {
     // some whitespace checking
     ASSERT_TRUE(JsonValue::Parse("   null   ", root));
-    EXPECT_TRUE(root.IsNull());
+    EXPECT_TRUE(root.isNull());
   }
 
   {
@@ -43,7 +43,7 @@ TEST(JsonParserTest, Reading) {
   {
     // Embedded comment
     ASSERT_TRUE(JsonValue::Parse("/* comment */null", root));
-    EXPECT_TRUE(root.IsNull());
+    EXPECT_TRUE(root.isNull());
 
     ASSERT_TRUE(JsonValue::Parse("40 /* comment */", root));
     EXPECT_TRUE(root.IsInteger());
@@ -319,7 +319,7 @@ TEST(JsonParserTest, Reading) {
     EXPECT_DOUBLE_EQ(9.87654321, double_val);
     JsonValue* null_val = dict.tryGetWithPath("null");
     ASSERT_TRUE(null_val);
-    EXPECT_TRUE(null_val->IsNull());
+    EXPECT_TRUE(null_val->isNull());
     StringSpan str_val;
     EXPECT_TRUE(dict.tryGetWithPath("S", str_val));
     EXPECT_EQ("str", str_val);
@@ -493,7 +493,7 @@ TEST(JsonParserTest, Reading) {
   {
     // Test literal root objects.
     EXPECT_TRUE(JsonValue::Parse("null", root));
-    EXPECT_TRUE(root.IsNull());
+    EXPECT_TRUE(root.isNull());
 
     ASSERT_TRUE(JsonValue::Parse("true", root));
     bool bool_value;
@@ -596,7 +596,7 @@ TEST(JsonParserTest, ConsumeLiterals) {
   parser = NewTestParser(input);
   ASSERT_TRUE(parser->ConsumeLiteral(value));
   EXPECT_EQ('l', parser->pos_[-1]);
-  EXPECT_TRUE(value.IsNull());
+  EXPECT_TRUE(value.isNull());
 }
 
 TEST(JsonParserTest, ConsumeNumbers) {

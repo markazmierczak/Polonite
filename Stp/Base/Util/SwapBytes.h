@@ -15,9 +15,9 @@
 
 namespace stp {
 
-inline unsigned char SwapBytes(unsigned char x) { return x; }
+inline unsigned char swapBytes(unsigned char x) { return x; }
 
-inline unsigned short SwapBytes(unsigned short x) {
+inline unsigned short swapBytes(unsigned short x) {
   #if COMPILER(MSVC)
   return _byteswap_ushort(x);
   #else
@@ -25,7 +25,7 @@ inline unsigned short SwapBytes(unsigned short x) {
   #endif
 }
 
-inline unsigned int SwapBytes(unsigned int x) {
+inline unsigned int swapBytes(unsigned int x) {
   #if COMPILER(MSVC)
   return _byteswap_ulong(x);
   #else
@@ -33,7 +33,7 @@ inline unsigned int SwapBytes(unsigned int x) {
   #endif
 }
 
-inline unsigned long long SwapBytes(unsigned long long x) {
+inline unsigned long long swapBytes(unsigned long long x) {
   #if COMPILER(MSVC)
   return _byteswap_uint64(x);
   #else
@@ -41,17 +41,17 @@ inline unsigned long long SwapBytes(unsigned long long x) {
   #endif
 }
 
-inline unsigned long SwapBytes(unsigned long x) {
+inline unsigned long swapBytes(unsigned long x) {
   #if ULONG_MAX == UINT_MAX
-  return static_cast<unsigned long>(SwapBytes(static_cast<unsigned int>(x)));
+  return static_cast<unsigned long>(swapBytes(static_cast<unsigned int>(x)));
   #elif ULONG_MAX == ULLONG_MAX
-  return static_cast<unsigned long>(SwapBytes(static_cast<unsigned long long>(x)));
+  return static_cast<unsigned long>(swapBytes(static_cast<unsigned long long>(x)));
   #endif
 }
 
 template<typename T, TEnableIf<TIsSigned<T>>* = nullptr>
-inline T SwapBytes(T x) {
-  return static_cast<T>(SwapBytes(toUnsigned(x)));
+inline T swapBytes(T x) {
+  return static_cast<T>(swapBytes(toUnsigned(x)));
 }
 
 } // namespace stp

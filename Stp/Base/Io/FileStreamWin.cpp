@@ -164,7 +164,7 @@ void FileStream::GetInfo(FileStreamInfo& out) {
 }
 
 static FILETIME* TimeToNullableFiletime(Time time, FILETIME& storage) {
-  if (time.IsNull())
+  if (time.isNull())
     return nullptr;
   storage = time.ToFileTime();
   return &storage;
