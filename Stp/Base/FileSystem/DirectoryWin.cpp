@@ -26,13 +26,13 @@ SystemErrorCode Directory::TryCreate(const FilePath& path) {
   return error;
 }
 
-SystemErrorCode Directory::TryRemoveEmpty(const FilePath& path) {
+SystemErrorCode Directory::tryRemoveEmpty(const FilePath& path) {
   if (!::RemoveDirectoryW(ToNullTerminated(path)))
     return GetLastWinErrorCode();
   return WinErrorCode::Success;
 }
 
-SystemErrorCode Directory::TryGetDriveSpaceInfo(const FilePath& path, DriveSpaceInfo& out_space) {
+SystemErrorCode Directory::tryGetDriveSpaceInfo(const FilePath& path, DriveSpaceInfo& out_space) {
   ULARGE_INTEGER available, total, free;
   if (!::GetDiskFreeSpaceExW(ToNullTerminated(path), &available, &total, &free))
     return GetLastWinErrorCode();

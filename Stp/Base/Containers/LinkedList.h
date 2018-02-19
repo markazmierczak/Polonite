@@ -79,9 +79,9 @@ class LinkedList {
   void RemoveFirst() { Remove(getFirst()); }
   void RemoveLast() { Remove(getLast()); }
 
-  bool contains(const T& value) const { return Find(value) != nullptr; }
+  bool contains(const T& value) const { return find(value) != nullptr; }
 
-  T* Find(const T& value) const;
+  T* find(const T& value) const;
   T* FindLast(const T& value) const;
 
   // Really slow, that's because it's not named size().
@@ -163,7 +163,7 @@ inline T* LinkedList<T>::getLast() const {
 }
 
 template<typename T>
-inline T* LinkedList<T>::Find(const T& value) const {
+inline T* LinkedList<T>::find(const T& value) const {
   for (NodeType* n = root_.next(), e = root(); n != e; n = n->next()) {
     if (*n->that() == value)
       return n->that();

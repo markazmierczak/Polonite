@@ -115,7 +115,7 @@ void Console::classInit() {
   // Initialize std streams first. One of them might be closed and
   // opening LogFile may assign std-err for example.
   if (active_destinations & FileDestination) {
-    const String* option = command_line.TryGet(LogToFileSwitch);
+    const String* option = command_line.tryGet(LogToFileSwitch);
     FilePath path = resolveLogFilePath(option);
 
     // Delete old log file.

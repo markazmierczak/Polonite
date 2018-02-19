@@ -82,7 +82,7 @@ struct BASE_EXPORT Quaternion {
 
   Quaternion GetConjugated() const { return Quaternion(w, -x, -y, -z); }
 
-  bool TryGetInverted(Quaternion& out) const WARN_UNUSED_RESULT;
+  bool tryGetInverted(Quaternion& out) const WARN_UNUSED_RESULT;
 
   bool operator==(const Quaternion& o) const;
   bool operator!=(const Quaternion& o) const { return !operator==(o); }

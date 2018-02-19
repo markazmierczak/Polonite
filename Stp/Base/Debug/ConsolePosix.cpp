@@ -38,7 +38,7 @@ bool ConsoleWriter::shouldUseColors(const FileStream& stream) {
     "xterm-color",
   };
   String term_name;
-  if (!Environment::TryGet("TERM", term_name))
+  if (!Environment::tryGet("TERM", term_name))
     return false;
   return SupportedTerminals.contains(term_name);
 }

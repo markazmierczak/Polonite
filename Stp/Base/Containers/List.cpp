@@ -15,7 +15,7 @@ namespace stp {
  * The list must not be empty.
  */
 
-/** \fn void List::RemoveAt(int at)
+/** \fn void List::removeAt(int at)
  * Removes an item at the specified index.
  */
 

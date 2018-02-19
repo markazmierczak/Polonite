@@ -231,7 +231,7 @@ bool JsonParser::ConsumeObject(JsonValue& out_value) {
       if (!object.tryAdd(key.toSpan(), move(value)))
         return ReportError(JsonError::KeyAlreadyAssigned, 1);
     } else {
-      object.Set(key.toSpan(), move(value));
+      object.set(key.toSpan(), move(value));
     }
 
     token = GetNextToken();

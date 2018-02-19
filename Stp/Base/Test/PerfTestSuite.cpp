@@ -20,7 +20,7 @@ void PerfTestSuite::onDidInit() {
 
   // Initialize the perf timer log
   FilePath log_path;
-  if (!command_line.TryGet("log-file", log_path)) {
+  if (!command_line.tryGet("log-file", log_path)) {
     #if OS(ANDROID)
     FilePath tmp_dir = GetAppCachePath();
     log_path = CombineFilePaths(tmp_dir, log_path.GetFileName());

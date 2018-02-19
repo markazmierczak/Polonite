@@ -53,32 +53,32 @@ void CommandLine::clear() {
 }
 
 bool CommandLine::Has(StringSpan name) const {
-  return TryGet(name) != nullptr;
+  return tryGet(name) != nullptr;
 }
 
-const String* CommandLine::TryGet(StringSpan name) const {
-  return switches_.TryGet(name);
+const String* CommandLine::tryGet(StringSpan name) const {
+  return switches_.tryGet(name);
 }
 
-const String* CommandLine::TryGetAscii(StringSpan name) const {
-  const String* value = TryGet(name);
+const String* CommandLine::tryGetAscii(StringSpan name) const {
+  const String* value = tryGet(name);
   return (value && IsAscii(*value)) ? value : nullptr;
 }
 
-bool CommandLine::TryGetInt(StringSpan name, int& out_value) const {
-  const String* value = TryGet(name);
+bool CommandLine::tryGetInt(StringSpan name, int& out_value) const {
+  const String* value = tryGet(name);
   if (!value)
     return false;
   return tryParse(*value, out_value) == ParseIntegerErrorCode::Ok;
 }
 
-bool CommandLine::TryGetFloat(StringSpan name, double& out_value) const {
-  const String* value = TryGet(name);
+bool CommandLine::tryGetFloat(StringSpan name, double& out_value) const {
+  const String* value = tryGet(name);
   return value ? tryParse(*value, out_value) : false;
 }
 
-bool CommandLine::TryGet(StringSpan name, FilePath& out_value) const {
-  const String* value = TryGet(name);
+bool CommandLine::tryGet(StringSpan name, FilePath& out_value) const {
+  const String* value = tryGet(name);
   if (!value)
     return false;
   out_value = FilePathSpan(value->data(), value->size());
@@ -86,7 +86,7 @@ bool CommandLine::TryGet(StringSpan name, FilePath& out_value) const {
 }
 
 bool CommandLine::Equals(StringSpan name, StringSpan value) const {
-  const String* real_value = TryGet(name);
+  const String* real_value = tryGet(name);
   return real_value ? *real_value == value : false;
 }
 
@@ -99,7 +99,7 @@ void CommandLine::Set(StringSpan switch_name, StringSpan value) {
 }
 
 void CommandLine::Set(StringSpan switch_name, String&& value) {
-  switches_.Set(switch_name, move(value));
+  switches_.set(switch_name, move(value));
 }
 
 bool CommandLine::ParseSwitch(StringSpan argument, String& out_name, String& out_value) {

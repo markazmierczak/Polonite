@@ -15,11 +15,11 @@ class FilePath;
 class BASE_EXPORT Environment {
   STATIC_ONLY(Environment);
  public:
-  static bool TryGet(StringSpan name, String& out_string);
-  static bool TryGet(StringSpan name, int& out_value);
-  static bool TryGet(StringSpan name, int64_t& out_value);
-  static bool TryGet(StringSpan name, double& out_value);
-  static bool TryGet(StringSpan name, FilePath& out_path);
+  static bool tryGet(StringSpan name, String& out_string);
+  static bool tryGet(StringSpan name, int& out_value);
+  static bool tryGet(StringSpan name, int64_t& out_value);
+  static bool tryGet(StringSpan name, double& out_value);
+  static bool tryGet(StringSpan name, FilePath& out_path);
 
   static bool TrySet(StringSpan name, StringSpan value);
   static bool TrySet(StringSpan name, const FilePath& path);
@@ -29,13 +29,13 @@ class BASE_EXPORT Environment {
   static bool Has(StringSpan name);
 
   #if OS(WIN)
-  static bool TryGetNative(const wchar_t* name, WString& out_string);
-  static bool TryGet(const wchar_t* name, FilePath& out_path);
+  static bool tryGetNative(const wchar_t* name, WString& out_string);
+  static bool tryGet(const wchar_t* name, FilePath& out_path);
   static bool Has(const wchar_t* name);
   #elif OS(POSIX)
-  static bool TryGetNative(const char* name, String& out_string);
-  static bool TryGet(const char* name, String& out_string);
-  static bool TryGet(const char* name, FilePath& out_path);
+  static bool tryGetNative(const char* name, String& out_string);
+  static bool tryGet(const char* name, String& out_string);
+  static bool tryGet(const char* name, FilePath& out_path);
   static bool TrySet(const char* name, const char* value);
   static bool TryUnset(const char* name);
   static bool Has(const char* name);

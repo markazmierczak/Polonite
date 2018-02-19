@@ -38,7 +38,7 @@ FilePath GetBaseTestDataPath() {
 
 static FilePath GetSourceTreePathImpl() {
   FilePath path;
-  if (Environment::TryGet("DIR_SOURCE_ROOT", path))
+  if (Environment::tryGet("DIR_SOURCE_ROOT", path))
     return path;
   #if OS(LINUX) || OS(WIN)
   // Unit tests execute two levels deep from the source root.

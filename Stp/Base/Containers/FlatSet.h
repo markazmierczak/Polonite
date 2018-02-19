@@ -26,7 +26,7 @@ class FlatSet {
   FlatSet& operator=(const FlatSet& other) { list_ = other; return *this; }
 
   void willGrow(int n) { list_.willGrow(n); }
-  void Shrink() { list_.shrinkToFit(); }
+  void shrink() { list_.shrinkToFit(); }
 
   ALWAYS_INLINE int capacity() const { return list_.capacity(); }
   ALWAYS_INLINE int size() const { return list_.size(); }
@@ -40,27 +40,26 @@ class FlatSet {
   template<typename U>
   bool tryAdd(U&& value);
   template<typename U>
-  bool TryRemove(const U& value);
+  bool tryRemove(const U& value);
 
   template<typename U>
   int indexOf(const U& value) const { return binarySearchInSpan(list_.toSpan(), value); }
 
-  void RemoveAt(int at) { list_.RemoveAt(at); }
+  void removeAt(int at) { list_.removeAt(at); }
   void removeRange(int at, int n) { list_.removeRange(at, n); }
 
   const ListType& list() const { return list_; }
 
-  static FlatSet AdoptList(ListType list) {
+  static FlatSet adoptList(ListType list) {
     ASSERT(IsSorted(list));
     ASSERT(HasDuplicatesAlreadySorted(list));
     return FlatSet(OrderedUniqueTag(), move(list));
   }
-  ListType TakeList() { return move(list_); }
+  ListType releaseList() { return move(list_); }
 
   friend void swap(FlatSet& l, FlatSet& r) noexcept { swap(l.list_, r.list_); }
   friend bool operator==(const FlatSet& l, const FlatSet& r) { return l.list_ == r.list_; }
   friend bool operator!=(const FlatSet& l, const FlatSet& r) { return !(l == r); }
-  friend int compare(const FlatSet& l, const FlatSet& r) { return compare(l.list_, r.list_); }
   friend auto begin(const FlatSet& x) { return begin(x.list_); }
   friend auto end(const FlatSet& x) { return end(x.list_); }
 
@@ -91,12 +90,12 @@ inline bool FlatSet<T, TList>::tryAdd(U&& value) {
 
 template<typename T, class TList>
 template<typename U>
-inline bool FlatSet<T, TList>::TryRemove(const U& value) {
+inline bool FlatSet<T, TList>::tryRemove(const U& value) {
   int pos = indexOf(value);
   if (pos < 0)
     return false;
 
-  list_.RemoveAt(pos);
+  list_.removeAt(pos);
   return true;
 }
 

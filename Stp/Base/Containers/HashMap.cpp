@@ -10,7 +10,7 @@
 namespace stp {
 namespace detail {
 
-int HashMapBase::OptimalBucketCount(unsigned min, bool binary_size) {
+int HashMapBase::optimalBucketCount(unsigned min, bool binary_size) {
   if (min == 0)
     return 0;
 

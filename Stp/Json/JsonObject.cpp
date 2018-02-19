@@ -22,13 +22,13 @@ void JsonObject::Shrink() {
 }
 
 const JsonValue& JsonObject::operator[](StringSpan key) const {
-  const JsonValue* value = TryGetWithPath(key);
+  const JsonValue* value = tryGetWithPath(key);
   ASSUME(value);
   return *value;
 }
 
 JsonValue& JsonObject::operator[](StringSpan key) {
-  JsonValue* value = TryGetWithPath(key);
+  JsonValue* value = tryGetWithPath(key);
   ASSUME(value);
   return *value;
 }
@@ -55,10 +55,10 @@ void JsonObject::SetWithPath(StringSpan input_path, JsonValue value) {
 
     if (pos < 0) {
       pos = -pos;
-      object->impl().InsertAt(pos, key, JsonValue(Type::Object));
-      object = &object->GetValueAt(pos).AsObject();
+      object->impl().insertAt(pos, key, JsonValue(Type::Object));
+      object = &object->getValueAt(pos).AsObject();
     } else {
-      JsonValue* value = &object->GetValueAt(pos);
+      JsonValue* value = &object->getValueAt(pos);
       if (!value->IsObject()) {
         *value = JsonValue(Type::Object);
       }
@@ -72,76 +72,76 @@ void JsonObject::SetWithPath(StringSpan input_path, JsonValue value) {
 
 void JsonObject::Set(StringSpan key, JsonValue value) {
   ASSERT(Utf8::Validate(key));
-  impl().Set(key, move(value));
+  impl().set(key, move(value));
 }
 
-const JsonValue* JsonObject::TryGetWithPath(StringSpan path) const {
-  return const_cast<JsonObject*>(this)->TryGetWithPath(path);
+const JsonValue* JsonObject::tryGetWithPath(StringSpan path) const {
+  return const_cast<JsonObject*>(this)->tryGetWithPath(path);
 }
 
-JsonValue* JsonObject::TryGetWithPath(StringSpan input_path) {
+JsonValue* JsonObject::tryGetWithPath(StringSpan input_path) {
   StringSpan path = input_path;
   JsonObject* object = this;
   for (int delimiter = path.indexOf('.'); delimiter >= 0; delimiter = path.indexOf('.')) {
     StringSpan key = path.getSlice(0, delimiter);
 
-    object = object->TryGetObject(key);
+    object = object->tryGetObject(key);
     if (!object)
       return nullptr;
 
     path = path.getSlice(delimiter + 1);
   }
-  return object->TryGet(path);
+  return object->tryGet(path);
 }
 
 template<typename T>
-static inline T* TryGetWithPathTmpl(const JsonObject& object, StringSpan path) {
-  auto* v = object.TryGetWithPath(path);
+static inline T* tryGetWithPathTmpl(const JsonObject& object, StringSpan path) {
+  auto* v = object.tryGetWithPath(path);
   bool ok = v && T::JsonClassOf(v);
   return const_cast<T*>(ok ? reinterpret_cast<const T*>(v) : nullptr);
 }
 
-const JsonArray* JsonObject::TryGetArrayWithPath(StringSpan path) const {
-  return TryGetWithPathTmpl<JsonArray>(*this, path);
+const JsonArray* JsonObject::tryGetArrayWithPath(StringSpan path) const {
+  return tryGetWithPathTmpl<JsonArray>(*this, path);
 }
-JsonArray* JsonObject::TryGetArrayWithPath(StringSpan path) {
-  return TryGetWithPathTmpl<JsonArray>(*this, path);
-}
-
-const JsonObject* JsonObject::TryGetObjectWithPath(StringSpan path) const {
-  return TryGetWithPathTmpl<JsonObject>(*this, path);
-}
-JsonObject* JsonObject::TryGetObjectWithPath(StringSpan path) {
-  return TryGetWithPathTmpl<JsonObject>(*this, path);
+JsonArray* JsonObject::tryGetArrayWithPath(StringSpan path) {
+  return tryGetWithPathTmpl<JsonArray>(*this, path);
 }
 
-const JsonValue* JsonObject::TryGet(StringSpan key) const {
-  return impl().TryGet(key);
+const JsonObject* JsonObject::tryGetObjectWithPath(StringSpan path) const {
+  return tryGetWithPathTmpl<JsonObject>(*this, path);
+}
+JsonObject* JsonObject::tryGetObjectWithPath(StringSpan path) {
+  return tryGetWithPathTmpl<JsonObject>(*this, path);
 }
 
-JsonValue* JsonObject::TryGet(StringSpan key) {
-  return impl().TryGet(key);
+const JsonValue* JsonObject::tryGet(StringSpan key) const {
+  return impl().tryGet(key);
+}
+
+JsonValue* JsonObject::tryGet(StringSpan key) {
+  return impl().tryGet(key);
 }
 
 template<typename T>
-static inline T* TryGetTmpl(const JsonObject& object, StringSpan key) {
-  auto* v = object.TryGet(key);
+static inline T* tryGetTmpl(const JsonObject& object, StringSpan key) {
+  auto* v = object.tryGet(key);
   bool ok = v && T::JsonClassOf(v);
   return const_cast<T*>(ok ? reinterpret_cast<const T*>(v) : nullptr);
 }
 
-const JsonArray* JsonObject::TryGetArray(StringSpan key) const {
-  return TryGetTmpl<JsonArray>(*this, key);
+const JsonArray* JsonObject::tryGetArray(StringSpan key) const {
+  return tryGetTmpl<JsonArray>(*this, key);
 }
-JsonArray* JsonObject::TryGetArray(StringSpan key) {
-  return TryGetTmpl<JsonArray>(*this, key);
+JsonArray* JsonObject::tryGetArray(StringSpan key) {
+  return tryGetTmpl<JsonArray>(*this, key);
 }
 
-const JsonObject* JsonObject::TryGetObject(StringSpan key) const {
-  return TryGetTmpl<JsonObject>(*this, key);
+const JsonObject* JsonObject::tryGetObject(StringSpan key) const {
+  return tryGetTmpl<JsonObject>(*this, key);
 }
-JsonObject* JsonObject::TryGetObject(StringSpan key) {
-  return TryGetTmpl<JsonObject>(*this, key);
+JsonObject* JsonObject::tryGetObject(StringSpan key) {
+  return tryGetTmpl<JsonObject>(*this, key);
 }
 
 bool JsonObject::containsKey(StringSpan key) const {
@@ -152,31 +152,31 @@ bool JsonObject::tryAdd(StringSpan key, JsonValue value) {
   return impl().tryAdd(key, move(value));
 }
 
-bool JsonObject::TryRemove(StringSpan key) {
-  return impl().TryRemove(key);
+bool JsonObject::tryRemove(StringSpan key) {
+  return impl().tryRemove(key);
 }
 
-bool JsonObject::TryRemoveWithPath(StringSpan path, EmptyHandling empty_handling) {
+bool JsonObject::tryRemoveWithPath(StringSpan path, EmptyHandling empty_handling) {
   int delimiter_pos = path.indexOf('.');
   if (delimiter_pos < 0)
-    return TryRemove(path);
+    return tryRemove(path);
 
   StringSpan object_path = path.getSlice(0, delimiter_pos);
-  JsonObject* object = TryGetObjectWithPath(object_path);
+  JsonObject* object = tryGetObjectWithPath(object_path);
   if (!object)
     return false;
 
   StringSpan nested_path = path.getSlice(delimiter_pos + 1);
-  bool removed = object->TryRemoveWithPath(nested_path, empty_handling);
+  bool removed = object->tryRemoveWithPath(nested_path, empty_handling);
   if (removed && object->isEmpty() && empty_handling == EraseEmpty) {
-    bool empty_removed = TryRemove(object_path);
+    bool empty_removed = tryRemove(object_path);
     ASSERT_UNUSED(empty_removed, empty_removed);
   }
   return true;
 }
 
 void JsonObject::RemoveWithPath(StringSpan path, EmptyHandling empty_handling) {
-  bool removed = TryRemoveWithPath(path, empty_handling);
+  bool removed = tryRemoveWithPath(path, empty_handling);
   ASSUME(removed);
 }
 

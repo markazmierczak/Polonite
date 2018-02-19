@@ -38,7 +38,7 @@ SystemErrorCode Directory::TryCreate(const FilePath& path) {
   return error_code;
 }
 
-SystemErrorCode Directory::TryRemoveEmpty(const FilePath& path) {
+SystemErrorCode Directory::tryRemoveEmpty(const FilePath& path) {
   if (::rmdir(ToNullTerminated(path)) == 0)
     return PosixErrorCode::Ok;
   return GetLastPosixErrorCode();
@@ -60,7 +60,7 @@ static bool IsStatsZeroIfUnlimited(const FilePath& path) {
 }
 #endif
 
-SystemErrorCode Directory::TryGetDriveSpaceInfo(const FilePath& path, DriveSpaceInfo& out_space) {
+SystemErrorCode Directory::tryGetDriveSpaceInfo(const FilePath& path, DriveSpaceInfo& out_space) {
   struct statvfs stats;
   if (HANDLE_EINTR(::statvfs(ToNullTerminated(path), &stats)) != 0)
     return GetLastPosixErrorCode();

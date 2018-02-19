@@ -498,8 +498,8 @@ void MapPointsOptIdentity(const Affine& m, Point2* dst, const Point2* src, int c
 
 void MapPointsOptTranslate(const Affine& m, Point2* dst, const Point2* src, int count) {
   ASSERT(m.IsTranslate());
-  float tx = m.Get(Affine::EntryTransX);
-  float ty = m.Get(Affine::EntryTransY);
+  float tx = m.get(Affine::EntryTransX);
+  float ty = m.get(Affine::EntryTransY);
   if (count & 1) {
     *dst = *src + Vector2(tx, ty);
     src += 1;
@@ -523,10 +523,10 @@ void MapPointsOptTranslate(const Affine& m, Point2* dst, const Point2* src, int 
 
 void MapPointsOptScale(const Affine& m, Point2* dst, const Point2* src, int count) {
   ASSERT(m.IsScaleTranslate());
-  float tx = m.Get(Affine::EntryTransX);
-  float ty = m.Get(Affine::EntryTransY);
-  float sx = m.Get(Affine::EntryScaleX);
-  float sy = m.Get(Affine::EntryScaleY);
+  float tx = m.get(Affine::EntryTransX);
+  float ty = m.get(Affine::EntryTransY);
+  float sx = m.get(Affine::EntryScaleX);
+  float sy = m.get(Affine::EntryScaleY);
   if (count & 1) {
     *dst = Point2(src->x * sx + tx, src->y * sy + ty);
     src += 1;
@@ -550,12 +550,12 @@ void MapPointsOptScale(const Affine& m, Point2* dst, const Point2* src, int coun
 }
 
 void MapPointsOptAffine(const Affine& m, Point2* dst, const Point2* src, int count) {
-  float tx = m.Get(Affine::EntryTransX);
-  float ty = m.Get(Affine::EntryTransY);
-  float sx = m.Get(Affine::EntryScaleX);
-  float sy = m.Get(Affine::EntryScaleY);
-  float kx = m.Get(Affine::EntryShearX);
-  float ky = m.Get(Affine::EntryShearY);
+  float tx = m.get(Affine::EntryTransX);
+  float ty = m.get(Affine::EntryTransY);
+  float sx = m.get(Affine::EntryScaleX);
+  float sy = m.get(Affine::EntryScaleY);
+  float kx = m.get(Affine::EntryShearX);
+  float ky = m.get(Affine::EntryShearY);
   if (count & 1) {
     *dst = Point2(
         src->x * sx + src->y * kx + tx,
@@ -773,7 +773,7 @@ void Affine::FormatImpl(TextWriter& out) const {
 bool IsNear(const Affine& lhs, const Affine& rhs, float tolerance) {
   for (int i = 0; i < Affine::EntryCount; ++i) {
     auto idx = static_cast<Affine::EntryType>(i);
-    if (!IsNear(lhs.Get(idx), rhs.Get(idx), tolerance))
+    if (!IsNear(lhs.get(idx), rhs.get(idx), tolerance))
       return false;
   }
   return true;

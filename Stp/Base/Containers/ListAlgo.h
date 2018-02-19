@@ -9,10 +9,10 @@
 namespace stp {
 
 template<typename TList, typename TItem, TEnableIf<TIsContiguousContainer<TList>>* = nullptr>
-inline bool TryRemoveOne(TList& list, const TItem& item) {
+inline bool tryRemoveOne(TList& list, const TItem& item) {
   int index = list.indexOf(item);
   if (index >= 0) {
-    list.RemoveAt(index);
+    list.removeAt(index);
     return true;
   }
   return false;
@@ -20,10 +20,10 @@ inline bool TryRemoveOne(TList& list, const TItem& item) {
 
 template<typename TList, typename TPredicate,
          TEnableIf<TIsContiguousContainer<TList>>* = nullptr>
-inline bool TryRemoveOneMatching(TList& list, TPredicate&& match) {
+inline bool tryRemoveOneMatching(TList& list, TPredicate&& match) {
   int index = FindIndex(list, Forward<TPredicate>(match));
   if (index >= 0) {
-    list.RemoveAt(index);
+    list.removeAt(index);
     return true;
   }
   return false;

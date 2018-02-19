@@ -22,12 +22,12 @@ class LruCache {
   const T& operator[](const InputKeyType& key) const;
   T& operator[](const InputKeyType& key);
 
-  T* TryGet(const InputKeyType& key);
+  T* tryGet(const InputKeyType& key);
 
   template<typename... Args>
   T* tryAdd(const InputKeyType& key, Args&&... args);
 
-  bool TryRemove(const InputKeyType& key);
+  bool tryRemove(const InputKeyType& key);
 
   void clear();
 
@@ -46,21 +46,21 @@ class LruCache {
 
 template<typename K, typename T, class Traits>
 inline const T& LruCache<K, T, Traits>::operator[](const InputKeyType& key) const {
-  const T* pvalue = TryGet(key);
+  const T* pvalue = tryGet(key);
   ASSERT(pvalue);
   return *pvalue;
 }
 
 template<typename K, typename T, class Traits>
 inline T& LruCache<K, T, Traits>::operator[](const InputKeyType& key) {
-  T* pvalue = TryGet(key);
+  T* pvalue = tryGet(key);
   ASSERT(pvalue);
   return *pvalue;
 }
 
 template<typename K, typename T, class Traits>
-inline T* LruCache<K, T, Traits>::TryGet(const InputKeyType& key) {
-  T* item = map_.TryGet(key);
+inline T* LruCache<K, T, Traits>::tryGet(const InputKeyType& key) {
+  T* item = map_.tryGet(key);
   if (item && list_.getFirst() != item) {
     list_.Remove(item);
     list_.Prepend(item);
@@ -79,8 +79,8 @@ inline T* LruCache<K, T, Traits>::tryAdd(const InputKeyType& key, Args&&... args
 }
 
 template<typename K, typename T, class Traits>
-inline bool LruCache<K, T, Traits>::TryRemove(const InputKeyType& key) {
-  T* item = map_.TryGet(key);
+inline bool LruCache<K, T, Traits>::tryRemove(const InputKeyType& key) {
+  T* item = map_.tryGet(key);
   if (item) {
     list_.Remove(item);
     map_.Remove(key);

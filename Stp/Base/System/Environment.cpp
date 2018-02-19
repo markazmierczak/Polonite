@@ -11,26 +11,26 @@
 namespace stp {
 
 template<typename T>
-static bool TryGetIntegerTmpl(StringSpan name, T& out_value) {
+static bool tryGetIntegerTmpl(StringSpan name, T& out_value) {
   ASSERT(out_value);
   String str;
-  if (!Environment::TryGet(name, str))
+  if (!Environment::tryGet(name, str))
     return false;
   return tryParse(str, out_value) == ParseIntegerErrorCode::Ok;
 }
 
-bool Environment::TryGet(StringSpan name, int& out_value) {
-  return TryGetIntegerTmpl(name, out_value);
+bool Environment::tryGet(StringSpan name, int& out_value) {
+  return tryGetIntegerTmpl(name, out_value);
 }
-bool Environment::TryGet(StringSpan name, int64_t& out_value) {
-  return TryGetIntegerTmpl(name, out_value);
+bool Environment::tryGet(StringSpan name, int64_t& out_value) {
+  return tryGetIntegerTmpl(name, out_value);
 }
 
-bool Environment::TryGet(StringSpan name, double& out_value) {
+bool Environment::tryGet(StringSpan name, double& out_value) {
   ASSERT(out_value);
 
   String str;
-  if (!TryGet(name, str))
+  if (!tryGet(name, str))
     return false;
 
   return tryParse(str, out_value);

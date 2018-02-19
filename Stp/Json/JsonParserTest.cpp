@@ -59,9 +59,9 @@ TEST(JsonParserTest, Reading) {
     ASSERT_TRUE(JsonArray::Parse("[1, /* comment, 2 ] */ \n 3]", list));
     EXPECT_EQ(2, list.size());
     int int_val = 0;
-    EXPECT_TRUE(list.TryGet(0, int_val));
+    EXPECT_TRUE(list.tryGet(0, int_val));
     EXPECT_EQ(1, int_val);
-    EXPECT_TRUE(list.TryGet(1, int_val));
+    EXPECT_TRUE(list.tryGet(1, int_val));
     EXPECT_EQ(3, int_val);
 
     ASSERT_TRUE(JsonArray::Parse("[1, /*a*/2, 3]", list));
@@ -290,7 +290,7 @@ TEST(JsonParserTest, Reading) {
     JsonArray list;
     ASSERT_TRUE(JsonArray::Parse("[true,]", list, allow_comma));
     EXPECT_EQ(1, list.size());
-    JsonValue* tmp_value = list.TryGet(0);
+    JsonValue* tmp_value = list.tryGet(0);
     ASSERT_TRUE(tmp_value);
     EXPECT_TRUE(tmp_value->IsBoolean());
     bool bool_value = false;
@@ -315,13 +315,13 @@ TEST(JsonParserTest, Reading) {
         JsonObject::tryParse("{\"number\":9.87654321, \"null\":null , \"\\x53\" : \"str\" }", dict));
 
     double double_val = 0.0;
-    EXPECT_TRUE(dict.TryGetWithPath("number", double_val));
+    EXPECT_TRUE(dict.tryGetWithPath("number", double_val));
     EXPECT_DOUBLE_EQ(9.87654321, double_val);
-    JsonValue* null_val = dict.TryGetWithPath("null");
+    JsonValue* null_val = dict.tryGetWithPath("null");
     ASSERT_TRUE(null_val);
     EXPECT_TRUE(null_val->IsNull());
     StringSpan str_val;
-    EXPECT_TRUE(dict.TryGetWithPath("S", str_val));
+    EXPECT_TRUE(dict.tryGetWithPath("S", str_val));
     EXPECT_EQ("str", str_val);
 
     JsonObject root2;
@@ -351,15 +351,15 @@ TEST(JsonParserTest, Reading) {
     // Test nesting
     JsonObject dict;
     ASSERT_TRUE(JsonObject::tryParse("{\"inner\":{\"array\":[true]},\"false\":false,\"d\":{}}", dict));
-    JsonObject* inner_dict = dict.TryGetObjectWithPath("inner");
+    JsonObject* inner_dict = dict.tryGetObjectWithPath("inner");
     ASSERT_TRUE(inner_dict);
-    JsonArray* inner_array = inner_dict->TryGetArrayWithPath("array");
+    JsonArray* inner_array = inner_dict->tryGetArrayWithPath("array");
     ASSERT_TRUE(inner_array);
     EXPECT_EQ(1, inner_array->size());
     bool bool_value = true;
-    EXPECT_TRUE(dict.TryGetWithPath("false", bool_value));
+    EXPECT_TRUE(dict.tryGetWithPath("false", bool_value));
     EXPECT_FALSE(bool_value);
-    inner_dict = dict.TryGetObjectWithPath("d");
+    inner_dict = dict.tryGetObjectWithPath("d");
     EXPECT_TRUE(inner_dict);
 
     JsonObject root2;
@@ -372,20 +372,20 @@ TEST(JsonParserTest, Reading) {
     JsonObject dict;
     ASSERT_TRUE(JsonObject::tryParse("{\"a.b\":3,\"c\":2,\"d.e.f\":{\"g.h.i.j\":1}}", dict));
     int integer_value = 0;
-    EXPECT_TRUE(dict.TryGet("a.b", integer_value));
+    EXPECT_TRUE(dict.tryGet("a.b", integer_value));
     EXPECT_EQ(3, integer_value);
-    EXPECT_TRUE(dict.TryGet("c", integer_value));
+    EXPECT_TRUE(dict.tryGet("c", integer_value));
     EXPECT_EQ(2, integer_value);
-    JsonObject* inner_dict = dict.TryGetObject("d.e.f");
+    JsonObject* inner_dict = dict.tryGetObject("d.e.f");
     ASSERT_TRUE(inner_dict);
     EXPECT_EQ(1, inner_dict->size());
-    EXPECT_TRUE(inner_dict->TryGet("g.h.i.j", integer_value));
+    EXPECT_TRUE(inner_dict->tryGet("g.h.i.j", integer_value));
     EXPECT_EQ(1, integer_value);
 
     ASSERT_TRUE(JsonObject::tryParse("{\"a\":{\"b\":2},\"a.b\":1}", dict));
-    EXPECT_TRUE(dict.TryGetWithPath("a.b", integer_value));
+    EXPECT_TRUE(dict.tryGetWithPath("a.b", integer_value));
     EXPECT_EQ(2, integer_value);
-    EXPECT_TRUE(dict.TryGet("a.b", integer_value));
+    EXPECT_TRUE(dict.tryGet("a.b", integer_value));
     EXPECT_EQ(1, integer_value);
   }
 
@@ -444,7 +444,7 @@ TEST(JsonParserTest, Reading) {
 
     JsonObject dict;
     ASSERT_TRUE(JsonObject::tryParse("{\"path\": \"/tmp/\xc3\xa0\xc3\xa8\xc3\xb2.png\"}", dict));
-    EXPECT_TRUE(dict.TryGetWithPath("path", str_val));
+    EXPECT_TRUE(dict.tryGetWithPath("path", str_val));
     EXPECT_EQ("/tmp/\xC3\xA0\xC3\xA8\xC3\xB2.png", str_val);
   }
 
@@ -567,7 +567,7 @@ TEST(JsonParserTest, ConsumeObject) {
 
   ASSERT_TRUE(value.IsObject());
   StringSpan str;
-  EXPECT_TRUE(value.AsObject().TryGetWithPath("abc", str));
+  EXPECT_TRUE(value.AsObject().tryGetWithPath("abc", str));
   EXPECT_EQ("def", str);
 }
 

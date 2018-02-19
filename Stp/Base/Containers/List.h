@@ -78,7 +78,7 @@ class List {
   void insertRange(int at, SpanType src);
 
   void RemoveLast();
-  void RemoveAt(int at) { removeRange(at, 1); }
+  void removeAt(int at) { removeRange(at, 1); }
   void removeRange(int at, int n);
 
   void truncate(int at);

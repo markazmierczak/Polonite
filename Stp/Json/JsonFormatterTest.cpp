@@ -54,16 +54,16 @@ TEST(JsonFormatterTest, NestedTypes) {
 
 TEST(JsonFormatterTest, KeysWithPeriods) {
   JsonObject period_dict;
-  period_dict.Set("a.b", 3);
-  period_dict.Set("c", 2);
+  period_dict.set("a.b", 3);
+  period_dict.set("c", 2);
   JsonObject period_dict2;
-  period_dict2.Set("g.h.i.j", 1);
-  period_dict.Set("d.e.f", move(period_dict2));
+  period_dict2.set("g.h.i.j", 1);
+  period_dict.set("d.e.f", move(period_dict2));
   EXPECT_EQ("{\"a.b\":3,\"c\":2,\"d.e.f\":{\"g.h.i.j\":1}}", FormattableToString(period_dict));
 
   JsonObject period_dict3;
   period_dict3.SetWithPath("a.b", 2);
-  period_dict3.Set("a.b", 1);
+  period_dict3.set("a.b", 1);
   EXPECT_EQ("{\"a\":{\"b\":2},\"a.b\":1}", FormattableToString(period_dict3));
 }
 

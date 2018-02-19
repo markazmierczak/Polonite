@@ -16,7 +16,7 @@ bool File::Exists(const FilePath& path) {
   return ::GetFileAttributesW(ToNullTerminated(path)) != INVALID_FILE_ATTRIBUTES;
 }
 
-SystemErrorCode File::TryGetInfo(const FilePath& path, FileInfo& out) {
+SystemErrorCode File::tryGetInfo(const FilePath& path, FileInfo& out) {
   if (!::GetFileAttributesExW(ToNullTerminated(path), GetFileExInfoStandard, &out.attr_data_))
     return GetLastWinErrorCode();
   return WinErrorCode::Success;

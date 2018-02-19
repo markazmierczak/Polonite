@@ -20,7 +20,7 @@ class BASE_EXPORT Directory {
   static SystemErrorCode TryCreate(const FilePath& path);
 
   static void RemoveEmpty(const FilePath& path);
-  static SystemErrorCode TryRemoveEmpty(const FilePath& path);
+  static SystemErrorCode tryRemoveEmpty(const FilePath& path);
 
   // Creates a directory, as well as creating any parent directories, if they don't exist.
   // Returns 'true' on successful creation, or if the directory already exists.
@@ -41,7 +41,7 @@ class BASE_EXPORT Directory {
     int64_t available; // similar to free, but takes disk quotas into account
   };
   static DriveSpaceInfo GetDriveSpaceInfo(const FilePath& path);
-  static SystemErrorCode TryGetDriveSpaceInfo(const FilePath& path, DriveSpaceInfo& out_info);
+  static SystemErrorCode tryGetDriveSpaceInfo(const FilePath& path, DriveSpaceInfo& out_info);
 };
 
 } // namespace stp

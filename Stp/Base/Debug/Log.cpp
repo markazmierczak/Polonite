@@ -220,7 +220,7 @@ static void ParseMatchers(StringSpan input) {
 void InitLogging() {
   auto& command_line = CommandLine::ForCurrentProcess();
 
-  const String* v = command_line.TryGet("v");
+  const String* v = command_line.tryGet("v");
   if (v) {
     if (tryParse(*v, g_max_log_level) != ParseIntegerErrorCode::Ok) {
       g_max_log_level = 0;
@@ -228,7 +228,7 @@ void InitLogging() {
     }
   }
 
-  const String* vmodule = command_line.TryGet("v");
+  const String* vmodule = command_line.tryGet("v");
   if (vmodule)
     ParseMatchers(*vmodule);
 }

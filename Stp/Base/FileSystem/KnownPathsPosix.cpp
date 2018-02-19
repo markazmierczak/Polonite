@@ -14,7 +14,7 @@ namespace stp {
 FilePath GetTempDirPath() {
   auto provider = []() {
     FilePath path;
-    if (Environment::TryGet("TMPDIR", path))
+    if (Environment::tryGet("TMPDIR", path))
       return path;
 
     #if OS(ANDROID)
@@ -36,7 +36,7 @@ FilePath GetHomeDirPath() {
         "home directory lookup not yet implemented for Android");
     #else
     FilePath path;
-    if (Environment::TryGet("HOME", path))
+    if (Environment::tryGet("HOME", path))
       return path;
 
     ASSERT(false, "unable to get home directory");

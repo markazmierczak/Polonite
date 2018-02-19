@@ -59,11 +59,11 @@ class BASE_EXPORT CommandLine {
 
   // Returns true if this command line contains the given switch.
   bool Has(StringSpan name) const;
-  const String* TryGet(StringSpan name) const;
-  const String* TryGetAscii(StringSpan name) const;
-  bool TryGetInt(StringSpan name, int& out_value) const;
-  bool TryGetFloat(StringSpan name, double& out_value) const;
-  bool TryGet(StringSpan name, FilePath& out_value) const;
+  const String* tryGet(StringSpan name) const;
+  const String* tryGetAscii(StringSpan name) const;
+  bool tryGetInt(StringSpan name, int& out_value) const;
+  bool tryGetFloat(StringSpan name, double& out_value) const;
+  bool tryGet(StringSpan name, FilePath& out_value) const;
   bool Equals(StringSpan name, StringSpan value) const;
 
   void SetProgramName(StringSpan name) { program_name_ = name; }

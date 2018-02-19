@@ -36,12 +36,12 @@ TEST(FlatSetTest, Remove) {
   set.tryAdd(1);
   set.tryAdd(5);
   set.tryAdd(3);
-  EXPECT_FALSE(set.TryRemove(4));
+  EXPECT_FALSE(set.tryRemove(4));
   set.tryAdd(4);
-  EXPECT_TRUE(set.TryRemove(4));
-  EXPECT_FALSE(set.TryRemove(4));
+  EXPECT_TRUE(set.tryRemove(4));
+  EXPECT_FALSE(set.tryRemove(4));
   set.tryAdd(4);
-  set.TryRemove(4);
+  set.tryRemove(4);
 }
 
 TEST(FlatSetTest, String) {

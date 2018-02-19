@@ -334,7 +334,7 @@ bool WaitableEvent::SignalOne() {
       return false;
 
     const bool r = kernel_->waiters_.getFirst()->Fire(this);
-    kernel_->waiters_.RemoveAt(0);
+    kernel_->waiters_.removeAt(0);
     if (r)
       return true;
   }
@@ -351,7 +351,7 @@ bool WaitableEvent::WaitableEventKernel::Dequeue(Waiter* searched, void* tag) {
   for (int i = 0; i < waiters_.size(); ++i) {
     Waiter* waiter = waiters_[i];
     if (waiter == searched && waiter->compare(tag)) {
-      waiters_.RemoveAt(i);
+      waiters_.removeAt(i);
       return true;
     }
   }

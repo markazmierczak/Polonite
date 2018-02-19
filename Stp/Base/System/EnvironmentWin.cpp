@@ -14,9 +14,9 @@
 
 namespace stp {
 
-bool Environment::TryGet(StringSpan name, String& out_value) {
+bool Environment::tryGet(StringSpan name, String& out_value) {
   WString wvalue;
-  bool ok = TryGet(ToNullTerminated(ToWString(name)), wvalue);
+  bool ok = tryGet(ToNullTerminated(ToWString(name)), wvalue);
   if (ok) {
     out_value.clear();
     appendWtf(out_value, wvalue);
@@ -24,7 +24,7 @@ bool Environment::TryGet(StringSpan name, String& out_value) {
   return ok;
 }
 
-bool Environment::TryGetNative(const wchar_t* name, WString& out_value) {
+bool Environment::tryGetNative(const wchar_t* name, WString& out_value) {
   int size = 1; // including null terminator
   while (true) {
     out_value.clear();
@@ -40,12 +40,12 @@ bool Environment::TryGetNative(const wchar_t* name, WString& out_value) {
   return true;
 }
 
-bool Environment::TryGet(StringSpan name, FilePath& out_path) {
-  return TryGet(ToNullTerminated(ToWString(name)), out_path);
+bool Environment::tryGet(StringSpan name, FilePath& out_path) {
+  return tryGet(ToNullTerminated(ToWString(name)), out_path);
 }
 
-bool Environment::TryGet(const wchar_t* name, FilePath& out_path) {
-  return TryGetNative(name, out_path.chars());
+bool Environment::tryGet(const wchar_t* name, FilePath& out_path) {
+  return tryGetNative(name, out_path.chars());
 }
 
 bool Environment::Has(StringSpan name) {

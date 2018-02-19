@@ -56,9 +56,9 @@ class SinglyLinkedList {
 
   T* TakeFirst();
 
-  bool contains(const T& value) const { return Find(value) != nullptr; }
+  bool contains(const T& value) const { return find(value) != nullptr; }
 
-  T* Find(const T& value) const;
+  T* find(const T& value) const;
 
   // Really slow, that's because it's not named size().
   int Count() const;
@@ -190,7 +190,7 @@ inline T* SinglyLinkedList<T>::Last() const {
 }
 
 template<typename T>
-inline T* SinglyLinkedList<T>::Find(const T& value) const {
+inline T* SinglyLinkedList<T>::find(const T& value) const {
   for (T* n = head(); n != nullptr; n = n->next()) {
     if (*n == value)
       return n;

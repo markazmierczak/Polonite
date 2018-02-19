@@ -132,7 +132,7 @@ bool Xform2::PreservesRightAngles(float tolerance) const {
 bool isFinite(const Xform2& xform) {
   float accumulator = 0;
   for (int i = 0; i < Xform2::EntryCount; ++i)
-    accumulator *= xform.Get(i);
+    accumulator *= xform.get(i);
   return accumulator == 0;
 }
 
@@ -436,17 +436,17 @@ void Xform2::SetAffine(const Affine& affine) {
   if (affine.IsScaleTranslate()) {
     if (affine.IsTranslate()) {
       SetTranslate(
-          affine.Get(Affine::EntryTransX), affine.Get(Affine::EntryTransY));
+          affine.get(Affine::EntryTransX), affine.get(Affine::EntryTransY));
     } else {
       SetScaleTranslate(
-          affine.Get(Affine::EntryScaleX), affine.Get(Affine::EntryScaleY),
-          affine.Get(Affine::EntryTransX), affine.Get(Affine::EntryTransY));
+          affine.get(Affine::EntryScaleX), affine.get(Affine::EntryScaleY),
+          affine.get(Affine::EntryTransX), affine.get(Affine::EntryTransY));
     }
   } else {
     *this = Xform2(
-        affine.Get(Affine::EntryScaleX), affine.Get(Affine::EntryShearY),
-        affine.Get(Affine::EntryShearX), affine.Get(Affine::EntryScaleY),
-        affine.Get(Affine::EntryTransX), affine.Get(Affine::EntryTransY));
+        affine.get(Affine::EntryScaleX), affine.get(Affine::EntryShearY),
+        affine.get(Affine::EntryShearX), affine.get(Affine::EntryScaleY),
+        affine.get(Affine::EntryTransX), affine.get(Affine::EntryTransY));
   }
 }
 
@@ -908,7 +908,7 @@ void Xform2::MapVectors(Vector2 dst[], const Vector2 src[], int count) const {
 
 bool IsNear(const Xform2& lhs, const Xform2& rhs, float tolerance) {
   for (int i = 0; i < Xform2::EntryCount; ++i) {
-    if (!IsNear(lhs.Get(i), rhs.Get(i), tolerance))
+    if (!IsNear(lhs.get(i), rhs.get(i), tolerance))
       return false;
   }
   return true;

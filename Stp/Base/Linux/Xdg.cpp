@@ -16,7 +16,7 @@ constexpr char Xdg::DotConfigDir[];
 FilePath Xdg::GetDirectory(const char* env_name, StringSpan fallback_dir) {
   FilePath path;
   String env_value;
-  if (Environment::TryGet(env_name, path)) {
+  if (Environment::tryGet(env_name, path)) {
     path.StripTrailingSeparators();
   } else {
     path = GetHomeDirPath();
@@ -43,7 +43,7 @@ FilePath Xdg::GetUserDirectory(const char* dir_name, StringSpan fallback_dir) {
 static DesktopEnvironment GetKdeDesktopEnvironment() {
   // The KDE session version environment variable introduced in KDE 4.
   int kde_session;
-  if (Environment::TryGet("KDE_SESSION_VERSION", kde_session)) {
+  if (Environment::tryGet("KDE_SESSION_VERSION", kde_session)) {
     if (kde_session >= 5)
       return DesktopEnvironment::Kde5;
     return DesktopEnvironment::Kde4;
@@ -54,13 +54,13 @@ static DesktopEnvironment GetKdeDesktopEnvironment() {
 DesktopEnvironment Xdg::GetDesktopEnvironment() {
   // XDG_CURRENT_DESKTOP is the newest standard circa 2012.
   /* FIXME String xdg_current_desktop;
-  if (Environment::TryGet("XDG_CURRENT_DESKTOP", xdg_current_desktop)) {
+  if (Environment::tryGet("XDG_CURRENT_DESKTOP", xdg_current_desktop)) {
     // Not all desktop environments set this env var as of this writing.
     if (StartsWith(xdg_current_desktop, "Unity")) {
       // gnome-fallback sessions set XDG_CURRENT_DESKTOP to Unity
       // DESKTOP_SESSION can be gnome-fallback or gnome-fallback-compiz
       String desktop_session;
-      if (Environment::TryGet("DESKTOP_SESSION", desktop_session) &&
+      if (Environment::tryGet("DESKTOP_SESSION", desktop_session) &&
           containsRange(desktop_session, "gnome-fallback")) {
         return DesktopEnvironment::Gnome;
       }
@@ -76,7 +76,7 @@ DesktopEnvironment Xdg::GetDesktopEnvironment() {
 
   // DESKTOP_SESSION was what everyone used in 2010.
   String desktop_session;
-  if (Environment::TryGet("DESKTOP_SESSION", desktop_session)) {
+  if (Environment::tryGet("DESKTOP_SESSION", desktop_session)) {
     if (desktop_session == "gnome" || desktop_session =="mate")
       return DesktopEnvironment::Gnome;
     if (desktop_session == "kde4" || desktop_session == "kde-plasma")

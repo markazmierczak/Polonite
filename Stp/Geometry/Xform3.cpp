@@ -645,17 +645,17 @@ void Xform3::SkewYRadians(double ay) {
 
 void Xform3::SetAffine(const Affine& affine) {
   SetAffine(
-      affine.Get(Affine::EntryScaleX), affine.Get(Affine::EntryShearY),
-      affine.Get(Affine::EntryShearX), affine.Get(Affine::EntryScaleY),
-      affine.Get(Affine::EntryTransX), affine.Get(Affine::EntryTransY));
+      affine.get(Affine::EntryScaleX), affine.get(Affine::EntryShearY),
+      affine.get(Affine::EntryShearX), affine.get(Affine::EntryScaleY),
+      affine.get(Affine::EntryTransX), affine.get(Affine::EntryTransY));
 }
 
 void Xform3::SetXform2d(const Xform2& x) {
   *this = Xform3(
-      x.Get(Xform2::EntryScaleX), x.Get(Xform2::EntryShearX), 0, x.Get(Xform2::EntryTransX),
-      x.Get(Xform2::EntryShearY), x.Get(Xform2::EntryScaleY), 0, x.Get(Xform2::EntryTransY),
+      x.get(Xform2::EntryScaleX), x.get(Xform2::EntryShearX), 0, x.get(Xform2::EntryTransX),
+      x.get(Xform2::EntryShearY), x.get(Xform2::EntryScaleY), 0, x.get(Xform2::EntryTransY),
       0, 0, 0, 0,
-      x.Get(Xform2::EntryPersp0), x.Get(Xform2::EntryPersp1), 0, x.Get(Xform2::EntryLast));
+      x.get(Xform2::EntryPersp0), x.get(Xform2::EntryPersp1), 0, x.get(Xform2::EntryLast));
 
   if (x.IsScaleTranslate()) {
     if (x.IsIdentity())
@@ -699,7 +699,7 @@ void Xform3::ApplyPerspectiveDepth(float depth) {
     Set(3, 2, -1 / depth);
   } else {
     Xform3 m(InitWithIdentity);
-    m.Set(3, 2, -1 / depth);
+    m.set(3, 2, -1 / depth);
     Concat(m);
   }
 }
@@ -1198,22 +1198,22 @@ bool isFinite(const Xform3& xform) {
   float accumulator = 0;
   for (int row = 0; row < 4; ++row) {
     for (int col = 0; col < 4; ++col)
-      accumulator *= xform.Get(row, col);
+      accumulator *= xform.get(row, col);
   }
   return accumulator == 0;
 }
 
 // Returns false if the matrix cannot be normalized.
 static bool TryNormalize(Xform3& m) {
-  if (m.Get(3, 3) == 0) {
+  if (m.get(3, 3) == 0) {
     // Cannot normalize.
     return false;
   }
 
-  float scale = 1 / m.Get(3, 3);
+  float scale = 1 / m.get(3, 3);
   for (int i = 0; i < 4; i++) {
     for (int j = 0; j < 4; j++)
-      m.Set(i, j, m.Get(i, j) * scale);
+      m.set(i, j, m.get(i, j) * scale);
   }
   return true;
 }
@@ -1251,8 +1251,8 @@ bool Xform3::Decompose(DecomposedXform3& out) const {
   Xform3 perspective_matrix = matrix;
 
   for (int i = 0; i < 3; ++i)
-    perspective_matrix.Set(3, i, 0);
-  perspective_matrix.Set(3, 3, 1);
+    perspective_matrix.set(3, i, 0);
+  perspective_matrix.set(3, 3, 1);
 
   // If the perspective matrix is not invertible, we are also unable to
   // decompose, so we'll bail early.
@@ -1263,10 +1263,10 @@ bool Xform3::Decompose(DecomposedXform3& out) const {
       matrix.GetEntry(EntryPersp1) != 0 ||
       matrix.GetEntry(EntryPersp2) != 0) {
     float rhs[4] = {
-      matrix.Get(3, 0),
-      matrix.Get(3, 1),
-      matrix.Get(3, 2),
-      matrix.Get(3, 3)
+      matrix.get(3, 0),
+      matrix.get(3, 1),
+      matrix.get(3, 2),
+      matrix.get(3, 3)
     };
 
     // Solve the equation by inverting perspective_matrix and multiplying
@@ -1292,7 +1292,7 @@ bool Xform3::Decompose(DecomposedXform3& out) const {
 
   Vector3 rows[3];
   for (int i = 0; i < 3; i++)
-    rows[i] = Vector3(matrix.Get(0, i), matrix.Get(1, i), matrix.Get(2, i));
+    rows[i] = Vector3(matrix.get(0, i), matrix.get(1, i), matrix.get(2, i));
 
   // Compute X scale factor and normalize first row.
   out.scale[0] = rows[0].GetLength();
@@ -1359,19 +1359,19 @@ static void ApplyShear(Xform3* xform, const float* decomp) {
   Xform3 temp(Xform3::InitWithIdentity);
   Xform3 skew_xform(Xform3::InitWithIdentity);
   if (decomp[0] || decomp[1] || decomp[2]) {
-    temp.Set(1, 2, decomp[2]);
+    temp.set(1, 2, decomp[2]);
     skew_xform.Concat(temp);
   }
 
   if (decomp[1]) {
-    temp.Set(1, 2, 0);
-    temp.Set(0, 2, decomp[1]);
+    temp.set(1, 2, 0);
+    temp.set(0, 2, decomp[1]);
     skew_xform.Concat(temp);
   }
 
   if (decomp[0]) {
-    temp.Set(0, 2, 0);
-    temp.Set(0, 1, decomp[0]);
+    temp.set(0, 2, 0);
+    temp.set(0, 1, decomp[0]);
     skew_xform.Concat(temp);
   }
   xform->Concat(skew_xform);
@@ -1396,7 +1396,7 @@ bool IsNear(const Xform3& lhs, const Xform3& rhs, float tolerance) {
 
   for (int row = 0; row < 4; row++) {
     for (int col = 0; col < 4; col++) {
-      const float delta = Abs(lhs.Get(row, col) - rhs.Get(row, col));
+      const float delta = Abs(lhs.get(row, col) - rhs.get(row, col));
       const float tolerance = (col == 3 && row < 3) ? TranslationTolerance : ComponentTolerance;
       if (delta > tolerance)
         return false;

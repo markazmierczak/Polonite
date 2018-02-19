@@ -47,9 +47,9 @@ class TextEncodingRegistry {
   }
 
   TextEncoding FindByName(StringSpan name) {
-    auto find_result = by_name_.Find(name);
+    auto find_result = by_name_.find(name);
     if (find_result)
-      return find_result.Get();
+      return find_result.get();
 
     TextEncoding encoding = Resolve([&name](TextEncodingProvider* provider) {
       return provider->TryResolveByName(name);

@@ -24,7 +24,7 @@ bool File::Exists(const FilePath& path) {
   return ::access(ToNullTerminated(path), F_OK) == 0;
 }
 
-SystemErrorCode File::TryGetInfo(const FilePath& path, FileInfo& out) {
+SystemErrorCode File::tryGetInfo(const FilePath& path, FileInfo& out) {
   if (posix::CallStat(ToNullTerminated(path), &out.stat_) != 0)
     return GetLastPosixErrorCode();
   return PosixErrorCode::Ok;
@@ -99,7 +99,7 @@ FilePath File::ReadSymbolicLink(const FilePath& symlink) {
   return target;
 }
 
-SystemErrorCode File::TryGetPosixPermissions(const FilePath& path, int& out_mode) {
+SystemErrorCode File::tryGetPosixPermissions(const FilePath& path, int& out_mode) {
   stat_wrapper_t file_info;
   if (posix::CallStat(ToNullTerminated(path), &file_info) != 0)
     return GetLastPosixErrorCode();
@@ -127,7 +127,7 @@ SystemErrorCode File::TrySetPosixPermissions(const FilePath& path, int mode) {
 
 int File::GetPosixPermissions(const FilePath& path) {
   int mode;
-  auto error_code = TryGetPosixPermissions(path, mode);
+  auto error_code = tryGetPosixPermissions(path, mode);
   if (!IsOk(error_code))
     throw FileSystemException(error_code, path);
   return mode;

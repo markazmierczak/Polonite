@@ -52,16 +52,16 @@ class BASE_EXPORT JsonArray : public JsonValue {
   template<typename T>
   void Set(int at, T&& arg) { Set(at, JsonValue(Forward<T>(arg))); }
 
-  const JsonValue* TryGet(int at) const;
-  JsonValue* TryGet(int at);
+  const JsonValue* tryGet(int at) const;
+  JsonValue* tryGet(int at);
 
   template<typename T>
-  bool TryGet(int at, T& out_value) const;
+  bool tryGet(int at, T& out_value) const;
 
-  const JsonArray* TryGetArray(int at) const;
-  JsonArray* TryGetArray(int at);
-  const JsonObject* TryGetObject(int at) const;
-  JsonObject* TryGetObject(int at);
+  const JsonArray* tryGetArray(int at) const;
+  JsonArray* tryGetArray(int at);
+  const JsonObject* tryGetObject(int at) const;
+  JsonObject* tryGetObject(int at);
 
   void add(JsonValue value);
 
@@ -70,7 +70,7 @@ class BASE_EXPORT JsonArray : public JsonValue {
 
   void RemoveLast();
 
-  void RemoveAt(int at);
+  void removeAt(int at);
 
   void removeRange(int at, int n);
 
@@ -103,8 +103,8 @@ class BASE_EXPORT JsonArray : public JsonValue {
 static_assert(sizeof(JsonArray) == sizeof(JsonValue), "!");
 
 template<typename T>
-inline bool JsonArray::TryGet(int at, T& out_value) const {
-  auto* value = TryGet(at);
+inline bool JsonArray::tryGet(int at, T& out_value) const {
+  auto* value = tryGet(at);
   return value ? value->TryCastTo(out_value) : false;
 }
 

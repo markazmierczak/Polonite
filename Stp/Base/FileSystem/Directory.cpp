@@ -24,7 +24,7 @@ void Directory::CreatePath(const FilePath& path) {
 }
 
 void Directory::RemoveEmpty(const FilePath& path) {
-  auto error_code = TryRemoveEmpty(path);
+  auto error_code = tryRemoveEmpty(path);
   if (!IsOk(error_code))
     throw FileSystemException(error_code, path);
 }
@@ -117,7 +117,7 @@ uint64_t Directory::ComputeSize(const FilePath& path) {
 
 Directory::DriveSpaceInfo Directory::GetDriveSpaceInfo(const FilePath& path) {
   DriveSpaceInfo info;
-  auto error_code = TryGetDriveSpaceInfo(path, info);
+  auto error_code = tryGetDriveSpaceInfo(path, info);
   if (!IsOk(error_code))
     throw FileSystemException(error_code, path);
   return info;

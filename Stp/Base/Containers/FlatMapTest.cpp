@@ -37,12 +37,12 @@ TEST(FlatMapTest, Remove) {
   map.tryAdd(1, 1);
   map.tryAdd(5, 5);
   map.tryAdd(3, 3);
-  EXPECT_FALSE(map.TryRemove(4));
+  EXPECT_FALSE(map.tryRemove(4));
   map.tryAdd(4, 4);
-  EXPECT_TRUE(map.TryRemove(4));
-  EXPECT_FALSE(map.TryRemove(4));
+  EXPECT_TRUE(map.tryRemove(4));
+  EXPECT_FALSE(map.tryRemove(4));
   map.tryAdd(4, 4);
-  map.TryRemove(4);
+  map.tryRemove(4);
 }
 
 TEST(FlatMapTest, String) {

@@ -33,7 +33,7 @@ class HashSet {
   bool tryAdd(U&& value) { return map_.tryAdd(Forward<U>(value), DummyEmpty()); }
 
   template<typename U>
-  bool TryRemove(const U& value) { return map_.TryRemove(value); }
+  bool tryRemove(const U& value) { return map_.tryRemove(value); }
 
   template<typename U>
   bool contains(const U& value) const { return map_.contains(value); }

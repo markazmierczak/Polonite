@@ -43,8 +43,8 @@ void JsonArray::RemoveLast() {
   impl().RemoveLast();
 }
 
-void JsonArray::RemoveAt(int at) {
-  impl().RemoveAt(at);
+void JsonArray::removeAt(int at) {
+  impl().removeAt(at);
 }
 
 void JsonArray::removeRange(int at, int n) {
@@ -68,33 +68,33 @@ void JsonArray::Set(int at, JsonValue value) {
   add(move(value));
 }
 
-const JsonValue* JsonArray::TryGet(int at) const {
-  return const_cast<JsonArray*>(this)->TryGet(at);
+const JsonValue* JsonArray::tryGet(int at) const {
+  return const_cast<JsonArray*>(this)->tryGet(at);
 }
 
-JsonValue* JsonArray::TryGet(int at) {
+JsonValue* JsonArray::tryGet(int at) {
   return at < size() ? (data() + at) : nullptr;
 }
 
 template<typename T>
-static inline T* TryGetTmpl(const JsonArray& array, int at) {
-  auto* v = array.TryGet(at);
+static inline T* tryGetTmpl(const JsonArray& array, int at) {
+  auto* v = array.tryGet(at);
   bool ok = v && T::JsonClassOf(v);
   return const_cast<T*>(ok ? reinterpret_cast<const T*>(v) : nullptr);
 }
 
-const JsonArray* JsonArray::TryGetArray(int at) const {
-  return TryGetTmpl<JsonArray>(*this, at);
+const JsonArray* JsonArray::tryGetArray(int at) const {
+  return tryGetTmpl<JsonArray>(*this, at);
 }
-JsonArray* JsonArray::TryGetArray(int at) {
-  return TryGetTmpl<JsonArray>(*this, at);
+JsonArray* JsonArray::tryGetArray(int at) {
+  return tryGetTmpl<JsonArray>(*this, at);
 }
 
-const JsonObject* JsonArray::TryGetObject(int at) const {
-  return TryGetTmpl<JsonObject>(*this, at);
+const JsonObject* JsonArray::tryGetObject(int at) const {
+  return tryGetTmpl<JsonObject>(*this, at);
 }
-JsonObject* JsonArray::TryGetObject(int at) {
-  return TryGetTmpl<JsonObject>(*this, at);
+JsonObject* JsonArray::tryGetObject(int at) {
+  return tryGetTmpl<JsonObject>(*this, at);
 }
 
 bool JsonArray::Parse(StringSpan input, JsonArray& output, const JsonOptions& options) {

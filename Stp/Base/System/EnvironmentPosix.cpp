@@ -13,18 +13,18 @@ namespace stp {
 
 BasicLock Environment::g_lock_ = BASIC_LOCK_INITIALIZER;
 
-bool Environment::TryGet(StringSpan name, String& out_value) {
-  return TryGet(ToNullTerminated(String(name)), out_value);
+bool Environment::tryGet(StringSpan name, String& out_value) {
+  return tryGet(ToNullTerminated(String(name)), out_value);
 }
 
-bool Environment::TryGet(const char* name, String& out_value) {
+bool Environment::tryGet(const char* name, String& out_value) {
   #if HAVE_UTF8_NATIVE_VALIDATION
-  if (!TryGetNative(name, out_value))
+  if (!tryGetNative(name, out_value))
     return false;
   ASSERT(Utf8::Validate(out_value));
   #else
   String mbvalue;
-  if (!TryGetNative(name, mbvalue))
+  if (!tryGetNative(name, mbvalue))
     return false;
   out_value.clear();
   appendWtf(out_value, mbvalue);
@@ -32,7 +32,7 @@ bool Environment::TryGet(const char* name, String& out_value) {
   return true;
 }
 
-bool Environment::TryGetNative(const char* name, String& out_value) {
+bool Environment::tryGetNative(const char* name, String& out_value) {
   AutoLock auto_lock(&g_lock_);
   const char* mbvalue_cstr = ::getenv(name);
   if (!mbvalue_cstr)
@@ -41,12 +41,12 @@ bool Environment::TryGetNative(const char* name, String& out_value) {
   return true;
 }
 
-bool Environment::TryGet(StringSpan name, FilePath& out_path) {
-  return TryGet(ToNullTerminated(String(name)), out_path);
+bool Environment::tryGet(StringSpan name, FilePath& out_path) {
+  return tryGet(ToNullTerminated(String(name)), out_path);
 }
 
-bool Environment::TryGet(const char* name, FilePath& out_path) {
-  return TryGetNative(name, out_path.chars());
+bool Environment::tryGet(const char* name, FilePath& out_path) {
+  return tryGetNative(name, out_path.chars());
 }
 
 bool Environment::Has(StringSpan name) {

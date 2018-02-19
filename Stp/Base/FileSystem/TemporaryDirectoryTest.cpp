@@ -18,14 +18,14 @@ TEST(TemporaryDirectory, FullPath) {
   EXPECT_TRUE(DirectoryExists(test_path));
   {
     TemporaryDirectory dir;
-    EXPECT_TRUE(dir.Set(test_path));
+    EXPECT_TRUE(dir.set(test_path));
     EXPECT_TRUE(dir.IsValid());
   }
   EXPECT_FALSE(DirectoryExists(test_path));
 
   {
     TemporaryDirectory dir;
-    EXPECT_TRUE(dir.Set(test_path));
+    EXPECT_TRUE(dir.set(test_path));
     // Now the dir doesn't exist, so ensure that it gets created.
     EXPECT_TRUE(DirectoryExists(test_path));
     // When we call release(), it shouldn't get destroyed when leaving scope.
@@ -38,7 +38,7 @@ TEST(TemporaryDirectory, FullPath) {
   // Clean up.
   {
     TemporaryDirectory dir;
-    EXPECT_TRUE(dir.Set(test_path));
+    EXPECT_TRUE(dir.set(test_path));
   }
   EXPECT_FALSE(DirectoryExists(test_path));
 }
@@ -86,7 +86,7 @@ TEST(TemporaryDirectory, MultipleInvocations) {
   EXPECT_TRUE(dir.Create());
   EXPECT_FALSE(dir.Create());
   TemporaryDirectory other_dir;
-  EXPECT_TRUE(other_dir.Set(dir.Take()));
+  EXPECT_TRUE(other_dir.set(dir.Take()));
   EXPECT_TRUE(dir.Create());
   EXPECT_FALSE(dir.Create());
   EXPECT_FALSE(other_dir.Create());

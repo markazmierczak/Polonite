@@ -12,49 +12,49 @@ namespace stp {
 namespace {
 
 #define EXPECT_ROW1_EQ(a, b, c, d, transform) \
-  EXPECT_FLOAT_EQ((a), (transform).Get(0, 0)); \
-  EXPECT_FLOAT_EQ((b), (transform).Get(0, 1)); \
-  EXPECT_FLOAT_EQ((c), (transform).Get(0, 2)); \
-  EXPECT_FLOAT_EQ((d), (transform).Get(0, 3));
+  EXPECT_FLOAT_EQ((a), (transform).get(0, 0)); \
+  EXPECT_FLOAT_EQ((b), (transform).get(0, 1)); \
+  EXPECT_FLOAT_EQ((c), (transform).get(0, 2)); \
+  EXPECT_FLOAT_EQ((d), (transform).get(0, 3));
 
 #define EXPECT_ROW2_EQ(a, b, c, d, transform) \
-  EXPECT_FLOAT_EQ((a), (transform).Get(1, 0)); \
-  EXPECT_FLOAT_EQ((b), (transform).Get(1, 1)); \
-  EXPECT_FLOAT_EQ((c), (transform).Get(1, 2)); \
-  EXPECT_FLOAT_EQ((d), (transform).Get(1, 3));
+  EXPECT_FLOAT_EQ((a), (transform).get(1, 0)); \
+  EXPECT_FLOAT_EQ((b), (transform).get(1, 1)); \
+  EXPECT_FLOAT_EQ((c), (transform).get(1, 2)); \
+  EXPECT_FLOAT_EQ((d), (transform).get(1, 3));
 
 #define EXPECT_ROW3_EQ(a, b, c, d, transform) \
-  EXPECT_FLOAT_EQ((a), (transform).Get(2, 0)); \
-  EXPECT_FLOAT_EQ((b), (transform).Get(2, 1)); \
-  EXPECT_FLOAT_EQ((c), (transform).Get(2, 2)); \
-  EXPECT_FLOAT_EQ((d), (transform).Get(2, 3));
+  EXPECT_FLOAT_EQ((a), (transform).get(2, 0)); \
+  EXPECT_FLOAT_EQ((b), (transform).get(2, 1)); \
+  EXPECT_FLOAT_EQ((c), (transform).get(2, 2)); \
+  EXPECT_FLOAT_EQ((d), (transform).get(2, 3));
 
 #define EXPECT_ROW4_EQ(a, b, c, d, transform) \
-  EXPECT_FLOAT_EQ((a), (transform).Get(3, 0)); \
-  EXPECT_FLOAT_EQ((b), (transform).Get(3, 1)); \
-  EXPECT_FLOAT_EQ((c), (transform).Get(3, 2)); \
-  EXPECT_FLOAT_EQ((d), (transform).Get(3, 3)); \
+  EXPECT_FLOAT_EQ((a), (transform).get(3, 0)); \
+  EXPECT_FLOAT_EQ((b), (transform).get(3, 1)); \
+  EXPECT_FLOAT_EQ((c), (transform).get(3, 2)); \
+  EXPECT_FLOAT_EQ((d), (transform).get(3, 3)); \
 
 // Checking float values for equality close to zero is not robust using
 // EXPECT_FLOAT_EQ (see gtest documentation). So, to verify rotation matrices,
 // we must use a looser absolute error threshold in some places.
 #define EXPECT_ROW1_NEAR(a, b, c, d, transform, error_threshold) \
-  EXPECT_NEAR((a), (transform).Get(0, 0), (error_threshold)); \
-  EXPECT_NEAR((b), (transform).Get(0, 1), (error_threshold)); \
-  EXPECT_NEAR((c), (transform).Get(0, 2), (error_threshold)); \
-  EXPECT_NEAR((d), (transform).Get(0, 3), (error_threshold));
+  EXPECT_NEAR((a), (transform).get(0, 0), (error_threshold)); \
+  EXPECT_NEAR((b), (transform).get(0, 1), (error_threshold)); \
+  EXPECT_NEAR((c), (transform).get(0, 2), (error_threshold)); \
+  EXPECT_NEAR((d), (transform).get(0, 3), (error_threshold));
 
 #define EXPECT_ROW2_NEAR(a, b, c, d, transform, error_threshold) \
-  EXPECT_NEAR((a), (transform).Get(1, 0), (error_threshold)); \
-  EXPECT_NEAR((b), (transform).Get(1, 1), (error_threshold)); \
-  EXPECT_NEAR((c), (transform).Get(1, 2), (error_threshold)); \
-  EXPECT_NEAR((d), (transform).Get(1, 3), (error_threshold));
+  EXPECT_NEAR((a), (transform).get(1, 0), (error_threshold)); \
+  EXPECT_NEAR((b), (transform).get(1, 1), (error_threshold)); \
+  EXPECT_NEAR((c), (transform).get(1, 2), (error_threshold)); \
+  EXPECT_NEAR((d), (transform).get(1, 3), (error_threshold));
 
 #define EXPECT_ROW3_NEAR(a, b, c, d, transform, error_threshold) \
-  EXPECT_NEAR((a), (transform).Get(2, 0), (error_threshold)); \
-  EXPECT_NEAR((b), (transform).Get(2, 1), (error_threshold)); \
-  EXPECT_NEAR((c), (transform).Get(2, 2), (error_threshold)); \
-  EXPECT_NEAR((d), (transform).Get(2, 3), (error_threshold));
+  EXPECT_NEAR((a), (transform).get(2, 0), (error_threshold)); \
+  EXPECT_NEAR((b), (transform).get(2, 1), (error_threshold)); \
+  EXPECT_NEAR((c), (transform).get(2, 2), (error_threshold)); \
+  EXPECT_NEAR((d), (transform).get(2, 3), (error_threshold));
 
 bool PointsAreNearlyEqual(const Point3& lhs, const Point3& rhs) {
   double epsilon = 1E-4;
@@ -66,22 +66,22 @@ bool MatricesAreNearlyEqual(const Xform3& lhs, const Xform3& rhs) {
 }
 
 void InitializeTestMatrix(Xform3& transform) {
-  transform.Set(0, 0, 10.f);
-  transform.Set(1, 0, 11.f);
-  transform.Set(2, 0, 12.f);
-  transform.Set(3, 0, 13.f);
-  transform.Set(0, 1, 14.f);
-  transform.Set(1, 1, 15.f);
-  transform.Set(2, 1, 16.f);
-  transform.Set(3, 1, 17.f);
-  transform.Set(0, 2, 18.f);
-  transform.Set(1, 2, 19.f);
-  transform.Set(2, 2, 20.f);
-  transform.Set(3, 2, 21.f);
-  transform.Set(0, 3, 22.f);
-  transform.Set(1, 3, 23.f);
-  transform.Set(2, 3, 24.f);
-  transform.Set(3, 3, 25.f);
+  transform.set(0, 0, 10.f);
+  transform.set(1, 0, 11.f);
+  transform.set(2, 0, 12.f);
+  transform.set(3, 0, 13.f);
+  transform.set(0, 1, 14.f);
+  transform.set(1, 1, 15.f);
+  transform.set(2, 1, 16.f);
+  transform.set(3, 1, 17.f);
+  transform.set(0, 2, 18.f);
+  transform.set(1, 2, 19.f);
+  transform.set(2, 2, 20.f);
+  transform.set(3, 2, 21.f);
+  transform.set(0, 3, 22.f);
+  transform.set(1, 3, 23.f);
+  transform.set(2, 3, 24.f);
+  transform.set(3, 3, 25.f);
 
   // Sanity check
   EXPECT_ROW1_EQ(10.0f, 14.0f, 18.0f, 22.0f, transform);
@@ -91,22 +91,22 @@ void InitializeTestMatrix(Xform3& transform) {
 }
 
 void InitializeTestMatrix2(Xform3& transform) {
-  transform.Set(0, 0, 30.f);
-  transform.Set(1, 0, 31.f);
-  transform.Set(2, 0, 32.f);
-  transform.Set(3, 0, 33.f);
-  transform.Set(0, 1, 34.f);
-  transform.Set(1, 1, 35.f);
-  transform.Set(2, 1, 36.f);
-  transform.Set(3, 1, 37.f);
-  transform.Set(0, 2, 38.f);
-  transform.Set(1, 2, 39.f);
-  transform.Set(2, 2, 40.f);
-  transform.Set(3, 2, 41.f);
-  transform.Set(0, 3, 42.f);
-  transform.Set(1, 3, 43.f);
-  transform.Set(2, 3, 44.f);
-  transform.Set(3, 3, 45.f);
+  transform.set(0, 0, 30.f);
+  transform.set(1, 0, 31.f);
+  transform.set(2, 0, 32.f);
+  transform.set(3, 0, 33.f);
+  transform.set(0, 1, 34.f);
+  transform.set(1, 1, 35.f);
+  transform.set(2, 1, 36.f);
+  transform.set(3, 1, 37.f);
+  transform.set(0, 2, 38.f);
+  transform.set(1, 2, 39.f);
+  transform.set(2, 2, 40.f);
+  transform.set(3, 2, 41.f);
+  transform.set(0, 3, 42.f);
+  transform.set(1, 3, 43.f);
+  transform.set(2, 3, 44.f);
+  transform.set(3, 3, 45.f);
 
   // Sanity check
   EXPECT_ROW1_EQ(30.0f, 34.0f, 38.0f, 42.0f, transform);
@@ -119,25 +119,25 @@ constexpr float ApproxZero = Limits<float>::Epsilon;
 constexpr float ApproxOne = 1 - ApproxZero;
 
 void InitializeApproxIdentityMatrix(Xform3& transform) {
-  transform.Set(0, 0, ApproxOne);
-  transform.Set(0, 1, ApproxZero);
-  transform.Set(0, 2, ApproxZero);
-  transform.Set(0, 3, ApproxZero);
+  transform.set(0, 0, ApproxOne);
+  transform.set(0, 1, ApproxZero);
+  transform.set(0, 2, ApproxZero);
+  transform.set(0, 3, ApproxZero);
 
-  transform.Set(1, 0, ApproxZero);
-  transform.Set(1, 1, ApproxOne);
-  transform.Set(1, 2, ApproxZero);
-  transform.Set(1, 3, ApproxZero);
+  transform.set(1, 0, ApproxZero);
+  transform.set(1, 1, ApproxOne);
+  transform.set(1, 2, ApproxZero);
+  transform.set(1, 3, ApproxZero);
 
-  transform.Set(2, 0, ApproxZero);
-  transform.Set(2, 1, ApproxZero);
-  transform.Set(2, 2, ApproxOne);
-  transform.Set(2, 3, ApproxZero);
+  transform.set(2, 0, ApproxZero);
+  transform.set(2, 1, ApproxZero);
+  transform.set(2, 2, ApproxOne);
+  transform.set(2, 3, ApproxZero);
 
-  transform.Set(3, 0, ApproxZero);
-  transform.Set(3, 1, ApproxZero);
-  transform.Set(3, 2, ApproxZero);
-  transform.Set(3, 3, ApproxOne);
+  transform.set(3, 0, ApproxZero);
+  transform.set(3, 1, ApproxZero);
+  transform.set(3, 2, ApproxZero);
+  transform.set(3, 3, ApproxOne);
 }
 
 #ifdef SK_MSCALAR_IS_DOUBLE
@@ -160,10 +160,10 @@ TEST(Xform3Test, Equality) {
   for (int i = 0; i <= 100; ++i) {
     for (int row = 0; row < 4; ++row) {
       for (int col = 0; col < 4; ++col) {
-        float a = lhs.Get(row, col);
-        float b = rhs.Get(row, col);
+        float a = lhs.get(row, col);
+        float b = rhs.get(row, col);
         float t = i / 100.0f;
-        interpolated.Set(row, col, a + (b - a) * t);
+        interpolated.set(row, col, a + (b - a) * t);
       }
     }
     if (i == 100) {
@@ -422,9 +422,9 @@ TEST(Xform3Test, BlendTranslate) {
     double t = i / 9.0;
     Xform3 res(Xform3::SkipInit);
     ASSERT_TRUE(Trylerp(res, from, to, t));
-    EXPECT_FLOAT_EQ(t, res.Get(0, 3));
-    EXPECT_FLOAT_EQ(t, res.Get(1, 3));
-    EXPECT_FLOAT_EQ(t, res.Get(2, 3));
+    EXPECT_FLOAT_EQ(t, res.get(0, 3));
+    EXPECT_FLOAT_EQ(t, res.get(1, 3));
+    EXPECT_FLOAT_EQ(t, res.get(2, 3));
   }
 }
 
@@ -492,9 +492,9 @@ TEST(Xform3Test, BlendScale) {
     double t = i / 9.0;
     Xform3 res(Xform3::SkipInit);
     ASSERT_TRUE(Trylerp(res, from, to, t));
-    EXPECT_FLOAT_EQ(t * 4 + 1, res.Get(0, 0));
-    EXPECT_FLOAT_EQ(t * 3 + 1, res.Get(1, 1));
-    EXPECT_FLOAT_EQ(t * 2 + 1, res.Get(2, 2));
+    EXPECT_FLOAT_EQ(t * 4 + 1, res.get(0, 0));
+    EXPECT_FLOAT_EQ(t * 3 + 1, res.get(1, 1));
+    EXPECT_FLOAT_EQ(t * 2 + 1, res.get(2, 2));
   }
 }
 
@@ -554,7 +554,7 @@ TEST(Xform3Test, BlendIdentity) {
 TEST(Xform3Test, CannotBlendSingularMatrix) {
   Xform3 from = Xform3::Identity();
   Xform3 to = Xform3::Identity();
-  to.Set(3, 3, 0);
+  to.set(3, 3, 0);
   Xform3 res(Xform3::SkipInit);
   EXPECT_FALSE(Trylerp(res, from, to, 0.5));
 }
@@ -971,10 +971,10 @@ TEST(Xform3Test, VerifyBlendForCompositeTransform) {
   // Normalizing means dividing everything by expected_end_of_animation.m44().
   Xform3 normalized_expected_end_of_animation = expected_end_of_animation;
   Xform3 normalization_matrix = Xform3::Identity();
-  normalization_matrix.Set(0, 0, 1 / expected_end_of_animation.Get(3, 3));
-  normalization_matrix.Set(1, 1, 1 / expected_end_of_animation.Get(3, 3));
-  normalization_matrix.Set(2, 2, 1 / expected_end_of_animation.Get(3, 3));
-  normalization_matrix.Set(3, 3, 1 / expected_end_of_animation.Get(3, 3));
+  normalization_matrix.set(0, 0, 1 / expected_end_of_animation.get(3, 3));
+  normalization_matrix.set(1, 1, 1 / expected_end_of_animation.get(3, 3));
+  normalization_matrix.set(2, 2, 1 / expected_end_of_animation.get(3, 3));
+  normalization_matrix.set(3, 3, 1 / expected_end_of_animation.get(3, 3));
   normalized_expected_end_of_animation.Concat(normalization_matrix);
 
   EXPECT_TRUE(MatricesAreNearlyEqual(normalized_expected_end_of_animation, res));
@@ -1094,10 +1094,10 @@ TEST(Xform3Test, VerifyMatrixInversion) {
     // Try to invert a matrix that is not invertible.
     // The inverse() function should reset the output matrix to identity.
     Xform3 uninvertible = Xform3::Identity();
-    uninvertible.Set(0, 0, 0.f);
-    uninvertible.Set(1, 1, 0.f);
-    uninvertible.Set(2, 2, 0.f);
-    uninvertible.Set(3, 3, 0.f);
+    uninvertible.set(0, 0, 0.f);
+    uninvertible.set(1, 1, 0.f);
+    uninvertible.set(2, 2, 0.f);
+    uninvertible.set(3, 3, 0.f);
     EXPECT_FALSE(uninvertible.IsInvertible());
   }
 }
@@ -1249,67 +1249,67 @@ TEST(Xform3Test, VerifyEqualsBooleanOperator) {
   // return false.
   Xform3 D = Xform3::Identity();
   D = A;
-  D.Set(0, 0, 0.f);
+  D.set(0, 0, 0.f);
   EXPECT_FALSE(A == D);
 
   D = A;
-  D.Set(1, 0, 0.f);
+  D.set(1, 0, 0.f);
   EXPECT_FALSE(A == D);
 
   D = A;
-  D.Set(2, 0, 0.f);
+  D.set(2, 0, 0.f);
   EXPECT_FALSE(A == D);
 
   D = A;
-  D.Set(3, 0, 0.f);
+  D.set(3, 0, 0.f);
   EXPECT_FALSE(A == D);
 
   D = A;
-  D.Set(0, 1, 0.f);
+  D.set(0, 1, 0.f);
   EXPECT_FALSE(A == D);
 
   D = A;
-  D.Set(1, 1, 0.f);
+  D.set(1, 1, 0.f);
   EXPECT_FALSE(A == D);
 
   D = A;
-  D.Set(2, 1, 0.f);
+  D.set(2, 1, 0.f);
   EXPECT_FALSE(A == D);
 
   D = A;
-  D.Set(3, 1, 0.f);
+  D.set(3, 1, 0.f);
   EXPECT_FALSE(A == D);
 
   D = A;
-  D.Set(0, 2, 0.f);
+  D.set(0, 2, 0.f);
   EXPECT_FALSE(A == D);
 
   D = A;
-  D.Set(1, 2, 0.f);
+  D.set(1, 2, 0.f);
   EXPECT_FALSE(A == D);
 
   D = A;
-  D.Set(2, 2, 0.f);
+  D.set(2, 2, 0.f);
   EXPECT_FALSE(A == D);
 
   D = A;
-  D.Set(3, 2, 0.f);
+  D.set(3, 2, 0.f);
   EXPECT_FALSE(A == D);
 
   D = A;
-  D.Set(0, 3, 0.f);
+  D.set(0, 3, 0.f);
   EXPECT_FALSE(A == D);
 
   D = A;
-  D.Set(1, 3, 0.f);
+  D.set(1, 3, 0.f);
   EXPECT_FALSE(A == D);
 
   D = A;
-  D.Set(2, 3, 0.f);
+  D.set(2, 3, 0.f);
   EXPECT_FALSE(A == D);
 
   D = A;
-  D.Set(3, 3, 0.f);
+  D.set(3, 3, 0.f);
   EXPECT_FALSE(A == D);
 }
 
@@ -1699,23 +1699,23 @@ TEST(Xform3Test, VerifyHasPerspective) {
   EXPECT_FALSE(A.HasPerspective());
 
   A.SetIdentity();
-  A.Set(3, 0, -1.f);
+  A.set(3, 0, -1.f);
   EXPECT_TRUE(A.HasPerspective());
 
   A.SetIdentity();
-  A.Set(3, 1, -1.f);
+  A.set(3, 1, -1.f);
   EXPECT_TRUE(A.HasPerspective());
 
   A.SetIdentity();
-  A.Set(3, 2, -0.3f);
+  A.set(3, 2, -0.3f);
   EXPECT_TRUE(A.HasPerspective());
 
   A.SetIdentity();
-  A.Set(3, 3, 0.5f);
+  A.set(3, 3, 0.5f);
   EXPECT_TRUE(A.HasPerspective());
 
   A.SetIdentity();
-  A.Set(3, 3, 0.f);
+  A.set(3, 3, 0.f);
   EXPECT_TRUE(A.HasPerspective());
 }
 
@@ -1756,14 +1756,14 @@ TEST(Xform3Test, VerifyIsInvertible) {
   // to zero (i.e. camera positioned at the origin), is not invertible.
   A.SetIdentity();
   A.ApplyPerspectiveDepth(1.0);
-  A.Set(3, 3, 0.f);
+  A.set(3, 3, 0.f);
   EXPECT_FALSE(A.IsInvertible());
 
   // Adding more to a non-invertible matrix will not make it invertible in the
   // general case.
   A.SetIdentity();
   A.ApplyPerspectiveDepth(1.0);
-  A.Set(3, 3, 0.f);
+  A.set(3, 3, 0.f);
   A.Scale(6.0, 7.0, 8.0);
   A.RotateAboutXAxis(Angle::DegreesToRadians(10.0));
   A.RotateAboutYAxis(Angle::DegreesToRadians(20.0));
@@ -1773,10 +1773,10 @@ TEST(Xform3Test, VerifyIsInvertible) {
 
   // A degenerate matrix of all zeros is not invertible.
   A.SetIdentity();
-  A.Set(0, 0, 0.f);
-  A.Set(1, 1, 0.f);
-  A.Set(2, 2, 0.f);
-  A.Set(3, 3, 0.f);
+  A.set(0, 0, 0.f);
+  A.set(1, 1, 0.f);
+  A.set(2, 2, 0.f);
+  A.set(3, 3, 0.f);
   EXPECT_FALSE(A.IsInvertible());
 }
 
@@ -1792,67 +1792,67 @@ TEST(Xform3Test, VerifyIsIdentity) {
   // Modifying any one individual element should cause the matrix to no longer
   // be identity.
   A.SetIdentity();
-  A.Set(0, 0, 2.f);
+  A.set(0, 0, 2.f);
   EXPECT_FALSE(A.IsIdentity());
 
   A.SetIdentity();
-  A.Set(1, 0, 2.f);
+  A.set(1, 0, 2.f);
   EXPECT_FALSE(A.IsIdentity());
 
   A.SetIdentity();
-  A.Set(2, 0, 2.f);
+  A.set(2, 0, 2.f);
   EXPECT_FALSE(A.IsIdentity());
 
   A.SetIdentity();
-  A.Set(3, 0, 2.f);
+  A.set(3, 0, 2.f);
   EXPECT_FALSE(A.IsIdentity());
 
   A.SetIdentity();
-  A.Set(0, 1, 2.f);
+  A.set(0, 1, 2.f);
   EXPECT_FALSE(A.IsIdentity());
 
   A.SetIdentity();
-  A.Set(1, 1, 2.f);
+  A.set(1, 1, 2.f);
   EXPECT_FALSE(A.IsIdentity());
 
   A.SetIdentity();
-  A.Set(2, 1, 2.f);
+  A.set(2, 1, 2.f);
   EXPECT_FALSE(A.IsIdentity());
 
   A.SetIdentity();
-  A.Set(3, 1, 2.f);
+  A.set(3, 1, 2.f);
   EXPECT_FALSE(A.IsIdentity());
 
   A.SetIdentity();
-  A.Set(0, 2, 2.f);
+  A.set(0, 2, 2.f);
   EXPECT_FALSE(A.IsIdentity());
 
   A.SetIdentity();
-  A.Set(1, 2, 2.f);
+  A.set(1, 2, 2.f);
   EXPECT_FALSE(A.IsIdentity());
 
   A.SetIdentity();
-  A.Set(2, 2, 2.f);
+  A.set(2, 2, 2.f);
   EXPECT_FALSE(A.IsIdentity());
 
   A.SetIdentity();
-  A.Set(3, 2, 2.f);
+  A.set(3, 2, 2.f);
   EXPECT_FALSE(A.IsIdentity());
 
   A.SetIdentity();
-  A.Set(0, 3, 2.f);
+  A.set(0, 3, 2.f);
   EXPECT_FALSE(A.IsIdentity());
 
   A.SetIdentity();
-  A.Set(1, 3, 2.f);
+  A.set(1, 3, 2.f);
   EXPECT_FALSE(A.IsIdentity());
 
   A.SetIdentity();
-  A.Set(2, 3, 2.f);
+  A.set(2, 3, 2.f);
   EXPECT_FALSE(A.IsIdentity());
 
   A.SetIdentity();
-  A.Set(3, 3, 2.f);
+  A.set(3, 3, 2.f);
   EXPECT_FALSE(A.IsIdentity());
 }
 
@@ -1870,70 +1870,70 @@ TEST(Xform3Test, VerifyIsIdentityOrTranslation) {
   // (2, 3) are the translation components, so modifying them should still
   // return true.
   A.SetIdentity();
-  A.Set(0, 0, 2.f);
+  A.set(0, 0, 2.f);
   EXPECT_FALSE(A.IsTranslate());
 
   A.SetIdentity();
-  A.Set(1, 0, 2.f);
+  A.set(1, 0, 2.f);
   EXPECT_FALSE(A.IsTranslate());
 
   A.SetIdentity();
-  A.Set(2, 0, 2.f);
+  A.set(2, 0, 2.f);
   EXPECT_FALSE(A.IsTranslate());
 
   A.SetIdentity();
-  A.Set(3, 0, 2.f);
+  A.set(3, 0, 2.f);
   EXPECT_FALSE(A.IsTranslate());
 
   A.SetIdentity();
-  A.Set(0, 1, 2.f);
+  A.set(0, 1, 2.f);
   EXPECT_FALSE(A.IsTranslate());
 
   A.SetIdentity();
-  A.Set(1, 1, 2.f);
+  A.set(1, 1, 2.f);
   EXPECT_FALSE(A.IsTranslate());
 
   A.SetIdentity();
-  A.Set(2, 1, 2.f);
+  A.set(2, 1, 2.f);
   EXPECT_FALSE(A.IsTranslate());
 
   A.SetIdentity();
-  A.Set(3, 1, 2.f);
+  A.set(3, 1, 2.f);
   EXPECT_FALSE(A.IsTranslate());
 
   A.SetIdentity();
-  A.Set(0, 2, 2.f);
+  A.set(0, 2, 2.f);
   EXPECT_FALSE(A.IsTranslate());
 
   A.SetIdentity();
-  A.Set(1, 2, 2.f);
+  A.set(1, 2, 2.f);
   EXPECT_FALSE(A.IsTranslate());
 
   A.SetIdentity();
-  A.Set(2, 2, 2.f);
+  A.set(2, 2, 2.f);
   EXPECT_FALSE(A.IsTranslate());
 
   A.SetIdentity();
-  A.Set(3, 2, 2.f);
+  A.set(3, 2, 2.f);
   EXPECT_FALSE(A.IsTranslate());
 
   // Note carefully - expecting true here.
   A.SetIdentity();
-  A.Set(0, 3, 2.f);
+  A.set(0, 3, 2.f);
   EXPECT_TRUE(A.IsTranslate());
 
   // Note carefully - expecting true here.
   A.SetIdentity();
-  A.Set(1, 3, 2.f);
+  A.set(1, 3, 2.f);
   EXPECT_TRUE(A.IsTranslate());
 
   // Note carefully - expecting true here.
   A.SetIdentity();
-  A.Set(2, 3, 2.f);
+  A.set(2, 3, 2.f);
   EXPECT_TRUE(A.IsTranslate());
 
   A.SetIdentity();
-  A.Set(3, 3, 2.f);
+  A.set(3, 3, 2.f);
   EXPECT_FALSE(A.IsTranslate());
 }
 
@@ -1944,9 +1944,9 @@ TEST(Xform3Test, VerifyIsNearTranslate) {
   A.SetIdentity();
 
   // Set translate values to values other than 0 or 1.
-  A.Set(0, 3, 3.4f);
-  A.Set(1, 3, 4.4f);
-  A.Set(2, 3, 5.6f);
+  A.set(0, 3, 3.4f);
+  A.set(1, 3, 4.4f);
+  A.set(2, 3, 5.6f);
 
   EXPECT_TRUE(A.IsNearTranslate(0));
   EXPECT_TRUE(A.IsNearTranslate(ApproxZero));
@@ -1955,15 +1955,15 @@ TEST(Xform3Test, VerifyIsNearTranslate) {
   InitializeApproxIdentityMatrix(A);
 
   // Some values must be exact.
-  A.Set(3, 0, 0);
-  A.Set(3, 1, 0);
-  A.Set(3, 2, 0);
-  A.Set(3, 3, 1);
+  A.set(3, 0, 0);
+  A.set(3, 1, 0);
+  A.set(3, 2, 0);
+  A.set(3, 3, 1);
 
   // Set translate values to values other than 0 or 1.
-  A.Set(0, 3, 3.4f);
-  A.Set(1, 3, 4.4f);
-  A.Set(2, 3, 5.6f);
+  A.set(0, 3, 3.4f);
+  A.set(1, 3, 4.4f);
+  A.set(2, 3, 5.6f);
 
   EXPECT_FALSE(A.IsNearTranslate(0));
   EXPECT_TRUE(A.IsNearTranslate(ApproxZero));
@@ -1972,15 +1972,15 @@ TEST(Xform3Test, VerifyIsNearTranslate) {
   InitializeApproxIdentityMatrix(A);
 
   // Some values must be exact.
-  A.Set(3, 0, 0);
-  A.Set(3, 1, 0);
-  A.Set(3, 2, 0);
-  A.Set(3, 3, 1);
+  A.set(3, 0, 0);
+  A.set(3, 1, 0);
+  A.set(3, 2, 0);
+  A.set(3, 3, 1);
 
   // Set some values (not translate values) to values other than 0 or 1.
-  A.Set(0, 1, 3.4f);
-  A.Set(3, 2, 4.4f);
-  A.Set(2, 0, 5.6f);
+  A.set(0, 1, 3.4f);
+  A.set(3, 2, 4.4f);
+  A.set(2, 0, 5.6f);
 
   EXPECT_FALSE(A.IsNearTranslate(0));
   EXPECT_FALSE(A.IsNearTranslate(ApproxZero));
@@ -2002,72 +2002,72 @@ TEST(Xform3Test, VerifyIsScaleOrTranslation) {
 
   // Note carefully - expecting true here.
   A.SetIdentity();
-  A.Set(0, 0, 2.f);
+  A.set(0, 0, 2.f);
   EXPECT_TRUE(A.IsScaleTranslate());
 
   A.SetIdentity();
-  A.Set(1, 0, 2.f);
+  A.set(1, 0, 2.f);
   EXPECT_FALSE(A.IsScaleTranslate());
 
   A.SetIdentity();
-  A.Set(2, 0, 2.f);
+  A.set(2, 0, 2.f);
   EXPECT_FALSE(A.IsScaleTranslate());
 
   A.SetIdentity();
-  A.Set(3, 0, 2.f);
+  A.set(3, 0, 2.f);
   EXPECT_FALSE(A.IsScaleTranslate());
 
   A.SetIdentity();
-  A.Set(0, 1, 2.f);
+  A.set(0, 1, 2.f);
   EXPECT_FALSE(A.IsScaleTranslate());
 
   // Note carefully - expecting true here.
   A.SetIdentity();
-  A.Set(1, 1, 2.f);
+  A.set(1, 1, 2.f);
   EXPECT_TRUE(A.IsScaleTranslate());
 
   A.SetIdentity();
-  A.Set(2, 1, 2.f);
+  A.set(2, 1, 2.f);
   EXPECT_FALSE(A.IsScaleTranslate());
 
   A.SetIdentity();
-  A.Set(3, 1, 2.f);
+  A.set(3, 1, 2.f);
   EXPECT_FALSE(A.IsScaleTranslate());
 
   A.SetIdentity();
-  A.Set(0, 2, 2.f);
+  A.set(0, 2, 2.f);
   EXPECT_FALSE(A.IsScaleTranslate());
 
   A.SetIdentity();
-  A.Set(1, 2, 2.f);
-  EXPECT_FALSE(A.IsScaleTranslate());
-
-  // Note carefully - expecting true here.
-  A.SetIdentity();
-  A.Set(2, 2, 2.f);
-  EXPECT_TRUE(A.IsScaleTranslate());
-
-  A.SetIdentity();
-  A.Set(3, 2, 2.f);
+  A.set(1, 2, 2.f);
   EXPECT_FALSE(A.IsScaleTranslate());
 
   // Note carefully - expecting true here.
   A.SetIdentity();
-  A.Set(0, 3, 2.f);
+  A.set(2, 2, 2.f);
+  EXPECT_TRUE(A.IsScaleTranslate());
+
+  A.SetIdentity();
+  A.set(3, 2, 2.f);
+  EXPECT_FALSE(A.IsScaleTranslate());
+
+  // Note carefully - expecting true here.
+  A.SetIdentity();
+  A.set(0, 3, 2.f);
   EXPECT_TRUE(A.IsScaleTranslate());
 
   // Note carefully - expecting true here.
   A.SetIdentity();
-  A.Set(1, 3, 2.f);
+  A.set(1, 3, 2.f);
   EXPECT_TRUE(A.IsScaleTranslate());
 
   // Note carefully - expecting true here.
   A.SetIdentity();
-  A.Set(2, 3, 2.f);
+  A.set(2, 3, 2.f);
   EXPECT_TRUE(A.IsScaleTranslate());
 
   A.SetIdentity();
-  A.Set(3, 3, 2.f);
+  A.set(3, 3, 2.f);
   EXPECT_FALSE(A.IsScaleTranslate());
 }
 
@@ -2089,16 +2089,16 @@ TEST(Xform3Test, IsFlat) {
   // A transform with all entries non-zero isn't flat.
   EXPECT_FALSE(transform.IsFlat());
 
-  transform.Set(0, 2, 0.f);
-  transform.Set(1, 2, 0.f);
-  transform.Set(2, 2, 1.f);
-  transform.Set(3, 2, 0.f);
+  transform.set(0, 2, 0.f);
+  transform.set(1, 2, 0.f);
+  transform.set(2, 2, 1.f);
+  transform.set(3, 2, 0.f);
 
   EXPECT_FALSE(transform.IsFlat());
 
-  transform.Set(2, 0, 0.f);
-  transform.Set(2, 1, 0.f);
-  transform.Set(2, 3, 0.f);
+  transform.set(2, 0, 0.f);
+  transform.set(2, 1, 0.f);
+  transform.set(2, 3, 0.f);
 
   // Since the third column and row are both (0, 0, 1, 0), the transform is
   // flat.
@@ -2176,10 +2176,10 @@ TEST(Xform3Test, Preserves2DAxisAlignment) {
   Xform3 transform = Xform3::Identity();
   for (const TestCase& value : test_cases) {
     transform.SetIdentity();
-    transform.Set(0, 0, value.a);
-    transform.Set(0, 1, value.b);
-    transform.Set(1, 0, value.c);
-    transform.Set(1, 1, value.d);
+    transform.set(0, 0, value.a);
+    transform.set(0, 1, value.b);
+    transform.set(1, 0, value.c);
+    transform.set(1, 1, value.d);
 
     if (value.expected) {
       EXPECT_TRUE(EmpiricallyPreserves2DAxisAlignment(transform));
@@ -2194,19 +2194,19 @@ TEST(Xform3Test, Preserves2DAxisAlignment) {
   // elements (except perspective) have entries, to test that they are ignored.
   for (const TestCase& value : test_cases) {
     transform.SetIdentity();
-    transform.Set(0, 0, value.a);
-    transform.Set(0, 1, value.b);
-    transform.Set(1, 0, value.c);
-    transform.Set(1, 1, value.d);
+    transform.set(0, 0, value.a);
+    transform.set(0, 1, value.b);
+    transform.set(1, 0, value.c);
+    transform.set(1, 1, value.d);
 
-    transform.Set(0, 2, 1.f);
-    transform.Set(0, 3, 2.f);
-    transform.Set(1, 2, 3.f);
-    transform.Set(1, 3, 4.f);
-    transform.Set(2, 0, 5.f);
-    transform.Set(2, 1, 6.f);
-    transform.Set(2, 2, 7.f);
-    transform.Set(2, 3, 8.f);
+    transform.set(0, 2, 1.f);
+    transform.set(0, 3, 2.f);
+    transform.set(1, 2, 3.f);
+    transform.set(1, 3, 4.f);
+    transform.set(2, 0, 5.f);
+    transform.set(2, 1, 6.f);
+    transform.set(2, 2, 7.f);
+    transform.set(2, 3, 8.f);
 
     if (value.expected) {
       EXPECT_TRUE(EmpiricallyPreserves2DAxisAlignment(transform));
@@ -2221,23 +2221,23 @@ TEST(Xform3Test, Preserves2DAxisAlignment) {
   // always assumed to not-preserve axis alignment.
   for (const TestCase& value : test_cases) {
     transform.SetIdentity();
-    transform.Set(0, 0, value.a);
-    transform.Set(0, 1, value.b);
-    transform.Set(1, 0, value.c);
-    transform.Set(1, 1, value.d);
+    transform.set(0, 0, value.a);
+    transform.set(0, 1, value.b);
+    transform.set(1, 0, value.c);
+    transform.set(1, 1, value.d);
 
-    transform.Set(0, 2, 1.f);
-    transform.Set(0, 3, 2.f);
-    transform.Set(1, 2, 3.f);
-    transform.Set(1, 3, 4.f);
-    transform.Set(2, 0, 5.f);
-    transform.Set(2, 1, 6.f);
-    transform.Set(2, 2, 7.f);
-    transform.Set(2, 3, 8.f);
-    transform.Set(3, 0, 9.f);
-    transform.Set(3, 1, 10.f);
-    transform.Set(3, 2, 11.f);
-    transform.Set(3, 3, 12.f);
+    transform.set(0, 2, 1.f);
+    transform.set(0, 3, 2.f);
+    transform.set(1, 2, 3.f);
+    transform.set(1, 3, 4.f);
+    transform.set(2, 0, 5.f);
+    transform.set(2, 1, 6.f);
+    transform.set(2, 2, 7.f);
+    transform.set(2, 3, 8.f);
+    transform.set(3, 0, 9.f);
+    transform.set(3, 1, 10.f);
+    transform.set(3, 2, 11.f);
+    transform.set(3, 3, 12.f);
 
     EXPECT_FALSE(EmpiricallyPreserves2DAxisAlignment(transform));
     EXPECT_FALSE(transform.Preserves2DAxisAlignment());
@@ -2321,10 +2321,10 @@ TEST(Xform3Test, Preserves2DAxisAlignment) {
 
 TEST(Xform3Test, BackFaceVisiblilityTolerance) {
   Xform3 backface_invisible = Xform3::Identity();
-  backface_invisible.Set(0, 3, 1.f);
-  backface_invisible.Set(3, 0, 1.f);
-  backface_invisible.Set(2, 0, 1.f);
-  backface_invisible.Set(3, 2, 1.f);
+  backface_invisible.set(0, 3, 1.f);
+  backface_invisible.set(3, 0, 1.f);
+  backface_invisible.set(2, 0, 1.f);
+  backface_invisible.set(3, 2, 1.f);
 
   // The transformation matrix has a determinant = 1 and cofactor33 = 0. So,
   // IsBackFaceVisible should return false.
@@ -2334,11 +2334,11 @@ TEST(Xform3Test, BackFaceVisiblilityTolerance) {
   // Adding a noise to the transformsation matrix that is within the tolerance
   // (machine epsilon) should not change the result.
   float noise = Limits<float>::Epsilon;
-  backface_invisible.Set(0, 3, 1.f + noise);
+  backface_invisible.set(0, 3, 1.f + noise);
   EXPECT_FALSE(backface_invisible.IsBackFaceVisible());
 
   // A noise that is more than the tolerance should change the result.
-  backface_invisible.Set(0, 3, 1.f + (2 * noise));
+  backface_invisible.set(0, 3, 1.f + (2 * noise));
   EXPECT_TRUE(backface_invisible.IsBackFaceVisible());
 }
 

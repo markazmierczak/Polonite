@@ -108,7 +108,7 @@ Quaternion Quaternion::GetNormalized() const {
   return *this * (1 / Sqrt(length_squared));
 }
 
-bool Quaternion::TryGetInverted(Quaternion& out) const {
+bool Quaternion::tryGetInverted(Quaternion& out) const {
   double len = GetLengthSquared();
   if (len < Limits<float>::Epsilon)
     return false;

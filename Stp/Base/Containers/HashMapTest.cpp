@@ -39,12 +39,12 @@ TEST(HashMapTest, Remove) {
   EXPECT_TRUE(map.tryAdd(1, 1));
   EXPECT_TRUE(map.tryAdd(5, 5));
   EXPECT_TRUE(map.tryAdd(3, 3));
-  EXPECT_FALSE(map.TryRemove(4));
+  EXPECT_FALSE(map.tryRemove(4));
   EXPECT_TRUE(map.tryAdd(4, 4));
-  EXPECT_TRUE(map.TryRemove(4));
-  EXPECT_FALSE(map.TryRemove(4));
+  EXPECT_TRUE(map.tryRemove(4));
+  EXPECT_FALSE(map.tryRemove(4));
   EXPECT_TRUE(map.tryAdd(4, 4));
-  EXPECT_TRUE(map.TryRemove(4));
+  EXPECT_TRUE(map.tryRemove(4));
 }
 
 TEST(HashMapTest, String) {

@@ -82,20 +82,20 @@ To create a list of values use ``add()`` or ``Set()``. Both of them will create 
      a.add(3);
      a.add("example string");
 
-     a.Set(6, sixth_value);
+     a.set(6, sixth_value);
      return a;
    }
 
 The above code create an array of size ``7``. Values at ``2..5`` positions are null. Note that ``operator[]`` is different from ``Set()`` since the former will assert on access to non-existent index.
 
-If you are not sure whether array holds an index, use ``TryGet()`` to obtain a value. There are several overloads which checks also for a type of the value and perform casts::
+If you are not sure whether array holds an index, use ``tryGet()`` to obtain a value. There are several overloads which checks also for a type of the value and perform casts::
 
-   JsonValue* opt_value = array.TryGet(3);
+   JsonValue* opt_value = array.tryGet(3);
 
-   JsonObject* object = array.TryGetObject(index);
+   JsonObject* object = array.tryGetObject(index);
 
    int number;
-   if (!array.TryGet(10, number)
+   if (!array.tryGet(10, number)
      return false;
 
 .. _stp-base-json-object:
@@ -117,7 +117,7 @@ To fill an object with values use ``add()``/``tryAdd()`` or ``Set()``. All of th
 
      bool ok = o.tryAdd("gender", gender); // returns false - key already present
      // o.add("gender", gender); // assertion
-     o.Set("gender", "male"); // overwrites if exists
+     o.set("gender", "male"); // overwrites if exists
 
      return o;
    }
@@ -129,7 +129,7 @@ A handy set of ``*WithPath()`` helpers are provided to work with paths instead o
 
 For example ``SetWithPath()`` is ``Set()`` alternative which accepts path instead of key::
 
-   object.Set("settings.global.full_screen", true);
+   object.set("settings.global.full_screen", true);
 
 If the key at any step of the way doesn't exist, or exists but isn't a ``JsonObject``, a new ``JsonObject`` will be created and attached to the path in that location.
 

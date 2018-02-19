@@ -78,7 +78,7 @@ class BASE_EXPORT FilePath {
   bool IsAbsolute() const { return toSpan().IsAbsolute(); }
   bool IsRelative() const { return toSpan().IsRelative(); }
 
-  FilePathEnumerator Enumerate() const { return toSpan().Enumerate(); }
+  FilePathEnumerator enumerate() const { return toSpan().enumerate(); }
 
   // Normalize all path separators to given type on Windows or do nothing on POSIX systems.
   void NormalizeSeparators() { NormalizeSeparatorsTo(FilePathSeparator); }

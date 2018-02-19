@@ -21,14 +21,14 @@ class BASE_EXPORT HashMapBase {
   // The lists pointed by buckets are composed of Real nodes and
   // last node in the list points to Sentinel node.
   struct BaseNode {
-    ALWAYS_INLINE bool IsSentinel() const { return next == nullptr; }
-    ALWAYS_INLINE bool IsReal() const { return next != nullptr; }
+    ALWAYS_INLINE bool isSentinel() const { return next == nullptr; }
+    ALWAYS_INLINE bool isReal() const { return next != nullptr; }
 
     BaseNode* next;
     HashCode hash;
   };
 
-  static int OptimalBucketCount(unsigned min, bool binary_size);
+  static int optimalBucketCount(unsigned min, bool binary_size);
 };
 
 } // namespace detail
@@ -61,16 +61,16 @@ class HashMap : public detail::HashMapBase {
   typedef BaseNode* Entry;
 
  public:
-  HashMap() { InitSentinel(); }
+  HashMap() { initSentinel(); }
   ~HashMap();
 
-  HashMap(HashMap&& other) { InitSentinel(); SwapWith(other); }
+  HashMap(HashMap&& other) { initSentinel(); swapWith(other); }
   HashMap& operator=(HashMap&& other);
 
-  HashMap(const HashMap& other) { InitSentinel(); Assign(other); }
+  HashMap(const HashMap& other) { initSentinel(); assign(other); }
   HashMap& operator=(const HashMap& other);
 
-  void SwapWith(HashMap& other);
+  void swapWith(HashMap& other);
 
   ALWAYS_INLINE int size() const { return size_; }
 
@@ -81,26 +81,26 @@ class HashMap : public detail::HashMapBase {
   // Returns true if the given hint triggered rehashing.
   bool willGrow(int n);
 
-  void Shrink();
+  void shrink();
 
-  void Rehash(int new_bucket_count);
-
-  template<typename U>
-  const T* TryGet(const U& key) const;
-  template<typename U>
-  T* TryGet(const U& key);
+  void rehash(int new_bucket_count);
 
   template<typename U>
-  void Set(U&& key, T value);
+  const T* tryGet(const U& key) const;
+  template<typename U>
+  T* tryGet(const U& key);
+
+  template<typename U>
+  void set(U&& key, T value);
 
   template<typename U>
   T* tryAdd(U&& key, T value);
 
   template<typename U>
-  bool TryRemove(const U& key);
+  bool tryRemove(const U& key);
 
   template<typename U>
-  bool containsKey(const U& key) const { return TryGet(key) != nullptr; }
+  bool containsKey(const U& key) const { return tryGet(key) != nullptr; }
 
   template<typename U>
   const T& operator[](const U& key) const;
@@ -111,16 +111,16 @@ class HashMap : public detail::HashMapBase {
   bool operator!=(const HashMap& other) const { return !operator==(other); }
 
   class PairsEnumerator;
-  PairsEnumerator Enumerate() const;
+  PairsEnumerator enumerate() const;
 
   class KeysEnumerator;
-  KeysEnumerator EnumerateKeys() const;
+  KeysEnumerator enumerateKeys() const;
 
   class ValuesEnumerator;
-  ValuesEnumerator EnumerateValues() const;
+  ValuesEnumerator enumerateValues() const;
 
-  void SetAutoShrink(bool on = true) { auto_shrink_ = on; }
-  void SetUseBinaryBucketSizes(bool on = true) { use_binary_bucket_sizes_ = on; }
+  void setAutoShrink(bool on = true) { auto_shrink_ = on; }
+  void setUseBinaryBucketSizes(bool on = true) { use_binary_bucket_sizes_ = on; }
 
  private:
   Entry* buckets_ = nullptr;
@@ -132,7 +132,7 @@ class HashMap : public detail::HashMapBase {
   bool auto_shrink_ = false;
   bool use_binary_bucket_sizes_ = false;
 
-  int ConstrainpartialHash(HashCode in_hash) const {
+  int constrainPartialHash(HashCode in_hash) const {
     auto hash = toUnderlying(in_hash);
     return use_binary_bucket_sizes_
         ? (hash & (bucket_count_ - 1))
@@ -140,13 +140,13 @@ class HashMap : public detail::HashMapBase {
   }
 
   template<typename U>
-  Entry* FindEntry(const U& key, HashCode hash) const {
+  Entry* findEntry(const U& key, HashCode hash) const {
     if (UNLIKELY(bucket_count_ == 0))
       return const_cast<Entry*>(&sentinel_);
 
-    int constrained_hash = ConstrainpartialHash(hash);
+    int constrained_hash = constrainPartialHash(hash);
     Entry* entry = &buckets_[constrained_hash];
-    for (BaseNode* node = *entry; !node->IsSentinel(); entry = &node->next, node = *entry) {
+    for (BaseNode* node = *entry; !node->isSentinel(); entry = &node->next, node = *entry) {
       if (node->hash == hash && RealNode::Cast(node)->key == key)
         break;
     }
@@ -154,18 +154,18 @@ class HashMap : public detail::HashMapBase {
   }
 
   template<typename U>
-  Entry* FindEntry(const U& key, HashCode* out_hash = nullptr) const {
+  Entry* findEntry(const U& key, HashCode* out_hash = nullptr) const {
     HashCode hash = HashCode::Zero;
     if (bucket_count_ != 0 || out_hash != nullptr) {
       hash = finalizeHash(partialHash(key));
       if (out_hash)
         *out_hash = hash;
     }
-    return FindEntry(key, hash);
+    return findEntry(key, hash);
   }
 
   template<typename U>
-  RealNode* CreateNode(BaseNode* next, HashCode hash, U&& key, T value) {
+  RealNode* createNode(BaseNode* next, HashCode hash, U&& key, T value) {
     RealNode* node;
     if (free_nodes_) {
       node = free_nodes_;
@@ -180,7 +180,7 @@ class HashMap : public detail::HashMapBase {
     return node;
   }
 
-  void DestroyNode(RealNode* node) {
+  void destroyNode(RealNode* node) {
     --size_;
 
     node->~RealNode();
@@ -189,19 +189,19 @@ class HashMap : public detail::HashMapBase {
     free_nodes_ = node;
   }
 
-  void InitSentinel();
-  void FiniSentinel();
+  void initSentinel();
+  void finiSentinel();
 
-  void Assign(const HashMap& other) {
+  void assign(const HashMap& other) {
     ASSERT(isEmpty());
     willGrow(other.size());
-    for (const auto& pair : other.Enumerate())
+    for (const auto& pair : other.enumerate())
       add(pair.key, pair.value);
   }
 
-  void DestroyAllNodes();
+  void destroyAllNodes();
 
-  void DiscardFreeNodes() {
+  void discardFreeNodes() {
     RealNode* node = free_nodes_;
     while (node) {
       RealNode* next = static_cast<RealNode*>(node->next);
@@ -211,12 +211,12 @@ class HashMap : public detail::HashMapBase {
     free_nodes_ = nullptr;
   }
 
-  void MaybeAutoShrink() {
+  void maybeAutoShrink() {
     if (auto_shrink_ && size_ <= (bucket_count_ >> 3))
-      Shrink();
+      shrink();
   }
 
-  const RealNode* FindFirstNode(int bucket_index = 0) const {
+  const RealNode* findFirstNode(int bucket_index = 0) const {
     for (; bucket_index < bucket_count_; ++bucket_index) {
       const BaseNode* node = buckets_[bucket_index];
       if (node != sentinel_)
@@ -225,44 +225,45 @@ class HashMap : public detail::HashMapBase {
     return nullptr;
   }
 
-  static const RealNode* FindNextNode(const RealNode* input_node) {
-    if (input_node->next->IsReal())
+  static const RealNode* findNextNode(const RealNode* input_node) {
+    if (input_node->next->isReal())
       return RealNode::Cast(input_node->next);
 
     auto* sentinel = static_cast<SentinelNode*>(input_node->next);
     HashMap& that = *sentinel->table;
 
-    int bucket_index = that.ConstrainpartialHash(input_node->hash);
-    return that.FindFirstNode(bucket_index + 1);
+    int bucket_index = that.constrainPartialHash(input_node->hash);
+    return that.findFirstNode(bucket_index + 1);
   }
 };
 
 template<typename K, typename T>
-inline void HashMap<K, T>::InitSentinel() {
+inline void HashMap<K, T>::initSentinel() {
   sentinel_ = new SentinelNode(this);
 }
 
 template<typename K, typename T>
-inline void HashMap<K, T>::FiniSentinel() {
+inline void HashMap<K, T>::finiSentinel() {
   delete static_cast<SentinelNode*>(sentinel_);
 }
 
 template<typename K, typename T>
 inline HashMap<K, T>::~HashMap() {
-  if (!isEmpty())
-    DestroyAllNodes();
-  DiscardFreeNodes();
+  if (!isEmpty()) {
+    destroyAllNodes();
+  }
+  discardFreeNodes();
 
   if (buckets_) {
     freeMemory(buckets_);
   }
-  FiniSentinel();
+  finiSentinel();
 }
 
 template<typename K, typename T>
 inline HashMap<K, T>& HashMap<K, T>::operator=(const HashMap& other) {
   clear();
-  Assign(other);
+  assign(other);
   return *this;
 }
 
@@ -273,7 +274,7 @@ inline HashMap<K, T>& HashMap<K, T>::operator=(HashMap&& other) {
 }
 
 template<typename K, typename T>
-inline void HashMap<K, T>::SwapWith(HashMap& other) {
+inline void HashMap<K, T>::swapWith(HashMap& other) {
   swap(buckets_, other.buckets_);
   swap(free_nodes_, other.free_nodes_);
   swap(sentinel_, other.sentinel_);
@@ -286,12 +287,12 @@ inline void HashMap<K, T>::clear() {
   if (isEmpty())
     return;
 
-  DestroyAllNodes();
-  MaybeAutoShrink();
+  destroyAllNodes();
+  maybeAutoShrink();
 }
 
 template<typename K, typename T>
-inline void HashMap<K, T>::DestroyAllNodes() {
+inline void HashMap<K, T>::destroyAllNodes() {
   Entry* buckets = buckets_;
   BaseNode* sentinel = sentinel_;
   for (int bucket_index = 0; bucket_index < bucket_count_; ++bucket_index) {
@@ -300,7 +301,7 @@ inline void HashMap<K, T>::DestroyAllNodes() {
     while (node != sentinel) {
       BaseNode* next = node->next;
       RealNode* real_node = RealNode::Cast(node);
-      DestroyNode(real_node);
+      destroyNode(real_node);
       node = next;
     }
   }
@@ -312,22 +313,22 @@ inline bool HashMap<K, T>::willGrow(int n) {
   ASSERT(n >= 0);
   int min = size_ + n;
   if (min > bucket_count_) {
-    int new_bucket_count = OptimalBucketCount(min, use_binary_bucket_sizes_);
-    Rehash(new_bucket_count);
+    int new_bucket_count = optimalBucketCount(min, use_binary_bucket_sizes_);
+    rehash(new_bucket_count);
     return true;
   }
   return false;
 }
 
 template<typename K, typename T>
-inline void HashMap<K, T>::Shrink() {
-  int new_bucket_count = OptimalBucketCount(size_, use_binary_bucket_sizes_);
-  Rehash(new_bucket_count);
-  DiscardFreeNodes();
+inline void HashMap<K, T>::shrink() {
+  int new_bucket_count = optimalBucketCount(size_, use_binary_bucket_sizes_);
+  rehash(new_bucket_count);
+  discardFreeNodes();
 }
 
 template<typename K, typename T>
-inline void HashMap<K, T>::Rehash(int new_bucket_count) {
+inline void HashMap<K, T>::rehash(int new_bucket_count) {
   ASSERT(new_bucket_count >= size_);
   int old_bucket_count = bucket_count_;
   if (new_bucket_count == old_bucket_count)
@@ -347,7 +348,7 @@ inline void HashMap<K, T>::Rehash(int new_bucket_count) {
     BaseNode* node = old_buckets[i];
     while (node != sentinel) {
       BaseNode* next = node->next;
-      int bucket_index = ConstrainpartialHash(node->hash);
+      int bucket_index = constrainPartialHash(node->hash);
       node->next = new_buckets[bucket_index];
       new_buckets[bucket_index] = node;
       node = next;
@@ -361,7 +362,7 @@ inline void HashMap<K, T>::Rehash(int new_bucket_count) {
 template<typename K, typename T>
 template<typename U>
 inline const T& HashMap<K, T>::operator[](const U& key) const {
-  const T* pvalue = TryGet(key);
+  const T* pvalue = tryGet(key);
   ASSERT(pvalue);
   return *pvalue;
 }
@@ -369,37 +370,37 @@ inline const T& HashMap<K, T>::operator[](const U& key) const {
 template<typename K, typename T>
 template<typename U>
 inline T& HashMap<K, T>::operator[](const U& key) {
-  T* pvalue = TryGet(key);
+  T* pvalue = tryGet(key);
   ASSERT(pvalue);
   return *pvalue;
 }
 
 template<typename K, typename T>
 template<typename U>
-inline const T* HashMap<K, T>::TryGet(const U& key) const {
-  return const_cast<HashMap*>(this)->TryGet(key);
+inline const T* HashMap<K, T>::tryGet(const U& key) const {
+  return const_cast<HashMap*>(this)->tryGet(key);
 }
 
 template<typename K, typename T>
 template<typename U>
-inline T* HashMap<K, T>::TryGet(const U& key) {
-  BaseNode* node = *FindEntry(key);
-  return node->IsReal() ? &RealNode::Cast(node)->value : nullptr;
+inline T* HashMap<K, T>::tryGet(const U& key) {
+  BaseNode* node = *findEntry(key);
+  return node->isReal() ? &RealNode::Cast(node)->value : nullptr;
 }
 
 template<typename K, typename T>
 template<typename U>
-inline void HashMap<K, T>::Set(U&& key, T value) {
+inline void HashMap<K, T>::set(U&& key, T value) {
   HashCode hash;
-  Entry* entry = FindEntry(key, &hash);
+  Entry* entry = findEntry(key, &hash);
   if (*entry != sentinel_) {
     T& value = RealNode::Cast(*entry)->value;
     value.~T();
     new(&value) T(move(value));
   } else {
     if (willGrow(1))
-      entry = FindEntry(key, hash);
-    *entry = CreateNode(sentinel_, hash, Forward<U>(key), move(value));
+      entry = findEntry(key, hash);
+    *entry = createNode(sentinel_, hash, Forward<U>(key), move(value));
   }
 }
 
@@ -407,32 +408,32 @@ template<typename K, typename T>
 template<typename U>
 inline T* HashMap<K, T>::tryAdd(U&& key, T value) {
   // Optimistic hint to grow the bucket count.
-  // Without this hint FindEntry() must be called twice.
+  // Without this hint findEntry() must be called twice.
   willGrow(1);
 
   HashCode hash;
-  Entry* entry = FindEntry(key, &hash);
+  Entry* entry = findEntry(key, &hash);
   if (*entry != sentinel_)
     return nullptr;
 
-  RealNode* node = CreateNode(sentinel_, hash, Forward<U>(key), move(value));
+  RealNode* node = createNode(sentinel_, hash, Forward<U>(key), move(value));
   *entry = node;
   return &node->value;
 }
 
 template<typename K, typename T>
 template<typename U>
-inline bool HashMap<K, T>::TryRemove(const U& key) {
-  Entry* entry = FindEntry(key);
+inline bool HashMap<K, T>::tryRemove(const U& key) {
+  Entry* entry = findEntry(key);
   BaseNode* node = *entry;
-  if (node->IsSentinel())
+  if (node->isSentinel())
     return false;
 
   RealNode* real_node = RealNode::Cast(node);
   BaseNode* next = node->next;
-  DestroyNode(real_node);
+  destroyNode(real_node);
   *entry = next;
-  MaybeAutoShrink();
+  maybeAutoShrink();
   return true;
 }
 
@@ -442,7 +443,7 @@ inline bool HashMap<K, T>::operator==(const HashMap& other) const {
     return false;
 
   for (const auto& pair : other) {
-    T* value = TryGet(pair.key);
+    T* value = tryGet(pair.key);
     if (!value || !(*value == pair.value))
       return false;
   }
@@ -456,13 +457,13 @@ class HashMap<K, T>::KeysEnumerator {
    public:
     explicit Iterator(const RealNode* node) : node_(node) {}
     const K& operator*() const { return node_->key; }
-    void operator++() { node_ = HashMap::FindNextNode(node_); }
+    void operator++() { node_ = HashMap::findNextNode(node_); }
    private:
     const RealNode* node_;
   };
 
   explicit KeysEnumerator(const HashMap& map)
-      : first_node_(map.FindFirstNode()) {}
+      : first_node_(map.findFirstNode()) {}
 
   Iterator begin() const { return Iterator(first_node_); }
   Iterator end() const { return Iterator(nullptr); }
@@ -472,7 +473,7 @@ class HashMap<K, T>::KeysEnumerator {
 };
 
 template<typename K, typename T>
-inline typename HashMap<K, T>::KeysEnumerator HashMap<K, T>::EnumerateKeys() const {
+inline typename HashMap<K, T>::KeysEnumerator HashMap<K, T>::enumerateKeys() const {
   return KeysEnumerator(*this);
 }
 
@@ -483,13 +484,13 @@ class HashMap<K, T>::ValuesEnumerator {
    public:
     explicit Iterator(const RealNode* node) : node_(node) {}
     const T& operator*() const { return node_->value; }
-    void operator++() { node_ = HashMap::FindNextNode(node_); }
+    void operator++() { node_ = HashMap::findNextNode(node_); }
    private:
     const RealNode* node_;
   };
 
   explicit ValuesEnumerator(const HashMap& map)
-      : first_node_(map.FindFirstNode()) {}
+      : first_node_(map.findFirstNode()) {}
 
   Iterator begin() const { return Iterator(first_node_); }
   Iterator end() const { return Iterator(nullptr); }
@@ -499,7 +500,7 @@ class HashMap<K, T>::ValuesEnumerator {
 };
 
 template<typename K, typename T>
-inline typename HashMap<K, T>::ValuesEnumerator HashMap<K, T>::EnumerateValues() const {
+inline typename HashMap<K, T>::ValuesEnumerator HashMap<K, T>::enumerateValues() const {
   return ValuesEnumerator(*this);
 }
 
@@ -510,13 +511,13 @@ class HashMap<K, T>::PairsEnumerator {
    public:
     explicit Iterator(const RealNode* node) : node_(node) {}
     const RealNode& operator*() const { return *node_; }
-    void operator++() { node_ = HashMap::FindNextNode(node_); }
+    void operator++() { node_ = HashMap::findNextNode(node_); }
    private:
     const RealNode* node_;
   };
 
   explicit PairsEnumerator(const HashMap& map)
-      : first_node_(map.FindFirstNode()) {}
+      : first_node_(map.findFirstNode()) {}
 
   Iterator begin() const { return Iterator(first_node_); }
   Iterator end() const { return Iterator(nullptr); }
@@ -526,7 +527,7 @@ class HashMap<K, T>::PairsEnumerator {
 };
 
 template<typename K, typename T>
-inline typename HashMap<K, T>::PairsEnumerator HashMap<K, T>::Enumerate() const {
+inline typename HashMap<K, T>::PairsEnumerator HashMap<K, T>::enumerate() const {
   return PairsEnumerator(*this);
 }
 

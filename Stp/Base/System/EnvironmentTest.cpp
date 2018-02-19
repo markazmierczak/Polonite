@@ -15,7 +15,7 @@ namespace stp {
 TEST_F(EnvironmentTest, GetVar) {
   // Every setup should have non-empty PATH...
   String env_value;
-  ASSERT_TRUE(Environment::TryGet("PATH", env_value));
+  ASSERT_TRUE(Environment::tryGet("PATH", env_value));
   EXPECT_NE(StringSpan(""), env_value);
 }
 
@@ -33,7 +33,7 @@ TEST_F(EnvironmentTest, SetVar) {
   EXPECT_TRUE(Environment::Has(FooUpper));
 
   String var_value;
-  ASSERT_TRUE(Environment::TryGet(FooUpper, var_value));
+  ASSERT_TRUE(Environment::tryGet(FooUpper, var_value));
   EXPECT_EQ(FooLower, var_value);
 }
 

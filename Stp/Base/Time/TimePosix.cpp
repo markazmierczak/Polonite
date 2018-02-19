@@ -41,7 +41,7 @@ LazyInstance<Lock>::LeakAtExit g_sys_time_to_time_struct_lock = LAZY_INSTANCE_IN
 typedef time64_t SysTime;
 
 SysTime SysTimeFromTimeStruct(struct tm* timestruct, bool is_local) {
-  AutoLock locked(&g_sys_time_to_time_struct_lock.Get());
+  AutoLock locked(&g_sys_time_to_time_struct_lock.get());
   if (is_local)
     return mktime64(timestruct);
   else
@@ -49,7 +49,7 @@ SysTime SysTimeFromTimeStruct(struct tm* timestruct, bool is_local) {
 }
 
 void SysTimeToTimeStruct(SysTime t, struct tm* timestruct, bool is_local) {
-  AutoLock locked(&g_sys_time_to_time_struct_lock.Get());
+  AutoLock locked(&g_sys_time_to_time_struct_lock.get());
   if (is_local)
     localtime64_r(&t, timestruct);
   else

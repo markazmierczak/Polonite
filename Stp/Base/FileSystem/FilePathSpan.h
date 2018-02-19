@@ -92,7 +92,7 @@ class BASE_EXPORT FilePathSpan {
   bool IsAbsolute() const { return GetRootLength() > 0; }
   bool IsRelative() const { return !IsAbsolute(); }
 
-  FilePathEnumerator Enumerate() const;
+  FilePathEnumerator enumerate() const;
 
   int GetRootLength() const;
   int GetDirectoryNameLength() const;
@@ -157,7 +157,7 @@ class BASE_EXPORT FilePathEnumerator {
   int now_len_;
 };
 
-inline FilePathEnumerator FilePathSpan::Enumerate() const {
+inline FilePathEnumerator FilePathSpan::enumerate() const {
   return FilePathEnumerator(*this);
 }
 

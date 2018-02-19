@@ -12,7 +12,7 @@
 namespace stp {
 
 void File::GetInfo(const FilePath& path, FileInfo& out) {
-  auto error_code = TryGetInfo(path, out);
+  auto error_code = tryGetInfo(path, out);
   if (!IsOk(error_code))
     throw FileSystemException(error_code, path);
 }

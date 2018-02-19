@@ -35,54 +35,54 @@ class BASE_EXPORT JsonObject : public JsonValue {
   template<typename T>
   void Set(StringSpan key, T&& value) { Set(key, JsonValue(Forward<T>(value))); }
 
-  const JsonValue* TryGet(StringSpan key) const;
-  JsonValue* TryGet(StringSpan key);
+  const JsonValue* tryGet(StringSpan key) const;
+  JsonValue* tryGet(StringSpan key);
 
-  const JsonArray* TryGetArray(StringSpan key) const;
-  JsonArray* TryGetArray(StringSpan key);
-  const JsonObject* TryGetObject(StringSpan key) const;
-  JsonObject* TryGetObject(StringSpan key);
+  const JsonArray* tryGetArray(StringSpan key) const;
+  JsonArray* tryGetArray(StringSpan key);
+  const JsonObject* tryGetObject(StringSpan key) const;
+  JsonObject* tryGetObject(StringSpan key);
 
   template<typename T>
-  bool TryGet(StringSpan key, T& out_value) const;
+  bool tryGet(StringSpan key, T& out_value) const;
 
   bool tryAdd(StringSpan key, JsonValue value);
 
   template<typename T>
   bool tryAdd(StringSpan key, T&& value) { return tryAdd(key, JsonValue(Forward<T>(value))); }
 
-  bool TryRemove(StringSpan key);
+  bool tryRemove(StringSpan key);
 
   void SetWithPath(StringSpan path, JsonValue value);
 
   template<typename T>
   void SetWithPath(StringSpan path, T&& value) { SetWithPath(path, JsonValue(Forward<T>(value))); }
 
-  const JsonValue* TryGetWithPath(StringSpan path) const;
-  JsonValue* TryGetWithPath(StringSpan path);
+  const JsonValue* tryGetWithPath(StringSpan path) const;
+  JsonValue* tryGetWithPath(StringSpan path);
 
-  const JsonArray* TryGetArrayWithPath(StringSpan path) const;
-  JsonArray* TryGetArrayWithPath(StringSpan path);
-  const JsonObject* TryGetObjectWithPath(StringSpan path) const;
-  JsonObject* TryGetObjectWithPath(StringSpan path);
+  const JsonArray* tryGetArrayWithPath(StringSpan path) const;
+  JsonArray* tryGetArrayWithPath(StringSpan path);
+  const JsonObject* tryGetObjectWithPath(StringSpan path) const;
+  JsonObject* tryGetObjectWithPath(StringSpan path);
 
-  // These are convenience forms of TryGetWithPath() for fundamental types.
+  // These are convenience forms of tryGetWithPath() for fundamental types.
   template<typename T>
-  bool TryGetWithPath(StringSpan path, T& out_value) const;
+  bool tryGetWithPath(StringSpan path, T& out_value) const;
 
   enum EmptyHandling {
     LeaveEmpty,
     EraseEmpty,
   };
-  bool TryRemoveWithPath(StringSpan path, EmptyHandling empty_handling = EraseEmpty);
+  bool tryRemoveWithPath(StringSpan path, EmptyHandling empty_handling = EraseEmpty);
   void RemoveWithPath(StringSpan path, EmptyHandling empty_handling = EraseEmpty);
 
   bool containsKey(StringSpan key) const;
 
-  const String& GetKeyAt(int at) const { return impl().GetKeyAt(at); }
+  const String& getKeyAt(int at) const { return impl().getKeyAt(at); }
 
-  const JsonValue& GetValueAt(int at) const { return impl().GetValueAt(at); }
-  JsonValue& GetValueAt(int at) { return impl().GetValueAt(at); }
+  const JsonValue& getValueAt(int at) const { return impl().getValueAt(at); }
+  JsonValue& getValueAt(int at) { return impl().getValueAt(at); }
 
   const ObjectData::PairType* begin() const { return impl().begin(); }
   const ObjectData::PairType* end() const { return impl().end(); }
@@ -108,14 +108,14 @@ class BASE_EXPORT JsonObject : public JsonValue {
 static_assert(sizeof(JsonObject) == sizeof(JsonValue), "!");
 
 template<typename T>
-inline bool JsonObject::TryGetWithPath(StringSpan path, T& out_value) const {
-  const JsonValue* value = TryGetWithPath(path);
+inline bool JsonObject::tryGetWithPath(StringSpan path, T& out_value) const {
+  const JsonValue* value = tryGetWithPath(path);
   return value ? value->TryCastTo(out_value) : false;
 }
 
 template<typename T>
-inline bool JsonObject::TryGet(StringSpan key, T& out_value) const {
-  const JsonValue* value = TryGet(key);
+inline bool JsonObject::tryGet(StringSpan key, T& out_value) const {
+  const JsonValue* value = tryGet(key);
   return value ? value->TryCastTo(out_value) : false;
 }
 

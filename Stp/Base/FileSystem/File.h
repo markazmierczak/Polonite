@@ -49,7 +49,7 @@ class BASE_EXPORT File {
 
   // Fetch information about the given file path.
   static void GetInfo(const FilePath& path, FileInfo& info);
-  static SystemErrorCode TryGetInfo(const FilePath& path, FileInfo& info) WARN_UNUSED_RESULT;
+  static SystemErrorCode tryGetInfo(const FilePath& path, FileInfo& info) WARN_UNUSED_RESULT;
 
   // Return an absolute version of a relative path.
   // On POSIX, this function fails if the path does not exist.
@@ -106,7 +106,7 @@ class BASE_EXPORT File {
   // Get/Set the permissions of the given |path|.
   // If |path| is symbolic link, |mode| is the permission of a file which the symlink points to.
   static int GetPosixPermissions(const FilePath& path);
-  static SystemErrorCode TryGetPosixPermissions(const FilePath& path, int& out_mode) WARN_UNUSED_RESULT;
+  static SystemErrorCode tryGetPosixPermissions(const FilePath& path, int& out_mode) WARN_UNUSED_RESULT;
 
   static void SetPosixPermissions(const FilePath& path, int mode);
   static SystemErrorCode TrySetPosixPermissions(const FilePath& path, int mode) WARN_UNUSED_RESULT;

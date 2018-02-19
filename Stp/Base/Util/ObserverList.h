@@ -20,7 +20,7 @@ class ObserverList {
    public:
     explicit Iterator(ObserverList<TObserver>* list);
     ~Iterator();
-    TObserver* TryGetNext();
+    TObserver* tryGetNext();
 
    private:
     friend class ObserverList;
@@ -80,7 +80,7 @@ ObserverList<TObserver>::Iterator::~Iterator() {
 }
 
 template<class TObserver>
-TObserver* ObserverList<TObserver>::Iterator::TryGetNext() {
+TObserver* ObserverList<TObserver>::Iterator::tryGetNext() {
   if (!list_)
     return nullptr;
   ListType& observers = list_->observers_;
@@ -111,7 +111,7 @@ void ObserverList<TObserver>::RemoveObserver(TObserver* obs) {
   int index = observers_.indexOf(obs);
   ASSERT(index >= 0);
   if (iterators_.isEmpty()) {
-    observers_.RemoveAt(index);
+    observers_.removeAt(index);
   } else {
     observers_[index] = nullptr;
     needs_compact_ = true;
@@ -140,7 +140,7 @@ void ObserverList<TObserver>::Compact() {
   ASSERT(needs_compact_);
   for (int i = observers_.size() - 1; i >= 0; --i) {
     if (observers_[i] == nullptr)
-      observers_.RemoveAt(i);
+      observers_.removeAt(i);
   }
   needs_compact_ = false;
 }
@@ -150,7 +150,7 @@ void ObserverList<TObserver>::Compact() {
     if ((observer_list).MightHaveObservers()) { \
       typename ObserverList<TObserverType>::Iterator it_inside_observer_macro(&observer_list); \
       TObserverType* obs; \
-      while ((obs = it_inside_observer_macro.TryGetNext()) != nullptr) \
+      while ((obs = it_inside_observer_macro.tryGetNext()) != nullptr) \
         obs->func; \
     } \
   } while (0)
