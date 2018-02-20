@@ -7,7 +7,6 @@
 
 #include "Base/Io/FileStream.h"
 #include "Base/Io/StreamWriter.h"
-#include "Base/Text/FormatMany.h"
 
 namespace stp {
 

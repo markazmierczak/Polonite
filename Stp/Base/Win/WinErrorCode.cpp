@@ -18,9 +18,9 @@ void format(TextWriter& out, WinErrorCode code) {
     // Messages returned by system ends with line breaks.
     out << makeSpan(msgbuf, len);
   } else {
-    FormatMany(out, "error (0x{:X8}) while retrieving error", ::GetLastError());
+    formatMany(out, "error (0x{:X8}) while retrieving error", ::GetLastError());
   }
-  FormatMany(out, ", code=0x{:X8}", toUnderlying(code));
+  formatMany(out, ", code=0x{:X8}", toUnderlying(code));
 }
 
 } // namespace detail

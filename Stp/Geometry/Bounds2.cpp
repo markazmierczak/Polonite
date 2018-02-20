@@ -3,8 +3,6 @@
 
 #include "Geometry/Bounds2.h"
 
-#include "Base/Text/FormatMany.h"
-
 namespace stp {
 
 Bounds2 RoundOut(const Bounds2& b) {

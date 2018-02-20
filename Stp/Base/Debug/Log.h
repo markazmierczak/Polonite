@@ -38,7 +38,7 @@ inline void LogPrint(
     StringSpan format, const Ts&... args) {
   TextWriter* out = LogPrintCommon(level, file, line);
   if (out) {
-    FormatMany(*out, format, args...);
+    formatMany(*out, format, args...);
     LogWrapUp(*out);
   }
 }

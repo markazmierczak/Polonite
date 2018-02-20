@@ -11,7 +11,7 @@ namespace stp {
 class TextWriter;
 
 template<typename... TArgs>
-inline void FormatMany(TextWriter& out, StringSpan fmt, const TArgs&... args);
+inline void formatMany(TextWriter& out, StringSpan fmt, const TArgs&... args);
 
 } // namespace stp
 

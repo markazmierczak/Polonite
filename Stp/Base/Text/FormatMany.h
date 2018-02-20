@@ -15,8 +15,8 @@ namespace detail {
 
 class BASE_EXPORT Formatter {
  public:
-  virtual void Execute(TextWriter& out, const StringSpan& opts) const = 0;
-  virtual StringSpan GetArgName() const;
+  virtual void execute(TextWriter& out, const StringSpan& opts) const = 0;
+  virtual StringSpan getArgName() const;
 
  protected:
   virtual ~Formatter() {}
@@ -34,7 +34,7 @@ class DefaultFormatter final : public Formatter {
  public:
   explicit DefaultFormatter(const T& adapted) : adapted_(adapted) {}
 
-  void Execute(TextWriter& out, const StringSpan& opts) const override {
+  void execute(TextWriter& out, const StringSpan& opts) const override {
     format(out, adapted_, opts);
   }
 
@@ -48,11 +48,11 @@ class NamedFormatter final : public Formatter {
   NamedFormatter(StringSpan name, const T& arg)
       : name_(name), adapted_(move(arg)) {}
 
-  void Execute(TextWriter& out, const StringSpan& opts) const override {
+  void execute(TextWriter& out, const StringSpan& opts) const override {
     format(out, adapted_, opts);
   }
 
-  StringSpan GetArgName() const override { return name_; }
+  StringSpan getArgName() const override { return name_; }
 
  private:
   StringSpan name_;
@@ -60,28 +60,28 @@ class NamedFormatter final : public Formatter {
 };
 
 template<typename T, TEnableIf<!TIsBaseOf<Formatter, T>>* = nullptr>
-inline DefaultFormatter<T> BuildFormatter(const T& x) {
+inline DefaultFormatter<T> buildFormatter(const T& x) {
   return DefaultFormatter<T>(x);
 }
 
 template<typename T, TEnableIf<TIsBaseOf<Formatter, T>>* = nullptr>
-inline const T& BuildFormatter(const T& x) {
+inline const T& buildFormatter(const T& x) {
   return x;
 }
 
-BASE_EXPORT void FormatManyImpl(TextWriter& out, StringSpan fmt, Span<Formatter*> args);
+BASE_EXPORT void formatManyImpl(TextWriter& out, StringSpan fmt, Span<Formatter*> args);
 
 } // namespace detail
 
 template<typename... Ts>
-inline void FormatMany(TextWriter& out, StringSpan fmt, const Ts&... args) {
-  auto formatters = makeTuple(detail::BuildFormatter(args)...);
+inline void formatMany(TextWriter& out, StringSpan fmt, const Ts&... args) {
+  auto formatters = makeTuple(detail::buildFormatter(args)...);
   auto pargs = formatters.apply(detail::CreateFormatterArray());
-  detail::FormatManyImpl(out, fmt, pargs);
+  detail::formatManyImpl(out, fmt, pargs);
 }
 
 template<typename T>
-inline detail::NamedFormatter<T> FormatArg(StringSpan name, const T& value) {
+inline detail::NamedFormatter<T> formatArg(StringSpan name, const T& value) {
   return detail::NamedFormatter<T>(name, value);
 }
 
@@ -90,7 +90,7 @@ inline void assertFail(
     const char* file, int line, const char* expr,
     StringSpan fmt, const Ts&... args) {
   TextWriter& out = assertPrint(file, line, expr);
-  FormatMany(out, fmt, args...);
+  formatMany(out, fmt, args...);
   assertWrapUp(out);
 }
 

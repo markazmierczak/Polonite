@@ -93,7 +93,7 @@ bool Time::ExplodedMostlyEquals(const Exploded& lhs, const Exploded& rhs) {
 void Time::FormatImpl(TextWriter& out, Time x) {
   Exploded exploded;
   x.UTCExplode(&exploded);
-  FormatMany(out,
+  formatMany(out,
       "{:04}-{:02}-{:02} "
       "{:02}:{:02}:{:02}.{:03} UTC",
       exploded.year, exploded.month, exploded.day_of_month,

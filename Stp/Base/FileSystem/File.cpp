@@ -7,7 +7,6 @@
 #include "Base/FileSystem/FileSystemException.h"
 #include "Base/FileSystem/KnownPaths.h"
 #include "Base/Io/FileStream.h"
-#include "Base/Text/FormatMany.h"
 
 namespace stp {
 

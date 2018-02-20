@@ -61,7 +61,7 @@ void StackTrace::FormatAddresses(TextWriter& out) const {
 #if OS(WIN) || OS(LINUX) || OS(DARWIN)
 void StackTrace::FormatSymbols(TextWriter& out) const {
   for (int i = count_ - 1; i >= 0; --i) {
-    out.format(" #{} {} in ", i, trace_[i]);
+    formatMany(" #{} {} in ", i, trace_[i]);
     FormatSymbol(out, trace_[i]);
     out.WriteLine();
   }

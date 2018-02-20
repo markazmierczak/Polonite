@@ -5,7 +5,6 @@
 
 #include "Base/FileSystem/FileInfo.h"
 #include "Base/Io/FileStream.h"
-#include "Base/Text/FormatMany.h"
 #include "Base/Util/Finally.h"
 
 #include <io.h>

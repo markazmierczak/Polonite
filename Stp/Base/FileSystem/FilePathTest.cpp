@@ -7,7 +7,6 @@
 
 #include "Base/Test/GTest.h"
 #include "Base/Test/PlatformTest.h"
-#include "Base/Text/FormatMany.h"
 
 #if OS(POSIX)
 # include "Base/Test/ScopedLocale.h"

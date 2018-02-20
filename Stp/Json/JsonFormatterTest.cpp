@@ -7,7 +7,6 @@
 
 #include "Base/Debug/Log.h"
 #include "Base/Test/GTest.h"
-#include "Base/Text/FormatMany.h"
 #include "Base/Text/Utf.h"
 
 namespace stp {

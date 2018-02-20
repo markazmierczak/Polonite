@@ -3,7 +3,6 @@
 
 #include "Geometry/Plane.h"
 
-#include "Base/Text/FormatMany.h"
 #include "Base/Type/Limits.h"
 #include "Geometry/Ray3.h"
 

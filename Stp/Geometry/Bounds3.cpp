@@ -3,7 +3,6 @@
 
 #include "Geometry/Bounds3.h"
 
-#include "Base/Text/FormatMany.h"
 #include "Geometry/Xform3.h"
 
 namespace stp {
@@ -14,11 +13,11 @@ void Bounds3::Transform(const Xform3& xform) {
 }
 
 void IntBounds3::ToFormat(TextWriter& out, const StringSpan& opts) const {
-  FormatMany(out, "{} {} {}x{}x{}", min, max, GetWidth(), GetHeight(), GetDepth());
+  formatMany(out, "{} {} {}x{}x{}", min, max, GetWidth(), GetHeight(), GetDepth());
 }
 
 void Bounds3::ToFormat(TextWriter& out, const StringSpan& opts) const {
-  FormatMany(out, "{} {} {}x{}x{}", min, max, GetWidth(), GetHeight(), GetDepth());
+  formatMany(out, "{} {} {}x{}x{}", min, max, GetWidth(), GetHeight(), GetDepth());
 }
 
 } // namespace stp

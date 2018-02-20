@@ -6,9 +6,8 @@
 #include "Base/Debug/Assert.h"
 #include "Base/Debug/Log.h"
 #include "Base/Io/FileStream.h"
-#include "Base/Io/TextWriter.h"
 #include "Base/Posix/EintrWrapper.h"
-#include "Base/Text/FormatMany.h"
+#include "Base/Type/Formattable.h"
 
 #include <elf.h>
 #include <fcntl.h>

@@ -6,7 +6,6 @@
 #include "Geometry/Quad2.h"
 
 #include "Base/Debug/Assert.h"
-#include "Base/Text/FormatMany.h"
 #include "Geometry/Affine.h"
 #include "Geometry/Bounds2.h"
 #include "Geometry/Triangle2.h"

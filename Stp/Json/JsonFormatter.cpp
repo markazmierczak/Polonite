@@ -7,7 +7,6 @@
 
 #include "Base/Dtoa/Dtoa.h"
 #include "Base/Math/Math.h"
-#include "Base/Text/FormatMany.h"
 #include "Base/Text/FormatInteger.h"
 #include "Base/Text/Utf.h"
 

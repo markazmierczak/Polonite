@@ -5,7 +5,6 @@
 
 #include "Base/Containers/List.h"
 #include "Base/Test/GTest.h"
-#include "Base/Text/FormatMany.h"
 
 namespace stp {
 

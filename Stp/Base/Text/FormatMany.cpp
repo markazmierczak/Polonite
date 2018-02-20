@@ -18,20 +18,20 @@ class FormatArgId {
  public:
   FormatArgId() = default;
 
-  bool IsName() const { return name_ != nullptr; }
-  bool IsIndex() const { return name_ == nullptr && size_or_index_ >= 0; }
+  bool isName() const { return name_ != nullptr; }
+  bool isIndex() const { return name_ == nullptr && size_or_index_ >= 0; }
 
-  StringSpan AsName() const {
-    ASSERT(IsName());
+  StringSpan asName() const {
+    ASSERT(isName());
     return StringSpan(name_, size_or_index_);
   }
 
-  int AsIndex() const {
-    ASSERT(IsIndex());
+  int asIndex() const {
+    ASSERT(isIndex());
     return size_or_index_;
   }
 
-  bool Parse(StringSpan s) {
+  bool parse(StringSpan s) {
     // Empty - neither name nor index.
     if (s.isEmpty())
       return true;
@@ -65,7 +65,7 @@ struct FormatLayout {
 
   char fill = ' ';
 
-  bool Parse(StringSpan s);
+  bool parse(StringSpan s);
 };
 
 struct FormatReplacement {
@@ -73,14 +73,14 @@ struct FormatReplacement {
   FormatLayout layout;
   StringSpan options;
 
-  bool NeedsLayout() const { return layout.width >= 0; }
+  bool needsLayout() const { return layout.width >= 0; }
 
-  bool Parse(StringSpan s);
+  bool parse(StringSpan s);
 
-  Formatter* FindFormatter(Span<Formatter*> args, int& implicit_index);
+  Formatter* findFormatter(Span<Formatter*> args, int& implicit_index);
 };
 
-static inline FormatAlign ParseAlign(char c) {
+static inline FormatAlign parseAlign(char c) {
   switch (c) {
     case '<':
     case '>':
@@ -90,7 +90,7 @@ static inline FormatAlign ParseAlign(char c) {
   return FormatAlign::None;
 }
 
-bool FormatLayout::Parse(StringSpan s) {
+bool FormatLayout::parse(StringSpan s) {
   if (s.isEmpty())
     return true;
 
@@ -98,12 +98,12 @@ bool FormatLayout::Parse(StringSpan s) {
   // Otherwise, if s[0] is a align char, then s[1:...] contains the width.
   // Otherwise, s[0:...] contains the width.
   if (s.size() >= 2) {
-    align = ParseAlign(s[1]);
+    align = parseAlign(s[1]);
     if (align != FormatAlign::None) {
       fill = s[0];
       s.removePrefix(2);
     } else {
-      align = ParseAlign(s[0]);
+      align = parseAlign(s[0]);
       if (align != FormatAlign::None) {
         s.removePrefix(1);
       } else {
@@ -114,7 +114,7 @@ bool FormatLayout::Parse(StringSpan s) {
   return tryParse(s, width) == ParseIntegerErrorCode::Ok;
 }
 
-bool FormatReplacement::Parse(StringSpan s) {
+bool FormatReplacement::parse(StringSpan s) {
   TrimWhitespaceAscii(s);
 
   int comma = s.indexOf(',');
@@ -128,14 +128,14 @@ bool FormatReplacement::Parse(StringSpan s) {
   int id_count = comma >= 0 ? comma : (semicolon >= 0 ? semicolon : s.size());
 
   StringSpan id_spec = s.getSlice(0, id_count);
-  if (!arg_id.Parse(id_spec))
+  if (!arg_id.parse(id_spec))
     return false;
 
   if (comma != -1) {
     int layout_start = comma + 1;
     int layout_end = semicolon >= 0 ? semicolon : s.size();
     StringSpan layout_spec = s.getSlice(layout_start, layout_end - layout_start);
-    if (!layout.Parse(layout_spec))
+    if (!layout.parse(layout_spec))
       return false;
   }
   if (semicolon != -1) {
@@ -145,17 +145,15 @@ bool FormatReplacement::Parse(StringSpan s) {
   return true;
 }
 
-Formatter* FormatReplacement::FindFormatter(
-    Span<Formatter*> args,
-    int& implicit_index) {
+Formatter* FormatReplacement::findFormatter(Span<Formatter*> args, int& implicit_index) {
   int index;
-  if (arg_id.IsIndex()) {
-    index = arg_id.AsIndex();
-  } else if (arg_id.IsName()) {
-    StringSpan name = arg_id.AsName();
+  if (arg_id.isIndex()) {
+    index = arg_id.asIndex();
+  } else if (arg_id.isName()) {
+    StringSpan name = arg_id.asName();
     for (index = 0; index < args.size(); ++index) {
       Formatter* formatter = args[index];
-      if (formatter->GetArgName() == name)
+      if (formatter->getArgName() == name)
         break;
     }
     if (index >= args.size())
@@ -169,11 +167,11 @@ Formatter* FormatReplacement::FindFormatter(
 
 } // namespace
 
-StringSpan Formatter::GetArgName() const {
+StringSpan Formatter::getArgName() const {
   return StringSpan();
 }
 
-static void FormatAndLayoutReplacement(
+static void formatAndLayoutReplacement(
     TextWriter& out,
     const FormatReplacement& replacement,
     Formatter* formatter, const StringSpan& opts) {
@@ -187,7 +185,7 @@ static void FormatAndLayoutReplacement(
   InlineList<char, 512> buffer;
   InlineStringWriter base_writer(&buffer);
   ClipTextWriter writer(&base_writer, width);
-  formatter->Execute(writer, opts);
+  formatter->execute(writer, opts);
 
   int pad_length = width - buffer.size();
 
@@ -211,7 +209,7 @@ static void FormatAndLayoutReplacement(
     out.indent(pad_length, fill);
 }
 
-void FormatManyImpl(TextWriter& out, StringSpan fmt, Span<Formatter*> args) {
+void formatManyImpl(TextWriter& out, StringSpan fmt, Span<Formatter*> args) {
   // TODO handle double }} correctly
   int implicit_index = -1;
   while (!fmt.isEmpty()) {
@@ -235,19 +233,19 @@ void FormatManyImpl(TextWriter& out, StringSpan fmt, Span<Formatter*> args) {
       fmt.removePrefix(closing_brace + 1);
 
       FormatReplacement replacement;
-      if (!replacement.Parse(rep_string)) {
+      if (!replacement.parse(rep_string)) {
         LOG(WARN, "invalid replacement at {}", brace);
         // TODO information in exception and remove the log
         throw FormatException();
       }
       // Resolve formatter that will produce input for replacement.
-      Formatter* formatter = replacement.FindFormatter(args, implicit_index);
+      Formatter* formatter = replacement.findFormatter(args, implicit_index);
       ASSERT(formatter);
 
-      if (replacement.NeedsLayout())
-        FormatAndLayoutReplacement(out, replacement, formatter, replacement.options);
+      if (replacement.needsLayout())
+        formatAndLayoutReplacement(out, replacement, formatter, replacement.options);
       else
-        formatter->Execute(out, replacement.options);
+        formatter->execute(out, replacement.options);
     }
   }
 }
