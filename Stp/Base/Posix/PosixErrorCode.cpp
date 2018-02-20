@@ -115,9 +115,9 @@ namespace {
 
 class PosixErrorCategory final : public ErrorCategory {
  public:
-  StringSpan GetName() const noexcept override { return "posix"; }
+  StringSpan getName() const noexcept override { return "posix"; }
 
-  void FormatMessage(TextWriter& out, int code) const override {
+  void formatMessage(TextWriter& out, int code) const override {
     detail::format(out, static_cast<PosixErrorCode>(code));
   }
 };

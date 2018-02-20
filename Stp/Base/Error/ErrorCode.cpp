@@ -11,31 +11,31 @@
 namespace stp {
 
 int compare(const ErrorCode& l, const ErrorCode& r) noexcept {
-  int rv = compare(&l.GetCategory(), &r.GetCategory());
+  int rv = compare(&l.getCategory(), &r.getCategory());
   if (!rv)
-    rv = compare(l.GetCode(), r.GetCode());
+    rv = compare(l.getCode(), r.getCode());
   return rv;
 }
 
 HashCode partialHash(const ErrorCode& x) noexcept {
-  return partialHashMany(&x.GetCategory(), x.GetCode());
+  return partialHashMany(&x.getCategory(), x.getCode());
 }
 
 namespace detail {
 
 void format(TextWriter& out, const ErrorCode& x) {
-  if (IsOk(x)) {
+  if (isOk(x)) {
     out << "no error";
   } else {
-    x.GetCategory().FormatMessage(out, x.GetCode());
+    x.getCategory().formatMessage(out, x.getCode());
   }
 }
 
-StringSpan SuccessErrorCategory::GetName() const noexcept {
+StringSpan SuccessErrorCategory::getName() const noexcept {
   return "success";
 }
 
-void SuccessErrorCategory::FormatMessage(TextWriter& out, int code) const {
+void SuccessErrorCategory::formatMessage(TextWriter& out, int code) const {
   out << "success";
 }
 

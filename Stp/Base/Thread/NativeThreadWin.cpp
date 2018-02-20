@@ -15,7 +15,7 @@ NativeThreadId NativeThread::CurrentId() {
 NativeThreadId NativeThread::ObjectToId(NativeThreadObject object) {
   DWORD id = ::GetThreadId(object);
   if (id == 0)
-    throw SystemException(GetLastPosixErrorCode());
+    throw SystemException(getLastPosixErrorCode());
   return id;
 }
 
@@ -41,7 +41,7 @@ NativeThread::ObjectHandlePair NativeThread::Create(
       nullptr, stack_size, ThreadFunc, delegate, flags, &handle);
 
   if (thread == InvalidNativeThreadObject)
-    throw SystemException(GetLastPosixErrorCode());
+    throw SystemException(getLastPosixErrorCode());
 
   if (start_detached) {
     if (!::CloseHandle(thread))
@@ -56,14 +56,14 @@ int NativeThread::Join(NativeThreadObject thread) {
   DWORD rv = ::WaitForSingleObject(thread, INFINITE);
   if (rv != WAIT_OBJECT_0) {
     ASSERT(rv == WAIT_FAILED);
-    throw Exception::WithDebug(SystemException(
-        GetLastPosixErrorCode()), "unable to join thread");
+    throw Exception::withDebug(SystemException(
+        getLastPosixErrorCode()), "unable to join thread");
   }
 
   DWORD exit_code;
   if (!::GetExitCodeThread(thread, &exit_code)) {
-    throw Exception::WithDebug(SystemException(
-        GetLastPosixErrorCode()), "unable to get thread's exit code");
+    throw Exception::withDebug(SystemException(
+        getLastPosixErrorCode()), "unable to get thread's exit code");
   }
 
   Detach(thread);
@@ -73,8 +73,8 @@ int NativeThread::Join(NativeThreadObject thread) {
 
 void NativeThread::Detach(NativeThreadObject thread) {
   if (!::CloseHandle(thread)) {
-    throw Exception::WithDebug(SystemException(
-        GetLastPosixErrorCode()), "unable to close thread handle");
+    throw Exception::withDebug(SystemException(
+        getLastPosixErrorCode()), "unable to close thread handle");
   }
 }
 
@@ -122,8 +122,8 @@ static int ThreadPriorityToNative(ThreadPriority priority) {
 void NativeThread::SetPriority(NativeThreadObject thread, ThreadPriority priority) {
   int native_priority = ThreadPriorityToNative(priority);
   if (!::SetThreadPriority(thread, native_priority)) {
-    throw Exception::WithDebug(SystemException(
-        GetLastPosixErrorCode()), "unable to change thread priority");
+    throw Exception::withDebug(SystemException(
+        getLastPosixErrorCode()), "unable to change thread priority");
   }
 }
 

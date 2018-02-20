@@ -115,7 +115,7 @@ void MemoryStream::PositionalWrite(int64_t offset, BufferSpan input) {
 
   int n = input.size();
   if (offset > MaxCapacity_ - n)
-    throw Exception::With(IoException(), "attempted to write past memory limit");
+    throw Exception::with(IoException(), "attempted to write past memory limit");
 
   int after_pos = static_cast<int>(offset) + n;
   if (after_pos > length_) {
@@ -135,7 +135,7 @@ void MemoryStream::WriteByte(byte_t byte) {
     int new_length = position_ + 1;
     if (new_length > capacity_) {
       if (new_length > MaxCapacity_)
-        throw Exception::With(IoException(), "attempted to write past memory limit");
+        throw Exception::with(IoException(), "attempted to write past memory limit");
       ensureCapacity(new_length);
     }
     if (position_ > length_) {
@@ -172,7 +172,7 @@ int64_t MemoryStream::Seek(int64_t offset, SeekOrigin origin) {
       UNREACHABLE(new_pos = -1);
   }
   if (new_pos < 0)
-    throw Exception::With(IoException(), "attempted to seek before the beginning of stream");
+    throw Exception::with(IoException(), "attempted to seek before the beginning of stream");
 
   position_ = new_pos;
   return new_pos;
@@ -200,7 +200,7 @@ void MemoryStream::SetLength(int64_t new_length) {
 
   if (new_length > length_) {
     if (new_length >= MaxCapacity_)
-      throw Exception::With(IoException(), "attempted to resize past memory limit");
+      throw Exception::with(IoException(), "attempted to resize past memory limit");
 
     ensureCapacity(static_cast<int>(new_length));
     // Zero the memory acquired by resizing up.
@@ -228,7 +228,7 @@ void MemoryStream::SetPosition(int64_t new_position) {
   ASSERT(CanSeek());
   ASSERT(new_position >= 0);
   if (new_position >= MaxCapacity_)
-    throw Exception::With(IoException(), "cannot seek past memory limit");
+    throw Exception::with(IoException(), "cannot seek past memory limit");
   position_ = static_cast<int>(new_position);
 }
 
@@ -243,7 +243,7 @@ void MemoryStream::ensureCapacity(int request) {
     return; // already satisfied
 
   if (!expandable_)
-    throw Exception::With(IoException(), "unable to resize the non-expandable stream");
+    throw Exception::with(IoException(), "unable to resize the non-expandable stream");
 
   int doubled_capacity = capacity_ << 1;
   if (doubled_capacity > MaxCapacity_)

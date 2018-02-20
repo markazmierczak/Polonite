@@ -85,7 +85,7 @@ void TemporaryDirectory::CreateInternal(FilePathSpan base_dir, StringSpan prefix
     }
 
     if (::GetLastError() != ERROR_ALREADY_EXISTS)
-      throw FileSystemException(GetLastWinErrorCode();
+      throw FileSystemException(getLastWinErrorCode();
 
     sub_dir.TruncateCharacters(base_dir.size());
   }
@@ -107,7 +107,7 @@ void TemporaryDirectory::CreateInternal(FilePathSpan base_dir, StringSpan prefix
   char* buffer = const_cast<char*>(toNullTerminated(sub_dir));
   char* dtemp = ::mkdtemp(buffer);
   if (!dtemp)
-    throw FileSystemException(GetLastPosixErrorCode());
+    throw FileSystemException(getLastPosixErrorCode());
   ASSERT(dtemp == buffer);
 
   path_ = move(sub_dir);

@@ -24,8 +24,8 @@ void FileDescriptor::Close() {
   // current process keep access to a resource.
   int ret = IGNORE_EINTR(::close(fd_));
   if (ret != 0) {
-    throw Exception::WithDebug(
-        SystemException(GetLastPosixErrorCode()), "closing descriptor failed");
+    throw Exception::withDebug(
+        SystemException(getLastPosixErrorCode()), "closing descriptor failed");
   }
   fd_ = InvalidFd;
 }
@@ -33,8 +33,8 @@ void FileDescriptor::Close() {
 FileDescriptor FileDescriptor::Duplicate() {
   FileDescriptor rv = TryDuplicate();
   if (!rv.IsValid()) {
-    throw Exception::WithDebug(
-        SystemException(GetLastPosixErrorCode()), "failed to duplicate file descriptor");
+    throw Exception::withDebug(
+        SystemException(getLastPosixErrorCode()), "failed to duplicate file descriptor");
   }
   return rv;
 }
@@ -42,8 +42,8 @@ FileDescriptor FileDescriptor::Duplicate() {
 FileDescriptor FileDescriptor::DuplicateTo(int new_fd) {
   FileDescriptor rv = TryDuplicateTo(new_fd);
   if (!rv.IsValid()) {
-    throw Exception::WithDebug(
-        SystemException(GetLastPosixErrorCode()), "failed to duplicate file descriptor");
+    throw Exception::withDebug(
+        SystemException(getLastPosixErrorCode()), "failed to duplicate file descriptor");
   }
   return rv;
 }
@@ -52,14 +52,14 @@ void FileDescriptor::SetNonBlocking() {
   int flags = ::fcntl(fd_, F_GETFL);
 
   if (flags == -1) {
-    throw Exception::WithDebug(
-        SystemException(GetLastPosixErrorCode()), "unable to get descriptor flags");
+    throw Exception::withDebug(
+        SystemException(getLastPosixErrorCode()), "unable to get descriptor flags");
   }
 
   if (!(flags & O_NONBLOCK)) {
     if (HANDLE_EINTR(::fcntl(fd_, F_SETFL, flags | O_NONBLOCK)) == -1)
-      throw Exception::WithDebug(
-          SystemException(GetLastPosixErrorCode()),
+      throw Exception::withDebug(
+          SystemException(getLastPosixErrorCode()),
           "unable to set non-blocking flag on descriptor");
   }
 }

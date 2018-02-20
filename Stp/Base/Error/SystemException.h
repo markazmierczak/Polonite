@@ -13,9 +13,9 @@ class BASE_EXPORT SystemException : public Exception {
  public:
   explicit SystemException(SystemErrorCode error_code) noexcept : error_code_(error_code) {}
 
-  SystemErrorCode GetErrorCode() const { return error_code_; }
+  SystemErrorCode getErrorCode() const { return error_code_; }
 
-  StringSpan GetName() const noexcept override;
+  StringSpan getName() const noexcept override;
 
  protected:
   void onFormat(TextWriter& out) const override;

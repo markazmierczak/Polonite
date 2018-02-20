@@ -20,7 +20,7 @@ SystemErrorCode DirectoryEnumerator::TryOpen(const FilePath& path) {
     current_dir_ = dir;
     return PosixErrorCode::Ok;
   }
-  return GetLastPosixErrorCode();
+  return getLastPosixErrorCode();
 }
 
 void DirectoryEnumerator::Close() noexcept {
@@ -56,7 +56,7 @@ bool DirectoryEnumerator::TryMoveNext(SystemErrorCode& out_error_code) {
     return true;
   }
   dirent_ = nullptr;
-  out_error_code = GetLastPosixErrorCode();
+  out_error_code = getLastPosixErrorCode();
   return false;
 }
 

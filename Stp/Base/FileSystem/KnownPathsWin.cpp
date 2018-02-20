@@ -26,7 +26,7 @@ FilePath GetTempDirPath() {
     wchar_t path[MAX_PATH + 1];
     DWORD length = ::GetTempPathW(MAX_PATH, path);
     if (length == 0)
-      throw SystemException(GetLastWinErrorCode());
+      throw SystemException(getLastWinErrorCode());
     return FilePath(path, static_cast<int>(length));
   };
   static known_path::Key g_key = 0;
@@ -42,7 +42,7 @@ FilePath GetCurrentDirPath() {
     int rv = static_cast<int>(::GetCurrentDirectoryW(buffer_length, dst));
     if (rv < buffer_length) {
       if (rv == 0)
-        throw SystemException(GetLastWinErrorCode());
+        throw SystemException(getLastWinErrorCode());
       path.TruncateCharacters(rv);
       return path;
     }
@@ -95,7 +95,7 @@ static FilePath GetModuleFile(HMODULE module) {
     }
     path.clear();
   }
-  throw SystemException(GetLastWinErrorCode());
+  throw SystemException(getLastWinErrorCode());
 }
 
 FilePath GetExecutableFilePath() {

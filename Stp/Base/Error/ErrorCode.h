@@ -11,8 +11,8 @@ namespace stp {
 
 class ErrorCategory {
  public:
-  virtual StringSpan GetName() const noexcept = 0;
-  virtual void FormatMessage(TextWriter& out, int code) const = 0;
+  virtual StringSpan getName() const noexcept = 0;
+  virtual void formatMessage(TextWriter& out, int code) const = 0;
 
   bool operator==(const ErrorCategory& other) const noexcept { return this == &other; }
   bool operator!=(const ErrorCategory& other) const noexcept { return this != &other; }
@@ -28,8 +28,8 @@ namespace detail {
 
 class SuccessErrorCategory final : public ErrorCategory {
  public:
-  StringSpan GetName() const noexcept override;
-  void FormatMessage(TextWriter& out, int code) const override;
+  StringSpan getName() const noexcept override;
+  void formatMessage(TextWriter& out, int code) const override;
 };
 
 BASE_EXPORT extern const SuccessErrorCategory SuccessErrorCategoryInstance;
@@ -38,7 +38,7 @@ BASE_EXPORT extern const SuccessErrorCategory SuccessErrorCategoryInstance;
 
 enum class PosixErrorCode : int;
 class ErrorCode;
-inline ErrorCode MakeErrorCode(PosixErrorCode code) noexcept;
+inline ErrorCode makeErrorCode(PosixErrorCode code) noexcept;
 
 class ErrorCode final {
  public:
@@ -54,15 +54,15 @@ class ErrorCode final {
   template<typename TErrorCodeEnum, TEnableIf<TIsErrorCodeEnum<TErrorCodeEnum>>* = nullptr>
   ErrorCode& operator=(TErrorCodeEnum e) noexcept { return *this = MakeErrorCode(e); }
 
-  int GetCode() const { return code_; }
-  const ErrorCategory& GetCategory() const { return *category_; }
+  int getCode() const { return code_; }
+  const ErrorCategory& getCategory() const { return *category_; }
 
   friend bool operator==(const ErrorCode& l, const ErrorCode& r) {
     return l.category_ == r.category_ && l.code_ == r.code_;
   }
   friend bool operator!=(const ErrorCode& l, const ErrorCode& r) { return !operator==(l, r); }
 
-  friend bool IsOk(const ErrorCode& x) { return x.code_ == 0; }
+  friend bool isOk(const ErrorCode& x) { return x.code_ == 0; }
 
  private:
   int code_;

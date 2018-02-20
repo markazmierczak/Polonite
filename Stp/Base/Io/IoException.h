@@ -11,12 +11,12 @@ namespace stp {
 // Base exception for stream-related exceptions.
 class IoException : public Exception {
  public:
-  StringSpan GetName() const noexcept override;
+  StringSpan getName() const noexcept override;
 };
 
 class BASE_EXPORT EndOfStreamException : public IoException {
  public:
-  StringSpan GetName() const noexcept override;
+  StringSpan getName() const noexcept override;
 
  protected:
   void onFormat(TextWriter& out) const override;

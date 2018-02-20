@@ -8,12 +8,12 @@
 
 namespace stp {
 
-StringSpan FileSystemException::GetName() const noexcept {
+StringSpan FileSystemException::getName() const noexcept {
   return "FileSystemException";
 }
 
 void FileSystemException::onFormat(TextWriter& out) const {
-  out << GetErrorCode();
+  out << getErrorCode();
   if (!path_.isEmpty()) {
     out << ", path=" << path_;
   }

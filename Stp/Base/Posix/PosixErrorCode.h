@@ -21,11 +21,11 @@ template<> struct TIsErrorCodeEnumTmpl<PosixErrorCode> : TTrue {};
 
 inline bool IsOk(PosixErrorCode code) { return code == PosixErrorCode::Ok; }
 
-inline PosixErrorCode GetLastPosixErrorCode() { return static_cast<PosixErrorCode>(errno); }
+inline PosixErrorCode getLastPosixErrorCode() { return static_cast<PosixErrorCode>(errno); }
 
 BASE_EXPORT const ErrorCategory* GetPosixErrorCategory() noexcept;
 
-inline ErrorCode MakeErrorCode(PosixErrorCode code) noexcept {
+inline ErrorCode makeErrorCode(PosixErrorCode code) noexcept {
   return ErrorCode(static_cast<int>(code), GetPosixErrorCategory());
 }
 

@@ -25,7 +25,7 @@ void NativeThread::SetPriority(NativeThreadObject thread, ThreadPriority priorit
     sched_param param = { 0 };
     error = static_cast<PosixErrorCode>(pthread_setschedparam(thread, SCHED_IDLE, &param));
     if (!IsOk(error))
-      throw Exception::WithDebug(SystemException(error), "unable to set idle policy for thread");
+      throw Exception::withDebug(SystemException(error), "unable to set idle policy for thread");
     return;
   }
   #endif
@@ -46,7 +46,7 @@ void NativeThread::SetPriority(NativeThreadObject thread, ThreadPriority priorit
   sched_param param = { p };
   error = static_cast<PosixErrorCode>(pthread_setschedparam(thread, policy, &param));
   if (!IsOk(error))
-    throw Exception::WithDebug(SystemException(error), "unable to set idle policy for thread");
+    throw Exception::withDebug(SystemException(error), "unable to set idle policy for thread");
 }
 #endif // OS(*)
 
@@ -64,7 +64,7 @@ void NativeThread::SetName(const String& name) {
   // Set the name for the LWP (which gets truncated to 15 characters).
   int err = prctl(PR_SET_NAME, toNullTerminated(name));
 
-  auto error_code = GetLastPosixErrorCode();
+  auto error_code = getLastPosixErrorCode();
   if (err < 0 && error_code != PosixErrorCode::OperationNotPermitted)
     LOG(ERROR, "prctl(PR_SET_NAME) failed : {}", error_code);
 }

@@ -24,19 +24,19 @@ struct ScopeFinallyCondition {
 struct ScopeCatchCondition {
   static constexpr bool MayThrow = false;
 
-  int exception_count = CountUncaughtExceptions();
+  int exception_count = countUncaughtExceptions();
 
   void cancel() { exception_count = Limits<int>::Max; }
-  bool shouldExecute() const { return exception_count < CountUncaughtExceptions(); }
+  bool shouldExecute() const { return exception_count < countUncaughtExceptions(); }
 };
 
 struct ScopeContinueCondition {
   static constexpr bool MayThrow = true;
 
-  int exception_count = CountUncaughtExceptions();
+  int exception_count = countUncaughtExceptions();
 
   void cancel() { exception_count = -1; }
-  bool shouldExecute() const { return exception_count >= CountUncaughtExceptions(); }
+  bool shouldExecute() const { return exception_count >= countUncaughtExceptions(); }
 };
 
 template<typename TAction, typename TCondition>

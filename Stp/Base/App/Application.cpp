@@ -206,10 +206,10 @@ void Application::onWillFini() {}
 void Application::onCaptureArguments(CommandLine::Arguments& arguments) {}
 
 static void defaultTerminate() {
-  auto exception_ptr = ExceptionPtr::Current();
+  auto exception_ptr = ExceptionPtr::current();
   if (exception_ptr) {
     try {
-      exception_ptr.Rethrow();
+      exception_ptr.rethrow();
     } catch(Exception& exception) {
       RELEASE_LOG(FATAL, "unhandled exception {}", exception);
     } catch(...) {

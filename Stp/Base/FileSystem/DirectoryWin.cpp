@@ -16,7 +16,7 @@ SystemErrorCode Directory::TryCreate(const FilePath& path) {
   if (::CreateDirectoryW(toNullTerminated(path), nullptr) != 0)
     return WinErrorCode::Success;
 
-  auto error = GetLastWinErrorCode();
+  auto error = getLastWinErrorCode();
   if (error.GetCode() == WinErrorCode::AlreadyExists) {
     // This error code doesn't indicate whether we were racing with someone
     // creating the same directory, or a file with the same path.
@@ -28,14 +28,14 @@ SystemErrorCode Directory::TryCreate(const FilePath& path) {
 
 SystemErrorCode Directory::tryRemoveEmpty(const FilePath& path) {
   if (!::RemoveDirectoryW(toNullTerminated(path)))
-    return GetLastWinErrorCode();
+    return getLastWinErrorCode();
   return WinErrorCode::Success;
 }
 
 SystemErrorCode Directory::tryGetDriveSpaceInfo(const FilePath& path, DriveSpaceInfo& out_space) {
   ULARGE_INTEGER available, total, free;
   if (!::GetDiskFreeSpaceExW(toNullTerminated(path), &available, &total, &free))
-    return GetLastWinErrorCode();
+    return getLastWinErrorCode();
 
   auto ULargeIntToInt64 = [](ULARGE_INTEGER bytes) {
     ASSERT(bytes.QuadPart <= INT64_MAX);

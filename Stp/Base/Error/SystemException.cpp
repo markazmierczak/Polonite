@@ -7,7 +7,7 @@
 
 namespace stp {
 
-StringSpan SystemException::GetName() const noexcept {
+StringSpan SystemException::getName() const noexcept {
   return "SystemException";
 }
 

@@ -85,7 +85,7 @@ NotFoundException::NotFoundException(FilePath path) noexcept
     : path_(move(path)) {
 }
 
-StringSpan NotFoundException::GetName() const noexcept {
+StringSpan NotFoundException::getName() const noexcept {
   return "known_path::NotFoundException";
 }
 

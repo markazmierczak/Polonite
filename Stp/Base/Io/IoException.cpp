@@ -7,11 +7,11 @@
 
 namespace stp {
 
-StringSpan IoException::GetName() const noexcept {
+StringSpan IoException::getName() const noexcept {
   return "IoException";
 }
 
-StringSpan EndOfStreamException::GetName() const noexcept {
+StringSpan EndOfStreamException::getName() const noexcept {
   return "EndOfStreamException";
 }
 

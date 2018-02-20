@@ -15,12 +15,12 @@ class TextWriter;
 namespace detail {
 
 template<typename T>
-inline void AttachManyToException(T& exception) {}
+inline void attachManyToException(T& exception) {}
 
 template<typename T, typename TArg, typename... TArgs>
-inline void AttachManyToException(T& exception, TArg&& arg, TArgs&&... args) {
-  AttachToException(exception, Forward<TArg>(arg));
-  AttachManyToException(exception, Forward<TArgs>(args)...);
+inline void attachManyToException(T& exception, TArg&& arg, TArgs&&... args) {
+  attachToException(exception, Forward<TArg>(arg));
+  attachManyToException(exception, Forward<TArgs>(args)...);
 }
 
 } // namespace detail
@@ -40,30 +40,30 @@ class BASE_EXPORT Exception {
   Exception(const Exception& other);
   Exception& operator=(const Exception& other);
 
-  virtual StringSpan GetName() const noexcept;
+  virtual StringSpan getName() const noexcept;
 
-  StringSpan GetMessage() const noexcept;
+  StringSpan getMessage() const noexcept;
 
   template<typename T, typename... TArgs>
-  static T With(T exception, TArgs&&... args) {
-    detail::AttachManyToException(exception, Forward<TArgs>(args)...);
+  static T with(T exception, TArgs&&... args) {
+    detail::attachManyToException(exception, Forward<TArgs>(args)...);
     return exception;
   }
 
   template<typename T, typename... TArgs>
-  static T WithDebug(T exception, TArgs&&... args) {
+  static T withDebug(T exception, TArgs&&... args) {
     #if !defined(NDEBUG)
-    detail::AttachManyToException(exception, Forward<TArgs>(args)...);
+    detail::attachManyToException(exception, Forward<TArgs>(args)...);
     #endif
     return exception;
   }
 
-  friend void AttachToException(Exception& exception, const StringSpan& message) {
-    exception.AddMessage(message, false);
+  friend void attachToException(Exception& exception, const StringSpan& message) {
+    exception.addMessage(message, false);
   }
   template<int N>
-  friend void AttachToException(Exception& exception, const char (&message)[N]) {
-    exception.AddMessage(message, N, true);
+  friend void attachToException(Exception& exception, const char (&message)[N]) {
+    exception.addMessage(message, N, true);
   }
 
   friend void swap(Exception& l, Exception& r) noexcept {
@@ -72,10 +72,10 @@ class BASE_EXPORT Exception {
     swap(l.msg_capacity_, r.msg_capacity_);
   }
   friend void format(TextWriter& out, const Exception& x, const StringSpan& opts) {
-    x.FormatImpl(out);
+    x.formatImpl(out);
   }
   friend TextWriter& operator<<(TextWriter& out, const Exception& x) {
-    x.FormatImpl(out);
+    x.formatImpl(out);
     return out;
   }
 
@@ -87,9 +87,9 @@ class BASE_EXPORT Exception {
   int msg_size_ = 0;
   int msg_capacity_ = 0;
 
-  void AddMessage(const StringSpan& message, bool literal);
-  void AddMessage(const char* msg, int msg_size, bool literal);
-  void FormatImpl(TextWriter& out) const;
+  void addMessage(const StringSpan& message, bool literal);
+  void addMessage(const char* msg, int msg_size, bool literal);
+  void formatImpl(TextWriter& out) const;
 };
 
 inline Exception::Exception(Exception&& other) noexcept

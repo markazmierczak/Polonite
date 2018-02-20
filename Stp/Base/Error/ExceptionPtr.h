@@ -43,7 +43,7 @@ bool operator==(const ExceptionPtr& l, const ExceptionPtr& r) noexcept;
 
 class ExceptionPtr {
  public:
-  static ExceptionPtr Current() noexcept;
+  static ExceptionPtr current() noexcept;
 
   ExceptionPtr() noexcept;
   ~ExceptionPtr() noexcept;
@@ -53,7 +53,7 @@ class ExceptionPtr {
 
   explicit operator bool() const noexcept;
 
-  [[noreturn]] void Rethrow();
+  [[noreturn]] void rethrow();
 
   friend bool operator==(const ExceptionPtr& l, const ExceptionPtr& r) noexcept;
   friend bool operator!=(const ExceptionPtr& l, const ExceptionPtr& r) noexcept {
@@ -79,7 +79,7 @@ class ExceptionPtr {
 };
 
 template<class TException>
-inline ExceptionPtr MakeExceptionPtr(TException e) noexcept {
+inline ExceptionPtr makeExceptionPtr(TException e) noexcept {
   #if COMPILER(MSVC)
   ExceptionPtr rv = nullptr;
   const void* info = __GetExceptionInfo(e);
@@ -90,7 +90,7 @@ inline ExceptionPtr MakeExceptionPtr(TException e) noexcept {
   try {
     throw e;
   } catch (...) {
-    return ExceptionPtr::Current();
+    return ExceptionPtr::current();
   }
   #endif
 }
@@ -136,11 +136,11 @@ inline void swap(ExceptionPtr& lhs, ExceptionPtr& rhs) noexcept {
   __ExceptionPtrSwap(&rhs, &lhs);
 }
 
-[[noreturn]] inline void ExceptionPtr::Rethrow() {
+[[noreturn]] inline void ExceptionPtr::rethrow() {
   __ExceptionPtrRethrow(this);
 }
 
-inline ExceptionPtr ExceptionPtr::Current() noexcept {
+inline ExceptionPtr ExceptionPtr::current() noexcept {
   ExceptionPtr rv;
   __ExceptionPtrCurrentException(&rv);
   return rv;
@@ -170,11 +170,11 @@ inline ExceptionPtr::operator bool() const noexcept {
   return impl_.operator bool();
 }
 
-[[noreturn]] inline void ExceptionPtr::Rethrow() {
+[[noreturn]] inline void ExceptionPtr::rethrow() {
   std::rethrow_exception(impl_);
 }
 
-inline ExceptionPtr ExceptionPtr::Current() noexcept {
+inline ExceptionPtr ExceptionPtr::current() noexcept {
   ExceptionPtr rv;
   rv.impl_ = std::current_exception();
   return rv;
@@ -212,13 +212,13 @@ inline bool operator==(const ExceptionPtr& l, const ExceptionPtr& r) noexcept {
   return l.ptr_ == r.ptr_;
 }
 
-[[noreturn]] inline void ExceptionPtr::Rethrow() {
+[[noreturn]] inline void ExceptionPtr::rethrow() {
   __cxxabiv1::__cxa_rethrow_primary_exception(ptr_);
   // if p.ptr_ is NULL, above returns so we terminate
   Application::Terminate();
 }
 
-inline ExceptionPtr ExceptionPtr::Current() noexcept {
+inline ExceptionPtr ExceptionPtr::current() noexcept {
   ExceptionPtr rv;
   rv.ptr_ = __cxxabiv1::__cxa_current_primary_exception();
   return rv;

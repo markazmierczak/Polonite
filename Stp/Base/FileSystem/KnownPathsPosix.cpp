@@ -31,7 +31,7 @@ FilePath GetTempDirPath() {
 FilePath GetHomeDirPath() {
   auto provider = []() {
     #if OS(ANDROID)
-    throw Exception::With(
+    throw Exception::with(
         NotSupportedException(),
         "home directory lookup not yet implemented for Android");
     #else
@@ -65,7 +65,7 @@ FilePath GetCurrentDirPath() {
       return path;
     }
   }
-  throw SystemException(GetLastSystemErrorCode());
+  throw SystemException(getLastSystemErrorCode());
 }
 
 bool SetCurrentDirPath(const FilePath& path) {

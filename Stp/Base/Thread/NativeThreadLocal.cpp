@@ -11,7 +11,7 @@ namespace stp {
 NativeThreadLocal::Slot NativeThreadLocal::Allocate() {
   Slot slot = ::TlsAlloc();
   if (slot == TLS_OUT_OF_INDEXES)
-    throw Exception::With(Exception(), "run out of TLS indices");
+    throw Exception::with(Exception(), "run out of TLS indices");
   return slot;
 }
 
@@ -25,7 +25,7 @@ NativeThreadLocal::Slot NativeThreadLocal::Allocate(void (*dtor)(void*)) {
   Slot slot;
   auto error = static_cast<PosixErrorCode>(pthread_key_create(&slot, dtor));
   if (!IsOk(error))
-    throw Exception::With(SystemException(error), "run out of TLS indices");
+    throw Exception::with(SystemException(error), "run out of TLS indices");
   return slot;
 }
 

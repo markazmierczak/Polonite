@@ -10,8 +10,8 @@ namespace stp {
 
 class Exception;
 
-BASE_EXPORT int CountUncaughtExceptions() noexcept;
-BASE_EXPORT bool HasUncaughtExceptions() noexcept;
+BASE_EXPORT int countUncaughtExceptions() noexcept;
+BASE_EXPORT bool hasUncaughtExceptions() noexcept;
 
 } // namespace stp
 

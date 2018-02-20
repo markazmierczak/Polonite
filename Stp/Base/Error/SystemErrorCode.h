@@ -20,11 +20,11 @@ using SystemErrorCode = WinErrorCode;
 using SystemErrorCode = PosixErrorCode;
 #endif
 
-inline SystemErrorCode GetLastSystemErrorCode() {
+inline SystemErrorCode getLastSystemErrorCode() {
   #if OS(WIN)
-  return GetLastWinErrorCode();
+  return getLastWinErrorCode();
   #elif OS(POSIX)
-  return GetLastPosixErrorCode();
+  return getLastPosixErrorCode();
   #endif
 }
 

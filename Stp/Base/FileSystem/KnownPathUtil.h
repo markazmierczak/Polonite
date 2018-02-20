@@ -35,7 +35,7 @@ inline FilePath ResolveDirectory(Key& key, ProvideType provider, Option option) 
 class BASE_EXPORT NotFoundException : public Exception {
  public:
   explicit NotFoundException(FilePath path) noexcept;
-  StringSpan GetName() const noexcept override;
+  StringSpan getName() const noexcept override;
 
   const FilePath& GetPath() const noexcept { return path_; }
 

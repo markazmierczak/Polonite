@@ -7,15 +7,15 @@
 
 namespace stp {
 
-StringSpan ArgumentException::GetName() const noexcept {
+StringSpan ArgumentException::getName() const noexcept {
   return "ArgumentException";
 }
 
 void ArgumentException::onFormat(TextWriter& out) const {
-  out << "argument name: " << GetArgumentName();
+  out << "argument name: " << getArgumentName();
 }
 
-StringSpan FormatException::GetName() const noexcept {
+StringSpan FormatException::getName() const noexcept {
   return "FormatException";
 }
 
@@ -29,7 +29,7 @@ void FormatException::onFormat(TextWriter& out) const {
   }
 }
 
-StringSpan OutOfMemoryException::GetName() const noexcept {
+StringSpan OutOfMemoryException::getName() const noexcept {
   return "OutOfMemoryException";
 }
 
@@ -39,19 +39,19 @@ void OutOfMemoryException::onFormat(TextWriter& out) const {
   }
 }
 
-StringSpan NotImplementedException::GetName() const noexcept {
+StringSpan NotImplementedException::getName() const noexcept {
   return "NotImplementedException";
 }
 
-StringSpan NotSupportedException::GetName() const noexcept {
+StringSpan NotSupportedException::getName() const noexcept {
   return "NotSupportedException";
 }
 
-StringSpan LengthException::GetName() const noexcept {
+StringSpan LengthException::getName() const noexcept {
   return "LengthException";
 }
 
-StringSpan OverflowException::GetName() const noexcept {
+StringSpan OverflowException::getName() const noexcept {
   return "OverflowException";
 }
 

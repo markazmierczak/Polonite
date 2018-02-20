@@ -23,7 +23,7 @@ class BASE_EXPORT FileSystemException : public SystemException {
   const FilePath& GetPath() const { return path_; }
   const FilePath& GetAuxPath() const { return aux_path_; }
 
-  StringSpan GetName() const noexcept override;
+  StringSpan getName() const noexcept override;
 
  protected:
   void onFormat(TextWriter& out) const final;

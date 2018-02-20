@@ -38,15 +38,15 @@ Exception::Exception(const Exception& other) {
   msg_size_ = other.msg_size_;
 }
 
-StringSpan Exception::GetName() const noexcept {
+StringSpan Exception::getName() const noexcept {
   return "Exception";
 }
 
-StringSpan Exception::GetMessage() const noexcept {
+StringSpan Exception::getMessage() const noexcept {
   return StringSpan(msg_data_, msg_size_);
 }
 
-void Exception::AddMessage(const StringSpan& next, bool literal) {
+void Exception::addMessage(const StringSpan& next, bool literal) {
   if (msg_size_ == 0 && literal) {
     ASSERT(msg_capacity_ == 0);
     msg_data_ = const_cast<char*>(next.data());
@@ -86,16 +86,16 @@ void Exception::AddMessage(const StringSpan& next, bool literal) {
   msg_size_ = total_size;
 }
 
-void Exception::AddMessage(const char* msg, int msg_size, bool literal) {
-  AddMessage(StringSpan(msg, msg_size), literal);
+void Exception::addMessage(const char* msg, int msg_size, bool literal) {
+  addMessage(StringSpan(msg, msg_size), literal);
 }
 
-void Exception::FormatImpl(TextWriter& out) const {
-  out << GetName() << ": ";
+void Exception::formatImpl(TextWriter& out) const {
+  out << getName() << ": ";
 
   onFormat(out);
 
-  auto msg = GetMessage();
+  auto msg = getMessage();
   if (!msg.isEmpty()) {
     out << '\n' << msg;
   }
@@ -104,7 +104,7 @@ void Exception::FormatImpl(TextWriter& out) const {
 void Exception::onFormat(TextWriter& out) const {
 }
 
-int CountUncaughtExceptions() noexcept {
+int countUncaughtExceptions() noexcept {
   #if COMPILER(MSVC)
   return std::uncaught_exceptions();
   #elif defined(_LIBCPPABI_VERSION)
@@ -115,7 +115,7 @@ int CountUncaughtExceptions() noexcept {
   #endif
 }
 
-bool HasUncaughtExceptions() noexcept {
+bool hasUncaughtExceptions() noexcept {
   return std::uncaught_exception();
 }
 
