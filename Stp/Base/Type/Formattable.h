@@ -1,8 +1,10 @@
 // Copyright 2017 Polonite Authors. All rights reserved.
 // Distributed under MIT license that can be found in the LICENSE file.
 
+#ifndef STP_BASE_TYPE_FORMATTABLE_H_
+#define STP_BASE_TYPE_FORMATTABLE_H_
+
 #include "Base/Io/TextWriter.h"
-#include "Base/Text/FormatManyFwd.h"
 #include "Base/Type/FormattableFwd.h"
 #include "Base/Type/NullableFwd.h"
 
@@ -126,3 +128,5 @@ inline void format(TextWriter& out, StringSpan text, const StringSpan& opts) {
 }
 
 } // namespace stp
+
+#endif // STP_BASE_TYPE_FORMATTABLE_H_

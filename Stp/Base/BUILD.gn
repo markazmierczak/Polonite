@@ -317,7 +317,6 @@ component("Base") {
     "Text/AsciiString.h",
     "Text/FormatMany.cpp",
     "Text/FormatMany.h",
-    "Text/FormatManyFwd.h",
     "Text/FormatInteger.h",
     "Text/ParsingUtil.h",
     "Text/String16.cpp",

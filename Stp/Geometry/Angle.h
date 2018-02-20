@@ -7,7 +7,6 @@
 #include "Base/Export.h"
 #include "Base/Math/Math.h"
 #include "Base/Math/MathConstants.h"
-#include "Base/Text/FormatManyFwd.h"
 
 namespace stp {
 

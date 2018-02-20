@@ -5,8 +5,7 @@
 #define STP_BASE_DEBUG_STACKTRACE_H_
 
 #include "Base/Compiler/Os.h"
-#include "Base/Export.h"
-#include "Base/Text/FormatManyFwd.h"
+#include "Base/Type/Formattable.h"
 
 #if OS(POSIX)
 #include <unistd.h>

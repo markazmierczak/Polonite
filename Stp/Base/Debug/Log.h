@@ -5,7 +5,6 @@
 #define STP_BASE_DEBUG_LOG_H_
 
 #include "Base/Containers/Span.h"
-#include "Base/Text/FormatManyFwd.h"
 
 namespace stp {
 
