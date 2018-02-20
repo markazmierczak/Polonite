@@ -10,7 +10,7 @@
 namespace stp {
 
 template<typename TValue>
-inline String FormattableToString(const TValue& value) {
+inline String formattableToString(const TValue& value) {
   String result;
   StringWriter writer(&result);
   writer << value;
@@ -18,7 +18,7 @@ inline String FormattableToString(const TValue& value) {
 }
 
 template<typename TValue>
-inline String FormattableToString(const TValue& value, const StringSpan& opts) {
+inline String formattableToString(const TValue& value, const StringSpan& opts) {
   String result;
   StringWriter writer(&result);
   format(writer, value, opts);

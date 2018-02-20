@@ -47,7 +47,7 @@ void PrintResult(
     bool important) {
   PrintResultsImpl(
       measurement, modifier, trace,
-      FormattableToString(static_cast<unsigned int>(value), "d"),
+      formattableToString(static_cast<unsigned int>(value), "d"),
       String(), String(), units, important);
 }
 
@@ -56,7 +56,7 @@ void PrintResult(
     double value, const String& units, bool important) {
   PrintResultsImpl(
       measurement, modifier, trace,
-      FormattableToString(value), String(), String(), units,
+      formattableToString(value), String(), String(), units,
       important);
 }
 
@@ -66,7 +66,7 @@ void appendResult(
     bool important) {
   output += ResultsToString(
       measurement, modifier, trace,
-      FormattableToString(static_cast<unsigned int>(value), "d"),
+      formattableToString(static_cast<unsigned int>(value), "d"),
       String(), String(),
       units, important);
 }

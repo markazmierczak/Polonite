@@ -298,7 +298,7 @@ void CommandLine::FormatImpl(TextWriter& out, const StringSpan& opts) const {
 }
 
 String CommandLine::ToArgvLine(bool with_program_name) const {
-  return FormattableToString(*this, with_program_name ? StringSpan() : StringSpan("L"));
+  return formattableToString(*this, with_program_name ? StringSpan() : StringSpan("L"));
 }
 
 } // namespace stp

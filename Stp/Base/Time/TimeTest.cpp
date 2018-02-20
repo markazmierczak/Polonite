@@ -562,7 +562,7 @@ TEST_F(TimeTest, UnixEpoch) {
 TEST(TimeLogging, FrameworkBirthdate) {
   Time birthdate;
   ASSERT_TRUE(Time::FromString("Tue, 01 Jan 2017 10:20:30 GMT", &birthdate));
-  EXPECT_EQ(StringSpan("2017-01-01 10:20:30.000 UTC"), FormattableToString(birthdate));
+  EXPECT_EQ(StringSpan("2017-01-01 10:20:30.000 UTC"), formattableToString(birthdate));
 }
 
 } // namespace

@@ -526,7 +526,7 @@ TEST(JsonParserTest, InvalidSanity) {
     EXPECT_FALSE(parser.Parse(item, root));
 
     EXPECT_NE(JsonError::Ok, parser.GetError().code);
-    EXPECT_NE("", FormattableToString(parser.GetError()));
+    EXPECT_NE("", formattableToString(parser.GetError()));
   }
 }
 

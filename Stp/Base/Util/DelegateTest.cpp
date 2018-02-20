@@ -9,21 +9,21 @@
 namespace stp {
 
 struct DelegateTest : public testing::Test {
-  virtual int CallbackWithResult(int a, int b) {
+  virtual int callbackWithResult(int a, int b) {
     return a - b;
   }
-  int NonVirtualCallbackWithResult(int a, int b) {
+  int nonVirtualCallbackWithResult(int a, int b) {
     return a - b;
   }
-  virtual MOCK_METHOD2(Callback, void(int, int));
-  MOCK_METHOD2(NonVirtualCallback, void(int, int));
+  virtual MOCK_METHOD2(callback, void(int, int));
+  MOCK_METHOD2(nonVirtualCallback, void(int, int));
 };
 
 TEST_F(DelegateTest, Result) {
   Delegate<int(int, int)> v;
-  v = makeDelegate(&DelegateTest::CallbackWithResult, this);
+  v = makeDelegate(&DelegateTest::callbackWithResult, this);
   EXPECT_EQ(3, v(5, 2));
-  v = makeDelegate(&DelegateTest::NonVirtualCallbackWithResult, this);
+  v = makeDelegate(&DelegateTest::nonVirtualCallbackWithResult, this);
   EXPECT_EQ(3, v(5, 2));
 }
 
@@ -32,13 +32,13 @@ TEST_F(DelegateTest, NoResult) {
 
   Delegate<void(int, int)> v;
   {
-    EXPECT_CALL(*this, Callback(Eq(5), Eq(2)));
-    v = makeDelegate(&DelegateTest::Callback, this);
+    EXPECT_CALL(*this, callback(Eq(5), Eq(2)));
+    v = makeDelegate(&DelegateTest::callback, this);
     v(5, 2);
   }
   {
-    EXPECT_CALL(*this, NonVirtualCallback(Eq(3), Eq(4))).Times(2);
-    v = makeDelegate(&DelegateTest::NonVirtualCallback, this);
+    EXPECT_CALL(*this, nonVirtualCallback(Eq(3), Eq(4))).Times(2);
+    v = makeDelegate(&DelegateTest::nonVirtualCallback, this);
     v(3, 4);
     v(3, 4);
   }

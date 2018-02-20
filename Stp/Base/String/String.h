@@ -35,7 +35,7 @@ class String {
   explicit operator bool() const noexcept { return !!impl_; }
 
   const char* data() const noexcept { return impl_ ? impl_->data() : 0; }
-  int size() const noexcept { return impl_ ? impl_->size() : 0; }
+  int length() const noexcept { return impl_ ? impl_->length() : 0; }
 
   const char& operator[](int at) const noexcept;
 

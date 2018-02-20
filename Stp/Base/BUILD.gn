@@ -260,7 +260,7 @@ component("Base") {
     "Math/SafeConversionsImpl.h",
     "Math/SaturatedMath.h",
 
-    "Memory/AddressOf.h",
+    "Memory/addressOf.h",
     "Memory/AlignedMalloc.cpp",
     "Memory/AlignedMalloc.h",
     "Memory/Allocate.cpp",

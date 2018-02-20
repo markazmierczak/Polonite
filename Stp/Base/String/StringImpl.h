@@ -82,7 +82,7 @@ class BASE_EXPORT StringImpl : public StringImplShape {
   bool isEmpty() noexcept { return length_ == 0; }
 
   const char* data() noexcept { return data_; }
-  int size() noexcept { return length_; }
+  int length() noexcept { return length_; }
 
   const char& operator[](int at) const noexcept;
 

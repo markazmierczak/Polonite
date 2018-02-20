@@ -275,7 +275,7 @@ TEST_F(FilePathTest, Combine) {
     FilePath observed_path = CombineFilePaths(root, leaf);
     EXPECT_EQ(item.expected, observed_path);
 
-    String ascii = FormattableToString(leaf);
+    String ascii = formattableToString(leaf);
     root.appendAscii(ascii);
     EXPECT_EQ(item.expected, root);
   }
@@ -686,7 +686,7 @@ TEST_F(FilePathTest, FromToString) {
   for (const auto& item : cases) {
     FilePath from_utf8 = FilePath::FromString(item.string);
     EXPECT_EQ(item.path, from_utf8);
-    EXPECT_EQ(item.string, FormattableToString(item.path));
+    EXPECT_EQ(item.string, formattableToString(item.path));
   }
 }
 

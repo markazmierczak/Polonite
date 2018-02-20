@@ -16,7 +16,7 @@ TEST(Md5Test, DigestToBase16) {
     0xE9, 0x80, 0x09, 0x98,
     0xEC, 0xF8, 0x42, 0x7E
   });
-  EXPECT_EQ("d41d8cd98f00b204e9800998ecf8427e", FormattableToString(digest));
+  EXPECT_EQ("d41d8cd98f00b204e9800998ecf8427e", formattableToString(digest));
 }
 
 TEST(Md5Test, SumEmtpyData) {
@@ -114,27 +114,27 @@ TEST(Md5Test, ContextWithLongData) {
 // Example data from http://www.ietf.org/rfc/rfc1321.txt A.5 Test Suite
 TEST(Md5Test, StringTestSuite1) {
   auto digest = computeMd5Digest(BufferSpan());
-  EXPECT_EQ("d41d8cd98f00b204e9800998ecf8427e", FormattableToString(digest));
+  EXPECT_EQ("d41d8cd98f00b204e9800998ecf8427e", formattableToString(digest));
 }
 
 TEST(Md5Test, StringTestSuite2) {
   auto digest = computeMd5Digest(BufferSpan("a"));
-  EXPECT_EQ("0cc175b9c0f1b6a831c399e269772661", FormattableToString(digest));
+  EXPECT_EQ("0cc175b9c0f1b6a831c399e269772661", formattableToString(digest));
 }
 
 TEST(Md5Test, StringTestSuite3) {
   auto digest = computeMd5Digest(BufferSpan("abc"));
-  EXPECT_EQ("900150983cd24fb0d6963f7d28e17f72", FormattableToString(digest));
+  EXPECT_EQ("900150983cd24fb0d6963f7d28e17f72", formattableToString(digest));
 }
 
 TEST(Md5Test, StringTestSuite4) {
   auto digest = computeMd5Digest(BufferSpan("message digest"));
-  EXPECT_EQ("f96b697d7cb7938d525a2f31aaf161d0", FormattableToString(digest));
+  EXPECT_EQ("f96b697d7cb7938d525a2f31aaf161d0", formattableToString(digest));
 }
 
 TEST(Md5Test, StringTestSuite5) {
   auto digest = computeMd5Digest(BufferSpan("abcdefghijklmnopqrstuvwxyz"));
-  EXPECT_EQ("c3fcd3d76192e4007dfb496cca67e13b", FormattableToString(digest));
+  EXPECT_EQ("c3fcd3d76192e4007dfb496cca67e13b", formattableToString(digest));
 }
 
 TEST(Md5Test, StringTestSuite6) {
@@ -142,7 +142,7 @@ TEST(Md5Test, StringTestSuite6) {
       "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
       "abcdefghijklmnopqrstuvwxyz"
       "0123456789"));
-  EXPECT_EQ("d174ab98d277d9f5a5611c2c9f419d9f", FormattableToString(digest));
+  EXPECT_EQ("d174ab98d277d9f5a5611c2c9f419d9f", formattableToString(digest));
 }
 
 TEST(Md5Test, StringTestSuite7) {
@@ -151,7 +151,7 @@ TEST(Md5Test, StringTestSuite7) {
       "12345678901234567890"
       "12345678901234567890"
       "12345678901234567890"));
-  EXPECT_EQ("57edf4a22be3c955ac49da2e2107b67a", FormattableToString(digest));
+  EXPECT_EQ("57edf4a22be3c955ac49da2e2107b67a", formattableToString(digest));
 }
 
 TEST(Md5Test, ContextWithStringData) {
@@ -162,7 +162,7 @@ TEST(Md5Test, ContextWithStringData) {
   Md5Digest digest(Md5Digest::NoInit);
   ctx.finish(digest);
 
-  EXPECT_EQ("900150983cd24fb0d6963f7d28e17f72", FormattableToString(digest));
+  EXPECT_EQ("900150983cd24fb0d6963f7d28e17f72", formattableToString(digest));
 }
 
 } // namespace stp

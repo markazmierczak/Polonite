@@ -124,12 +124,12 @@ TEST(TimeTicks, SnappedToNextTickOverflow) {
 
 TEST(TimeTicksLogging, ZeroTime) {
   TimeTicks zero;
-  EXPECT_EQ("0 bogo-microseconds", FormattableToString(zero));
+  EXPECT_EQ("0 bogo-microseconds", formattableToString(zero));
 }
 
 TEST(TimeTicksLogging, FortyYearsLater) {
   TimeTicks forty_years_later = TimeTicks() + TimeDelta::FromDays(365.25 * 40);
-  EXPECT_EQ("1262304000000000 bogo-microseconds", FormattableToString(forty_years_later));
+  EXPECT_EQ("1262304000000000 bogo-microseconds", formattableToString(forty_years_later));
 }
 
 } // namespace stp

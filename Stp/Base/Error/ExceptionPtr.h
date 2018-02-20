@@ -84,7 +84,7 @@ inline ExceptionPtr MakeExceptionPtr(TException e) noexcept {
   ExceptionPtr rv = nullptr;
   const void* info = __GetExceptionInfo(e);
   if (info)
-    __ExceptionPtrCopyException(&rv, AddressOf(e), info);
+    __ExceptionPtrCopyException(&rv, addressOf(e), info);
   return rv;
   #else
   try {

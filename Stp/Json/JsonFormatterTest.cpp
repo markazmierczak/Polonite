@@ -13,21 +13,21 @@
 namespace stp {
 
 TEST(JsonFormatterTest, BasicTypes) {
-  EXPECT_EQ("null", FormattableToString(JsonValue()));
-  EXPECT_EQ("{}", FormattableToString(JsonObject()));
-  EXPECT_EQ("[]", FormattableToString(JsonArray()));
-  EXPECT_EQ("42", FormattableToString(JsonValue(42)));
-  EXPECT_EQ("true", FormattableToString(JsonValue(true)));
-  EXPECT_EQ("false", FormattableToString(JsonValue(false)));
+  EXPECT_EQ("null", formattableToString(JsonValue()));
+  EXPECT_EQ("{}", formattableToString(JsonObject()));
+  EXPECT_EQ("[]", formattableToString(JsonArray()));
+  EXPECT_EQ("42", formattableToString(JsonValue(42)));
+  EXPECT_EQ("true", formattableToString(JsonValue(true)));
+  EXPECT_EQ("false", formattableToString(JsonValue(false)));
 
   // Test Real values should always have a decimal or an 'e'.
-  EXPECT_EQ("1.0", FormattableToString(JsonValue(1.0)));
+  EXPECT_EQ("1.0", formattableToString(JsonValue(1.0)));
 
   // Test Real values in the the range (-1, 1) must have leading zeros
-  EXPECT_EQ("0.2", FormattableToString(JsonValue(0.2)));
-  EXPECT_EQ("-0.8", FormattableToString(JsonValue(-0.8)));
+  EXPECT_EQ("0.2", formattableToString(JsonValue(0.2)));
+  EXPECT_EQ("-0.8", formattableToString(JsonValue(-0.8)));
 
-  EXPECT_EQ("\"foo\"", FormattableToString(JsonValue("foo")));
+  EXPECT_EQ("\"foo\"", formattableToString(JsonValue("foo")));
 }
 
 TEST(JsonFormatterTest, NestedTypes) {
@@ -42,14 +42,14 @@ TEST(JsonFormatterTest, NestedTypes) {
   root.SetWithPath("array", move(array));
 
   // Test the pretty-printer.
-  EXPECT_EQ("{\"array\":[{\"inner int\":10},[],true]}", FormattableToString(root));
+  EXPECT_EQ("{\"array\":[{\"inner int\":10},[],true]}", formattableToString(root));
 
   EXPECT_EQ("{\n"
             "   \"array\": [ {\n"
             "      \"inner int\": 10\n"
             "   }, [  ], true ]\n"
             "}",
-            FormattableToString(root, "P"));
+            formattableToString(root, "P"));
 }
 
 TEST(JsonFormatterTest, KeysWithPeriods) {
@@ -59,18 +59,18 @@ TEST(JsonFormatterTest, KeysWithPeriods) {
   JsonObject period_dict2;
   period_dict2.set("g.h.i.j", 1);
   period_dict.set("d.e.f", move(period_dict2));
-  EXPECT_EQ("{\"a.b\":3,\"c\":2,\"d.e.f\":{\"g.h.i.j\":1}}", FormattableToString(period_dict));
+  EXPECT_EQ("{\"a.b\":3,\"c\":2,\"d.e.f\":{\"g.h.i.j\":1}}", formattableToString(period_dict));
 
   JsonObject period_dict3;
   period_dict3.SetWithPath("a.b", 2);
   period_dict3.set("a.b", 1);
-  EXPECT_EQ("{\"a\":{\"b\":2},\"a.b\":1}", FormattableToString(period_dict3));
+  EXPECT_EQ("{\"a\":{\"b\":2},\"a.b\":1}", formattableToString(period_dict3));
 }
 
 TEST(JsonFormatterTest, DoublesAsInts) {
   // Test allowing a double with no fractional part to be written as an integer.
   JsonValue double_value(1e10);
-  EXPECT_EQ("10000000000", FormattableToString(double_value, "I"));
+  EXPECT_EQ("10000000000", formattableToString(double_value, "I"));
 }
 
 TEST(JsonFormatterTest, EscapeUTF8) {

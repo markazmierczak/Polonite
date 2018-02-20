@@ -17,7 +17,7 @@ TEST(BufferTest, Empty) {
 
 TEST(BufferTest, Format) {
   constexpr byte_t bytes[] = {0x01, 0xFF, 0x02, 0xFE, 0x03, 0x80, 0x81};
-  EXPECT_EQ("01FF02FE038081", FormattableToString(BufferSpan(bytes)));
+  EXPECT_EQ("01FF02FE038081", formattableToString(BufferSpan(bytes)));
 }
 
 } // namespace stp

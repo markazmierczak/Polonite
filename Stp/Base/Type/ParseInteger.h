@@ -39,7 +39,7 @@ enum class ParseIntegerErrorCode {
   OverflowError,
 };
 
-inline void MaybeThrow(ParseIntegerErrorCode code) {
+inline void maybeThrow(ParseIntegerErrorCode code) {
   if (code == ParseIntegerErrorCode::Ok)
     return;
   if (code == ParseIntegerErrorCode::OverflowError)
@@ -56,7 +56,7 @@ class IntegerParser {
   static constexpr TInteger Min = Limits<TInteger>::Min;
   static constexpr TInteger Max = Limits<TInteger>::Max;
 
-  static constexpr ParseIntegerErrorCode Invoke(StringSpan input, TInteger& out_value) {
+  static constexpr ParseIntegerErrorCode invoke(StringSpan input, TInteger& out_value) {
     const char* it = begin(input);
     const char* it_end = end(input);
 
@@ -65,25 +65,25 @@ class IntegerParser {
       if constexpr (!TIsSigned<TInteger>)
         result = ParseIntegerErrorCode::FormatError;
       else
-        result = Negative::Invoke(it + 1, it_end, out_value);
+        result = Negative::invoke(it + 1, it_end, out_value);
     } else {
       if (it != it_end && *it == '+')
         ++it;
-      result = Positive::Invoke(it, it_end, out_value);
+      result = Positive::invoke(it, it_end, out_value);
     }
     return result;
   }
 
  private:
   // TSignHelper provides:
-  //  - a static function, CheckBounds, that determines whether the next digit
+  //  - a static function, checkBounds, that determines whether the next digit
   //    causes an overflow/underflow
-  //  - a static function, Increment, that appends the next digit appropriately
+  //  - a static function, increment, that appends the next digit appropriately
   //    according to the sign of the number being parsed.
   template<typename TSignHelper>
   class Base {
    public:
-    static constexpr ParseIntegerErrorCode Invoke(const char* begin, const char* end, TInteger& output) {
+    static constexpr ParseIntegerErrorCode invoke(const char* begin, const char* end, TInteger& output) {
       output = 0;
       if (begin == end)
         return ParseIntegerErrorCode::FormatError;
@@ -102,13 +102,13 @@ class IntegerParser {
           return ParseIntegerErrorCode::FormatError;
 
         if (current != begin) {
-          if (!TSignHelper::CheckBounds(output, new_digit))
+          if (!TSignHelper::checkBounds(output, new_digit))
             return ParseIntegerErrorCode::OverflowError;
 
           output *= TBase;
         }
 
-        TSignHelper::Increment(new_digit, output);
+        TSignHelper::increment(new_digit, output);
       }
       return ParseIntegerErrorCode::Ok;
     }
@@ -116,7 +116,7 @@ class IntegerParser {
 
   class Positive : public Base<Positive> {
    public:
-    static constexpr bool CheckBounds(TInteger& output, uint8_t new_digit) {
+    static constexpr bool checkBounds(TInteger& output, uint8_t new_digit) {
       if (output > static_cast<TInteger>(Max / TBase) ||
           (output == static_cast<TInteger>(Max / TBase) &&
            new_digit > Max % TBase)) {
@@ -124,22 +124,22 @@ class IntegerParser {
       }
       return true;
     }
-    static constexpr void Increment(uint8_t increment, TInteger& output) {
-      output += increment;
+    static constexpr void increment(uint8_t amount, TInteger& output) {
+      output += amount;
     }
   };
 
   class Negative : public Base<Negative> {
    public:
-    static constexpr bool CheckBounds(TInteger& output, uint8_t new_digit) {
+    static constexpr bool checkBounds(TInteger& output, uint8_t new_digit) {
       if (output < Min / TBase ||
           (output == Min / TBase && new_digit > 0 - Min % TBase)) {
         return false;
       }
       return true;
     }
-    static constexpr void Increment(uint8_t increment, TInteger& output) {
-      output -= increment;
+    static constexpr void increment(uint8_t amount, TInteger& output) {
+      output -= amount;
     }
   };
 };
@@ -148,24 +148,24 @@ class IntegerParser {
 
 template<typename T, TEnableIf<TIsInteger<T>>*>
 constexpr ParseIntegerErrorCode tryParse(StringSpan input, T& output) {
-  return detail::IntegerParser<T, 10>::Invoke(input, output);
+  return detail::IntegerParser<T, 10>::invoke(input, output);
 }
 
 template<typename T, TEnableIf<TIsInteger<T>>* = nullptr>
 constexpr ParseIntegerErrorCode tryParseHex(StringSpan input, T& output) {
-  return detail::IntegerParser<T, 16>::Invoke(input, output);
+  return detail::IntegerParser<T, 16>::invoke(input, output);
 }
 
 template<typename T, TEnableIf<TIsInteger<T>>* = nullptr>
 constexpr ParseIntegerErrorCode tryParseOctal(StringSpan input, T& output) {
-  return detail::IntegerParser<T, 8>::Invoke(input, output);
+  return detail::IntegerParser<T, 8>::invoke(input, output);
 }
 
 template<typename T>
 struct ParseTmpl<T, TEnableIf<TIsInteger<T>>> {
   constexpr void operator()(StringSpan text, T& rv) {
     ParseIntegerErrorCode code = tryParse(text, rv);
-    MaybeThrow(code);
+    maybeThrow(code);
   }
 };
 

@@ -231,7 +231,7 @@ inline int DecodeTmpl(Context& context, BufferSpan input, MutableSpan<T> output,
   if (flush && state.NeedsFlush())
     state.Write(optr, oi, saw_error);
 
-  context.MaybeThrow(saw_error);
+  context.maybeThrow(saw_error);
   ASSERT(oi <= output.size());
   return oi;
 }
