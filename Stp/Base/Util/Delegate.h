@@ -9,7 +9,6 @@
 #include "Base/Type/FormattableFwd.h"
 #include "Base/Type/NullableFwd.h"
 #include "Base/Type/Variable.h"
-#include "Base/Util/DelegateFwd.h"
 
 namespace stp {
 
@@ -197,6 +196,9 @@ struct SimplifyMethod<sizeof(MSVCUnknownMemberFunction)> {
 BASE_EXPORT void FormatDelegate(TextWriter& out, const StringSpan& opts, void* ptr);
 
 } // namespace delegate_impl
+
+template<typename Signature>
+class Delegate;
 
 template<typename TResult, typename... TArgs>
 class Delegate<TResult(TArgs...)> {

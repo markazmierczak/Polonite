@@ -430,7 +430,6 @@ component("Base") {
     "Util/CallOnce.h",
     "Util/Delegate.cpp",
     "Util/Delegate.h",
-    "Util/DelegateFwd.h",
     "Util/Finally.h",
     "Util/Flags.h",
     "Util/Function.h",
