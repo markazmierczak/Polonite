@@ -224,7 +224,7 @@ TEST(StringSpanTest, indexOfAnyOf) {
   #undef LAST_INDEX_ANY_OF
 }
 
-TEST(StringSpanTest, IsAscii) {
+TEST(StringSpanTest, isAscii) {
   static char char_ascii[] =
       "0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF";
   static char16_t char16_ascii[] = {
@@ -235,17 +235,17 @@ TEST(StringSpanTest, IsAscii) {
       L"0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF";
 
   // Test a variety of the fragment start positions and lengths in order to make
-  // sure that bit masking in IsAsciiString works correctly.
+  // sure that bit masking in isAsciiString works correctly.
   // Also, test that a non-ASCII character will be detected regardless of its
   // position inside the string.
   {
     const int string_length = isizeofArray(char_ascii) - 1;
     for (int offset = 0; offset < 8; ++offset) {
       for (int len = 0, max_len = string_length - offset; len < max_len; ++len) {
-        EXPECT_TRUE(StringSpan(char_ascii + offset, len).IsAscii());
+        EXPECT_TRUE(StringSpan(char_ascii + offset, len).isAscii());
         for (int char_pos = offset; char_pos < len; ++char_pos) {
           char_ascii[char_pos] |= '\x80';
-          EXPECT_FALSE(StringSpan(char_ascii + offset, len).IsAscii());
+          EXPECT_FALSE(StringSpan(char_ascii + offset, len).isAscii());
           char_ascii[char_pos] &= ~'\x80';
         }
       }
@@ -256,14 +256,14 @@ TEST(StringSpanTest, IsAscii) {
     const int string_length = isizeofArray(char16_ascii) - 1;
     for (int offset = 0; offset < 4; ++offset) {
       for (int len = 0, max_len = string_length - offset; len < max_len; ++len) {
-        EXPECT_TRUE(String16Span(char16_ascii + offset, len).IsAscii());
+        EXPECT_TRUE(String16Span(char16_ascii + offset, len).isAscii());
         for (int char_pos = offset; char_pos < len; ++char_pos) {
           char16_ascii[char_pos] |= 0x80;
-          EXPECT_FALSE(String16Span(char16_ascii + offset, len).IsAscii());
+          EXPECT_FALSE(String16Span(char16_ascii + offset, len).isAscii());
           char16_ascii[char_pos] &= ~0x80;
           // Also test when the upper half is non-zero.
           char16_ascii[char_pos] |= 0x100;
-          EXPECT_FALSE(String16Span(char16_ascii + offset, len).IsAscii());
+          EXPECT_FALSE(String16Span(char16_ascii + offset, len).isAscii());
           char16_ascii[char_pos] &= ~0x100;
         }
       }

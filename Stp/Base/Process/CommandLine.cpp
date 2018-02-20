@@ -62,7 +62,7 @@ const String* CommandLine::tryGet(StringSpan name) const {
 
 const String* CommandLine::tryGetAscii(StringSpan name) const {
   const String* value = tryGet(name);
-  return (value && IsAscii(*value)) ? value : nullptr;
+  return (value && isAscii(*value)) ? value : nullptr;
 }
 
 bool CommandLine::tryGetInt(StringSpan name, int& out_value) const {

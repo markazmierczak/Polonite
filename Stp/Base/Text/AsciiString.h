@@ -12,35 +12,35 @@ namespace stp {
 
 namespace detail {
 
-BASE_EXPORT int CompareIgnoreCaseAscii(const char* lhs, const char* rhs, int size);
+BASE_EXPORT int compareIgnoreCaseAscii(const char* lhs, const char* rhs, int size);
 
 } // namespace detail
 
-inline bool EqualsIgnoreCaseAscii(StringSpan lhs, StringSpan rhs) {
+inline bool equalIgnoreCaseAscii(StringSpan lhs, StringSpan rhs) {
   return lhs.size() == rhs.size() &&
-      detail::CompareIgnoreCaseAscii(lhs.data(), rhs.data(), lhs.size()) == 0;
+      detail::compareIgnoreCaseAscii(lhs.data(), rhs.data(), lhs.size()) == 0;
 }
 
-inline int CompareIgnoreCaseAscii(StringSpan lhs, StringSpan rhs) {
+inline int compareIgnoreCaseAscii(StringSpan lhs, StringSpan rhs) {
   int min_size = min(lhs.size(), rhs.size());
-  int rv = detail::CompareIgnoreCaseAscii(lhs.data(), rhs.data(), min_size);
+  int rv = detail::compareIgnoreCaseAscii(lhs.data(), rhs.data(), min_size);
   return rv != 0 ? rv : (lhs.size() - rhs.size());
 }
 
 struct IgnoreCaseAsciiComparer {
-  int operator()(StringSpan lhs, StringSpan rhs) const { return CompareIgnoreCaseAscii(lhs, rhs); }
+  int operator()(StringSpan lhs, StringSpan rhs) const { return compareIgnoreCaseAscii(lhs, rhs); }
 };
 
-inline bool StartsWithIgnoreCaseAscii(StringSpan str, StringSpan prefix) {
+inline bool startsWithIgnoreCaseAscii(StringSpan str, StringSpan prefix) {
   ASSERT(!prefix.isEmpty());
   return str.size() >= prefix.size() &&
-      EqualsIgnoreCaseAscii(str.getSlice(0, prefix.size()), prefix);
+      equalIgnoreCaseAscii(str.getSlice(0, prefix.size()), prefix);
 }
 
-inline bool EndsWithIgnoreCaseAscii(StringSpan str, StringSpan suffix) {
+inline bool endsWithIgnoreCaseAscii(StringSpan str, StringSpan suffix) {
   ASSERT(!suffix.isEmpty());
   return str.size() >= suffix.size() &&
-      EqualsIgnoreCaseAscii(str.getSlice(str.size() - suffix.size()), suffix);
+      equalIgnoreCaseAscii(str.getSlice(str.size() - suffix.size()), suffix);
 }
 
 BASE_EXPORT int indexOfIgnoreCaseAscii(StringSpan str, char c);
@@ -49,32 +49,32 @@ BASE_EXPORT int lastIndexOfIgnoreCaseAscii(StringSpan str, char c);
 BASE_EXPORT int indexOfIgnoreCaseAscii(StringSpan haystack, StringSpan needle);
 BASE_EXPORT int lastIndexOfIgnoreCaseAscii(StringSpan haystack, StringSpan needle);
 
-BASE_EXPORT void ToLowerAsciiInplace(MutableStringSpan s);
-BASE_EXPORT void ToUpperAsciiInplace(MutableStringSpan s);
+BASE_EXPORT void toLowerAsciiInplace(MutableStringSpan s);
+BASE_EXPORT void toUpperAsciiInplace(MutableStringSpan s);
 
-BASE_EXPORT String ToLowerAscii(StringSpan src) WARN_UNUSED_RESULT;
-BASE_EXPORT String ToUpperAscii(StringSpan src) WARN_UNUSED_RESULT;
+BASE_EXPORT String toLowerAscii(StringSpan src) WARN_UNUSED_RESULT;
+BASE_EXPORT String toUpperAscii(StringSpan src) WARN_UNUSED_RESULT;
 
 template<typename TString>
-inline void TrimLeadingWhitespaceAscii(TString& str) {
+inline void trimLeadingSpaceAscii(TString& str) {
   while (!str.isEmpty() && isSpaceAscii(str.getFirst()))
     str.removePrefix(1);
 }
 
 template<typename TString>
-inline void TrimTrailingWhitespaceAscii(TString& str) {
+inline void trimTrailingSpaceAscii(TString& str) {
   while (!str.isEmpty() && isSpaceAscii(str.getLast()))
     str.removeSuffix(1);
 }
 
 template<typename TString>
-inline void TrimWhitespaceAscii(TString& str) {
+inline void trimSpaceAscii(TString& str) {
   // Keep this in this order to minimize copying.
-  TrimTrailingWhitespaceAscii(str);
-  TrimLeadingWhitespaceAscii(str);
+  trimTrailingSpaceAscii(str);
+  trimLeadingSpaceAscii(str);
 }
 
-BASE_EXPORT bool IsAscii(StringSpan text);
+BASE_EXPORT bool isAscii(StringSpan text);
 
 } // namespace stp
 

@@ -212,7 +212,7 @@ bool JsonFormatter::EscapeReplaceUnicode(TextWriter& out, StringSpan str) {
       continue;
     }
 
-    if (IsAscii(rune) && rune >= 32) {
+    if (isAscii(rune) && rune >= 32) {
       out << char_cast<char>(rune);
       continue;
     }

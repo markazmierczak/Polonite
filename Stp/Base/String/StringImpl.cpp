@@ -41,7 +41,7 @@ void StringImpl::destroy(StringImpl* that) noexcept {
 }
 
 RefPtr<StringImpl> StringImpl::createFromLiteral(const char* text, int length) {
-  ASSERT_WITH_MESSAGE(length > 0, "use StaticStringImpl::empty() to create an empty string");
+  ASSERT(length > 0, "use StaticStringImpl::empty() to create an empty string");
   return RefPtr<StringImpl>::create(CtorNoCopy, text);
 }
 

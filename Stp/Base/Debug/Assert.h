@@ -33,14 +33,11 @@ BASE_EXPORT void assertWrapUp(TextWriter& out);
    ? static_cast<void>(0) \
    : stp::assertFail(__FILE__, __LINE__, #expr, ##__VA_ARGS__))
 
-#define ASSERT_WITH_MESSAGE ASSERT
-
 # define ASSERT_UNUSED(expr, var) ASSERT(expr)
 # define ASSUME(cond, ...) ASSERT(cond, ##__VA_ARGS__)
 # define UNREACHABLE(...) ASSERT(false); __VA_ARGS__
 #else
 # define ASSERT(expr, ...) static_cast<void>(0)
-# define ASSERT_WITH_MESSAGE ASSERT
 # define ASSERT_UNUSED(expr, var) ALLOW_UNUSED_LOCAL(var)
 # define ASSUME(cond, ...) BUILTIN_ASSUME(cond)
 

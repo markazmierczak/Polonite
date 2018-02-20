@@ -11,7 +11,7 @@ namespace stp {
 
 namespace detail {
 
-int CompareIgnoreCaseAscii(const char* lhs, const char* rhs, int size) {
+int compareIgnoreCaseAscii(const char* lhs, const char* rhs, int size) {
   ASSERT(size >= 0);
 
   for (int i = 0; i < size; ++i) {
@@ -62,7 +62,7 @@ int indexOfIgnoreCaseAscii(StringSpan haystack, StringSpan needle) {
       return -1;
 
     haystack.removePrefix(found + 1);
-    if (StartsWithIgnoreCaseAscii(haystack, needle_rest))
+    if (startsWithIgnoreCaseAscii(haystack, needle_rest))
       return static_cast<int>(haystack.data() - orig_data - 1);
   }
   return -1;
@@ -81,44 +81,44 @@ int lastIndexOfIgnoreCaseAscii(StringSpan haystack, StringSpan needle) {
       return -1;
 
     haystack.truncate(found);
-    if (EndsWithIgnoreCaseAscii(haystack, needle_rest))
+    if (endsWithIgnoreCaseAscii(haystack, needle_rest))
       return haystack.size() - needle_rest.size();
   }
   return -1;
 }
 
-static inline void ToLowerAscii(char* output, const char* input, int length) {
+static inline void toLowerAscii(char* output, const char* input, int length) {
   for (int i = 0; i < length; ++i)
     output[i] = toLowerAscii(input[i]);
 }
 
-static inline void ToUpperAscii(char* output, const char* input, int length) {
+static inline void toUpperAscii(char* output, const char* input, int length) {
   for (int i = 0; i < length; ++i)
     output[i] = toUpperAscii(input[i]);
 }
 
-void ToLowerAsciiInplace(MutableStringSpan s) {
-  ToLowerAscii(s.data(), s.data(), s.size());
+void toLowerAsciiInplace(MutableStringSpan s) {
+  toLowerAscii(s.data(), s.data(), s.size());
 }
-void ToUpperAsciiInplace(MutableStringSpan s) {
-  ToUpperAscii(s.data(), s.data(), s.size());
+void toUpperAsciiInplace(MutableStringSpan s) {
+  toUpperAscii(s.data(), s.data(), s.size());
 }
 
-String ToLowerAscii(StringSpan src) {
+String toLowerAscii(StringSpan src) {
   String rv;
   char* dst = rv.appendUninitialized(src.size());
-  ToLowerAscii(dst, src.data(), src.size());
+  toLowerAscii(dst, src.data(), src.size());
   return rv;
 }
 
-String ToUpperAscii(StringSpan src) {
+String toUpperAscii(StringSpan src) {
   String rv;
   char* dst = rv.appendUninitialized(src.size());
-  ToLowerAscii(dst, src.data(), src.size());
+  toLowerAscii(dst, src.data(), src.size());
   return rv;
 }
 
-bool IsAscii(StringSpan text) {
+bool isAscii(StringSpan text) {
   using MachineWord = uintptr_t;
 
   MachineWord all_char_bits = 0;

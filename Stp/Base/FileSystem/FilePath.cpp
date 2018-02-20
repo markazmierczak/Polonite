@@ -115,7 +115,7 @@ void FilePath::AddComponent(FilePathSpan component) {
 }
 
 void FilePath::AddComponentAscii(StringSpan component) {
-  ASSERT(IsAscii(component));
+  ASSERT(isAscii(component));
 
   bool need_separator = false;
   if (!isEmpty())

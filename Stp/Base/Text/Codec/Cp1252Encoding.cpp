@@ -84,7 +84,7 @@ const byte_t Cp1252Page20[48] = {
 };
 
 byte_t TryEncodeExtra(char32_t c) {
-  ASSERT(!IsAscii(c));
+  ASSERT(!isAscii(c));
   ASSERT(!(0x00A0 <= c && c < 0x0100));
 
   if (0x0150 <= c && c < 0x0198)

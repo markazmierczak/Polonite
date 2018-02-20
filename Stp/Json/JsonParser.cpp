@@ -356,7 +356,7 @@ bool JsonParser::ConsumeStringRaw(JsonStringBuilder& out) {
           }
           pos_ += 2;
 
-          if (IsAscii(static_cast<char32_t>(hex_digit)))
+          if (isAscii(static_cast<char32_t>(hex_digit)))
             string.append(static_cast<char>(hex_digit));
           else
             DecodeUtf8(static_cast<char32_t>(hex_digit), string);
@@ -474,7 +474,7 @@ void JsonParser::DecodeUtf8(char32_t point, JsonStringBuilder& dest) {
 
   // Anything outside of the basic ASCII plane will need to be decoded from
   // int32_t to a multi-byte sequence.
-  if (IsAscii(point)) {
+  if (isAscii(point)) {
     dest.append(static_cast<char>(point));
   } else {
     char utf8_units[4];

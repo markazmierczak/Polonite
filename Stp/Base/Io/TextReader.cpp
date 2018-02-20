@@ -24,7 +24,7 @@ int TextReader::ReadAscii() {
 int TextReader::ReadAscii(char* data, int count) {
   int n = OnRead(data, count);
   if (n > 0) {
-    if (!StringSpan(data, n).IsAscii())
+    if (!StringSpan(data, n).isAscii())
       return -1;
   }
   return n;

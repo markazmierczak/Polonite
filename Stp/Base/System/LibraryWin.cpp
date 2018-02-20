@@ -59,7 +59,7 @@ void* Library::TryResolveNative(NativeLibrary library, const char* name) {
 }
 
 String Library::DecorateName(StringSpan name) {
-  ASSERT(name.IsAscii());
+  ASSERT(name.isAscii());
   return String::ConcatArgs(name, ".dll");
 }
 

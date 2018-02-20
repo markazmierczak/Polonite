@@ -223,7 +223,7 @@ String FilePathSpan::GetExtension() const {
  * The test is case insensitive.
  */
 bool FilePathSpan::MatchesExtension(StringSpan extension) const {
-  ASSERT(IsAscii(extension));
+  ASSERT(isAscii(extension));
 
   int pos = indexOfExtension();
 

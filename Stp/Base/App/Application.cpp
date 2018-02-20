@@ -158,7 +158,7 @@ void Application::fini() {
 void Application::setName(StringSpan name) {
   ASSERT(!name.isEmpty());
   // Many clients depends on short name being ASCII.
-  ASSERT(IsAscii(name));
+  ASSERT(isAscii(name));
   // Short name may not contain, otherwise it cannot be used in path specification.
   // FIXME ASSERT(name.indexOfAny("/\\:") < 0);
 

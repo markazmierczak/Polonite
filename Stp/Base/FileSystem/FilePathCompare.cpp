@@ -18,8 +18,8 @@ static int EqualCaseInsensitive(const wchar_t* lhs, const wchar_t* rhs, int size
 
   ASSERT(lhs_letter_pos == rhs_letter_pos);
 
-  int lhs_letter = ToUpperAscii(lhs[lhs_letter_pos]);
-  int rhs_letter = ToUpperAscii(rhs[rhs_letter_pos]);
+  int lhs_letter = toUpperAscii(lhs[lhs_letter_pos]);
+  int rhs_letter = toUpperAscii(rhs[rhs_letter_pos]);
   if (lhs_letter != rhs_letter)
     return lhs_letter - rhs_letter;
 

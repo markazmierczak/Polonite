@@ -115,7 +115,7 @@ bool FormatLayout::parse(StringSpan s) {
 }
 
 bool FormatReplacement::parse(StringSpan s) {
-  TrimWhitespaceAscii(s);
+  trimSpaceAscii(s);
 
   int comma = s.indexOf(',');
   int semicolon = s.indexOf(':');
@@ -140,7 +140,7 @@ bool FormatReplacement::parse(StringSpan s) {
   }
   if (semicolon != -1) {
     options = s.getSlice(semicolon + 1);
-    TrimWhitespaceAscii(options);
+    trimSpaceAscii(options);
   }
   return true;
 }
