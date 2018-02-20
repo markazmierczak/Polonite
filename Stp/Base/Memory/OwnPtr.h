@@ -6,7 +6,6 @@
 
 #include "Base/Debug/Assert.h"
 #include "Base/Memory/Allocate.h"
-#include "Base/Type/NullableFwd.h"
 #include "Base/Type/Variable.h"
 
 namespace stp {
@@ -73,11 +72,6 @@ class OwnPtr {
   T* ptr_ = nullptr;
 
   DISALLOW_COPY_AND_ASSIGN(OwnPtr);
-};
-
-template<typename T>
-struct NullableTmpl<OwnPtr<T>> {
-  typedef OwnPtr<T> Type;
 };
 
 template<typename T, class TAllocator>

@@ -7,7 +7,6 @@
 #include "Base/Compiler/Cpu.h"
 #include "Base/Debug/Assert.h"
 #include "Base/Type/FormattableFwd.h"
-#include "Base/Type/NullableFwd.h"
 #include "Base/Type/Variable.h"
 
 namespace stp {
@@ -239,11 +238,6 @@ class Delegate<TResult(TArgs...)> {
  private:
   delegate_impl::GenericClass* gobject_;
   TResult (*gmethod_)(delegate_impl::GenericClass*, TArgs...);
-};
-
-template<typename TResult, typename... TArgs>
-struct NullableTmpl<Delegate<TResult(TArgs...)>> {
-  typedef Delegate<Delegate<TResult(TArgs...)>> Type;
 };
 
 template<typename TClass, typename TThis, typename TResult, typename... TArgs>

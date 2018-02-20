@@ -6,7 +6,6 @@
 
 #include "Base/Debug/Assert.h"
 #include "Base/Memory/Allocate.h"
-#include "Base/Type/NullableFwd.h"
 #include "Base/Type/Variable.h"
 
 #include <stdlib.h>
@@ -70,11 +69,6 @@ template<class T> bool operator==(const MallocPtr<T>&, nullptr_t) = delete;
 template<class T> bool operator!=(const MallocPtr<T>&, nullptr_t) = delete;
 template<class T> bool operator==(nullptr_t, const MallocPtr<T>&) = delete;
 template<class T> bool operator!=(nullptr_t, const MallocPtr<T>&) = delete;
-
-template<typename T>
-struct NullableTmpl<MallocPtr<T>> {
-  typedef MallocPtr<T> Type;
-};
 
 template<typename T>
 inline MallocPtr<T> MallocPtr<T>::create(int size_in_bytes) {

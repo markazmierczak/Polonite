@@ -414,7 +414,6 @@ component("Base") {
     "Type/IntegerSelection.h",
     "Type/Limits.h",
     "Type/Nullable.h",
-    "Type/NullableFwd.h",
     "Type/ObjectCast.h",
     "Type/ParameterPack.h",
     "Type/ParseFloat.h",
