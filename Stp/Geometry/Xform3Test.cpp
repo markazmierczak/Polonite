@@ -62,7 +62,7 @@ bool PointsAreNearlyEqual(const Point3& lhs, const Point3& rhs) {
 }
 
 bool MatricesAreNearlyEqual(const Xform3& lhs, const Xform3& rhs) {
-  return IsNear(lhs, rhs, 1E-3f);
+  return isNear(lhs, rhs, 1E-3f);
 }
 
 void InitializeTestMatrix(Xform3& transform) {
@@ -1937,7 +1937,7 @@ TEST(Xform3Test, VerifyIsIdentityOrTranslation) {
   EXPECT_FALSE(A.IsTranslate());
 }
 
-TEST(Xform3Test, VerifyIsNearTranslate) {
+TEST(Xform3Test, VerifyisNearTranslate) {
   Xform3 A = Xform3::Identity();
 
   // Exact pure translation.
@@ -1948,8 +1948,8 @@ TEST(Xform3Test, VerifyIsNearTranslate) {
   A.set(1, 3, 4.4f);
   A.set(2, 3, 5.6f);
 
-  EXPECT_TRUE(A.IsNearTranslate(0));
-  EXPECT_TRUE(A.IsNearTranslate(ApproxZero));
+  EXPECT_TRUE(A.isNearTranslate(0));
+  EXPECT_TRUE(A.isNearTranslate(ApproxZero));
 
   // Approximately pure translation.
   InitializeApproxIdentityMatrix(A);
@@ -1965,8 +1965,8 @@ TEST(Xform3Test, VerifyIsNearTranslate) {
   A.set(1, 3, 4.4f);
   A.set(2, 3, 5.6f);
 
-  EXPECT_FALSE(A.IsNearTranslate(0));
-  EXPECT_TRUE(A.IsNearTranslate(ApproxZero));
+  EXPECT_FALSE(A.isNearTranslate(0));
+  EXPECT_TRUE(A.isNearTranslate(ApproxZero));
 
   // Not approximately pure translation.
   InitializeApproxIdentityMatrix(A);
@@ -1982,8 +1982,8 @@ TEST(Xform3Test, VerifyIsNearTranslate) {
   A.set(3, 2, 4.4f);
   A.set(2, 0, 5.6f);
 
-  EXPECT_FALSE(A.IsNearTranslate(0));
-  EXPECT_FALSE(A.IsNearTranslate(ApproxZero));
+  EXPECT_FALSE(A.isNearTranslate(0));
+  EXPECT_FALSE(A.isNearTranslate(ApproxZero));
 }
 
 TEST(Xform3Test, VerifyIsScaleOrTranslation) {

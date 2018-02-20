@@ -203,14 +203,14 @@ TEST(BitArrayTest, Shift) {
     BitArray<255> ba(UINT64_C(0xAA55AA55AA55AA55));
     ba <<= 15;
 
-    BitArray<255> test0(RotateBitsLeft(UINT64_C(0xAA55AA55AA55AA55), 15));
+    BitArray<255> test0(rotateBitsLeft(UINT64_C(0xAA55AA55AA55AA55), 15));
     for (int i = 0; i < 15; ++i)
       test0[i] = 0;
     EXPECT_EQ(test0, ba);
 
     ba >>= 30;
 
-    BitArray<255> test1(RotateBitsRight(UINT64_C(0xAA55AA55AA55AA55), 15));
+    BitArray<255> test1(rotateBitsRight(UINT64_C(0xAA55AA55AA55AA55), 15));
     for (int i = 0; i < 30; ++i)
       test1[254 - i] = 0;
     EXPECT_EQ(test1, ba);

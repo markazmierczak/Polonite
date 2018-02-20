@@ -82,13 +82,13 @@ Vector3 Vector3::GetNormalizedOrThis() const {
 }
 
 bool Vector3::IsNormalized() const {
-  return IsNear(GetLengthSquared(), 1.0, static_cast<double>(Limits<float>::Epsilon));
+  return isNear(GetLengthSquared(), 1.0, static_cast<double>(Limits<float>::Epsilon));
 }
 
-bool IsNear(const Vector3& lhs, const Vector3& rhs, float tolerance) {
-  return IsNear(lhs.x, rhs.x, tolerance) &&
-         IsNear(lhs.y, rhs.y, tolerance) &&
-         IsNear(lhs.z, rhs.z, tolerance);
+bool isNear(const Vector3& lhs, const Vector3& rhs, float tolerance) {
+  return isNear(lhs.x, rhs.x, tolerance) &&
+         isNear(lhs.y, rhs.y, tolerance) &&
+         isNear(lhs.z, rhs.z, tolerance);
 }
 
 IntVector3 min(const IntVector3& lhs, const IntVector3& rhs) {

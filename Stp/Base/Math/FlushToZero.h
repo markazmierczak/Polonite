@@ -5,6 +5,7 @@
 #define STP_BASE_MATH_FLUSHTOZERO_H_
 
 #include "Base/Compiler/Simd.h"
+#include "Base/Type/Attributes.h"
 
 namespace stp {
 

@@ -8,7 +8,7 @@
 
 namespace stp {
 
-TEST(BitsTest, Log2Floor32) {
+TEST(BitsTest, log2Floor32) {
   auto slow = [](uint32_t x) {
     int l = 0;
     for (; x > 1; x /= 2)
@@ -24,18 +24,18 @@ TEST(BitsTest, Log2Floor32) {
   };
 
   for (uint32_t x : input)
-    EXPECT_EQ(slow(x), Log2Floor(x));
+    EXPECT_EQ(slow(x), log2Floor(x));
 
   CryptoRandom rng;
   for (int i = 0; i < 100; ++i) {
     uint32_t x = rng.nextUint32();
     if (!x)
       continue;
-    EXPECT_EQ(slow(x), Log2Floor(x));
+    EXPECT_EQ(slow(x), log2Floor(x));
   }
 }
 
-TEST(BitsTest, Log2Floor64) {
+TEST(BitsTest, log2Floor64) {
   auto slow = [](uint64_t x) {
     int l = 0;
     for (; x > 1; x /= 2)
@@ -52,18 +52,18 @@ TEST(BitsTest, Log2Floor64) {
   };
 
   for (uint64_t x : input)
-    EXPECT_EQ(slow(x), Log2Floor(x));
+    EXPECT_EQ(slow(x), log2Floor(x));
 
   CryptoRandom rng;
   for (int i = 0; i < 100; ++i) {
     uint64_t x = rng.nextUint64();
     if (!x)
       continue;
-    EXPECT_EQ(slow(x), Log2Floor(x));
+    EXPECT_EQ(slow(x), log2Floor(x));
   }
 }
 
-TEST(BitsTest, Log2Ceil32) {
+TEST(BitsTest, log2Ceil32) {
   auto slow = [](uint32_t x) {
     for (int i = 0; i < 32; ++i) {
       if ((UINT32_C(1) << i) >= x)
@@ -80,18 +80,18 @@ TEST(BitsTest, Log2Ceil32) {
   };
 
   for (uint32_t x : input)
-    EXPECT_EQ(slow(x), Log2Ceil(x));
+    EXPECT_EQ(slow(x), log2Ceil(x));
 
   CryptoRandom rng;
   for (int i = 0; i < 100; ++i) {
     uint32_t x = rng.nextUint32();
     if (!x)
       continue;
-    EXPECT_EQ(slow(x), Log2Ceil(x));
+    EXPECT_EQ(slow(x), log2Ceil(x));
   }
 }
 
-TEST(BitsTest, Log2Ceil64) {
+TEST(BitsTest, log2Ceil64) {
   auto slow = [](uint64_t x) {
     for (int i = 0; i < 64; ++i) {
       if ((UINT64_C(1) << i) >= x)
@@ -109,18 +109,18 @@ TEST(BitsTest, Log2Ceil64) {
   };
 
   for (uint64_t x : input)
-    EXPECT_EQ(slow(x), Log2Ceil(x));
+    EXPECT_EQ(slow(x), log2Ceil(x));
 
   CryptoRandom rng;
   for (int i = 0; i < 100; ++i) {
     uint64_t x = rng.nextUint64();
     if (!x)
       continue;
-    EXPECT_EQ(slow(x), Log2Ceil(x));
+    EXPECT_EQ(slow(x), log2Ceil(x));
   }
 }
 
-TEST(BitsTest, IsPowerOfTwo) {
+TEST(BitsTest, isPowerOfTwo) {
   auto slow = [](uint32_t x) {
     bool flag = false;
     for (; x && !flag; x >>= 1) {
@@ -138,23 +138,23 @@ TEST(BitsTest, IsPowerOfTwo) {
   };
 
   for (uint32_t x : input)
-    EXPECT_EQ(slow(x), IsPowerOfTwo(x));
+    EXPECT_EQ(slow(x), isPowerOfTwo(x));
 
   CryptoRandom rng;
   for (int i = 0; i < 100; ++i) {
     uint32_t x = rng.nextUint32();
     if (!x)
       continue;
-    EXPECT_EQ(slow(x), IsPowerOfTwo(x));
+    EXPECT_EQ(slow(x), isPowerOfTwo(x));
   }
 }
 
-TEST(BitsTest, WhichPowerOfTwo) {
+TEST(BitsTest, whichPowerOfTwo) {
   for (int i = 0; i < 64; ++i)
-    EXPECT_EQ(i, WhichPowerOfTwo(UINT64_C(1) << i));
+    EXPECT_EQ(i, whichPowerOfTwo(UINT64_C(1) << i));
 }
 
-TEST(BitsTest, RoundDownToPowerOfTwo32) {
+TEST(BitsTest, roundDownToPowerOfTwo32) {
   auto slow = [](uint32_t x) {
     uint32_t max = UINT32_C(1) << 31;
     if (x >= max)
@@ -176,16 +176,16 @@ TEST(BitsTest, RoundDownToPowerOfTwo32) {
   };
 
   for (uint32_t x : input)
-    EXPECT_EQ(slow(x), RoundDownToPowerOfTwo(x));
+    EXPECT_EQ(slow(x), roundDownToPowerOfTwo(x));
 
   CryptoRandom rng;
   for (int i = 0; i < 100; ++i) {
     uint32_t x = rng.nextUint32();
-    EXPECT_EQ(slow(x), RoundDownToPowerOfTwo(x));
+    EXPECT_EQ(slow(x), roundDownToPowerOfTwo(x));
   }
 }
 
-TEST(BitsTest, RoundDownToPowerOfTwo64) {
+TEST(BitsTest, roundDownToPowerOfTwo64) {
   auto slow = [](uint64_t x) {
     uint64_t max = UINT64_C(1) << 63;
     if (x >= max)
@@ -207,16 +207,16 @@ TEST(BitsTest, RoundDownToPowerOfTwo64) {
   };
 
   for (uint64_t x : input)
-    EXPECT_EQ(slow(x), RoundDownToPowerOfTwo(x)) << x;
+    EXPECT_EQ(slow(x), roundDownToPowerOfTwo(x)) << x;
 
   CryptoRandom rng;
   for (int i = 0; i < 100; ++i) {
     uint64_t x = rng.nextUint64();
-    EXPECT_EQ(slow(x), RoundDownToPowerOfTwo(x));
+    EXPECT_EQ(slow(x), roundDownToPowerOfTwo(x));
   }
 }
 
-TEST(BitsTest, RoundUpToPowerOfTwo32) {
+TEST(BitsTest, roundUpToPowerOfTwo32) {
   auto slow = [](uint32_t x) {
     uint32_t r = 1;
     while (r < x)
@@ -231,17 +231,17 @@ TEST(BitsTest, RoundUpToPowerOfTwo32) {
   };
 
   for (uint32_t x : input)
-    EXPECT_EQ(slow(x), RoundUpToPowerOfTwo(x));
+    EXPECT_EQ(slow(x), roundUpToPowerOfTwo(x));
 
   CryptoRandom rng;
   for (int i = 0; i < 100; ++i) {
     // Shift one right to have last bit cleared.
     uint32_t x = rng.nextUint32() >> 1;
-    EXPECT_EQ(slow(x), RoundUpToPowerOfTwo(x));
+    EXPECT_EQ(slow(x), roundUpToPowerOfTwo(x));
   }
 }
 
-TEST(BitsTest, RoundUpToPowerOfTwo64) {
+TEST(BitsTest, roundUpToPowerOfTwo64) {
   auto slow = [](uint64_t x) {
     uint64_t r = 1;
     while (r < x)
@@ -256,13 +256,13 @@ TEST(BitsTest, RoundUpToPowerOfTwo64) {
   };
 
   for (uint64_t x : input)
-    EXPECT_EQ(slow(x), RoundUpToPowerOfTwo(x)) << x;
+    EXPECT_EQ(slow(x), roundUpToPowerOfTwo(x)) << x;
 
   CryptoRandom rng;
   for (int i = 0; i < 100; ++i) {
     // Shift one right to have last bit cleared.
     uint64_t x = rng.nextUint64() >> 1;
-    EXPECT_EQ(slow(x), RoundUpToPowerOfTwo(x));
+    EXPECT_EQ(slow(x), roundUpToPowerOfTwo(x));
   }
 }
 

@@ -114,7 +114,7 @@ BASE_EXPORT IntVector3 lerp(const IntVector3& a, const IntVector3& b, double t);
 
 BASE_EXPORT Vector3 lerp(const Vector3& a, const Vector3& b, double t);
 
-BASE_EXPORT bool IsNear(const Vector3& lhs, const Vector3& rhs, float tolerance);
+BASE_EXPORT bool isNear(const Vector3& lhs, const Vector3& rhs, float tolerance);
 
 BASE_EXPORT Vector3 Floor(const Vector3& v);
 BASE_EXPORT Vector3 Ceil(const Vector3& v);

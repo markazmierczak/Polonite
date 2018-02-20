@@ -158,7 +158,7 @@ inline void sortSpan(MutableSpan<T> sequence, TComparer&& comparer = DefaultComp
   if (sequence.size() <= 1)
     return;
   // use IntroSort as default algorithm.
-  int depth_limit = 2 * Log2Floor(sequence.size());
+  int depth_limit = 2 * log2Floor(sequence.size());
   detail::introSort(
       sequence.data(), 0, sequence.size() - 1,
       depth_limit,

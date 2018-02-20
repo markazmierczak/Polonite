@@ -87,11 +87,11 @@ TEST(ContiguousAllocatorTest, Alignment) {
 
   allocator.Reset();
   double* double_ptr = Allocate<double>(allocator, 1);
-  EXPECT_TRUE(IsAlignedTo(double_ptr, alignof(double)));
+  EXPECT_TRUE(isAlignedTo(double_ptr, alignof(double)));
   uint8_t* byte_after_double_ptr = Allocate<uint8_t>(allocator, 1);
-  EXPECT_TRUE(IsAlignedTo(byte_after_double_ptr, alignof(double)));
+  EXPECT_TRUE(isAlignedTo(byte_after_double_ptr, alignof(double)));
   double_ptr = Allocate<double>(allocator, 1);
-  EXPECT_TRUE(IsAlignedTo(double_ptr, alignof(double)));
+  EXPECT_TRUE(isAlignedTo(double_ptr, alignof(double)));
 }
 
 } // namespace

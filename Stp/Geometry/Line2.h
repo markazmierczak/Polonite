@@ -107,11 +107,11 @@ struct BASE_EXPORT Line2 {
 };
 
 inline bool Line2::IsVertical(float tolerance) const {
-  return IsNear(x1(), x2(), tolerance);
+  return isNear(x1(), x2(), tolerance);
 }
 
 inline bool Line2::IsHorizontal(float tolerance) const {
-  return IsNear(y1(), y2(), tolerance);
+  return isNear(y1(), y2(), tolerance);
 }
 
 inline float Line2::GetSlope() const {

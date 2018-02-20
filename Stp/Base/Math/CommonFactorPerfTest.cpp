@@ -14,7 +14,7 @@ namespace stp {
 static const int GcdBenchmarkIterations = 1000000;
 
 template<typename T>
-static List<T> GenerateTable() {
+static List<T> generateTable() {
   int size = GcdBenchmarkIterations + 1;
   List<T> list;
   T* dst = list.appendUninitialized(size);
@@ -25,7 +25,7 @@ static List<T> GenerateTable() {
 }
 
 template<typename T>
-static inline T SimpleGcd(T a, T b) {
+static inline T simpleGcd(T a, T b) {
   T tmp = 0;
   while (b) {
     tmp = a;
@@ -35,12 +35,12 @@ static inline T SimpleGcd(T a, T b) {
   return a;
 }
 
-TEST(GcdPerfTest, Euclid32) {
-  auto table = GenerateTable<uint32_t>();
+TEST(GcdPerfTest, euclid32) {
+  auto table = generateTable<uint32_t>();
 
   TimeTicks start = TimeTicks::Now();
   for (int i = 0; i < GcdBenchmarkIterations; ++i) {
-    SimpleGcd(table[i], table[i + 1]);
+    simpleGcd(table[i], table[i + 1]);
   }
   double total_time_milliseconds = (TimeTicks::Now() - start).InMillisecondsF();
   perf_test::PrintResult(
@@ -49,12 +49,12 @@ TEST(GcdPerfTest, Euclid32) {
       "runs/ms", true);
 }
 
-TEST(GcdPerfTest, Binary32) {
-  auto table = GenerateTable<uint32_t>();
+TEST(GcdPerfTest, binary32) {
+  auto table = generateTable<uint32_t>();
 
   TimeTicks start = TimeTicks::Now();
   for (int i = 0; i < GcdBenchmarkIterations; ++i) {
-    GreatestCommonDivisor(table[i], table[i + 1]);
+    greatestCommonDivisor(table[i], table[i + 1]);
   }
   double total_time_milliseconds = (TimeTicks::Now() - start).InMillisecondsF();
   perf_test::PrintResult(
@@ -63,12 +63,12 @@ TEST(GcdPerfTest, Binary32) {
       "runs/ms", true);
 }
 
-TEST(GcdPerfTest, Euclid64) {
-  auto table = GenerateTable<uint64_t>();
+TEST(GcdPerfTest, euclid64) {
+  auto table = generateTable<uint64_t>();
 
   TimeTicks start = TimeTicks::Now();
   for (int i = 0; i < GcdBenchmarkIterations; ++i) {
-    SimpleGcd(table[i], table[i + 1]);
+    simpleGcd(table[i], table[i + 1]);
   }
   double total_time_milliseconds = (TimeTicks::Now() - start).InMillisecondsF();
   perf_test::PrintResult(
@@ -77,12 +77,12 @@ TEST(GcdPerfTest, Euclid64) {
       "runs/ms", true);
 }
 
-TEST(GcdPerfTest, Binary64) {
-  auto table = GenerateTable<uint64_t>();
+TEST(GcdPerfTest, binary64) {
+  auto table = generateTable<uint64_t>();
 
   TimeTicks start = TimeTicks::Now();
   for (int i = 0; i < GcdBenchmarkIterations; ++i) {
-    GreatestCommonDivisor(table[i], table[i + 1]);
+    greatestCommonDivisor(table[i], table[i + 1]);
   }
   double total_time_milliseconds = (TimeTicks::Now() - start).InMillisecondsF();
   perf_test::PrintResult(

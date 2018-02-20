@@ -137,7 +137,7 @@ class Fixed {
 
   friend Fixed Abs(Fixed x) { return x.bits_ >= 0 ? x : -x; }
 
-  friend bool IsNear(Fixed x, Fixed y, Fixed tolerance) {
+  friend bool isNear(Fixed x, Fixed y, Fixed tolerance) {
     return Abs(x - y) <= tolerance;
   }
 

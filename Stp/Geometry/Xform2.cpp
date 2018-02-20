@@ -91,8 +91,8 @@ bool Xform2::IsSimilarity(float tolerance) const {
   float mx = d_[EntryScaleX];
   float my = d_[EntryScaleY];
   if (!(transforms & TypeMaskAffine)) {
-    return !IsNear(mx, 0.f, NearlyZeroForGraphics<float>) &&
-        IsNear(Abs(mx), Abs(my), NearlyZeroForGraphics<float>);
+    return !isNear(mx, 0.f, NearlyZeroForGraphics<float>) &&
+        isNear(Abs(mx), Abs(my), NearlyZeroForGraphics<float>);
   }
 
   float sx = d_[EntryShearX];
@@ -103,8 +103,8 @@ bool Xform2::IsSimilarity(float tolerance) const {
 
   // upper 2x2 is rotation/reflection + uniform scale if basis vectors
   // are 90 degree rotations of each other
-  return (IsNear(mx, my, tolerance) && IsNear(sx, -sy, tolerance))
-      || (IsNear(mx, -my, tolerance) && IsNear(sx, sy, tolerance));
+  return (isNear(mx, my, tolerance) && isNear(sx, -sy, tolerance))
+      || (isNear(mx, -my, tolerance) && isNear(sx, sy, tolerance));
 }
 
 bool Xform2::PreservesRightAngles(float tolerance) const {
@@ -126,7 +126,7 @@ bool Xform2::PreservesRightAngles(float tolerance) const {
     return false;
 
   float dot = DotProduct(Vector2(mx, sy), Vector2(sx, my));
-  return IsNear(dot, tolerance * tolerance, NearlyZeroForGraphics<float>);
+  return isNear(dot, tolerance * tolerance, NearlyZeroForGraphics<float>);
 }
 
 bool isFinite(const Xform2& xform) {
@@ -906,9 +906,9 @@ void Xform2::MapVectors(Vector2 dst[], const Vector2 src[], int count) const {
   }
 }
 
-bool IsNear(const Xform2& lhs, const Xform2& rhs, float tolerance) {
+bool isNear(const Xform2& lhs, const Xform2& rhs, float tolerance) {
   for (int i = 0; i < Xform2::EntryCount; ++i) {
-    if (!IsNear(lhs.get(i), rhs.get(i), tolerance))
+    if (!isNear(lhs.get(i), rhs.get(i), tolerance))
       return false;
   }
   return true;

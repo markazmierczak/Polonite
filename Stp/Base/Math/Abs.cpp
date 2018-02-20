@@ -7,12 +7,12 @@
 
 namespace stp {
 
-bool IsNearUlp(float x, float y) {
-  return IsNearUlp(RawFloat(x), RawFloat(y));
+bool isNearUlp(float x, float y) {
+  return isNearUlp(RawFloat(x), RawFloat(y));
 }
 
-bool IsNearUlp(double x, double y) {
-  return IsNearUlp(RawDouble(x), RawDouble(y));
+bool isNearUlp(double x, double y) {
+  return isNearUlp(RawDouble(x), RawDouble(y));
 }
 
 } // namespace stp

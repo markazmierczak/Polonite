@@ -42,9 +42,9 @@ TEST(AffineTest, Rotate) {
   Affine rt1(t);
   Affine rt2(-1, -3, -2, -4, 5, 6);
   t.Rotate(Angle::DegreesToRadians(180.0));
-  EXPECT_TRUE(IsNear(t, rt2, 0.001f));
+  EXPECT_TRUE(isNear(t, rt2, 0.001f));
   t.Rotate(Angle::DegreesToRadians(-180.0));
-  EXPECT_TRUE(IsNear(t, rt1, 0.001f));
+  EXPECT_TRUE(isNear(t, rt1, 0.001f));
 }
 
 TEST(AffineTest, SkewX) {
@@ -82,7 +82,7 @@ TEST(AffineTest, MapPoint) {
   EXPECT_EQ(Point2(5, -5), t.MapPoint(p));
 
   t.SetRotate(Angle::DegreesToRadians(90.0));
-  EXPECT_TRUE(IsNear(Point2(2, 1), t.MapPoint(p), 0.0001f));
+  EXPECT_TRUE(isNear(Point2(2, 1), t.MapPoint(p), 0.0001f));
 }
 
 TEST(AffineTest, Concat) {
@@ -181,9 +181,9 @@ TEST(AffineTest, GetInverted) {
   EXPECT_TRUE(mat.IsInvertible());
   EXPECT_TRUE(mat.GetInverted(inverse));
   iden1.SetConcat(mat, inverse);
-  EXPECT_TRUE(IsNear(iden1, Affine::Identity(), 0.0001f));
+  EXPECT_TRUE(isNear(iden1, Affine::Identity(), 0.0001f));
   iden2.SetConcat(inverse, mat);
-  EXPECT_TRUE(IsNear(iden2, Affine::Identity(), 0.0001f));
+  EXPECT_TRUE(isNear(iden2, Affine::Identity(), 0.0001f));
 
   mat.SetScale(0, 1);
   EXPECT_FALSE(mat.IsInvertible());

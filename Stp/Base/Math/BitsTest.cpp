@@ -461,7 +461,7 @@ TEST(BitsTest, countLeadingZeroBits64) {
   }
 }
 
-TEST(BitsTest, RotateRight32) {
+TEST(BitsTest, rotateRight32) {
   struct Pair {
     uint32_t expected;
     uint32_t input;
@@ -475,7 +475,7 @@ TEST(BitsTest, RotateRight32) {
   };
 
   for (Pair x : input)
-    EXPECT_EQ(x.expected, RotateBitsRight(x.input, x.shift));
+    EXPECT_EQ(x.expected, rotateBitsRight(x.input, x.shift));
 }
 
 TEST(BitsTest, RotateLeft32) {
@@ -493,10 +493,10 @@ TEST(BitsTest, RotateLeft32) {
   };
 
   for (Pair x : input)
-    EXPECT_EQ(x.expected, RotateBitsLeft(x.input, x.shift));
+    EXPECT_EQ(x.expected, rotateBitsLeft(x.input, x.shift));
 }
 
-TEST(BitsTest, Reverse8) {
+TEST(BitsTest, reverse8) {
   auto slow = [](uint8_t x) {
     uint8_t m = 1 << 7;
     uint8_t c = 0;
@@ -513,7 +513,7 @@ TEST(BitsTest, Reverse8) {
   }
 }
 
-TEST(BitsTest, Reverse16) {
+TEST(BitsTest, reverse16) {
   auto slow = [](uint16_t x) {
     uint16_t m = UINT16_C(1) << 15;
     uint16_t c = 0;
@@ -542,7 +542,7 @@ TEST(BitsTest, Reverse16) {
   }
 }
 
-TEST(BitsTest, Reverse32) {
+TEST(BitsTest, reverse32) {
   auto slow = [](uint32_t x) {
     uint32_t m = UINT32_C(1) << 31;
     uint32_t c = 0;
@@ -571,7 +571,7 @@ TEST(BitsTest, Reverse32) {
   }
 }
 
-TEST(BitsTest, Reverse64) {
+TEST(BitsTest, reverse64) {
   auto slow = [](uint64_t x) {
     uint64_t m = UINT64_C(1) << 63;
     uint64_t c = 0;

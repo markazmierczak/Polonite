@@ -34,7 +34,7 @@ StreamWriter::StreamWriter(Stream* stream, TextEncoding encoding, int buffer_cap
   if (buffer_capacity < MinBufferCapacity) {
     buffer_capacity = MinBufferCapacity;
   } else {
-    buffer_capacity = AlignForward(buffer_capacity, isizeof(char32_t));
+    buffer_capacity = alignForward(buffer_capacity, isizeof(char32_t));
   }
   buffer_.ensureCapacity(buffer_capacity);
 }

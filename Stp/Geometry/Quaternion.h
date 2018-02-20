@@ -100,7 +100,7 @@ BASE_EXPORT Quaternion lerp(const Quaternion& q1, const Quaternion& q2, double t
 // Spherical linear interpolation between two quaternions
 BASE_EXPORT Quaternion Slerp(const Quaternion& q1, const Quaternion& q2, double t);
 
-BASE_EXPORT bool IsNear(const Quaternion& lhs, const Quaternion& rhs, double tolerance);
+BASE_EXPORT bool isNear(const Quaternion& lhs, const Quaternion& rhs, double tolerance);
 
 BASE_EXPORT double DotProduct(const Quaternion& lhs, const Quaternion& rhs);
 

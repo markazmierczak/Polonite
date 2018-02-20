@@ -8,11 +8,11 @@
 
 namespace stp {
 
-static inline uint32_t GcdRecursive32(uint32_t a, uint32_t b) {
-  return b == 0 ? a : GcdRecursive32(b, a % b);
+static inline uint32_t gcdRecursive32(uint32_t a, uint32_t b) {
+  return b == 0 ? a : gcdRecursive32(b, a % b);
 }
 
-TEST(GcdTest, Gcd32) {
+TEST(GcdTest, gcd32) {
   struct Pair {
     uint32_t x;
     uint32_t y;
@@ -27,21 +27,21 @@ TEST(GcdTest, Gcd32) {
   };
 
   for (Pair p : input)
-    EXPECT_EQ(GcdRecursive32(p.x, p.y), GreatestCommonDivisor(p.x, p.y));
+    EXPECT_EQ(gcdRecursive32(p.x, p.y), greatestCommonDivisor(p.x, p.y));
 
   CryptoRandom rng;
   for (int i = 0; i < 100; ++i) {
     uint32_t x = rng.nextUint32();
     uint32_t y = rng.nextUint32();
-    EXPECT_EQ(GcdRecursive32(x, y), GreatestCommonDivisor(x, y));
+    EXPECT_EQ(gcdRecursive32(x, y), greatestCommonDivisor(x, y));
   }
 }
 
-static inline uint64_t GcdRecursive64(uint64_t a, uint64_t b) {
-  return b == 0 ? a : GcdRecursive64(b, a % b);
+static inline uint64_t gcdRecursive64(uint64_t a, uint64_t b) {
+  return b == 0 ? a : gcdRecursive64(b, a % b);
 }
 
-TEST(GcdTest, Gcd64) {
+TEST(GcdTest, gcd64) {
   struct Pair {
     uint64_t x;
     uint64_t y;
@@ -56,13 +56,13 @@ TEST(GcdTest, Gcd64) {
   };
 
   for (Pair p : input)
-    EXPECT_EQ(GcdRecursive64(p.x, p.y), GreatestCommonDivisor(p.x, p.y));
+    EXPECT_EQ(gcdRecursive64(p.x, p.y), greatestCommonDivisor(p.x, p.y));
 
   CryptoRandom rng;
   for (int i = 0; i < 100; ++i) {
     uint32_t x = rng.nextUint64();
     uint32_t y = rng.nextUint64();
-    EXPECT_EQ(GcdRecursive64(x, y), GreatestCommonDivisor(x, y));
+    EXPECT_EQ(gcdRecursive64(x, y), greatestCommonDivisor(x, y));
   }
 }
 

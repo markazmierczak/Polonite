@@ -12,18 +12,18 @@ namespace stp {
 // Pair of BCD digits.
 struct BcdPair {
   // Returns BCD representation of |byte| value.
-  static constexpr BcdPair Pack(unsigned byte) {
+  static constexpr BcdPair pack(unsigned byte) {
     ASSERT(byte < 100);
     return { static_cast<uint8_t>(((byte / 10) << 4) | (byte % 10)) };
   }
 
   // Converts BCD representation to byte value.
-  constexpr uint8_t Unpack() const {
+  constexpr uint8_t unpack() const {
     return (bits >> 4) * 10 + (bits & 0xF);
   }
 
-  constexpr uint8_t GetLowDigit() const { return bits & 0xF; }
-  constexpr uint8_t GetHighDigit() const { return bits >> 4; }
+  constexpr uint8_t getLowDigit() const { return bits & 0xF; }
+  constexpr uint8_t getHighDigit() const { return bits >> 4; }
 
   uint8_t bits;
 };

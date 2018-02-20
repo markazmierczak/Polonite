@@ -243,7 +243,7 @@ class BASE_EXPORT Xform2 {
   static const MapXYFunction MapXYFunctions_[16];
 };
 
-BASE_EXPORT bool IsNear(const Xform2& lhs, const Xform2& rhs, float tolerance);
+BASE_EXPORT bool isNear(const Xform2& lhs, const Xform2& rhs, float tolerance);
 
 BASE_EXPORT bool isFinite(const Xform2& xform);
 

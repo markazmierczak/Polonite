@@ -201,7 +201,7 @@ inline int DecodeTmpl(Context& context, BufferSpan input, MutableSpan<T> output,
     byte_t head = iptr[ii];
     if (head < 0x80) {
       // ASCII
-      if (IsAlignedTo(iptr, WordIncrement)) {
+      if (isAlignedTo(iptr, WordIncrement)) {
         constexpr MachineWord Mask = static_cast<MachineWord>(UINT64_C(0x8080808080808080));
         while (ii < isize) {
           if (*reinterpret_cast<const MachineWord*>(iptr + ii) & Mask)

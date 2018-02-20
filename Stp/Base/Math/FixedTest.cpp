@@ -108,14 +108,14 @@ TEST(FixedTest, Sqrt) {
 
   constexpr double Sqrt2Double = MathConstants<double>::Sqrt2;
   const auto Epsilon16 = Limits<Fixed16>::Epsilon;
-  EXPECT_TRUE(IsNear(Fixed16(Sqrt2Double), Sqrt(Fixed16(2)), Epsilon16));
-  EXPECT_TRUE(IsNear(Fixed16(8), Sqrt(Fixed16(64)), Epsilon16));
-  EXPECT_TRUE(IsNear(Fixed16(0.25f), Sqrt(Fixed16(0.0625)), Epsilon16));
+  EXPECT_TRUE(isNear(Fixed16(Sqrt2Double), Sqrt(Fixed16(2)), Epsilon16));
+  EXPECT_TRUE(isNear(Fixed16(8), Sqrt(Fixed16(64)), Epsilon16));
+  EXPECT_TRUE(isNear(Fixed16(0.25f), Sqrt(Fixed16(0.0625)), Epsilon16));
 
   const auto Epsilon6 = Limits<Fixed26_6>::Epsilon;
   EXPECT_NEAR(Fixed26_6(Sqrt2Double).ToBits(), Sqrt(Fixed26_6(2)).ToBits(), Epsilon6.ToBits());
-  EXPECT_TRUE(IsNear(Fixed26_6(8), Sqrt(Fixed26_6(64)), Epsilon6));
-  EXPECT_TRUE(IsNear(Fixed26_6(0.25f), Sqrt(Fixed26_6(0.0625f)), Epsilon6));
+  EXPECT_TRUE(isNear(Fixed26_6(8), Sqrt(Fixed26_6(64)), Epsilon6));
+  EXPECT_TRUE(isNear(Fixed26_6(0.25f), Sqrt(Fixed26_6(0.0625f)), Epsilon6));
 }
 
 TEST(FixedTest, Lerp) {

@@ -12,46 +12,46 @@ namespace stp {
 // Returns true if |value| is a multiple of |alignment|.
 // |alignment| must be power of 2.
 template<typename T, TEnableIf<TIsInteger<T>>* = nullptr>
-inline bool IsAlignedTo(T x, T alignment) {
-  ASSERT(IsPowerOfTwo(alignment));
+inline bool isAlignedTo(T x, T alignment) {
+  ASSERT(isPowerOfTwo(alignment));
   return (x & (alignment - 1)) == 0;
 }
-inline bool IsAlignedTo(const void* x, intptr_t alignment) {
-  return IsAlignedTo(reinterpret_cast<intptr_t>(x), alignment);
+inline bool isAlignedTo(const void* x, intptr_t alignment) {
+  return isAlignedTo(reinterpret_cast<intptr_t>(x), alignment);
 }
 
 // Returns alignment of the given |x|.
 // Clears all bits except the least significant (returns 1 for x=0).
 template<typename T>
-inline T WhichAlignment(T x) {
+inline T whichAlignment(T x) {
   return x ? extractFirstOneBit(x) : 1;
 }
 
-inline intptr_t WhichAlignment(const void* x) {
-  return WhichAlignment(reinterpret_cast<intptr_t>(x));
+inline intptr_t whichAlignment(const void* x) {
+  return whichAlignment(reinterpret_cast<intptr_t>(x));
 }
 
 template<typename T, TEnableIf<TIsInteger<T>>* = nullptr>
-inline T AlignForward(T x, T alignment) {
-  ASSERT(IsPowerOfTwo(alignment));
+inline T alignForward(T x, T alignment) {
+  ASSERT(isPowerOfTwo(alignment));
   return (x + alignment - 1) & ~(alignment - 1);
 }
 
 template<typename T, TEnableIf<TIsInteger<T>>* = nullptr>
-inline T AlignBackward(T x, T alignment) {
-  ASSERT(IsPowerOfTwo(alignment));
+inline T alignBackward(T x, T alignment) {
+  ASSERT(isPowerOfTwo(alignment));
   return x & (alignment - 1);
 }
 
 // This always succeeds and fills padding with difference in bytes
 // between output and input pointer.
 template<typename TPointer, typename TInteger>
-inline TPointer* AlignForward(
+inline TPointer* alignForward(
     TPointer* pointer, TInteger alignment,
     TInteger* out_padding = nullptr) {
-  ASSERT(IsPowerOfTwo(alignment));
+  ASSERT(isPowerOfTwo(alignment));
   uintptr_t uptr = reinterpret_cast<uintptr_t>(pointer);
-  uintptr_t aligned_uptr = AlignForward<uintptr_t>(uptr, toUnsigned(alignment));
+  uintptr_t aligned_uptr = alignForward<uintptr_t>(uptr, toUnsigned(alignment));
   if (out_padding)
     *out_padding = static_cast<TInteger>(aligned_uptr - uptr);
   return reinterpret_cast<TPointer*>(aligned_uptr);
@@ -59,14 +59,14 @@ inline TPointer* AlignForward(
 
 // C++11 std::align implementation.
 template<typename TPointer, typename TInteger>
-inline bool AlignForward(
+inline bool alignForward(
     TPointer*& pointer, TInteger alignment,
     TInteger size, TInteger& in_out_space,
     TInteger* out_padding = nullptr) {
-  ASSERT(IsPowerOfTwo(alignment));
+  ASSERT(isPowerOfTwo(alignment));
 
   TInteger padding;
-  TPointer* result = AlignForward(pointer, alignment, &padding);
+  TPointer* result = alignForward(pointer, alignment, &padding);
   if (in_out_space - padding < size)
     return false;
 
@@ -78,10 +78,10 @@ inline bool AlignForward(
 }
 
 template<typename TPointer, typename TInteger>
-inline TPointer* AlignBackward(TPointer* pointer, TInteger alignment) {
-  ASSERT(IsPowerOfTwo(alignment));
+inline TPointer* alignBackward(TPointer* pointer, TInteger alignment) {
+  ASSERT(isPowerOfTwo(alignment));
   uintptr_t ptr = reinterpret_cast<uintptr_t>(pointer);
-  uintptr_t aligned_ptr = AlignBackward<uintptr_t>(ptr, toUnsigned(alignment));
+  uintptr_t aligned_ptr = alignBackward<uintptr_t>(ptr, toUnsigned(alignment));
   return reinterpret_cast<TPointer*>(aligned_ptr);
 }
 

@@ -55,7 +55,7 @@ class BASE_EXPORT Plane {
   float distance;
 };
 
-BASE_EXPORT bool IsNear(const Plane& lhs, const Plane& rhs, float tolerance);
+BASE_EXPORT bool isNear(const Plane& lhs, const Plane& rhs, float tolerance);
 
 } // namespace stp
 

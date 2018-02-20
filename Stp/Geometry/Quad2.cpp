@@ -14,14 +14,14 @@
 namespace stp {
 
 bool Quad2::IsRectilinear(float tol) const {
-  return (IsNear(p[0].x, p[1].x, tol) &&
-          IsNear(p[1].y, p[2].y, tol) &&
-          IsNear(p[2].x, p[3].x, tol) &&
-          IsNear(p[3].y, p[0].y, tol)) ||
-         (IsNear(p[0].y, p[1].y, tol) &&
-          IsNear(p[1].x, p[2].x, tol) &&
-          IsNear(p[2].y, p[3].y, tol) &&
-          IsNear(p[3].x, p[0].x, tol));
+  return (isNear(p[0].x, p[1].x, tol) &&
+          isNear(p[1].y, p[2].y, tol) &&
+          isNear(p[2].x, p[3].x, tol) &&
+          isNear(p[3].y, p[0].y, tol)) ||
+         (isNear(p[0].y, p[1].y, tol) &&
+          isNear(p[1].x, p[2].x, tol) &&
+          isNear(p[2].y, p[3].y, tol) &&
+          isNear(p[3].x, p[0].x, tol));
 }
 
 bool Quad2::IsCounterClockwise() const {

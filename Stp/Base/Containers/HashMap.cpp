@@ -16,7 +16,7 @@ int HashMapBase::optimalBucketCount(unsigned min, bool binary_size) {
 
   int count;
   if (binary_size) {
-    count = RoundUpToPowerOfTwo(min);
+    count = roundUpToPowerOfTwo(min);
   } else {
     count = NextPrimeNumber(min - 1);
   }

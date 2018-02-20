@@ -29,11 +29,11 @@ HashCode combineHash(HashCode in_seed, HashCode in_value) {
   auto value = toUnderlying(in_value);
 
   value *= C1;
-  value = RotateBitsRight(value, 15);
+  value = rotateBitsRight(value, 15);
   value *= C2;
 
   seed ^= value;
-  seed = RotateBitsRight(seed, 13);
+  seed = rotateBitsRight(seed, 13);
   seed = seed * 5 + UINT32_C(0xE6546B64);
 
   return static_cast<HashCode>(seed);

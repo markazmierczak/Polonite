@@ -10,7 +10,7 @@ namespace detail {
 
 void* aligned_malloc(size_t size, size_t alignment) noexcept {
   ASSERT(size > 0);
-  ASSERT(IsPowerOfTwo(alignment));
+  ASSERT(isPowerOfTwo(alignment));
   ASSERT(alignment >= sizeof(void*));
 
   void* ptr;
@@ -22,7 +22,7 @@ void* aligned_malloc(size_t size, size_t alignment) noexcept {
     ptr = nullptr;
   #endif
 
-  ASSERT(IsAlignedTo(ptr, alignment));
+  ASSERT(isAlignedTo(ptr, alignment));
   return ptr;
 }
 

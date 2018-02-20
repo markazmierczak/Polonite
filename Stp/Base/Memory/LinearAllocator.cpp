@@ -115,7 +115,7 @@ void LinearAllocator::Reset() {
 
 void* LinearAllocator::TryAllocateWithinBlock(Block* block, size_t size, size_t alignment) {
   size_t padding;
-  if (!AlignForward(block->free_ptr, alignment, size, block->free_size, &padding))
+  if (!alignForward(block->free_ptr, alignment, size, block->free_size, &padding))
     return nullptr;
 
   void* ptr = block->free_ptr;
@@ -188,7 +188,7 @@ LinearAllocator::Block* LinearAllocator::NewBlock(size_t size) {
 
   // Increase chunk size for next block.
   if (chunk_size_ < MaxBlockSize)
-    chunk_size_ = AlignForward(chunk_size_ + (chunk_size_ >> 1), alignof(max_align_t));
+    chunk_size_ = alignForward(chunk_size_ + (chunk_size_ >> 1), alignof(max_align_t));
 
   return block;
 }

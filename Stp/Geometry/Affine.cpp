@@ -94,7 +94,7 @@ bool Affine::IsSimilarity(float tolerance) const {
       return true;
 
     // If no skew, can just compare scale factors.
-    return !IsNear(sx, 0.f, tolerance) && IsNear(sy, 0.f, tolerance);
+    return !isNear(sx, 0.f, tolerance) && isNear(sy, 0.f, tolerance);
   }
 
   float kx = d_[EntryShearX];
@@ -105,8 +105,8 @@ bool Affine::IsSimilarity(float tolerance) const {
 
   // Upper 2x2 is rotation/reflection + uniform scale if basis vectors
   // are 90 degree rotations of each other.
-  return (IsNear(sx, sy, tolerance) && IsNear(kx, -ky, tolerance))
-      || (IsNear(sx, -sy, tolerance) && IsNear(kx, ky, tolerance));
+  return (isNear(sx, sy, tolerance) && isNear(kx, -ky, tolerance))
+      || (isNear(sx, -sy, tolerance) && isNear(kx, ky, tolerance));
 }
 
 bool Affine::PreservesRightAngles(float tolerance) const {
@@ -122,7 +122,7 @@ bool Affine::PreservesRightAngles(float tolerance) const {
     return false;
 
   // Upper 2x2 is scale + rotation/reflection if basis vectors are orthogonal.
-  return IsNear(0.f, DotProduct(Vector2(sx, ky), Vector2(kx, sy)), tolerance);
+  return isNear(0.f, DotProduct(Vector2(sx, ky), Vector2(kx, sy)), tolerance);
 }
 
 Affine Affine::MakeTranslate(float tx, float ty) {
@@ -770,10 +770,10 @@ void Affine::FormatImpl(TextWriter& out) const {
   out.Write(']');
 }
 
-bool IsNear(const Affine& lhs, const Affine& rhs, float tolerance) {
+bool isNear(const Affine& lhs, const Affine& rhs, float tolerance) {
   for (int i = 0; i < Affine::EntryCount; ++i) {
     auto idx = static_cast<Affine::EntryType>(i);
-    if (!IsNear(lhs.get(idx), rhs.get(idx), tolerance))
+    if (!isNear(lhs.get(idx), rhs.get(idx), tolerance))
       return false;
   }
   return true;

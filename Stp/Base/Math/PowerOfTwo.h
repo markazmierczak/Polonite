@@ -14,7 +14,7 @@ namespace stp {
 // Returns the integer i such as 2^i <= n < 2^(i+1).
 // Assumes |x| is not zero.
 template<typename T, TEnableIf<TIsInteger<T>>* = nullptr>
-inline int Log2Floor(T x) {
+inline int log2Floor(T x) {
   ASSERT(x >= 0);
   return findLastOneBit(x);
 }
@@ -22,23 +22,23 @@ inline int Log2Floor(T x) {
 // Returns the integer i such as 2^(i-1) < n <= 2^i.
 // Assumes |x| is not zero.
 template<typename T, TEnableIf<TIsInteger<T>>* = nullptr>
-inline int Log2Ceil(T x) {
+inline int log2Ceil(T x) {
   ASSERT(x >= 0);
-  return (x != 1) ? (1 + Log2Floor(x - 1)) : 0;
+  return (x != 1) ? (1 + log2Floor(x - 1)) : 0;
 }
 
 // Returns true iff x is a power of 2.
 template<typename T, TEnableIf<TIsInteger<T>>* = nullptr>
-constexpr bool IsPowerOfTwo(T x) {
+constexpr bool isPowerOfTwo(T x) {
   return x > 0 && !(x & (x-1));
 }
 
 // Returns which power of two is |x|.
 // |x| must be a power of 2.
 template<typename T, TEnableIf<TIsInteger<T>>* = nullptr>
-inline int WhichPowerOfTwo(T x) {
+inline int whichPowerOfTwo(T x) {
   ASSUME(x > 0);
-  ASSERT(IsPowerOfTwo(x));
+  ASSERT(isPowerOfTwo(x));
   return findFirstOneBit(x);
 }
 
@@ -47,7 +47,7 @@ inline int WhichPowerOfTwo(T x) {
 // If |x| is lower or equal to zero, one is returned.
 // |x| must be lower than maximum representable power of two.
 template<typename T, TEnableIf<TIsInteger<T>>* = nullptr>
-inline T RoundUpToPowerOfTwo(T x) {
+inline T roundUpToPowerOfTwo(T x) {
   if (x > 1) {
     int p = findLastOneBit(x - 1) + 1;
     ASSERT(p <= Limits<T>::Digits);
@@ -59,14 +59,14 @@ inline T RoundUpToPowerOfTwo(T x) {
 // Returns the greatest power of two which is <= |x|.
 // If you pass in a number that is already a power of two, it is returned as is.
 template<typename T, TEnableIf<TIsInteger<T>>* = nullptr>
-inline T RoundDownToPowerOfTwo(T x) {
+inline T roundDownToPowerOfTwo(T x) {
   ASSUME(x > 0);
   return T(1) << findLastOneBit(x);
 }
 
 template<typename T, TEnableIf<TIsInteger<T>>* = nullptr>
-inline int TryLog2(T x) {
-  return IsPowerOfTwo(x) ? WhichPowerOfTwo(x) : -1;
+inline int tryLog2(T x) {
+  return isPowerOfTwo(x) ? whichPowerOfTwo(x) : -1;
 }
 
 } // namespace stp

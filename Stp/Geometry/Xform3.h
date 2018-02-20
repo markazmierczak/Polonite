@@ -113,7 +113,7 @@ class BASE_EXPORT Xform3 {
 
   // Returns true if the matrix is either identity or translation,
   // allowing for an amount of inaccuracy as specified by the parameter.
-  bool IsNearTranslate(float tolerance) const;
+  bool isNearTranslate(float tolerance) const;
 
   // Returns true if the matrix had only scaling components.
   bool IsScale() const { return (GetType() & ~TypeMaskScale) == 0; }
@@ -405,7 +405,7 @@ class BASE_EXPORT Xform3 {
 // DecomposedTransform.
 BASE_EXPORT bool Trylerp(Xform3& out, const Xform3& x, const Xform3& y, double t);
 
-BASE_EXPORT bool IsNear(const Xform3& lhs, const Xform3& rhs, float tolerance = 0.1f);
+BASE_EXPORT bool isNear(const Xform3& lhs, const Xform3& rhs, float tolerance = 0.1f);
 
 BASE_EXPORT bool isFinite(const Xform3& xform);
 

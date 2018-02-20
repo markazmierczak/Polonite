@@ -102,7 +102,7 @@ static inline bool ApproximatelyOne(float x, float tolerance) {
   return Abs(x - 1) <= tolerance;
 }
 
-bool Xform3::IsNearTranslate(float tolerance) const {
+bool Xform3::isNearTranslate(float tolerance) const {
   ASSERT(tolerance >= 0);
 
   if (IsTranslate())
@@ -143,9 +143,9 @@ bool Xform3::HasIntegerTranslate(float tolerance) const {
         static_cast<int>(GetEntry(EntryTransZ)) == GetEntry(EntryTransZ);
   } else {
     no_fractional_translation =
-        IsNear(Round(GetEntry(EntryTransX)), GetEntry(EntryTransX), tolerance) &&
-        IsNear(Round(GetEntry(EntryTransY)), GetEntry(EntryTransY), tolerance) &&
-        IsNear(Round(GetEntry(EntryTransZ)), GetEntry(EntryTransZ), tolerance);
+        isNear(Round(GetEntry(EntryTransX)), GetEntry(EntryTransX), tolerance) &&
+        isNear(Round(GetEntry(EntryTransY)), GetEntry(EntryTransY), tolerance) &&
+        isNear(Round(GetEntry(EntryTransZ)), GetEntry(EntryTransZ), tolerance);
   }
   return no_fractional_translation;
 }
@@ -484,7 +484,7 @@ void Xform3::SetRotateAbout(float x, float y, float z, double radians) {
 }
 
 void Xform3::SetRotateAboutUnit(float x, float y, float z, double radians) {
-  ASSERT(IsNear(Vector3(x, y, z).GetLengthSquared(), 1.0, 1E-5));
+  ASSERT(isNear(Vector3(x, y, z).GetLengthSquared(), 1.0, 1E-5));
 
   if (radians == 0) {
     SetIdentity();
@@ -1386,7 +1386,7 @@ void Xform3::Recompose(const DecomposedXform3& decomp) {
   Scale(decomp.scale[0], decomp.scale[1], decomp.scale[2]);
 }
 
-bool IsNear(const Xform3& lhs, const Xform3& rhs, float tolerance) {
+bool isNear(const Xform3& lhs, const Xform3& rhs, float tolerance) {
   const float ComponentTolerance = tolerance;
 
   // We may have a larger discrepancy in the scroll components due to snapping

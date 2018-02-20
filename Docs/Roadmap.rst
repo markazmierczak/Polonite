@@ -28,7 +28,7 @@ Finish **Fs**:
 Tighter **GTest**/**GMock** integration:
 
 * Use of Polonite classes instead of ``std``.
-* Use ``IsNear()`` to handle ``EXPECT_NEAR``.
+* Use ``isNear()`` to handle ``EXPECT_NEAR``.
 * Use ``Formattable`` concept within GTest.
 
 **Android**/**iOS**/**Mac** support.

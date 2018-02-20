@@ -163,7 +163,7 @@ class RawFloatingPoint {
   //   - returns false if either number is (or both are) NaN.
   //   - treats really large numbers as almost equal to infinity.
   //   - thinks +0.0 and -0.0 are 0 DLP's apart.
-  friend constexpr bool IsNearUlp(const RawFloatingPoint& lhs, const RawFloatingPoint& rhs) {
+  friend constexpr bool isNearUlp(const RawFloatingPoint& lhs, const RawFloatingPoint& rhs) {
     // The IEEE standard says that any comparison operation involving
     // a NaN must return false.
     if (IsNan(lhs) || IsNan(rhs))

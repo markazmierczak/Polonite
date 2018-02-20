@@ -274,7 +274,7 @@ BASE_EXPORT bool Trylerp(Affine& out, const Affine& x, const Affine& y, double t
 
 BASE_EXPORT DecomposedAffine lerp(const DecomposedAffine& x, const DecomposedAffine& y, double t);
 
-BASE_EXPORT bool IsNear(const Affine& lhs, const Affine& rhs, float tolerance);
+BASE_EXPORT bool isNear(const Affine& lhs, const Affine& rhs, float tolerance);
 
 constexpr Affine::Affine(
     float scale_x, float shear_y,

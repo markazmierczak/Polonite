@@ -38,12 +38,12 @@ inline double Abs(double x) { return ::fabs(x); }
 inline long double Abs(long double x) { return ::fabsl(x); }
 
 template<typename T, TEnableIf<TIsArithmetic<T>>* = nullptr>
-inline bool IsNear(T x, T y, T tolerance) {
+inline bool isNear(T x, T y, T tolerance) {
   return Abs(x - y) <= tolerance;
 }
 
-BASE_EXPORT bool IsNearUlp(float x, float y);
-BASE_EXPORT bool IsNearUlp(double x, double y);
+BASE_EXPORT bool isNearUlp(float x, float y);
+BASE_EXPORT bool isNearUlp(double x, double y);
 
 } // namespace stp
 

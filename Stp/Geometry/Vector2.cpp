@@ -60,7 +60,7 @@ Vector2 Vector2::GetNormalizedOrThis() const {
 }
 
 bool Vector2::IsNormalized() const {
-  return IsNear(GetLengthSquared(), 1.0, static_cast<double>(FLT_EPSILON));
+  return isNear(GetLengthSquared(), 1.0, static_cast<double>(FLT_EPSILON));
 }
 
 Vector2 Floor(Vector2 v) {
@@ -95,9 +95,9 @@ IntVector2 RoundToInt(Vector2 v) {
   return IntVector2(RoundToInt(v.x), RoundToInt(v.y));
 }
 
-bool IsNear(const Vector2& lhs, const Vector2& rhs, float tolerance) {
-  return IsNear(lhs.x, rhs.x, tolerance) &&
-         IsNear(lhs.y, rhs.y, tolerance);
+bool isNear(const Vector2& lhs, const Vector2& rhs, float tolerance) {
+  return isNear(lhs.x, rhs.x, tolerance) &&
+         isNear(lhs.y, rhs.y, tolerance);
 }
 
 IntVector2 lerp(const IntVector2& a, const IntVector2& b, double t) {

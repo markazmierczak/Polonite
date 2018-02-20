@@ -13,7 +13,7 @@ TEST(Plane3dTest, Constructors) {
   Plane plane_xy(Vector3(0, 0, 1), 1);
   Plane plane_xy_calculated(Point3(0, 0, -1), Vector3(0, 0, 1));
   EXPECT_EQ(plane_xy, plane_xy_calculated);
-  EXPECT_TRUE(IsNear(plane_xy, plane_xy_calculated, Limits<float>::Epsilon));
+  EXPECT_TRUE(isNear(plane_xy, plane_xy_calculated, Limits<float>::Epsilon));
 }
 
 TEST(Plane3dTest, GetDistanceTo) {

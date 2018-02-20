@@ -82,9 +82,9 @@ void Plane::ToFormat(TextWriter& out, const StringSpan& opts) const {
   out.WriteFloat(distance);
 }
 
-bool IsNear(const Plane& lhs, const Plane& rhs, float tolerance) {
-  return IsNear(lhs.normal, rhs.normal, tolerance) &&
-         IsNear(lhs.distance, rhs.distance, tolerance);
+bool isNear(const Plane& lhs, const Plane& rhs, float tolerance) {
+  return isNear(lhs.normal, rhs.normal, tolerance) &&
+         isNear(lhs.distance, rhs.distance, tolerance);
 }
 
 } // namespace stp

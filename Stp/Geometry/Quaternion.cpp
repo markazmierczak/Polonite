@@ -142,7 +142,7 @@ Quaternion Slerp(const Quaternion& q1, const Quaternion& q2, double t) {
   dot = clamp(dot, -1.0, 1.0);
 
   constexpr double Epsilon = Limits<float>::Epsilon;
-  if (IsNear(dot, 1.0, Epsilon) || IsNear(dot, -1.0, Epsilon))
+  if (isNear(dot, 1.0, Epsilon) || isNear(dot, -1.0, Epsilon))
     return q1;
 
   double denom = Sqrt(1.0 - dot * dot);
@@ -158,11 +158,11 @@ Quaternion Slerp(const Quaternion& q1, const Quaternion& q2, double t) {
   return q1 * scale1 + q2 * scale2;
 }
 
-bool IsNear(const Quaternion& lhs, const Quaternion& rhs, double tolerance) {
-  return IsNear(lhs.w, rhs.w, tolerance) &&
-         IsNear(lhs.x, rhs.x, tolerance) &&
-         IsNear(lhs.y, rhs.y, tolerance) &&
-         IsNear(lhs.z, rhs.z, tolerance);
+bool isNear(const Quaternion& lhs, const Quaternion& rhs, double tolerance) {
+  return isNear(lhs.w, rhs.w, tolerance) &&
+         isNear(lhs.x, rhs.x, tolerance) &&
+         isNear(lhs.y, rhs.y, tolerance) &&
+         isNear(lhs.z, rhs.z, tolerance);
 }
 
 void Quaternion::ToFormat(TextWriter& out, const StringSpan& opts) const {

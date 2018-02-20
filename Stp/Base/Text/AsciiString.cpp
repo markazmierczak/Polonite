@@ -127,14 +127,14 @@ bool isAscii(StringSpan text) {
   const char* end = str + text.size();
 
   // Prologue: align the input.
-  while (!IsAlignedTo(str, isizeof(MachineWord)) && str != end) {
+  while (!isAlignedTo(str, isizeof(MachineWord)) && str != end) {
     all_char_bits |= *str;
     ++str;
   }
 
   // Compare the values of CPU word size.
   constexpr int LoopIncrement = isizeof(MachineWord) / isizeof(char);
-  const char* word_end = AlignBackward(end, sizeof(MachineWord));
+  const char* word_end = alignBackward(end, sizeof(MachineWord));
   for (; str < word_end; str += LoopIncrement)
     all_char_bits |= *(reinterpret_cast<const MachineWord*>(str));
 

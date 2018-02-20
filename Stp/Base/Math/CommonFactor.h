@@ -13,7 +13,7 @@
 namespace stp {
 
 template<typename T, typename U>
-auto GreatestCommonDivisor(T ai, U bi) -> TCommon<T, U> {
+auto greatestCommonDivisor(T ai, U bi) -> TCommon<T, U> {
   static_assert(TIsInteger<T>, "!");
   static_assert(TIsInteger<U>, "!");
 
@@ -42,14 +42,14 @@ auto GreatestCommonDivisor(T ai, U bi) -> TCommon<T, U> {
 }
 
 template<typename T, typename U>
-auto LeastCommonMultiple(T ai, U bi) -> TCommon<T, U> {
+auto leastCommonMultiple(T ai, U bi) -> TCommon<T, U> {
   if (ai == 0 || bi == 0)
     return 0;
 
   using ResultType = TCommon<T, U>;
   using UCommonType = TMakeUnsigned<ResultType>;
 
-  UCommonType x = absToUnsigned(ai / GreatestCommonDivisor(ai, bi));
+  UCommonType x = absToUnsigned(ai / greatestCommonDivisor(ai, bi));
   UCommonType y = absToUnsigned(bi);
   ASSERT(static_cast<UCommonType>(Limits<ResultType>::Max) / x > y);
   return static_cast<ResultType>(x * y);
