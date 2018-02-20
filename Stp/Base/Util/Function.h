@@ -7,9 +7,11 @@
 #include "Base/Debug/Assert.h"
 #include "Base/Test/GTestProd.h"
 #include "Base/Type/Variable.h"
-#include "Base/Util/FunctionFwd.h"
 
 namespace stp {
+
+template<typename TSignature>
+class Function;
 
 namespace detail_function {
 

@@ -433,7 +433,6 @@ component("Base") {
     "Util/Finally.h",
     "Util/Flags.h",
     "Util/Function.h",
-    "Util/FunctionFwd.h",
     "Util/LazyInstance.cpp",
     "Util/LazyInstance.h",
     "Util/ObserverList.h",

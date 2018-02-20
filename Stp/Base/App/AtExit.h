@@ -6,7 +6,7 @@
 
 #include "Base/Containers/Stack.h"
 #include "Base/Thread/Lock.h"
-#include "Base/Util/FunctionFwd.h"
+#include "Base/Util/Function.h"
 
 namespace stp {
 
