@@ -13,7 +13,7 @@ class KeyValuePair {
  public:
   template<typename TKey, typename TValue>
   KeyValuePair(TKey&& key, TValue&& value)
-      : key_(Forward<TKey>(key)), value_(Forward<TValue>(value)) {}
+      : key_(forward<TKey>(key)), value_(forward<TValue>(value)) {}
 
   KeyValuePair(KeyValuePair&& o) noexcept : key_(move(o.key_)), value_(move(o.value_)) {}
   KeyValuePair& operator=(KeyValuePair&& o) noexcept;

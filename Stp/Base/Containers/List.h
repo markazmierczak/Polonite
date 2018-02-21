@@ -175,7 +175,7 @@ inline bool operator!=(const T (&lhs)[N], const List<T>& rhs) {
 
 template<typename T>
 inline List<T> makeList(Span<T> list) {
-  return List<T>(Forward<T>(list));
+  return List<T>(forward<T>(list));
 }
 
 BASE_EXPORT const char* toNullTerminated(const List<char>& string);

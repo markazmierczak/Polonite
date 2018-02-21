@@ -23,7 +23,7 @@ class AutoReset {
   template<typename U>
   AutoReset(T* var, U&& new_value)
       : scoped_variable_(var),
-        original_value_(exchange(*var, Forward<U>(new_value))) {
+        original_value_(exchange(*var, forward<U>(new_value))) {
   }
 
   ~AutoReset() {

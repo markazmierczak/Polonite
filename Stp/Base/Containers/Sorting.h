@@ -134,13 +134,13 @@ void introSort(T* d, int lo, int hi, int depth, TComparer&& comparer) {
         return;
       }
       auto sub = MutableSpan<T>(d + lo, partition_size);
-      insertionSortSpan(sub, Forward<TComparer>(comparer));
+      insertionSortSpan(sub, forward<TComparer>(comparer));
       return;
     }
 
     if (depth == 0) {
       auto sub = MutableSpan<T>(d + lo, partition_size);
-      heapSortSpan(sub, Forward<TComparer>(comparer));
+      heapSortSpan(sub, forward<TComparer>(comparer));
       return;
     }
     --depth;
@@ -162,7 +162,7 @@ inline void sortSpan(MutableSpan<T> sequence, TComparer&& comparer = DefaultComp
   detail::introSort(
       sequence.data(), 0, sequence.size() - 1,
       depth_limit,
-      Forward<TComparer>(comparer));
+      forward<TComparer>(comparer));
 }
 
 } // namespace stp

@@ -50,7 +50,7 @@ class BASE_EXPORT JsonArray : public JsonValue {
   void Set(int at, JsonValue value);
 
   template<typename T>
-  void Set(int at, T&& arg) { Set(at, JsonValue(Forward<T>(arg))); }
+  void Set(int at, T&& arg) { Set(at, JsonValue(forward<T>(arg))); }
 
   const JsonValue* tryGet(int at) const;
   JsonValue* tryGet(int at);
@@ -66,7 +66,7 @@ class BASE_EXPORT JsonArray : public JsonValue {
   void add(JsonValue value);
 
   template<typename T>
-  void add(T&& arg) { add(JsonValue(Forward<T>(arg))); }
+  void add(T&& arg) { add(JsonValue(forward<T>(arg))); }
 
   void removeLast();
 

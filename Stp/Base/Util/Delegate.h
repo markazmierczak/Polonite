@@ -219,7 +219,7 @@ class Delegate<TResult(TArgs...)> {
 
   TResult operator()(TArgs... args) const {
     ASSERT(gmethod_ != nullptr);
-    return (*gmethod_)(gobject_, Forward<TArgs>(args)...);
+    return (*gmethod_)(gobject_, forward<TArgs>(args)...);
   }
 
   Delegate& operator=(const Delegate& other) {

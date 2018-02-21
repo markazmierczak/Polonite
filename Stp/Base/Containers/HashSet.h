@@ -30,7 +30,7 @@ class HashSet {
   void clear() { map_.clear(); }
 
   template<typename U>
-  bool tryAdd(U&& value) { return map_.tryAdd(Forward<U>(value), DummyEmpty()); }
+  bool tryAdd(U&& value) { return map_.tryAdd(forward<U>(value), DummyEmpty()); }
 
   template<typename U>
   bool tryRemove(const U& value) { return map_.tryRemove(value); }

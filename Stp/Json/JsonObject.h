@@ -33,7 +33,7 @@ class BASE_EXPORT JsonObject : public JsonValue {
   void Set(StringSpan key, JsonValue value);
 
   template<typename T>
-  void Set(StringSpan key, T&& value) { Set(key, JsonValue(Forward<T>(value))); }
+  void Set(StringSpan key, T&& value) { Set(key, JsonValue(forward<T>(value))); }
 
   const JsonValue* tryGet(StringSpan key) const;
   JsonValue* tryGet(StringSpan key);
@@ -49,14 +49,14 @@ class BASE_EXPORT JsonObject : public JsonValue {
   bool tryAdd(StringSpan key, JsonValue value);
 
   template<typename T>
-  bool tryAdd(StringSpan key, T&& value) { return tryAdd(key, JsonValue(Forward<T>(value))); }
+  bool tryAdd(StringSpan key, T&& value) { return tryAdd(key, JsonValue(forward<T>(value))); }
 
   bool tryRemove(StringSpan key);
 
   void SetWithPath(StringSpan path, JsonValue value);
 
   template<typename T>
-  void SetWithPath(StringSpan path, T&& value) { SetWithPath(path, JsonValue(Forward<T>(value))); }
+  void SetWithPath(StringSpan path, T&& value) { SetWithPath(path, JsonValue(forward<T>(value))); }
 
   const JsonValue* tryGetWithPath(StringSpan path) const;
   JsonValue* tryGetWithPath(StringSpan path);

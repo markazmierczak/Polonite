@@ -34,7 +34,7 @@ class LruCache {
  private:
   struct Node : public LinkedListNode<Node> {
     template<typename... Args>
-    explicit Node(Args&&... args) : value(Forward<Args>(args)...) {}
+    explicit Node(Args&&... args) : value(forward<Args>(args)...) {}
 
     T value;
   };
@@ -71,7 +71,7 @@ inline T* LruCache<K, T, Traits>::tryGet(const InputKeyType& key) {
 template<typename K, typename T, class Traits>
 template<typename... Args>
 inline T* LruCache<K, T, Traits>::tryAdd(const InputKeyType& key, Args&&... args) {
-  T* item = map_.tryAdd(key, Forward<Args>(args)...);
+  T* item = map_.tryAdd(key, forward<Args>(args)...);
   if (item)
     list_.prepend(item);
 

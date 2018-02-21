@@ -173,7 +173,7 @@ class HashMap : public detail::HashMapBase {
     } else {
       node = (RealNode*)allocateMemory(isizeof(RealNode));
     }
-    new (node) RealNode(Forward<U>(key), move(value));
+    new (node) RealNode(forward<U>(key), move(value));
     node->next = next;
     node->hash = hash;
     ++size_;
@@ -400,7 +400,7 @@ inline void HashMap<K, T>::set(U&& key, T value) {
   } else {
     if (willGrow(1))
       entry = findEntry(key, hash);
-    *entry = createNode(sentinel_, hash, Forward<U>(key), move(value));
+    *entry = createNode(sentinel_, hash, forward<U>(key), move(value));
   }
 }
 
@@ -416,7 +416,7 @@ inline T* HashMap<K, T>::tryAdd(U&& key, T value) {
   if (*entry != sentinel_)
     return nullptr;
 
-  RealNode* node = createNode(sentinel_, hash, Forward<U>(key), move(value));
+  RealNode* node = createNode(sentinel_, hash, forward<U>(key), move(value));
   *entry = node;
   return &node->value;
 }

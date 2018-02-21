@@ -38,8 +38,8 @@ struct TRemoveReferenceHelper<T&&> {
 };
 
 struct TIsReferenceableHelper2 {
-  template<typename T> static T& Test(int);
-  template<typename T> static TUnspecified Test(...);
+  template<typename T> static T& test(int);
+  template<typename T> static TUnspecified test(...);
 };
 
 } // namespace detail
@@ -58,7 +58,7 @@ using TRemoveReference = typename detail::TRemoveReferenceHelper<T>::Type;
 
 template<typename T>
 constexpr bool TIsReferenceable =
-    !TsAreSame<decltype(detail::TIsReferenceableHelper2::Test<T>(0)), TUnspecified>;
+    !TsAreSame<decltype(detail::TIsReferenceableHelper2::test<T>(0)), TUnspecified>;
 
 namespace detail {
 
@@ -97,12 +97,12 @@ ALWAYS_INLINE constexpr TRemoveReference<T> && move(T&& t) noexcept {
 }
 
 template<typename T>
-ALWAYS_INLINE constexpr T&& Forward(TRemoveReference<T>& t) noexcept {
+ALWAYS_INLINE constexpr T&& forward(TRemoveReference<T>& t) noexcept {
   return static_cast<T&&>(t);
 }
 
 template<typename T>
-ALWAYS_INLINE constexpr T&& Forward(TRemoveReference<T>&& t) noexcept {
+ALWAYS_INLINE constexpr T&& forward(TRemoveReference<T>&& t) noexcept {
   static_assert(!TIsLvalueReference<T>, "can not forward an rvalue as an lvalue");
   return static_cast<T&&>(t);
 }
@@ -110,7 +110,7 @@ ALWAYS_INLINE constexpr T&& Forward(TRemoveReference<T>&& t) noexcept {
 template<typename T, typename U = T>
 constexpr T exchange(T& obj, U&& new_val) noexcept {
   T old_val = move(obj);
-  obj = Forward<U>(new_val);
+  obj = forward<U>(new_val);
   return old_val;
 }
 
@@ -239,8 +239,8 @@ using TApplyCV = typename detail::TApplyCVHelper<T, U>::Type;
 template<typename T>
 using TRemoveCVRef = TRemoveCV<TRemoveReference<T>>;
 
-template<class T> constexpr TAddConst<T>& AsConst(T& x) noexcept { return x; }
-template<class T> void AsConst(const T&&) = delete;
+template<class T> constexpr TAddConst<T>& asConst(T& x) noexcept { return x; }
+template<class T> void asConst(const T&&) = delete;
 
 } // namespace stp
 

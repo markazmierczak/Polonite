@@ -30,7 +30,7 @@ constexpr int findLastIndexInSpan(Span<T> span, TPredicate&& matcher) noexcept {
 
 template<typename T, typename TPredicate>
 constexpr bool existsInSpan(Span<T> span, TPredicate&& matcher) noexcept {
-  return findIndexInSpan(span, Forward<TPredicate>(matcher)) >= 0;
+  return findIndexInSpan(span, forward<TPredicate>(matcher)) >= 0;
 }
 
 template<typename T, typename TItem>

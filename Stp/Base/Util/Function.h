@@ -126,12 +126,12 @@ class Function<TResult(TArgs...)> {
       !detail_function::TRequiresHeap<TFunction> &&
       noexcept(TDecayed(declval<TFunction>()))) {
     if constexpr (detail_function::TRequiresHeap<TFunction>) {
-      storage_.heap = new TDecayed(Forward<TFunction>(fn));
+      storage_.heap = new TDecayed(forward<TFunction>(fn));
       invoker_ = &invokeHeap<TDecayed>;
       manager_ = &ManagerType::doHeap<TDecayed>;
     } else {
       if (!detail_function::isNullPtr(fn)) {
-        ::new (storage_.local) TDecayed(Forward<TFunction>(fn));
+        ::new (storage_.local) TDecayed(forward<TFunction>(fn));
         invoker_ = &invokeLocal<TDecayed>;
         manager_ = &ManagerType::doLocal<TDecayed>;
       }
@@ -142,9 +142,9 @@ class Function<TResult(TArgs...)> {
   Function& operator=(TFunction&& fn) noexcept(noexcept(Function(declval<TFunction>()))) {
     if constexpr (noexcept(Function(declval<TFunction>()))) {
       this->~Function();
-      ::new (this) Function(Forward<TFunction>(fn));
+      ::new (this) Function(forward<TFunction>(fn));
     } else {
-      Function tmp(Forward<TFunction>(fn));
+      Function tmp(forward<TFunction>(fn));
       swap(tmp, *this);
     }
     return *this;
@@ -155,7 +155,7 @@ class Function<TResult(TArgs...)> {
 
   TResult operator()(TArgs... args) {
     ASSERT(invoker_ != nullptr);
-    return invoker_(storage_, Forward<TArgs>(args)...);
+    return invoker_(storage_, forward<TArgs>(args)...);
   }
 
  private:
@@ -191,12 +191,12 @@ class Function<TResult(TArgs...)> {
   template<typename TFunction>
   static TResult invokeLocal(StorageType& storage, TArgs&&... args) {
     auto& fn = storage.asLocal<TFunction>();
-    return fn(Forward<TArgs>(args)...);
+    return fn(forward<TArgs>(args)...);
   }
   template<typename TFunction>
   static TResult invokeHeap(StorageType& storage, TArgs&&... args) {
     auto& fn = storage.asHeap<TFunction>();
-    return fn(Forward<TArgs>(args)...);
+    return fn(forward<TArgs>(args)...);
   }
 };
 

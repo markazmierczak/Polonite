@@ -26,7 +26,7 @@ struct NullableStorage {
 
   template<typename... TArgs>
   constexpr explicit NullableStorage(TArgs&&... args)
-      : value(Forward<TArgs>(args)...), is_valid(true) {}
+      : value(forward<TArgs>(args)...), is_valid(true) {}
 
   void reset() {
     if (is_valid) {
@@ -50,7 +50,7 @@ struct NullableStorage<T, true> {
 
   template<typename... TArgs>
   constexpr explicit NullableStorage(TArgs&&... args)
-      : value(Forward<TArgs>(args)...), is_valid(true) {}
+      : value(forward<TArgs>(args)...), is_valid(true) {}
 
   void reset() { is_valid = false; }
 
@@ -112,17 +112,17 @@ class Nullable {
   }
 
   template<typename U, TEnableIf<TIsConstructible<T, U> && TIsConvertibleTo<U, T>>* = nullptr>
-  constexpr Nullable(U&& value) noexcept(noexcept(T(Forward<U>(value))))
-      : storage_(Forward<U>(value)) {}
+  constexpr Nullable(U&& value) noexcept(noexcept(T(forward<U>(value))))
+      : storage_(forward<U>(value)) {}
 
   template<typename U, TEnableIf<TIsConstructible<T, U> && !TIsConvertibleTo<U, T>>* = nullptr>
-  constexpr explicit Nullable(U&& value) noexcept(noexcept(T(Forward<U>(value))))
-      : storage_(Forward<U>(value)) {}
+  constexpr explicit Nullable(U&& value) noexcept(noexcept(T(forward<U>(value))))
+      : storage_(forward<U>(value)) {}
 
   template<typename U, TEnableIf<TIsAssignable<T&, U>>* = nullptr>
-  constexpr Nullable& operator=(U&& other) noexcept(noexcept(declval<T&>() = Forward<U>(other))) {
+  constexpr Nullable& operator=(U&& other) noexcept(noexcept(declval<T&>() = forward<U>(other))) {
     if (isValid())
-      storage_.value = Forward<U>(other);
+      storage_.value = forward<U>(other);
     else
       init(other);
     return *this;
@@ -168,7 +168,7 @@ class Nullable {
   template<typename U>
   constexpr void init(U&& value) {
     ASSERT(!storage_.is_valid);
-    new (&storage_.value) T(Forward<U>(value));
+    new (&storage_.value) T(forward<U>(value));
     storage_.is_valid = true;
   }
 
@@ -251,13 +251,13 @@ inline void format(TextWriter& out, const Nullable<T>& x, const StringSpan& opts
 template<typename T, typename U>
 constexpr T coalesce(const Nullable<U>& nullable, U&& default_value) {
   static_assert(TIsConvertibleTo<U, T>, "!");
-  return nullable.operator bool() ? *nullable : static_cast<T>(Forward<U>(default_value));
+  return nullable.operator bool() ? *nullable : static_cast<T>(forward<U>(default_value));
 }
 
 template<typename T, typename U>
 constexpr T coalesce(Nullable<U>&& nullable, U&& default_value) {
   static_assert(TIsConvertibleTo<U, T>, "!");
-  return nullable.operator bool() ? move(*nullable) : static_cast<T>(Forward<U>(default_value));
+  return nullable.operator bool() ? move(*nullable) : static_cast<T>(forward<U>(default_value));
 }
 
 } // namespace stp

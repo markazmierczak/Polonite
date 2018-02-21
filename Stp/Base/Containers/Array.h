@@ -68,7 +68,7 @@ struct TIsTriviallyRelocatableTmpl<Array<T, N>> : TIsTriviallyRelocatableTmpl<T>
 template<typename T = void, typename... TElements>
 constexpr auto makeArray(TElements&&... elements) {
   using DT = TConditional<TIsVoid<T>, TCommon<TElements...>, T>;
-  return Array<DT, sizeof...(TElements)> { { Forward<TElements>(elements)... } };
+  return Array<DT, sizeof...(TElements)> { { forward<TElements>(elements)... } };
 }
 
 template<typename T, int N>

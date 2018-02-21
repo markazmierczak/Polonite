@@ -92,7 +92,7 @@ class FlatMap {
     T& get() const { return that_.list_[index_].value(); }
 
     template<typename U>
-    void add(U&& key, T value) { that_.insertAt(~index_, Forward<U>(key), move(value)); }
+    void add(U&& key, T value) { that_.insertAt(~index_, forward<U>(key), move(value)); }
 
    private:
     FlatMap& that_;
@@ -201,7 +201,7 @@ inline void FlatMap<K, T, TList>::set(U&& key, T new_value) {
     destroyObject(&value);
     new (&value) T(move(new_value));
   } else {
-    insertAt(~pos, Forward<U>(key), move(new_value));
+    insertAt(~pos, forward<U>(key), move(new_value));
   }
 }
 
@@ -212,7 +212,7 @@ inline T* FlatMap<K, T, TList>::tryAdd(U&& key, T value) {
   if (pos >= 0)
     return nullptr;
 
-  insertAt(~pos, Forward<U>(key), move(value));
+  insertAt(~pos, forward<U>(key), move(value));
   return &list_[~pos].value();
 }
 
@@ -232,7 +232,7 @@ template<typename U>
 inline void FlatMap<K, T, TList>::insertAt(int at, U&& key, T value) {
   ASSERT(at == 0 || compare(list_[at - 1].key(), key) < 0);
   ASSERT(at == size() || compare(key, list_[at].key()) < 0);
-  list_.insert(at, PairType(Forward<U>(key), move(value)));
+  list_.insert(at, PairType(forward<U>(key), move(value)));
 }
 
 } // namespace stp

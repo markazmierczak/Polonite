@@ -35,7 +35,7 @@ class TupleLeaf {
   }
 
   template<typename T>
-  constexpr explicit TupleLeaf(T&& other) : value(stp::Forward<T>(other)) {
+  constexpr explicit TupleLeaf(T&& other) : value(stp::forward<T>(other)) {
     static_assert(CanBindReference<T>(),
                   "Attempted to construct a reference element in a tuple with an rvalue");
   }
@@ -45,7 +45,7 @@ class TupleLeaf {
 
   template<typename T>
   TupleLeaf& operator=(T&& other) {
-    value = stp::Forward<T>(other);
+    value = stp::forward<T>(other);
     return *this;
   }
 
@@ -66,14 +66,14 @@ class TupleLeaf<I, H, true> : private H {
 
   template<typename T>
   constexpr explicit TupleLeaf(T&& other)
-      : H(stp::Forward<T>(other)) {}
+      : H(stp::forward<T>(other)) {}
 
   TupleLeaf(TupleLeaf const &) = default;
   TupleLeaf(TupleLeaf &&) = default;
 
   template<typename T>
   TupleLeaf& operator=(T&& other) {
-    H::operator=(stp::Forward<T>(other));
+    H::operator=(stp::forward<T>(other));
     return *this;
   }
 
@@ -100,14 +100,14 @@ class EMPTY_BASES_LAYOUT TupleImpl<IndexSequence<Indices...>, Ts...>
   constexpr TupleImpl() = default;
 
   constexpr explicit TupleImpl(Ts&&... args) :
-      TupleLeaf<Indices, Ts>(stp::Forward<Ts>(args))... {}
+      TupleLeaf<Indices, Ts>(stp::forward<Ts>(args))... {}
 
   constexpr explicit TupleImpl(const Ts&... args) :
       TupleLeaf<Indices, Ts>(args)... {}
 
   template<typename... Us>
   constexpr explicit TupleImpl(Us&&... args) :
-      TupleLeaf<Indices, Ts>(stp::Forward<Us>(args))... {}
+      TupleLeaf<Indices, Ts>(stp::forward<Us>(args))... {}
 
   TupleImpl(const TupleImpl& other) = default;
   TupleImpl(TupleImpl&& other) = default;
@@ -118,7 +118,7 @@ class EMPTY_BASES_LAYOUT TupleImpl<IndexSequence<Indices...>, Ts...>
   }
 
   TupleImpl& operator=(TupleImpl&& other) {
-    Swallow(TupleLeaf<Indices, Ts>::operator=(stp::Forward<Ts>(static_cast<TupleLeaf<Indices, Ts>&>(other).get()))...);
+    Swallow(TupleLeaf<Indices, Ts>::operator=(stp::forward<Ts>(static_cast<TupleLeaf<Indices, Ts>&>(other).get()))...);
     return *this;
   }
 
@@ -179,10 +179,10 @@ class Tuple {
   Tuple(Tuple&&) = default;
 
   constexpr explicit Tuple(const Ts& ... args) : base_(args...) {}
-  constexpr explicit Tuple(Ts&& ... args) : base_(stp::Forward<Ts>(args)...) {}
+  constexpr explicit Tuple(Ts&& ... args) : base_(stp::forward<Ts>(args)...) {}
 
   template<typename... Us>
-  constexpr explicit Tuple(Us&&... args) : base_(stp::Forward<Us>(args)...) {}
+  constexpr explicit Tuple(Us&&... args) : base_(stp::forward<Us>(args)...) {}
 
   Tuple& operator=(const Tuple& other) {
     base_.operator=(other.base_);
@@ -206,8 +206,8 @@ class Tuple {
 
  private:
   template<typename F, int... I>
-  auto applyImpl(F&& f, IndexSequence<I...>) -> decltype(stp::Forward<F>(f)(get<I>()...)) {
-    return stp::Forward<F>(f)(get<I>()...);
+  auto applyImpl(F&& f, IndexSequence<I...>) -> decltype(stp::forward<F>(f)(get<I>()...)) {
+    return stp::forward<F>(f)(get<I>()...);
   }
  public:
 
@@ -215,8 +215,8 @@ class Tuple {
   // Tuple variadically to f as if by calling f(a1, a2, ..., an) and
   // return the result.
   template<typename F>
-  auto apply(F&& f) -> decltype(applyImpl(stp::Forward<F>(f), MakeIndexSequence<size()>())) {
-    return applyImpl(stp::Forward<F>(f), MakeIndexSequence<size()>());
+  auto apply(F&& f) -> decltype(applyImpl(stp::forward<F>(f), MakeIndexSequence<size()>())) {
+    return applyImpl(stp::forward<F>(f), MakeIndexSequence<size()>());
   }
 
  private:
@@ -252,7 +252,7 @@ class Tuple<> {
 
 template<typename... Ts>
 constexpr auto makeTuple(Ts&&... args) {
-  return Tuple<TDecay<Ts>...>(stp::Forward<Ts>(args)...);
+  return Tuple<TDecay<Ts>...>(stp::forward<Ts>(args)...);
 }
 
 namespace detail {

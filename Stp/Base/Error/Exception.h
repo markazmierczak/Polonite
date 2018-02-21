@@ -19,8 +19,8 @@ inline void attachManyToException(T& exception) {}
 
 template<typename T, typename TArg, typename... TArgs>
 inline void attachManyToException(T& exception, TArg&& arg, TArgs&&... args) {
-  attachToException(exception, Forward<TArg>(arg));
-  attachManyToException(exception, Forward<TArgs>(args)...);
+  attachToException(exception, forward<TArg>(arg));
+  attachManyToException(exception, forward<TArgs>(args)...);
 }
 
 } // namespace detail
@@ -46,14 +46,14 @@ class BASE_EXPORT Exception {
 
   template<typename T, typename... TArgs>
   static T with(T exception, TArgs&&... args) {
-    detail::attachManyToException(exception, Forward<TArgs>(args)...);
+    detail::attachManyToException(exception, forward<TArgs>(args)...);
     return exception;
   }
 
   template<typename T, typename... TArgs>
   static T withDebug(T exception, TArgs&&... args) {
     #if !defined(NDEBUG)
-    detail::attachManyToException(exception, Forward<TArgs>(args)...);
+    detail::attachManyToException(exception, forward<TArgs>(args)...);
     #endif
     return exception;
   }

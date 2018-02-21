@@ -21,7 +21,7 @@ inline bool tryRemoveOne(TList& list, const TItem& item) {
 template<typename TList, typename TPredicate,
          TEnableIf<TIsContiguousContainer<TList>>* = nullptr>
 inline bool tryRemoveOneMatching(TList& list, TPredicate&& match) {
-  int index = FindIndex(list, Forward<TPredicate>(match));
+  int index = FindIndex(list, forward<TPredicate>(match));
   if (index >= 0) {
     list.removeAt(index);
     return true;

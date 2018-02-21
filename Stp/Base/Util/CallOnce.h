@@ -20,7 +20,7 @@ class BASE_EXPORT CallOnce {
       return;
 
     if (state == NotStarted && needsCall(&state_)) {
-      fn(Forward<TArgs>(args)...);
+      fn(forward<TArgs>(args)...);
 
       subtle::Release_Store(&state_, Done);
     }

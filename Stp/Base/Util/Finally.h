@@ -80,18 +80,18 @@ template<typename TAction>
 using ScopeContinue = detail::ScopeGuard<TAction, detail::ScopeContinueCondition>;
 
 template<typename TAction, typename TDecayed = TDecay<TAction>>
-inline auto makeScopeFinally(TAction&& f) noexcept(noexcept(TDecayed(Forward<TAction>(f)))) {
-  return ScopeFinally<TDecayed>(Forward<TAction>(f));
+inline auto makeScopeFinally(TAction&& f) noexcept(noexcept(TDecayed(forward<TAction>(f)))) {
+  return ScopeFinally<TDecayed>(forward<TAction>(f));
 }
 
 template<typename TAction, typename TDecayed = TDecay<TAction>>
-inline auto makeScopeCatch(TAction&& f) noexcept(noexcept(TDecayed(Forward<TAction>(f)))) {
-  return ScopeCatch<TDecayed>(Forward<TAction>(f));
+inline auto makeScopeCatch(TAction&& f) noexcept(noexcept(TDecayed(forward<TAction>(f)))) {
+  return ScopeCatch<TDecayed>(forward<TAction>(f));
 }
 
 template<typename TAction, typename TDecayed = TDecay<TAction>>
-inline auto makeScopeContinue(TAction&& f) noexcept(noexcept(TDecayed(Forward<TAction>(f)))) {
-  return ScopeContinue<TDecayed>(Forward<TAction>(f));
+inline auto makeScopeContinue(TAction&& f) noexcept(noexcept(TDecayed(forward<TAction>(f)))) {
+  return ScopeContinue<TDecayed>(forward<TAction>(f));
 }
 
 } // namespace stp
