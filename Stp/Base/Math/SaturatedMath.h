@@ -10,39 +10,39 @@
 namespace stp {
 
 template<typename T, TEnableIf<TIsUnsigned<T>>* = nullptr>
-inline T SaturatedNeg(T x) {
+inline T saturatedNeg(T x) {
   return 0;
 }
 
 template<typename T, TEnableIf<TIsSigned<T>>* = nullptr>
-inline T SaturatedNeg(T x) {
+inline T saturatedNeg(T x) {
   if (UNLIKELY(x == Limits<T>::Min))
     return Limits<T>::Max;
   return -x;
 }
 
 template<typename T, TEnableIf<TIsUnsigned<T>>* = nullptr>
-inline T SaturatedAbs(T x) {
+inline T saturatedAbs(T x) {
   return x;
 }
 
 template<typename T, TEnableIf<TIsSigned<T>>* = nullptr>
-inline T SaturatedAbs(T x) {
-  return x >= 0 ? x : SaturatedNeg(x);
+inline T saturatedAbs(T x) {
+  return x >= 0 ? x : saturatedNeg(x);
 }
 
 namespace detail {
 
 template<typename T>
 struct SaturatedAddHelper {
-  static T Do(T x, T y) {
+  static T add(T x, T y) {
     using TUint = TMakeUnsigned<T>;
 
     T result;
-    if (LIKELY(!OverflowAdd(x, y, &result)))
+    if (LIKELY(!overflowAdd(x, y, &result)))
       return result;
 
-    static constexpr TUint BitWidth = sizeof(T) * 8;
+    constexpr TUint BitWidth = sizeof(T) * 8;
 
     TUint ux = static_cast<TUint>(x);
     TUint max = Limits<T>::Max;
@@ -54,14 +54,14 @@ struct SaturatedAddHelper {
 
 template<typename T, typename TEnabler = void>
 struct SaturatedSubHelper {
-  static T Do(T x, T y) {
+  static T sub(T x, T y) {
     using TUint = TMakeUnsigned<T>;
 
     T result;
-    if (LIKELY(!OverflowSub(x, y, &result)))
+    if (LIKELY(!overflowSub(x, y, &result)))
       return result;
 
-    static constexpr TUint BitWidth = sizeof(T) * 8;
+    constexpr TUint BitWidth = sizeof(T) * 8;
 
     TUint ux = static_cast<TUint>(x);
     TUint max = Limits<T>::Max;
@@ -74,7 +74,7 @@ struct SaturatedSubHelper {
 #if CPU(ARM32) && COMPILER(GCC)
 template<>
 struct SaturatedAddHelper<int32_t> {
-  static int32_t Do(int32_t x, int32_t y) {
+  static int32_t add(int32_t x, int32_t y) {
     int32_t result;
     asm("qadd %[output],%[first],%[second]"
         :   [output]  "=r"  (result)
@@ -86,7 +86,7 @@ struct SaturatedAddHelper<int32_t> {
 
 template<>
 struct SaturatedSubHelper<int32_t> {
-  static int32_t Do(int32_t x, int32_t y) {
+  static int32_t sub(int32_t x, int32_t y) {
     int32_t result;
     asm("qsub %[output],%[first],%[second]"
         :   [output] "=r"  (result)
@@ -100,13 +100,13 @@ struct SaturatedSubHelper<int32_t> {
 } // namespace detail
 
 template<typename T, TEnableIf<TIsInteger<T>>* = nullptr>
-inline T SaturatedAdd(T x, T y) {
-  return detail::SaturatedAddHelper<T>::Do(x, y);
+inline T saturatedAdd(T x, T y) {
+  return detail::SaturatedAddHelper<T>::add(x, y);
 }
 
 template<typename T, TEnableIf<TIsInteger<T>>* = nullptr>
-inline T SaturatedSub(T x, T y) {
-  return detail::SaturatedSubHelper<T>::Do(x, y);
+inline T saturatedSub(T x, T y) {
+  return detail::SaturatedSubHelper<T>::sub(x, y);
 }
 
 } // namespace stp

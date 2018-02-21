@@ -5,7 +5,6 @@
 #define STP_BASE_GEOMETRY_ELLIPSE_H_
 
 #include "Base/Math/Math.h"
-#include "Base/Math/MathConstants.h"
 #include "Geometry/Bounds2.h"
 
 namespace stp {
@@ -26,7 +25,7 @@ struct BASE_EXPORT Ellipse {
 
   bool isEmpty() const { return radii.x <= 0 || radii.y <= 0; }
 
-  double GetArea() const { return MathConstants<double>::Pi * radii.x * radii.y; }
+  double GetArea() const { return MathPi * radii.x * radii.y; }
 
   Bounds2 GetBounds() const { return Bounds2(center - radii, center + radii); }
 

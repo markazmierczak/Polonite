@@ -196,10 +196,10 @@ class BASE_EXPORT Time : public TimeBase<Time> {
   Time LocalMidnight() const;
 
   friend TextWriter& operator<<(TextWriter& out, Time x) {
-    FormatImpl(out, x); return out;
+    formatImpl(out, x); return out;
   }
   friend void format(TextWriter& out, Time x, const StringSpan& opts) {
-    FormatImpl(out, x);
+    formatImpl(out, x);
   }
 
  private:
@@ -235,7 +235,7 @@ class BASE_EXPORT Time : public TimeBase<Time> {
   // Comparison does not consider |day_of_week| when doing the operation.
   static bool ExplodedMostlyEquals(const Exploded& lhs, const Exploded& rhs);
 
-  static void FormatImpl(TextWriter& out, Time x);
+  static void formatImpl(TextWriter& out, Time x);
 };
 
 } // namespace stp

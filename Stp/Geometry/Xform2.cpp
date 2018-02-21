@@ -34,10 +34,10 @@ unsigned Xform2::GetTypeMaskSlow() const {
   if (d_[EntryTransX] != 0 || d_[EntryTransY] != 0)
     mask |= TypeMaskTranslate;
 
-  unsigned m00 = RawFloat(d_[EntryScaleX]).ToBits();
-  unsigned m01 = RawFloat(d_[EntryShearX]).ToBits();
-  unsigned m10 = RawFloat(d_[EntryShearY]).ToBits();
-  unsigned m11 = RawFloat(d_[EntryScaleY]).ToBits();
+  unsigned m00 = RawFloat(d_[EntryScaleX]).toBits();
+  unsigned m01 = RawFloat(d_[EntryShearX]).toBits();
+  unsigned m10 = RawFloat(d_[EntryShearY]).toBits();
+  unsigned m11 = RawFloat(d_[EntryScaleY]).toBits();
 
   if (m01 | m10) {
     // The skew components may be scale-inducing, unless we are dealing
@@ -62,7 +62,7 @@ unsigned Xform2::GetTypeMaskSlow() const {
     mask |= (dp0 & ds1) * TypeMaskRectStaysRect;
   } else {
     // Only test for scale explicitly if not affine, since affine sets the scale bit.
-    const uint32_t One = RawFloat(1.f).ToBits();
+    const uint32_t One = RawFloat(1.f).toBits();
 
     if ((m00 ^ One) | (m11 ^ One))
       mask |= TypeMaskScale;

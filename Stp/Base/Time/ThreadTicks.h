@@ -53,10 +53,10 @@ class BASE_EXPORT ThreadTicks : public TimeBase<ThreadTicks> {
   #endif
 
   friend TextWriter& operator<<(TextWriter& out, const ThreadTicks& x) {
-    FormatImpl(out, x); return out;
+    formatImpl(out, x); return out;
   }
   friend void format(TextWriter& out, const ThreadTicks& x, const StringSpan& opts) {
-    FormatImpl(out, x);
+    formatImpl(out, x);
   }
 
  private:
@@ -79,7 +79,7 @@ class BASE_EXPORT ThreadTicks : public TimeBase<ThreadTicks> {
   static void WaitUntilInitializedWin();
   #endif
 
-  static void FormatImpl(TextWriter& out, ThreadTicks x);
+  static void formatImpl(TextWriter& out, ThreadTicks x);
 };
 
 } // namespace stp

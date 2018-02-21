@@ -76,21 +76,16 @@ class RawFloatingPoint {
   constexpr RawFloatingPoint(BitsType bits, FromBitsCtor) : bits_(bits) {}
  public:
 
-  static constexpr RawFloatingPoint FromBits(BitsType bits) {
+  static constexpr RawFloatingPoint fromBits(BitsType bits) {
     return RawFloatingPoint(bits, FromBitsCtor());
   }
-  constexpr ALWAYS_INLINE BitsType ToBits() const { return bits_; }
+  constexpr ALWAYS_INLINE BitsType toBits() const { return bits_; }
 
   static constexpr int BitCount = 8 * sizeof(BitsType);
-
   static constexpr int MantissaBitCount = Limits<TBuiltin>::Digits - 1;
-
   static constexpr int ExponentBitCount = BitCount - 1 - MantissaBitCount;
-
   static constexpr BitsType SignBitMask = static_cast<BitsType>(1) << (BitCount - 1);
-
   static constexpr BitsType MantissaBitMask = ~static_cast<BitsType>(0) >> (ExponentBitCount + 1);
-
   static constexpr BitsType ExponentBitMask = ~(SignBitMask | MantissaBitMask);
 
   // How many ULP's (Units in the Last Place) we want to tolerate when
@@ -128,34 +123,30 @@ class RawFloatingPoint {
     return u.value;
   }
 
-  constexpr BitsType GetSignBit() const { return bits_ & SignBitMask; }
+  constexpr BitsType getSignBit() const { return bits_ & SignBitMask; }
+  constexpr BitsType getExponentBits() const { return bits_ & ExponentBitMask; }
+  constexpr BitsType getMantissaBits() const { return bits_ & MantissaBitMask; }
 
-  constexpr BitsType GetExponentBits() const { return bits_ & ExponentBitMask; }
-
-  constexpr BitsType GetMantissaBits() const { return bits_ & MantissaBitMask; }
-
-  constexpr RawFloatingPoint operator-() const { return FromBits(bits_ ^ SignBitMask); }
+  constexpr RawFloatingPoint operator-() const { return fromBits(bits_ ^ SignBitMask); }
 
   friend constexpr RawFloatingPoint mathAbs(RawFloatingPoint x) {
-    return FromBits(x.bits_ & ~SignBitMask);
+    return fromBits(x.bits_ & ~SignBitMask);
   }
 
   friend constexpr bool isNaN(RawFloatingPoint x) {
     // It's a NaN if the exponent bits are all ones and the mantissa
     // bits are not entirely zeros.
-    return mathAbs(x).ToBits() > ExponentBitMask;
+    return mathAbs(x).toBits() > ExponentBitMask;
   }
 
   friend constexpr bool isFinite(RawFloatingPoint x) {
-    return x.GetExponentBits() != ExponentBitMask;
+    return x.getExponentBits() != ExponentBitMask;
   }
-
   friend constexpr bool isInfinity(RawFloatingPoint x) {
-    return mathAbs(x).ToBits() == ExponentBitMask;
+    return mathAbs(x).toBits() == ExponentBitMask;
   }
-
-  friend constexpr bool IsNormal(RawFloatingPoint x) {
-    return x.GetExponentBits() != 0 && isFinite(x);
+  friend constexpr bool isNormal(RawFloatingPoint x) {
+    return x.getExponentBits() != 0 && isFinite(x);
   }
 
   // Returns true iff this number is at most MaxUlps ULP's away from rhs.
@@ -169,7 +160,7 @@ class RawFloatingPoint {
     if (isNaN(lhs) || isNaN(rhs))
       return false;
 
-    return DistanceBetweenSignAndMagnitudeNumbers(lhs.bits_, rhs.bits_) <= MaxUlps;
+    return distanceBetweenSignAndMagnitudeNumbers(lhs.bits_, rhs.bits_) <= MaxUlps;
   }
 
  private:
@@ -196,7 +187,7 @@ class RawFloatingPoint {
   //
   // Read http://en.wikipedia.org/wiki/Signed_number_representations
   // for more details on signed number representations.
-  static constexpr BitsType SignAndMagnitudeToBiased(BitsType sam) {
+  static constexpr BitsType signAndMagnitudeToBiased(BitsType sam) {
     if (SignBitMask & sam) {
       // sam represents a negative number.
       return ~sam + 1;
@@ -207,9 +198,9 @@ class RawFloatingPoint {
 
   // Given two numbers in the sign-and-magnitude representation,
   // returns the distance between them as an unsigned number.
-  static constexpr BitsType DistanceBetweenSignAndMagnitudeNumbers(BitsType sam1, BitsType sam2) {
-    const BitsType biased1 = SignAndMagnitudeToBiased(sam1);
-    const BitsType biased2 = SignAndMagnitudeToBiased(sam2);
+  static constexpr BitsType distanceBetweenSignAndMagnitudeNumbers(BitsType sam1, BitsType sam2) {
+    const BitsType biased1 = signAndMagnitudeToBiased(sam1);
+    const BitsType biased2 = signAndMagnitudeToBiased(sam2);
     return (biased1 >= biased2) ? (biased1 - biased2) : (biased2 - biased1);
   }
 };
@@ -227,16 +218,16 @@ struct Limits<RawFloatingPoint<T>> {
   static constexpr int MinExponent = Limits<T>::MinExponent;
   static constexpr int MaxExponent = Limits<T>::MaxExponent;
 
-  static constexpr RawType Epsilon = RawType::FromBits(Traits::EpsilonBitValue);
-  static constexpr RawType Infinity = RawType::FromBits(RawType::ExponentBitMask);
-  static constexpr RawType NaN = RawType::FromBits(Traits::NaNBitValue);
+  static constexpr RawType Epsilon = RawType::fromBits(Traits::EpsilonBitValue);
+  static constexpr RawType Infinity = RawType::fromBits(RawType::ExponentBitMask);
+  static constexpr RawType NaN = RawType::fromBits(Traits::NaNBitValue);
 
   static constexpr RawType SmallestNormal =
-      RawType::FromBits(RawType::SignBitMask >> RawType::ExponentBitCount);
+      RawType::fromBits(RawType::SignBitMask >> RawType::ExponentBitCount);
 
-  static constexpr RawType SmallestSubnormal = RawType::FromBits(1);
+  static constexpr RawType SmallestSubnormal = RawType::fromBits(1);
 
-  static constexpr RawType Min = RawType::FromBits(~SmallestNormal.ToBits());
+  static constexpr RawType Min = RawType::fromBits(~SmallestNormal.toBits());
   static constexpr RawType Max = -Min;
 };
 

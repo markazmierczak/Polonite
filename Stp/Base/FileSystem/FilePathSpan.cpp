@@ -260,7 +260,7 @@ void FilePathSpan::RemoveExtension() {
     chars_.truncate(pos);
 }
 
-void FilePathSpan::FormatImpl(TextWriter& out) const {
+void FilePathSpan::formatImpl(TextWriter& out) const {
   #if HAVE_UTF8_NATIVE_VALIDATION
   out.Write(chars_);
   #else

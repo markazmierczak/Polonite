@@ -7,29 +7,29 @@
 
 namespace stp {
 
-TEST(NBitsTest, SaturateToUnsignedNBits) {
-  EXPECT_EQ(0u, SaturateToUnsignedNBits(0, 1));
-  EXPECT_EQ(0u, SaturateToUnsignedNBits(-10, 8));
-  EXPECT_EQ(0xFFFFu, SaturateToUnsignedNBits(0x7FFFFFFF, 16));
-  EXPECT_EQ(0xFFu, SaturateToUnsignedNBits(0x7FFFFFFF, 8));
-  EXPECT_EQ(0xFFu, SaturateToUnsignedNBits(0xFF, 8));
-  EXPECT_EQ(0xFFu, SaturateToUnsignedNBits(0x100, 8));
-  EXPECT_EQ(31u, SaturateToUnsignedNBits(37, 5));
-  EXPECT_EQ(0x7FFFFFFFu, SaturateToUnsignedNBits(0xFFFFFFFFu, 31));
-  EXPECT_EQ(0xFFFFFFFFu, SaturateToUnsignedNBits(0xFFFFFFFFu, 32));
+TEST(NBitsTest, saturateToUnsignedNBits) {
+  EXPECT_EQ(0u, saturateToUnsignedNBits(0, 1));
+  EXPECT_EQ(0u, saturateToUnsignedNBits(-10, 8));
+  EXPECT_EQ(0xFFFFu, saturateToUnsignedNBits(0x7FFFFFFF, 16));
+  EXPECT_EQ(0xFFu, saturateToUnsignedNBits(0x7FFFFFFF, 8));
+  EXPECT_EQ(0xFFu, saturateToUnsignedNBits(0xFF, 8));
+  EXPECT_EQ(0xFFu, saturateToUnsignedNBits(0x100, 8));
+  EXPECT_EQ(31u, saturateToUnsignedNBits(37, 5));
+  EXPECT_EQ(0x7FFFFFFFu, saturateToUnsignedNBits(0xFFFFFFFFu, 31));
+  EXPECT_EQ(0xFFFFFFFFu, saturateToUnsignedNBits(0xFFFFFFFFu, 32));
 }
 
-TEST(NBitsTest, SaturateToSignedNBits) {
-  EXPECT_EQ(0, SaturateToSignedNBits(0, 1));
-  EXPECT_EQ(0x7FFF, SaturateToSignedNBits(0x7FFFFFFF, 16));
-  EXPECT_EQ(-0x8000, SaturateToSignedNBits(INT32_MIN, 16));
-  EXPECT_EQ(0x7F, SaturateToSignedNBits(0x7FFFFFFF, 8));
-  EXPECT_EQ(-0x80, SaturateToSignedNBits(INT32_MIN, 8));
-  EXPECT_EQ(0x7FFFFFFF, SaturateToSignedNBits(0x7FFFFFFF, 32));
-  EXPECT_EQ(15, SaturateToSignedNBits(37, 5));
-  EXPECT_EQ(-16, SaturateToSignedNBits(-37, 5));
-  EXPECT_EQ(1, SaturateToSignedNBits(1, 5));
-  EXPECT_EQ(-1, SaturateToSignedNBits(-1, 5));
+TEST(NBitsTest, saturateToSignedNBits) {
+  EXPECT_EQ(0, saturateToSignedNBits(0, 1));
+  EXPECT_EQ(0x7FFF, saturateToSignedNBits(0x7FFFFFFF, 16));
+  EXPECT_EQ(-0x8000, saturateToSignedNBits(INT32_MIN, 16));
+  EXPECT_EQ(0x7F, saturateToSignedNBits(0x7FFFFFFF, 8));
+  EXPECT_EQ(-0x80, saturateToSignedNBits(INT32_MIN, 8));
+  EXPECT_EQ(0x7FFFFFFF, saturateToSignedNBits(0x7FFFFFFF, 32));
+  EXPECT_EQ(15, saturateToSignedNBits(37, 5));
+  EXPECT_EQ(-16, saturateToSignedNBits(-37, 5));
+  EXPECT_EQ(1, saturateToSignedNBits(1, 5));
+  EXPECT_EQ(-1, saturateToSignedNBits(-1, 5));
 }
 
 } // namespace stp

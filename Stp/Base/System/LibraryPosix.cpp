@@ -15,7 +15,7 @@ static inline StringSpan DynamicLinkerErrorMessage() {
   return makeSpanFromNullTerminated(dlerror());
 }
 
-void LibraryLoadError::FormatImpl(TextWriter& out) const {
+void LibraryLoadError::formatImpl(TextWriter& out) const {
   out << message_;
 }
 

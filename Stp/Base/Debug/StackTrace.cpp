@@ -34,7 +34,7 @@ void StackTrace::PrintToConsole() const {
   format(Console::err(), StringSpan());
 }
 
-void StackTrace::FormatImpl(TextWriter& out, const StringSpan& opts) const {
+void StackTrace::formatImpl(TextWriter& out, const StringSpan& opts) const {
   bool symbolize = true;
   if (!opts.isEmpty()) {
     bool ok = opts.size() == 1;

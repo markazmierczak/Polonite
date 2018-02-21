@@ -37,7 +37,7 @@ static constexpr Array<unsigned, 48> PrimeIndices = {
 };
 
 template<typename T, int SmallPrimeStartIndex = 0>
-static inline bool IsPrimeHelper(T x) {
+static inline bool isPrimeHelper(T x) {
   if (x <= SmallPrimes.getLast())
     return binarySearchInSpan(SmallPrimes.toSpan(), static_cast<unsigned>(x)) >= 0;
 
@@ -78,12 +78,12 @@ static inline bool IsPrimeHelper(T x) {
   }
 }
 
-bool IsPrimeNumber32(uint32_t x) {
-  return IsPrimeHelper(x);
+bool isPrimeNumber32(uint32_t x) {
+  return isPrimeHelper(x);
 }
 
-bool IsPrimeNumber64(uint64_t x) {
-  return IsPrimeHelper(x);
+bool isPrimeNumber64(uint64_t x) {
+  return isPrimeHelper(x);
 }
 
 #if ASSERT_IS_ON
@@ -96,7 +96,7 @@ static inline bool CheckPrimeOverflow(uint64_t x) {
 #endif // ASSERT_IS_ON
 
 template<typename T>
-static inline T NextPrimeHelper(T x) {
+static inline T nextPrimeHelper(T x) {
   if (x < SmallPrimes.getLast()) {
     int yi = lowerBoundOfSpan(SmallPrimes.toSpan(), static_cast<unsigned>(x));
     T y = SmallPrimes[yi];
@@ -119,7 +119,7 @@ static inline T NextPrimeHelper(T x) {
 
     // It is known a-priori that |x| is not divisible by 2, 3, 5 or 7,
     // so don't test those (SmallPrimeStartIndex == 5 ->  divide by 11 first).
-    if (IsPrimeHelper<T, 5>(x))
+    if (isPrimeHelper<T, 5>(x))
       return x;
 
     if (++in == M) {
@@ -129,12 +129,12 @@ static inline T NextPrimeHelper(T x) {
   }
 }
 
-uint32_t NextPrimeNumber32(uint32_t x) {
-  return NextPrimeHelper(x);
+uint32_t nextPrimeNumber32(uint32_t x) {
+  return nextPrimeHelper(x);
 }
 
-uint64_t NextPrimeNumber64(uint64_t x) {
-  return NextPrimeHelper(x);
+uint64_t nextPrimeNumber64(uint64_t x) {
+  return nextPrimeHelper(x);
 }
 
 } // namespace detail

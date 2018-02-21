@@ -15,13 +15,13 @@
 namespace stp {
 
 template<typename T, TEnableIf<TIsUnsigned<T>>* = nullptr>
-inline bool OverflowNeg(T x, T* presult) {
+inline bool overflowNeg(T x, T* presult) {
   *presult = static_cast<T>(0) - x;
   return x != 0;
 }
 
 template<typename T, TEnableIf<TIsSigned<T>>* = nullptr>
-inline bool OverflowNeg(T x, T* presult) {
+inline bool overflowNeg(T x, T* presult) {
   using TUint = TMakeUnsigned<T>;
 
   TUint ux = static_cast<TUint>(x);
@@ -31,41 +31,41 @@ inline bool OverflowNeg(T x, T* presult) {
 }
 
 template<typename T, TEnableIf<TIsUnsigned<T>>* = nullptr>
-inline bool OverflowAbs(T x, T* presult) {
+inline bool overflowAbs(T x, T* presult) {
   *presult = x;
   return false;
 }
 
 template<typename T, TEnableIf<TIsSigned<T>>* = nullptr>
-inline bool OverflowAbs(T x, T* presult) {
+inline bool overflowAbs(T x, T* presult) {
   if (x >= 0) {
     *presult = x;
     return false;
   }
-  return OverflowNeg(x, presult);
+  return overflowNeg(x, presult);
 }
 
 #if HAVE_OVERFLOW_BUILTINS
 
 template<typename T>
-static bool OverflowAdd(T x, T y, T* result) {
+static bool overflowAdd(T x, T y, T* result) {
   static_assert(TIsInteger<T>, "!");
   return __builtin_add_overflow(x, y, result);
 }
 
 template<typename T>
-static bool OverflowSub(T x, T y, T* result) {
+static bool overflowSub(T x, T y, T* result) {
   return __builtin_sub_overflow(x, y, result);
 }
 
 template<typename T>
-static bool OverflowMul(T x, T y, T* result) {
+static bool overflowMul(T x, T y, T* result) {
   return __builtin_mul_overflow(x, y, result);
 }
 
 #else
 template<typename T, TEnableIf<sizeof(T) < sizeof(uintmax_t)>* = nullptr>
-inline bool OverflowAdd(T x, T y, T* presult) {
+inline bool overflowAdd(T x, T y, T* presult) {
   using TWiden = TMakeInteger<TIsSigned<T>, sizeof(T) * 2>;
   TWiden wresult = static_cast<TWiden>(x) + y;
   T result = static_cast<T>(wresult);
@@ -74,7 +74,7 @@ inline bool OverflowAdd(T x, T y, T* presult) {
 }
 
 template<typename T, TEnableIf<sizeof(T) >= sizeof(uintmax_t)>* = nullptr>
-inline bool OverflowAdd(T x, T y, T* presult) {
+inline bool overflowAdd(T x, T y, T* presult) {
   static_assert(TIsInteger<T>, "!");
   using TUint = TMakeUnsigned<T>;
 
@@ -88,7 +88,7 @@ inline bool OverflowAdd(T x, T y, T* presult) {
 }
 
 template<typename T, TEnableIf<sizeof(T) < sizeof(uintmax_t)>* = nullptr>
-inline bool OverflowSub(T x, T y, T* presult) {
+inline bool overflowSub(T x, T y, T* presult) {
   using TWiden = TMakeInteger<TIsSigned<T>, sizeof(T) * 2>;
   TWiden wresult = static_cast<TWiden>(x) - y;
   T result = static_cast<T>(wresult);
@@ -97,7 +97,7 @@ inline bool OverflowSub(T x, T y, T* presult) {
 }
 
 template<typename T, TEnableIf<sizeof(T) >= sizeof(uintmax_t)>* = nullptr>
-inline bool OverflowSub(T x, T y, T* presult) {
+inline bool overflowSub(T x, T y, T* presult) {
   static_assert(TIsInteger<T>, "!");
   using TUint = TMakeUnsigned<T>;
 
@@ -110,7 +110,7 @@ inline bool OverflowSub(T x, T y, T* presult) {
 }
 
 template<typename T, TEnableIf<sizeof(T) < sizeof(uintmax_t)>* = nullptr>
-inline bool OverflowMul(T x, T y, T* presult) {
+inline bool overflowMul(T x, T y, T* presult) {
   static_assert(TIsInteger<T>, "type must be integral");
   using TWiden = TMakeInteger<TIsSigned<T>, sizeof(T) * 2>;
   TWiden wresult = static_cast<TWiden>(x) * y;
@@ -120,7 +120,7 @@ inline bool OverflowMul(T x, T y, T* presult) {
 }
 
 template<typename T, TEnableIf<sizeof(T) >= sizeof(uintmax_t)>* = nullptr>
-inline bool OverflowMul(T x, T y, T* presult) {
+inline bool overflowMul(T x, T y, T* presult) {
   static_assert(TIsInteger<T>, "!");
   using TUint = TMakeUnsigned<T>;
 
@@ -141,7 +141,7 @@ inline bool OverflowMul(T x, T y, T* presult) {
 #endif // !HAVE_OVERFLOW_BUILTINS
 
 template<typename T>
-inline bool OverflowDiv(T x, T y, T* presult) {
+inline bool overflowDiv(T x, T y, T* presult) {
   ASSERT(y != 0);
   if ((TIsUnsigned<T> || x != Limits<T>::Min || y != static_cast<T>(-1))) {
     *presult = x / y;
@@ -153,19 +153,19 @@ inline bool OverflowDiv(T x, T y, T* presult) {
 namespace detail {
 
 template<typename T, typename U, bool TIsSigned = TIsSigned<T>>
-struct OverflowLShiftOp {
-  static bool Do(T x, U shift, T* presult) {
-    *presult = x << shift;
+struct OverflowShiftLeftOp {
+  static bool shift(T x, U amount, T* presult) {
+    *presult = x << amount;
     return false;
   }
 };
 
 template<typename T, typename U>
-struct OverflowLShiftOp<T, U, true> {
-  static bool Do(T x, U shift, T* presult) {
+struct OverflowShiftLeftOp<T, U, true> {
+  static bool shift(T x, U amount, T* presult) {
     using UnsignedType = TMakeUnsigned<T>;
-    T rv = static_cast<T>(static_cast<UnsignedType>(x) << shift);
-    bool overflow = (rv >> shift) != x;
+    T rv = static_cast<T>(static_cast<UnsignedType>(x) << amount);
+    bool overflow = (rv >> amount) != x;
     *presult = rv;
     return overflow;
   }
@@ -174,10 +174,10 @@ struct OverflowLShiftOp<T, U, true> {
 } // namespace detail
 
 template<typename T, typename U>
-inline bool OverflowLShift(T x, U shift, T* presult) {
+inline bool overflowShiftLeft(T x, U shift, T* presult) {
   ASSERT(!isNegative(shift));
   ASSERT(shift < static_cast<U>(8 * sizeof(T)));
-  return detail::OverflowLShiftOp<T, U>::Do(x, shift, presult);
+  return detail::OverflowShiftLeftOp<T, U>::shift(x, shift, presult);
 }
 
 #undef HAVE_OVERFLOW_BUILTINS

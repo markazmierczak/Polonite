@@ -11,6 +11,14 @@
 
 namespace stp {
 
+constexpr double MathE      = 2.718281828459045235360287471352662497e+00;
+constexpr double MathPi     = 3.141592653589793238462643383279502884e+00;
+constexpr double MathPhi    = 1.618033988749894848204586834365638118e+00;
+constexpr double MathSqrt2  = 1.414213562373095048801688724209698078e+00;
+constexpr double MathLn2    = 6.931471805599453094172321214581765680e-01;
+constexpr double MathLn10   = 2.302585092994045684017991454684364207e+00;
+constexpr double MathLog10E = 4.342944819032518276511289189166050822e-01;
+
 inline float mathAbs(float x) { return ::fabsf(x); }
 inline double mathAbs(double x) { return ::fabs(x); }
 inline long double mathAbs(long double x) { return ::fabsl(x); }
@@ -29,7 +37,7 @@ struct DecomposeResultForFloat {
   T integral;
   T fractional;
 
-  void Unpack(T& out_integral, T& out_fractional) const {
+  void unpack(T& out_integral, T& out_fractional) const {
     out_integral = integral;
     out_fractional = fractional;
   }
@@ -112,7 +120,7 @@ struct SinCosResult {
   T sin;
   T cos;
 
-  void Unpack(T& out_sin, T& out_cos) const { out_sin = sin, out_cos = cos; }
+  void unpack(T& out_sin, T& out_cos) const { out_sin = sin, out_cos = cos; }
 };
 
 #if defined(__GLIBC__)

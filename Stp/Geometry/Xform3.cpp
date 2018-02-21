@@ -1232,7 +1232,7 @@ static inline Vector3 CrossProduct2(const Vector3& lhs, const Vector3& rhs) {
 }
 
 // Taken from http://www.w3.org/TR/css3-transforms/.
-bool Xform3::Decompose(DecomposedXform3& out) const {
+bool Xform3::decompose(DecomposedXform3& out) const {
   if (IsScaleTranslate()) {
     out.SetScaleTranslate(
         GetEntry(EntryScaleX), GetEntry(EntryScaleY), GetEntry(EntryScaleZ),
@@ -1415,7 +1415,7 @@ bool Trylerp(Xform3& out, const Xform3& x, const Xform3& y, double t) {
   }
   DecomposedXform3 x_decomp(DecomposedXform3::SkipInit);
   DecomposedXform3 y_decomp(DecomposedXform3::SkipInit);
-  if (!x.Decompose(x_decomp) || !y.Decompose(y_decomp))
+  if (!x.decompose(x_decomp) || !y.decompose(y_decomp))
     return false;
 
   DecomposedXform3 out_decomp = lerp(x_decomp, y_decomp, t);

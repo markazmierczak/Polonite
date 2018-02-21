@@ -42,10 +42,10 @@ class Safe {
 };
 
 template<typename T, TEnableIf<TIsArithmetic<T>>* = nullptr>
-constexpr Safe<T> MakeSafe(T x) { return Safe<T>(x); }
+constexpr Safe<T> makeSafe(T x) { return Safe<T>(x); }
 
 template<typename T>
-constexpr Safe<T> MakeSafe(Safe<T> x) { return x; }
+constexpr Safe<T> makeSafe(Safe<T> x) { return x; }
 
 namespace safe {
 
@@ -117,10 +117,10 @@ struct TBinaryOpPromote {
 };
 
 template<typename T>
-constexpr T Extract(Safe<T> x) { return x.get(); }
+constexpr T extract(Safe<T> x) { return x.get(); }
 
 template<typename T>
-constexpr T Extract(T x) { return x; }
+constexpr T extract(T x) { return x; }
 
 template<typename T>
 struct TIsSafeHelper : TFalse {};
@@ -182,39 +182,39 @@ template<typename T, typename TEnabler = void>
 struct ArithmeticOpOverflow {
   static bool add(T x, T y) {
     T dummy;
-    return OverflowAdd(x, y, &dummy);
+    return overflowAdd(x, y, &dummy);
   }
-  static bool Sub(T x, T y) {
+  static bool sub(T x, T y) {
     T dummy;
-    return OverflowSub(x, y, &dummy);
+    return overflowSub(x, y, &dummy);
   }
-  static bool Mul(T x, T y) {
+  static bool mul(T x, T y) {
     T dummy;
-    return OverflowMul(x, y, &dummy);
+    return overflowMul(x, y, &dummy);
   }
-  static bool Div(T x, T y) {
+  static bool div(T x, T y) {
     T dummy;
-    return OverflowDiv(x, y, &dummy);
+    return overflowDiv(x, y, &dummy);
   }
-  static bool Mod(T x, T y) {
+  static bool mod(T x, T y) {
     ASSERT(y != 0);
     return false;
   }
 
   template<typename TShift>
-  static bool LShift(T x, TShift shift) {
+  static bool shiftLeft(T x, TShift shift) {
     T dummy;
-    return OverflowLShift(x, shift, &dummy);
+    return overflowShiftLeft(x, shift, &dummy);
   }
 };
 
 template<typename T>
 struct ArithmeticOpOverflow<T, TEnableIf<TIsFloatingPoint<T>>> {
   static bool add(T x, T y) { return false; }
-  static bool Sub(T x, T y) { return false; }
-  static bool Mul(T x, T y) { return false; }
-  static bool Div(T x, T y) { return false; }
-  static bool Mod(T x, T y) { return false; }
+  static bool sub(T x, T y) { return false; }
+  static bool mul(T x, T y) { return false; }
+  static bool div(T x, T y) { return false; }
+  static bool mod(T x, T y) { return false; }
 };
 
 template<typename T, typename U>
@@ -225,44 +225,44 @@ constexpr auto add(T x, U y) {
 }
 
 template<typename T, typename U>
-constexpr auto Sub(T x, U y) {
+constexpr auto sub(T x, U y) {
   using PromotedType = typename TBinaryOpPromote<T, U>::Type;
-  ASSERT(!ArithmeticOpOverflow<PromotedType>::Sub(x, y));
+  ASSERT(!ArithmeticOpOverflow<PromotedType>::sub(x, y));
   return static_cast<PromotedType>(x) - static_cast<PromotedType>(y);
 }
 
 template<typename T, typename U>
-constexpr auto Mul(T x, U y) {
+constexpr auto mul(T x, U y) {
   using PromotedType = typename TBinaryOpPromote<T, U>::Type;
-  ASSERT(!ArithmeticOpOverflow<PromotedType>::Mul(x, y));
+  ASSERT(!ArithmeticOpOverflow<PromotedType>::mul(x, y));
   return static_cast<PromotedType>(x) * static_cast<PromotedType>(y);
 }
 
 template<typename T, typename U>
-constexpr auto Div(T x, U y) {
+constexpr auto div(T x, U y) {
   using PromotedType = typename TBinaryOpPromote<T, U>::Type;
-  ASSERT(!ArithmeticOpOverflow<PromotedType>::Div(x, y));
+  ASSERT(!ArithmeticOpOverflow<PromotedType>::div(x, y));
   return static_cast<PromotedType>(x) / static_cast<PromotedType>(y);
 }
 
 template<typename T, typename U>
-constexpr auto Mod(T x, U y) {
+constexpr auto mod(T x, U y) {
   using PromotedType = typename TBinaryOpPromote<T, U>::Type;
-  ASSERT(!ArithmeticOpOverflow<PromotedType>::Mod(x, y));
+  ASSERT(!ArithmeticOpOverflow<PromotedType>::mod(x, y));
   return static_cast<PromotedType>(x) % static_cast<PromotedType>(y);
 }
 
 template<typename T, typename U>
-constexpr auto LShift(T x, U y) {
+constexpr auto shiftLeft(T x, U y) {
   typedef decltype(x << y) ResultType;
-  ASSERT(!ArithmeticOpOverflow<ResultType>::LShift(x, y));
-  return MakeSafe(static_cast<ResultType>(toUnsigned(x) << y));
+  ASSERT(!ArithmeticOpOverflow<ResultType>::shiftLeft(x, y));
+  return makeSafe(static_cast<ResultType>(toUnsigned(x) << y));
 }
 
 template<typename T, typename U>
-constexpr auto RShift(T x, U y) {
+constexpr auto shiftRight(T x, U y) {
   ASSERT(!isNegative(y) && y < static_cast<U>(8 * sizeof(x)));
-  return MakeSafe(x >> y);
+  return makeSafe(x >> y);
 }
 
 enum class ComparisonMethod {
@@ -438,7 +438,7 @@ struct TMakeUnsignedTmpl<Safe<T>> {
 #define SAFE_UNARY_OPERATOR(OP, NAME) \
   template<typename T> \
   constexpr auto operator OP(Safe<T> x) { \
-    return MakeSafe(safe::NAME(x.get())); \
+    return makeSafe(safe::NAME(x.get())); \
   }
 
 SAFE_UNARY_OPERATOR(~, Not)
@@ -450,26 +450,26 @@ SAFE_UNARY_OPERATOR(-, Neg)
 #define SAFE_BINARY_OPERATOR(OP, NAME) \
   template<typename T, typename U, TEnableIf<safe::TAreValidBinaryArguments<T, U>>* = nullptr> \
   constexpr auto operator OP(T x, U y) { \
-    return MakeSafe(safe::NAME(safe::Extract(x), safe::Extract(y))); \
+    return makeSafe(safe::NAME(safe::extract(x), safe::extract(y))); \
   }
 
 SAFE_BINARY_OPERATOR(&, And)
 SAFE_BINARY_OPERATOR(|, Or)
 SAFE_BINARY_OPERATOR(^, Xor)
 SAFE_BINARY_OPERATOR(+, add)
-SAFE_BINARY_OPERATOR(-, Sub)
-SAFE_BINARY_OPERATOR(*, Mul)
-SAFE_BINARY_OPERATOR(/, Div)
-SAFE_BINARY_OPERATOR(%, Mod)
-SAFE_BINARY_OPERATOR(<<, LShift)
-SAFE_BINARY_OPERATOR(>>, RShift)
+SAFE_BINARY_OPERATOR(-, sub)
+SAFE_BINARY_OPERATOR(*, mul)
+SAFE_BINARY_OPERATOR(/, div)
+SAFE_BINARY_OPERATOR(%, mod)
+SAFE_BINARY_OPERATOR(<<, shiftLeft)
+SAFE_BINARY_OPERATOR(>>, shiftRight)
 
 #undef SAFE_BINARY_OPERATOR
 
 #define SAFE_COMPARE_OPERATOR(OP, NAME) \
   template<typename T, typename U, TEnableIf<safe::TAreValidBinaryArguments<T, U>>* = nullptr> \
   constexpr bool operator OP(T x, U y) { \
-    return safe::NAME(safe::Extract(x), safe::Extract(y)); \
+    return safe::NAME(safe::extract(x), safe::extract(y)); \
   }
 
 SAFE_COMPARE_OPERATOR(==, CompareEq)
@@ -517,25 +517,25 @@ inline constexpr Safe<T>& Safe<T>::operator--() {
 
 template<typename T>
 constexpr auto mathAbs(Safe<T> x) {
-  return MakeSafe(safe::mathAbs(x.get()));
+  return makeSafe(safe::mathAbs(x.get()));
 }
 
 template<typename T>
 constexpr auto mathAbsToUnsigned(Safe<T> x) {
-  return MakeSafe(mathAbsToUnsigned(x.get()));
+  return makeSafe(mathAbsToUnsigned(x.get()));
 }
 
 template<typename T>
 constexpr auto toUnsigned(Safe<T> x) {
   static_assert(TIsInteger<T>, "!");
   ASSERT(!isNegative(x.get()));
-  return MakeSafe(toUnsigned(x.get()));
+  return makeSafe(toUnsigned(x.get()));
 }
 template<typename T>
 constexpr Safe<TMakeSigned<T>> toSigned(Safe<T> x) {
   static_assert(TIsInteger<T>, "!");
   ASSERT(x.get() <= static_cast<T>(Limits<TMakeSigned<T>>::Max));
-  return MakeSafe(toSigned(x.get()));
+  return makeSafe(toSigned(x.get()));
 }
 
 template<typename T>
@@ -550,12 +550,12 @@ constexpr int mathSignum(Safe<T> x) {
 
 template<typename TDst, typename TSrc>
 constexpr Safe<TDst> assertedCast(Safe<TSrc> x) {
-  return MakeSafe(assertedCast<TDst>(x.get()));
+  return makeSafe(assertedCast<TDst>(x.get()));
 }
 
 template<typename T, typename U, TEnableIf<safe::TAreValidBinaryArguments<T, U>>* = nullptr>
 constexpr auto lerp(T x, U y, double t) {
-  return MakeSafe(lerp(safe::Extract(x), safe::Extract(y), t));
+  return makeSafe(lerp(safe::extract(x), safe::extract(y), t));
 }
 
 } // namespace stp

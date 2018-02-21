@@ -48,10 +48,10 @@ class BASE_EXPORT TimeTicks : public TimeBase<TimeTicks> {
   TimeTicks SnappedToNextTick(TimeTicks tick_phase, TimeDelta tick_interval) const;
 
   friend TextWriter& operator<<(TextWriter& out, TimeTicks x) {
-    FormatImpl(out, x); return out;
+    formatImpl(out, x); return out;
   }
   friend void format(TextWriter& out, TimeTicks x, const StringSpan& opts) {
-    FormatImpl(out, x);
+    formatImpl(out, x);
   }
 
  private:
@@ -67,7 +67,7 @@ class BASE_EXPORT TimeTicks : public TimeBase<TimeTicks> {
   static void ClassInit() {}
   #endif
 
-  static void FormatImpl(TextWriter& out, TimeTicks x);
+  static void formatImpl(TextWriter& out, TimeTicks x);
 };
 
 } // namespace stp

@@ -372,7 +372,7 @@ struct VecNx<16, uint8_t> {
     return _mm_min_epu8(l.vec_, r.vec_);
   }
 
-  static VecNx SaturatedAdd(const VecNx& l, const VecNx& r) {
+  static VecNx saturatedAdd(const VecNx& l, const VecNx& r) {
     return _mm_adds_epu8(l.vec_, r.vec_);
   }
 

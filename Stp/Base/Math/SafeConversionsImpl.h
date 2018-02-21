@@ -31,7 +31,7 @@ struct TNumericMaxExponent<T, TEnableIf<TIsFloatingPoint<T>>> {
 // arguments, but probably doesn't do what you want for any unsigned value
 // larger than max / 2 + 1 (i.e. signed min cast to unsigned).
 template<typename T>
-constexpr TMakeSigned<T> ConditionalNegate(T x, bool is_negative) {
+constexpr TMakeSigned<T> conditionalNegate(T x, bool is_negative) {
   static_assert(TIsInteger<T>, "type must be integral");
   using SignedT = TMakeSigned<T>;
   using UnsignedT = TMakeUnsigned<T>;
@@ -102,13 +102,13 @@ class RangeCheck {
 
   constexpr RangeCheck() : is_underflow_(0), is_overflow_(0) {}
 
-  constexpr bool IsValid() const { return !is_overflow_ && !is_underflow_; }
-  constexpr bool IsInvalid() const { return is_overflow_ && is_underflow_; }
-  constexpr bool IsOverflow() const { return is_overflow_ && !is_underflow_; }
-  constexpr bool IsUnderflow() const { return !is_overflow_ && is_underflow_; }
+  constexpr bool isValid() const { return !is_overflow_ && !is_underflow_; }
+  constexpr bool isInvalid() const { return is_overflow_ && is_underflow_; }
+  constexpr bool isOverflow() const { return is_overflow_ && !is_underflow_; }
+  constexpr bool isUnderflow() const { return !is_overflow_ && is_underflow_; }
 
-  constexpr bool is_overflow_flag_set() const { return is_overflow_; }
-  constexpr bool is_underflow_flag_set() const { return is_underflow_; }
+  constexpr bool isOverflowFlagSet() const { return is_overflow_; }
+  constexpr bool isUnderflowFlagSet() const { return is_underflow_; }
 
   constexpr bool operator==(const RangeCheck rhs) const {
     return is_underflow_ == rhs.is_underflow_ && is_overflow_ == rhs.is_overflow_;
@@ -160,23 +160,23 @@ struct NarrowingRange {
   // Masks out the integer bits that are beyond the precision of the
   // intermediate type used for comparison.
   template<typename T, TEnableIf<TIsInteger<T>>* = nullptr>
-  static constexpr T Adjust(T value) {
+  static constexpr T adjust(T value) {
     static_assert(TsAreSame<T, TDst>, "!");
     static_assert(Shift < DstLimits::Digits, "!");
-    return static_cast<T>(ConditionalNegate(
+    return static_cast<T>(conditionalNegate(
         mathAbsToUnsigned(value) & ~((T(1) << Shift) - T(1)),
         isNegative(value)));
   }
 
   template<typename T, TEnableIf<TIsFloatingPoint<T>>* = nullptr>
-  static constexpr T Adjust(T value) {
+  static constexpr T adjust(T value) {
     static_assert(TsAreSame<T, TDst>, "!");
     static_assert(Shift == 0, "!");
     return value;
   }
 
-  static constexpr TDst Max = Adjust(Limits<TDst>::Max);
-  static constexpr TDst Min = Adjust(Limits<TDst>::Min);
+  static constexpr TDst Max = adjust(Limits<TDst>::Max);
+  static constexpr TDst Min = adjust(Limits<TDst>::Min);
 };
 
 template<typename TDst, typename TSrc,
@@ -199,7 +199,7 @@ struct DstRangeRelationToSrcRangeImpl<
     TDst, TSrc,
     DstSign, SrcSign,
     NumericRangeContained> {
-  static constexpr RangeCheck Check(TSrc value) {
+  static constexpr RangeCheck check(TSrc value) {
     using SrcLimits = Limits<TSrc>;
     using DstLimits = NarrowingRange<TDst, TSrc>;
     return RangeCheck(
@@ -217,7 +217,7 @@ struct DstRangeRelationToSrcRangeImpl<
     TDst, TSrc,
     IntegerRepresentationSigned, IntegerRepresentationSigned,
     NumericRangeNotContained> {
-  static constexpr RangeCheck Check(TSrc value) {
+  static constexpr RangeCheck check(TSrc value) {
     using DstLimits = NarrowingRange<TDst, TSrc>;
     return RangeCheck(value >= DstLimits::Min, value <= DstLimits::Max);
   }
@@ -230,7 +230,7 @@ struct DstRangeRelationToSrcRangeImpl<
     TDst, TSrc,
     IntegerRepresentationUnsigned, IntegerRepresentationUnsigned,
     NumericRangeNotContained> {
-  static constexpr RangeCheck Check(TSrc value) {
+  static constexpr RangeCheck check(TSrc value) {
     using DstLimits = NarrowingRange<TDst, TSrc>;
     return RangeCheck(
         DstLimits::Min == TDst(0) || value >= DstLimits::Min,
@@ -244,7 +244,7 @@ struct DstRangeRelationToSrcRangeImpl<
     TDst, TSrc,
     IntegerRepresentationSigned, IntegerRepresentationUnsigned,
     NumericRangeNotContained> {
-  static constexpr RangeCheck Check(TSrc value) {
+  static constexpr RangeCheck check(TSrc value) {
     using DstLimits = NarrowingRange<TDst, TSrc>;
     using Promotion = decltype(TSrc() + TDst());
     return RangeCheck(
@@ -261,7 +261,7 @@ struct DstRangeRelationToSrcRangeImpl<
     TDst, TSrc,
     IntegerRepresentationUnsigned, IntegerRepresentationSigned,
     NumericRangeNotContained> {
-  static constexpr RangeCheck Check(TSrc value) {
+  static constexpr RangeCheck check(TSrc value) {
     using SrcLimits = Limits<TSrc>;
     using DstLimits = NarrowingRange<TDst, TSrc>;
     using Promotion = decltype(TSrc() + TDst());
@@ -273,10 +273,10 @@ struct DstRangeRelationToSrcRangeImpl<
 };
 
 template<typename TDst, typename TSrc>
-constexpr RangeCheck DstRangeRelationToSrcRange(TSrc value) {
+constexpr RangeCheck dstRangeRelationToSrcRange(TSrc value) {
   static_assert(TIsArithmetic<TSrc>, "argument must be numeric");
   static_assert(TIsArithmetic<TDst>, "result must be numeric");
-  return DstRangeRelationToSrcRangeImpl<TDst, TSrc>::Check(value);
+  return DstRangeRelationToSrcRangeImpl<TDst, TSrc>::check(value);
 }
 
 } // namespace detail

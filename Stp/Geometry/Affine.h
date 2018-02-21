@@ -187,11 +187,11 @@ class BASE_EXPORT Affine {
 
   // Converts matrix to decomposed representation.
   // If conversion fails, returns false and leaves |decomposed| untouched.
-  bool Decompose(DecomposedAffine& out) const WARN_UNUSED_RESULT;
+  bool decompose(DecomposedAffine& out) const WARN_UNUSED_RESULT;
 
   // Decomposes magnitude of scale X and Y from transformation.
   // The sign is always positive and might be different than original.
-  // Use Decompose() if you need that.
+  // Use decompose() if you need that.
   float DecomposeScaleMagX() const;
   float DecomposeScaleMagY() const;
 
@@ -215,10 +215,10 @@ class BASE_EXPORT Affine {
   bool operator!=(const Affine& other) const { return !operator==(other); }
 
   friend TextWriter& operator<<(TextWriter& out, const Affine& x) {
-    x.FormatImpl(out); return out;
+    x.formatImpl(out); return out;
   }
   friend void format(TextWriter& out, const Affine& x, const StringSpan& opts) {
-    x.FormatImpl(out);
+    x.formatImpl(out);
   }
 
  private:
@@ -237,7 +237,7 @@ class BASE_EXPORT Affine {
   void SetTransInternal(const Vector2& v);
   Vector2 GetTransInternal() const { return Vector2(d_[EntryTransX], d_[EntryTransY]); }
 
-  void FormatImpl(TextWriter& out) const;
+  void formatImpl(TextWriter& out) const;
 
   float d_[6]; // row-major
   mutable int type_mask_;

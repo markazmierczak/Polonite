@@ -273,7 +273,7 @@ static void FormatCommandLineArgument(TextWriter& out, StringSpan arg) {
   #endif // OS(*)
 }
 
-void CommandLine::FormatImpl(TextWriter& out, const StringSpan& opts) const {
+void CommandLine::formatImpl(TextWriter& out, const StringSpan& opts) const {
   bool with_program = true;
   if (!opts.isEmpty()) {
     if (opts[0] == 'L')

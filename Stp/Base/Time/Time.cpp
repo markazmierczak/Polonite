@@ -90,7 +90,7 @@ bool Time::ExplodedMostlyEquals(const Exploded& lhs, const Exploded& rhs) {
          lhs.millisecond == rhs.millisecond;
 }
 
-void Time::FormatImpl(TextWriter& out, Time x) {
+void Time::formatImpl(TextWriter& out, Time x) {
   Exploded exploded;
   x.UTCExplode(&exploded);
   formatMany(out,
@@ -100,7 +100,7 @@ void Time::FormatImpl(TextWriter& out, Time x) {
       exploded.hour, exploded.minute, exploded.second, exploded.millisecond);
 }
 
-void ThreadTicks::FormatImpl(TextWriter& out, ThreadTicks x) {
+void ThreadTicks::formatImpl(TextWriter& out, ThreadTicks x) {
   out << x.us_ << " bogo-thread-microseconds";
 }
 

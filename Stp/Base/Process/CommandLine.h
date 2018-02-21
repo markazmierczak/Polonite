@@ -95,10 +95,10 @@ class BASE_EXPORT CommandLine {
   #endif
 
   friend TextWriter& operator<<(TextWriter& out, const CommandLine& x) {
-    x.FormatImpl(out, StringSpan()); return out;
+    x.formatImpl(out, StringSpan()); return out;
   }
   friend void format(TextWriter& out, const CommandLine& x, const StringSpan& opts) {
-    x.FormatImpl(out, opts);
+    x.formatImpl(out, opts);
   }
 
  private:
@@ -113,7 +113,7 @@ class BASE_EXPORT CommandLine {
   void ParseFromArgv(int argc, char** argv);
   #endif
 
-  void FormatImpl(TextWriter& out, const StringSpan& opts) const;
+  void formatImpl(TextWriter& out, const StringSpan& opts) const;
 
   static CommandLine* g_for_current_process_;
 

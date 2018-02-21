@@ -21,7 +21,7 @@ String ResultsToString(
   // <*>RESULT <graph_name>: <trace_name>= <value> <units>
   // <*>RESULT <graph_name>: <trace_name>= {<mean>, <std deviation>} <units>
   // <*>RESULT <graph_name>: <trace_name>= [<value>,value,value,...,] <units>
-  return StringformatMany(
+  return stringFormatMany(
       "{}RESULT {}{}: {}= {}{}{} {}\n",
       important ? "*" : "", measurement, modifier, trace, prefix, values, suffix, units);
 }

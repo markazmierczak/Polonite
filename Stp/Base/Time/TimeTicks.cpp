@@ -27,7 +27,7 @@ TimeTicks TimeTicks::SnappedToNextTick(TimeTicks tick_phase, TimeDelta tick_inte
   return *this + interval_offset;
 }
 
-void TimeTicks::FormatImpl(TextWriter& out, TimeTicks x) {
+void TimeTicks::formatImpl(TextWriter& out, TimeTicks x) {
   // This function formats a TimeTicks object as "bogo-microseconds".
   // The origin and granularity of the count are platform-specific, and may very
   // from run to run. Although bogo-microseconds usually roughly correspond to

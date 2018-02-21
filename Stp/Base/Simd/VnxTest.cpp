@@ -157,7 +157,7 @@ TEST(VnxTest, SaturatedAdd) {
       if (exact > 255) { exact = 255; }
       if (exact <   0) { exact =   0; }
 
-      EXPECT_EQ(exact, VnxMath::SaturatedAdd(Vec16b(a), Vec16b(b))[0]);
+      EXPECT_EQ(exact, VnxMath::saturatedAdd(Vec16b(a), Vec16b(b))[0]);
     }
   }
 }

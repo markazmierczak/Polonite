@@ -10,7 +10,7 @@
 namespace stp {
 
 template<typename... TArgs>
-inline String StringformatMany(StringSpan fmt, const TArgs&... args) {
+inline String stringFormatMany(StringSpan fmt, const TArgs&... args) {
   String result;
   StringWriter writer(&result);
   formatMany(writer, fmt, args...);

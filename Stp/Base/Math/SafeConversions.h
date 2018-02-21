@@ -15,7 +15,7 @@ namespace stp {
 // for the destination type.
 template<typename TDst, typename TSrc>
 constexpr bool isValueInRangeForNumericType(TSrc value) {
-  return detail::DstRangeRelationToSrcRange<TDst>(value).IsValid();
+  return detail::dstRangeRelationToSrcRange<TDst>(value).isValid();
 }
 
 // assertedCast<> is analogous to static_cast<> for numeric types,
@@ -39,13 +39,13 @@ constexpr TDst saturatedCast(TSrc x) {
 
 template<typename TDst, typename TSrc, TEnableIf<TIsInteger<TDst>>* = nullptr>
 constexpr TDst saturatedCast(TSrc x) {
-  auto constraint = detail::DstRangeRelationToSrcRange<TDst, TSrc>(x);
+  auto constraint = detail::dstRangeRelationToSrcRange<TDst, TSrc>(x);
   // For some reason clang generates much better code when the branch is
   // structured exactly this way, rather than a sequence of checks.
-  return !constraint.is_overflow_flag_set()
-      ? (!constraint.is_underflow_flag_set() ? static_cast<TDst>(x) : Limits<TDst>::Min)
+  return !constraint.isOverflowFlagSet()
+      ? (!constraint.isUnderflowFlagSet() ? static_cast<TDst>(x) : Limits<TDst>::Min)
       // Skip this check for integral Src, which cannot be NaN.
-      : (TIsInteger<TSrc> || !constraint.is_underflow_flag_set()
+      : (TIsInteger<TSrc> || !constraint.isUnderflowFlagSet()
           ? Limits<TDst>::Max : static_cast<TDst>(0));
 }
 

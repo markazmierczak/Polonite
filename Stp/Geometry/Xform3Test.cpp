@@ -1005,7 +1005,7 @@ TEST(Xform3Test, FactorTRS) {
 
     // factor the matrix
     DecomposedXform3 decomp(DecomposedXform3::SkipInit);
-    bool success = transform.Decompose(decomp);
+    bool success = transform.decompose(decomp);
     EXPECT_TRUE(success);
     EXPECT_FLOAT_EQ(decomp.translate.x, degrees * 2);
     EXPECT_FLOAT_EQ(decomp.translate.y, -degrees * 3);
@@ -1029,7 +1029,7 @@ TEST(Xform3Test, DecomposeTransform) {
     EXPECT_TRUE(transform.Preserves2DAxisAlignment());
 
     DecomposedXform3 decomp(DecomposedXform3::SkipInit);
-    bool success = transform.Decompose(decomp);
+    bool success = transform.decompose(decomp);
     EXPECT_TRUE(success);
 
     Xform3 compose_transform = Xform3::FromDecomposed(decomp);

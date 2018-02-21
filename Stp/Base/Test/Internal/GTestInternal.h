@@ -347,7 +347,7 @@ class FloatingPoint {
     // a NAN must return false.
     if (is_nan() || rhs.is_nan()) return false;
 
-    return DistanceBetweenSignAndMagnitudeNumbers(u_.bits_, rhs.u_.bits_)
+    return distanceBetweenSignAndMagnitudeNumbers(u_.bits_, rhs.u_.bits_)
         <= kMaxUlps;
   }
 
@@ -373,7 +373,7 @@ class FloatingPoint {
   //
   // Read http://en.wikipedia.org/wiki/Signed_number_representations
   // for more details on signed number representations.
-  static Bits SignAndMagnitudeToBiased(const Bits &sam) {
+  static Bits signAndMagnitudeToBiased(const Bits &sam) {
     if (kSignBitMask & sam) {
       // sam represents a negative number.
       return ~sam + 1;
@@ -385,10 +385,10 @@ class FloatingPoint {
 
   // Given two numbers in the sign-and-magnitude representation,
   // returns the distance between them as an unsigned number.
-  static Bits DistanceBetweenSignAndMagnitudeNumbers(const Bits &sam1,
+  static Bits distanceBetweenSignAndMagnitudeNumbers(const Bits &sam1,
                                                      const Bits &sam2) {
-    const Bits biased1 = SignAndMagnitudeToBiased(sam1);
-    const Bits biased2 = SignAndMagnitudeToBiased(sam2);
+    const Bits biased1 = signAndMagnitudeToBiased(sam1);
+    const Bits biased2 = signAndMagnitudeToBiased(sam2);
     return (biased1 >= biased2) ? (biased1 - biased2) : (biased2 - biased1);
   }
 

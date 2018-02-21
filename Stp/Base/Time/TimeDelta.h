@@ -88,10 +88,10 @@ class BASE_EXPORT TimeDelta {
 
   // Computations with other deltas.
   TimeDelta operator+(TimeDelta other) const {
-    return FromInternalValue(MakeSafe(delta_) + other.delta_);
+    return FromInternalValue(makeSafe(delta_) + other.delta_);
   }
   TimeDelta operator-(TimeDelta other) const {
-    return FromInternalValue(MakeSafe(delta_) - other.delta_);
+    return FromInternalValue(makeSafe(delta_) - other.delta_);
   }
 
   TimeDelta& operator+=(TimeDelta other) { return *this = (*this + other); }
@@ -101,9 +101,9 @@ class BASE_EXPORT TimeDelta {
 
   // Computations with numeric types.
   template<typename T>
-  TimeDelta operator*(T a) const { return FromInternalValue(MakeSafe(delta_) * a); }
+  TimeDelta operator*(T a) const { return FromInternalValue(makeSafe(delta_) * a); }
   template<typename T>
-  TimeDelta operator/(T a) const { return FromInternalValue(MakeSafe(delta_) / a); }
+  TimeDelta operator/(T a) const { return FromInternalValue(makeSafe(delta_) / a); }
 
   template<typename T>
   TimeDelta& operator*=(T a) { return *this = (*this * a); }

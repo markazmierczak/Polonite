@@ -53,7 +53,7 @@ class BASE_EXPORT StackTrace {
   void PrintToConsole() const;
 
   friend void format(TextWriter& out, const StackTrace& x, const StringSpan& opts) {
-    x.FormatImpl(out, opts);
+    x.formatImpl(out, opts);
   }
   friend TextWriter& operator<<(TextWriter& out, const StackTrace& x) {
     x.FormatSymbols(out); return out;
@@ -64,7 +64,7 @@ class BASE_EXPORT StackTrace {
   void InitTrace(const _CONTEXT* context_record);
   #endif
 
-  void FormatImpl(TextWriter& out, const StringSpan& opts) const;
+  void formatImpl(TextWriter& out, const StringSpan& opts) const;
   void FormatSymbols(TextWriter& out) const;
   void FormatAddresses(TextWriter& out) const;
 

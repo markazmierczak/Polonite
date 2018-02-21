@@ -8,15 +8,12 @@
 
 namespace stp {
 
-const Half::BitsType Half::ExponentBitMask;
-const Half::BitsType Half::MantissaBitMask;
-
 // based on Fabien Giesen's float_to_half_fast3()
 // see https://gist.github.com/rygorous/2156668
 Half::Half(float x) {
   RawFloat f(x);
-  uint32_t fbits = f.ToBits();
-  uint32_t sign = f.GetSignBit();
+  uint32_t fbits = f.toBits();
+  uint32_t sign = f.getSignBit();
   fbits ^= sign;
 
   // NOTE all the integer compares in this function can be safely
@@ -32,18 +29,18 @@ Half::Half(float x) {
     // (De)normalized number or zero
   } else {
     constexpr uint32_t RoundMask = ~0xFFFu;
-    constexpr RawFloat Magic = RawFloat::FromBits(15u << 23);
+    constexpr RawFloat Magic = RawFloat::fromBits(15u << 23);
 
     fbits &= RoundMask;
 
-    auto tmp = RawFloat::FromBits(fbits);
-    fbits = RawFloat(static_cast<float>(tmp) * static_cast<float>(Magic)).ToBits();
+    auto tmp = RawFloat::fromBits(fbits);
+    fbits = RawFloat(static_cast<float>(tmp) * static_cast<float>(Magic)).toBits();
     fbits -= RoundMask;
 
-    constexpr RawFloat Infinity16 = RawFloat::FromBits(31u << 23);
+    constexpr RawFloat Infinity16 = RawFloat::fromBits(31u << 23);
     // Clamp to signed infinity if overflowed
-    if (fbits > Infinity16.ToBits())
-      fbits = Infinity16.ToBits();
+    if (fbits > Infinity16.toBits())
+      fbits = Infinity16.toBits();
 
     result = fbits >> 13; // Take the bits!
   }
@@ -57,40 +54,31 @@ Half::Half(float x) {
 Half::operator float() const {
   uint32_t obits;
 
-  if (GetExponentBits() == 0) {
-    constexpr RawFloat Magic = RawFloat::FromBits(126u << 23);
+  if (getExponentBits() == 0) {
+    constexpr RawFloat Magic = RawFloat::fromBits(126u << 23);
     // Zero / Denormal
-    auto dm = RawFloat::FromBits(Magic.ToBits() + GetMantissaBits());
+    auto dm = RawFloat::fromBits(Magic.toBits() + getMantissaBits());
 
-    obits = RawFloat(static_cast<float>(dm) - static_cast<float>(Magic)).ToBits();
+    obits = RawFloat(static_cast<float>(dm) - static_cast<float>(Magic)).toBits();
   } else {
     // Set mantissa
-    obits = GetMantissaBits() << 13;
+    obits = getMantissaBits() << 13;
     // Set exponent
-    if (GetExponentBits() == 0x1F) {
+    if (getExponentBits() == 0x1F) {
       // Inf/NaN
       obits |= RawFloat::ExponentBitMask;
     } else {
-      obits |= (127 - 15 + GetExponentBits()) << 23;
+      obits |= (127 - 15 + getExponentBits()) << 23;
     }
   }
 
   // Set sign
-  obits |= static_cast<uint32_t>(GetSignBit()) << 16;
-  return static_cast<float>(RawFloat::FromBits(obits));
+  obits |= static_cast<uint32_t>(getSignBit()) << 16;
+  return static_cast<float>(RawFloat::fromBits(obits));
 }
 
-void Half::FormatImpl(TextWriter& out, float x, const StringSpan& opts) {
+void Half::formatImpl(TextWriter& out, float x, const StringSpan& opts) {
   format(out, x, opts);
 }
-
-constexpr Half Limits<Half>::Epsilon;
-constexpr Half Limits<Half>::Infinity;
-constexpr Half Limits<Half>::NaN;
-constexpr Half Limits<Half>::SignalingNaN;
-constexpr Half Limits<Half>::SmallestNormal;
-constexpr Half Limits<Half>::SmallestSubnormal;
-constexpr Half Limits<Half>::Max;
-constexpr Half Limits<Half>::Min;
 
 } // namespace stp

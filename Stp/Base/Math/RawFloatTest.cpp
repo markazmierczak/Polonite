@@ -9,23 +9,23 @@
 namespace stp {
 
 TEST(RawFloatTest, Values) {
-  EXPECT_EQ(RawFloat(1.f).ToBits(), RawFloat(1.f).ToBits());
-  EXPECT_EQ(RawFloat(Limits<float>::Min).ToBits(), Limits<RawFloat>::Min.ToBits());
-  EXPECT_EQ(RawFloat(Limits<float>::Max).ToBits(), Limits<RawFloat>::Max.ToBits());
-  EXPECT_EQ(RawFloat(Limits<float>::SmallestNormal).ToBits(),
-            Limits<RawFloat>::SmallestNormal.ToBits());
-  EXPECT_EQ(RawFloat(Limits<float>::Infinity).ToBits(), Limits<RawFloat>::Infinity.ToBits());
-  EXPECT_EQ(RawFloat(Limits<float>::Epsilon).ToBits(), Limits<RawFloat>::Epsilon.ToBits());
-  EXPECT_EQ(RawFloat(Limits<float>::NaN).ToBits(), Limits<RawFloat>::NaN.ToBits());
+  EXPECT_EQ(RawFloat(1.f).toBits(), RawFloat(1.f).toBits());
+  EXPECT_EQ(RawFloat(Limits<float>::Min).toBits(), Limits<RawFloat>::Min.toBits());
+  EXPECT_EQ(RawFloat(Limits<float>::Max).toBits(), Limits<RawFloat>::Max.toBits());
+  EXPECT_EQ(RawFloat(Limits<float>::SmallestNormal).toBits(),
+            Limits<RawFloat>::SmallestNormal.toBits());
+  EXPECT_EQ(RawFloat(Limits<float>::Infinity).toBits(), Limits<RawFloat>::Infinity.toBits());
+  EXPECT_EQ(RawFloat(Limits<float>::Epsilon).toBits(), Limits<RawFloat>::Epsilon.toBits());
+  EXPECT_EQ(RawFloat(Limits<float>::NaN).toBits(), Limits<RawFloat>::NaN.toBits());
 
-  EXPECT_EQ(RawDouble(1.0).ToBits(), RawDouble(1.0).ToBits());
-  EXPECT_EQ(RawDouble(Limits<double>::Min).ToBits(), Limits<RawDouble>::Min.ToBits());
-  EXPECT_EQ(RawDouble(Limits<double>::Max).ToBits(), Limits<RawDouble>::Max.ToBits());
-  EXPECT_EQ(RawDouble(Limits<double>::SmallestNormal).ToBits(),
-            Limits<RawDouble>::SmallestNormal.ToBits());
-  EXPECT_EQ(RawDouble(Limits<double>::Infinity).ToBits(), Limits<RawDouble>::Infinity.ToBits());
-  EXPECT_EQ(RawDouble(Limits<double>::Epsilon).ToBits(), Limits<RawDouble>::Epsilon.ToBits());
-  EXPECT_EQ(RawDouble(Limits<double>::NaN).ToBits(), Limits<RawDouble>::NaN.ToBits());
+  EXPECT_EQ(RawDouble(1.0).toBits(), RawDouble(1.0).toBits());
+  EXPECT_EQ(RawDouble(Limits<double>::Min).toBits(), Limits<RawDouble>::Min.toBits());
+  EXPECT_EQ(RawDouble(Limits<double>::Max).toBits(), Limits<RawDouble>::Max.toBits());
+  EXPECT_EQ(RawDouble(Limits<double>::SmallestNormal).toBits(),
+            Limits<RawDouble>::SmallestNormal.toBits());
+  EXPECT_EQ(RawDouble(Limits<double>::Infinity).toBits(), Limits<RawDouble>::Infinity.toBits());
+  EXPECT_EQ(RawDouble(Limits<double>::Epsilon).toBits(), Limits<RawDouble>::Epsilon.toBits());
+  EXPECT_EQ(RawDouble(Limits<double>::NaN).toBits(), Limits<RawDouble>::NaN.toBits());
 }
 
 } // namespace stp

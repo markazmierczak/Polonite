@@ -12,37 +12,37 @@ namespace stp {
 
 namespace detail {
 
-BASE_EXPORT bool IsPrimeNumber32(uint32_t x);
-BASE_EXPORT bool IsPrimeNumber64(uint64_t x);
+BASE_EXPORT bool isPrimeNumber32(uint32_t x);
+BASE_EXPORT bool isPrimeNumber64(uint64_t x);
 
 template<typename T, TEnableIf<(sizeof(T) <= 4)>* = nullptr>
-inline bool IsPrimeNumberImpl(T x) { return IsPrimeNumber32(x); }
+inline bool isPrimeNumberImpl(T x) { return isPrimeNumber32(x); }
 template<typename T, TEnableIf<(sizeof(T) == 8)>* = nullptr>
-inline bool IsPrimeNumberImpl(T x) { return IsPrimeNumber64(x); }
+inline bool isPrimeNumberImpl(T x) { return isPrimeNumber64(x); }
 
-BASE_EXPORT uint32_t NextPrimeNumber32(uint32_t x);
-BASE_EXPORT uint64_t NextPrimeNumber64(uint64_t x);
+BASE_EXPORT uint32_t nextPrimeNumber32(uint32_t x);
+BASE_EXPORT uint64_t nextPrimeNumber64(uint64_t x);
 
 template<typename T, TEnableIf<(sizeof(T) <= 4)>* = nullptr>
-inline T NextPrimeNumberImpl(T x) { return NextPrimeNumber32(x); }
+inline T nextPrimeNumberImpl(T x) { return nextPrimeNumber32(x); }
 template<typename T, TEnableIf<(sizeof(T) == 8)>* = nullptr>
-inline T NextPrimeNumberImpl(T x) { return NextPrimeNumber64(x); }
+inline T nextPrimeNumberImpl(T x) { return nextPrimeNumber64(x); }
 
 } // namespace detail
 
 template<typename T, TEnableIf<TIsInteger<T>>* = nullptr>
-inline T IsPrimeNumber(T x) {
+inline T isPrimeNumber(T x) {
   ASSERT(!isNegative(x));
   auto ux = toUnsigned(x);
-  return detail::IsPrimeNumberImpl(ux);
+  return detail::isPrimeNumberImpl(ux);
 }
 
 // Returns the first prime number greater than |x|.
 template<typename T, TEnableIf<TIsInteger<T>>* = nullptr>
-inline T NextPrimeNumber(T x) {
+inline T nextPrimeNumber(T x) {
   ASSERT(!isNegative(x));
   auto ux = toUnsigned(x);
-  auto rv = detail::NextPrimeNumberImpl(ux);
+  auto rv = detail::nextPrimeNumberImpl(ux);
   return assertedCast<T>(rv);
 }
 

@@ -109,18 +109,18 @@ class BASE_EXPORT FilePathSpan {
   friend HashCode partialHash(const FilePathSpan& x) { return x.HashImpl(); }
   friend int compare(const FilePathSpan& l, const FilePathSpan& r) { return l.CompareTo(r); }
   friend TextWriter& operator<<(TextWriter& out, const FilePathSpan& x) {
-    x.FormatImpl(out);
+    x.formatImpl(out);
     return out;
   }
   friend void format(TextWriter& out, const FilePathSpan& x, const StringSpan& opts) {
-    x.FormatImpl(out);
+    x.formatImpl(out);
   }
 
  private:
   bool EqualsTo(const FilePathSpan& other) const;
   int CompareTo(const FilePathSpan& other) const;
   HashCode HashImpl() const;
-  void FormatImpl(TextWriter& out) const;
+  void formatImpl(TextWriter& out) const;
 
   Span<CharType> chars_;
 };

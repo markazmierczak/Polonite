@@ -86,8 +86,8 @@ struct VecNx {
   }
 
   // Saturated addition.
-  static VecNx SaturatedAdd(const VecNx& l, const VecNx& r) {
-    return { Half::SaturatedAdd(l.lo_, r.lo_), Half::SaturatedAdd(l.hi_, r.hi_) };
+  static VecNx saturatedAdd(const VecNx& l, const VecNx& r) {
+    return { Half::saturatedAdd(l.lo_, r.lo_), Half::saturatedAdd(l.hi_, r.hi_) };
   }
 
   VecNx operator!() const { return { !lo_, !hi_ }; }
@@ -153,7 +153,7 @@ struct VecNx<1,T> {
   static VecNx Ternary(const VecNx& c, const VecNx& t, const VecNx& e) {
     return c.val_ != 0 ? t : e;
   }
-  static VecNx SaturatedAdd(const VecNx& x, const VecNx& y) {
+  static VecNx saturatedAdd(const VecNx& x, const VecNx& y) {
     static_assert(TIsUnsigned<T>, "!");
     T sum = x.val_ + y.val_;
     return sum < x.val_ ? Limits<T>::Max : sum;
@@ -161,7 +161,7 @@ struct VecNx<1,T> {
 
   VecNx operator!() const { return !val_; }
   VecNx operator-() const { return -val_; }
-  VecNx operator~() const { return FromBits(~ToBits(val_)); }
+  VecNx operator~() const { return fromBits(~toBits(val_)); }
 
   VecNx operator<<(int bits) const { return val_ << bits; }
   VecNx operator>>(int bits) const { return val_ >> bits; }
@@ -171,9 +171,9 @@ struct VecNx<1,T> {
   VecNx operator*(const VecNx& o) const { return val_ * o.val_; }
   VecNx operator/(const VecNx& o) const { return val_ / o.val_; }
 
-  VecNx operator&(const VecNx& y) const { return FromBits(ToBits(val_) & ToBits(y.val_)); }
-  VecNx operator|(const VecNx& y) const { return FromBits(ToBits(val_) | ToBits(y.val_)); }
-  VecNx operator^(const VecNx& y) const { return FromBits(ToBits(val_) ^ ToBits(y.val_)); }
+  VecNx operator&(const VecNx& y) const { return fromBits(toBits(val_) & toBits(y.val_)); }
+  VecNx operator|(const VecNx& y) const { return fromBits(toBits(val_) | toBits(y.val_)); }
+  VecNx operator^(const VecNx& y) const { return fromBits(toBits(val_) ^ toBits(y.val_)); }
 
   VecNx operator==(const VecNx& y) const { return ConditionValue(val_ == y.val_); }
   VecNx operator!=(const VecNx& y) const { return ConditionValue(val_ != y.val_); }
@@ -196,11 +196,11 @@ struct VecNx<1,T> {
 
  private:
   static VecNx ConditionValue(bool b) {
-    return FromBits(static_cast<Bits>(b ? -1 : 0));
+    return fromBits(static_cast<Bits>(b ? -1 : 0));
   }
 
-  static Bits ToBits(T v) { return bitCast<Bits>(v); }
-  static T FromBits(Bits bits) { return bitCast<T>(bits); }
+  static Bits toBits(T v) { return bitCast<Bits>(v); }
+  static T fromBits(Bits bits) { return bitCast<T>(bits); }
 };
 
 template<typename D, typename S, unsigned N>
@@ -242,8 +242,8 @@ class VnxMath {
   }
 
   template<unsigned N, typename T>
-  static VecNx<N,T> SaturatedAdd(const VecNx<N,T>& l, const VecNx<N,T>& r) {
-    return VecNx<N,T>::SaturatedAdd(l, r);
+  static VecNx<N,T> saturatedAdd(const VecNx<N,T>& l, const VecNx<N,T>& r) {
+    return VecNx<N,T>::saturatedAdd(l, r);
   }
 
   template<unsigned N, typename T>

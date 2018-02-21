@@ -8,7 +8,7 @@
 
 namespace stp {
 
-void LibraryLoadError::FormatImpl(TextWriter& out) const {
+void LibraryLoadError::formatImpl(TextWriter& out) const {
   out << static_cast<WinErrorCode>(code_);
 }
 

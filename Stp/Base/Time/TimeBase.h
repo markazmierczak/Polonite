@@ -45,10 +45,10 @@ class TimeBase {
 
   // Return a new time modified by some delta.
   TimeClass operator+(TimeDelta delta) const {
-    return FromInternalValue(MakeSafe(us_) + delta.ToInternalValue());
+    return FromInternalValue(makeSafe(us_) + delta.ToInternalValue());
   }
   TimeClass operator-(TimeDelta delta) const {
-    return FromInternalValue(MakeSafe(us_) - delta.ToInternalValue());
+    return FromInternalValue(makeSafe(us_) - delta.ToInternalValue());
   }
 
   // Modify by some time delta.

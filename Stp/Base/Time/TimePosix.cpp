@@ -85,7 +85,7 @@ int64_t ConvertTimespecToMicros(const struct timespec& ts) {
     result += (ts.tv_nsec / TimeDelta::NanosecondsPerMicrosecond);
     return result;
   }
-  auto msecs_from_secs = MakeSafe(ts.tv_sec) * TimeDelta::MicrosecondsPerSecond;
+  auto msecs_from_secs = makeSafe(ts.tv_sec) * TimeDelta::MicrosecondsPerSecond;
   return msecs_from_secs + ts.tv_nsec / TimeDelta::NanosecondsPerMicrosecond;
 }
 

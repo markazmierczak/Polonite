@@ -12,7 +12,7 @@ namespace stp {
 // Returns true if |x| can be represented by N-bits integer.
 // The signedness depends on type of |x|.
 template<typename T, TEnableIf<TIsInteger<T> && TIsUnsigned<T>>* = nullptr>
-constexpr bool FitsNBits(T x, int n) {
+constexpr bool fitsNBits(T x, int n) {
   constexpr int BitCount = 8 * sizeof(T);
   ASSERT(0 < n && n <= BitCount);
   T mask = ~T(0) >> (BitCount - n);
@@ -20,14 +20,14 @@ constexpr bool FitsNBits(T x, int n) {
 }
 
 template<typename T, TEnableIf<TIsInteger<T> && TIsSigned<T>>* = nullptr>
-constexpr bool FitsNBits(T x, int n) {
+constexpr bool fitsNBits(T x, int n) {
   constexpr int BitCount = 8 * sizeof(T);
   ASSERT_UNUSED(0 < n && n <= BitCount, BitCount);
   return -(static_cast<T>(1) << (n-1)) <= x && x < (static_cast<T>(1) << (n-1));
 }
 
 template<typename T>
-constexpr T ZeroExtendNBits(T x, int n) {
+constexpr T zeroExtendNBits(T x, int n) {
   constexpr int BitCount = 8 * sizeof(T);
   ASSERT(0 < n && n <= BitCount);
   using UnsignedType = TMakeUnsigned<T>;
@@ -38,7 +38,7 @@ constexpr T ZeroExtendNBits(T x, int n) {
 // Takes first |n| bits and returns sign extended value.
 // |size| must be in range (0, number of bits in T).
 template<typename T>
-constexpr T SignExtendNBits(T x, int n) {
+constexpr T signExtendNBits(T x, int n) {
   constexpr int BitCount = 8 * sizeof(T);
   ASSERT(0 < n && n <= BitCount);
   int shift = BitCount - n;
@@ -46,24 +46,24 @@ constexpr T SignExtendNBits(T x, int n) {
 }
 
 template<typename T>
-constexpr T ZeroExtendNBitsExtract(T x, int lsb, int n) {
+constexpr T zeroExtendNBitsExtract(T x, int lsb, int n) {
   constexpr int BitCount = 8 * sizeof(T);
   ASSERT_UNUSED(0 < n && lsb <= 0 && lsb + n <= BitCount, BitCount);
-  return ZeroExtendNBits(x >> lsb, n);
+  return zeroExtendNBits(x >> lsb, n);
 }
 
 template<typename T>
-constexpr T SignExtendNBitsExtract(T x, int lsb, int n) {
+constexpr T signExtendNBitsExtract(T x, int lsb, int n) {
   constexpr int BitCount = 8 * sizeof(T);
   ASSERT_UNUSED(0 < n && lsb <= 0 && lsb + n <= BitCount, BitCount);
-  return SignExtendNBits(x >> lsb, n);
+  return signExtendNBits(x >> lsb, n);
 }
 
 // Saturates value to the unsigned value of |size| bits.,
 // i.e. clamps to range [0, 2^N-1] range.
 // Note that input |value| is signed.
 template<typename T>
-constexpr TMakeUnsigned<T> SaturateToUnsignedNBits(T x, int n) {
+constexpr TMakeUnsigned<T> saturateToUnsignedNBits(T x, int n) {
   constexpr int BitCount = 8 * sizeof(T);
   ASSERT(0 < n && n <= BitCount);
 
@@ -78,7 +78,7 @@ constexpr TMakeUnsigned<T> SaturateToUnsignedNBits(T x, int n) {
 // Saturates value to the signed value of |size| bits.,
 // i.e. clamps to range [-2^(N-1), 2^(N-1)-1] range.
 template<typename T>
-constexpr TMakeSigned<T> SaturateToSignedNBits(T x, int n) {
+constexpr TMakeSigned<T> saturateToSignedNBits(T x, int n) {
   constexpr int BitCount = 8 * sizeof(T);
   ASSERT_UNUSED(0 < n && n <= BitCount, BitCount);
 

@@ -14,25 +14,25 @@ TEST(SafeTest, Basic) {
   // Check if we are on machine using 2's complement integers.
   static_assert(static_cast<int>(0xFFFFFFFEu) == -2, "!");
 
-  auto x = MakeSafe(3u);
+  auto x = makeSafe(3u);
   EXPECT_VALUE_OF_TYPE(x, Safe<unsigned int>);
   EXPECT_EQ(x.get(), 3u);
 
   EXPECT_FALSE(!x);
-  EXPECT_TRUE(!MakeSafe(0));
+  EXPECT_TRUE(!makeSafe(0));
 
   Safe<int8_t> y = -5;
   EXPECT_EQ(y.get(), -5);
 }
 
-TEST(SafeTest, MakeSafeNested) {
-  auto x = MakeSafe(3);
-  auto y = MakeSafe(x);
+TEST(SafeTest, makeSafeNested) {
+  auto x = makeSafe(3);
+  auto y = makeSafe(x);
   EXPECT_EQ(y.get(), 3);
 }
 
 TEST(SafeTest, ExplicitConversionToArithmetic) {
-  auto x = MakeSafe(3);
+  auto x = makeSafe(3);
   float rf = x;
   uint8_t ru = x;
   EXPECT_EQ(rf, 3.f);
@@ -40,7 +40,7 @@ TEST(SafeTest, ExplicitConversionToArithmetic) {
 }
 
 TEST(SafeTest, ExplicitConversionToSafe) {
-  auto x = MakeSafe(3);
+  auto x = makeSafe(3);
   Safe<float> rf = x;
   Safe<uint8_t> ru = x;
   EXPECT_EQ(rf.get(), 3.f);
@@ -49,14 +49,14 @@ TEST(SafeTest, ExplicitConversionToSafe) {
 
 TEST(SafeTest, Not) {
   uint8_t input = 3;
-  auto x = ~MakeSafe(input);
+  auto x = ~makeSafe(input);
   EXPECT_VALUE_OF_TYPE(x, Safe<int>);
   EXPECT_EQ(x.get(), -4);
 }
 
 TEST(SafeTest, Neg) {
   uint32_t input = 3;
-  auto x = -MakeSafe(input);
+  auto x = -makeSafe(input);
   EXPECT_VALUE_OF_TYPE(x, Safe<int64_t>);
   EXPECT_EQ(x.get(), -3);
 }
@@ -78,57 +78,57 @@ TEST(SafeTest, BinaryArithmetic) {
 
   // signed() + signed()
   {
-    auto rv = max_s8 + MakeSafe(min_s8);
+    auto rv = max_s8 + makeSafe(min_s8);
     EXPECT_VALUE_OF_TYPE(rv, Safe<int>);
     EXPECT_EQ(rv.get(), -1);
   }
   {
-    auto rv = MakeSafe(-5) * MakeSafe(max_s8);
+    auto rv = makeSafe(-5) * makeSafe(max_s8);
     EXPECT_VALUE_OF_TYPE(rv, Safe<int>);
     EXPECT_EQ(rv.get(), -635);
   }
 
   // unsigned() + unsigned()
   {
-    auto rv = 2u + MakeSafe(max_u8);
+    auto rv = 2u + makeSafe(max_u8);
     EXPECT_VALUE_OF_TYPE(rv, Safe<unsigned int>);
     EXPECT_EQ(rv.get(), INT64_C(0x101));
   }
   {
-    auto rv = max_u8 + MakeSafe(max_u8);
+    auto rv = max_u8 + makeSafe(max_u8);
     EXPECT_VALUE_OF_TYPE(rv, Safe<int>);
     EXPECT_EQ(rv.get(), INT64_C(0x1FE));
   }
 
   // unsigned(32bit) + signed(<=32bit)
   {
-    auto rv = max_u32 + MakeSafe(max_s8);
+    auto rv = max_u32 + makeSafe(max_s8);
     EXPECT_VALUE_OF_TYPE(rv, Safe<int64_t>);
     EXPECT_EQ(rv.get(), INT64_C(0x10000007E));
 
-    rv = max_u32 + MakeSafe(min_s8);
+    rv = max_u32 + makeSafe(min_s8);
     EXPECT_EQ(rv.get(), INT64_C(0xFFFFFF7F));
   }
 
   // floating-point
   {
-    auto rv = 2 - MakeSafe(0.5);
+    auto rv = 2 - makeSafe(0.5);
     EXPECT_VALUE_OF_TYPE(rv, Safe<double>);
     EXPECT_EQ(rv.get(), 1.5);
   }
   {
-    auto rv = 1.f / MakeSafe(-2);
+    auto rv = 1.f / makeSafe(-2);
     EXPECT_VALUE_OF_TYPE(rv, Safe<float>);
     EXPECT_EQ(rv.get(), -0.5);
   }
 
   // Addition of mixed sign 64-bit integers fails to compile:
-  // auto rv = MakeSafe(UINT64_C(2)) + INT64_C(2);
+  // auto rv = makeSafe(UINT64_C(2)) + INT64_C(2);
 }
 
 TEST(SafeTest, Compare) {
   {
-    auto lhs = MakeSafe(0xFFFFFFFFu);
+    auto lhs = makeSafe(0xFFFFFFFFu);
     auto rhs = -100;
     EXPECT_FALSE(lhs == rhs);
     EXPECT_NE(lhs, rhs);
@@ -138,7 +138,7 @@ TEST(SafeTest, Compare) {
     EXPECT_GT(lhs, rhs);
   }
   {
-    auto lhs = -MakeSafe(4.f);
+    auto lhs = -makeSafe(4.f);
     auto rhs = -4;
     EXPECT_EQ(lhs, rhs);
     EXPECT_FALSE(lhs != rhs);
@@ -186,18 +186,18 @@ TEST(SafeTest, SignConversion) {
   static_assert(TsAreSame<Safe<uint8_t>, TMakeUnsigned<Safe<int8_t>>>, "!");
 
   {
-    auto x = toSigned(MakeSafe(3u));
+    auto x = toSigned(makeSafe(3u));
     EXPECT_VALUE_OF_TYPE(x, Safe<int>);
     EXPECT_EQ(x, 3);
   }
   {
-    auto x = toSigned(MakeSafe(-3));
+    auto x = toSigned(makeSafe(-3));
     EXPECT_VALUE_OF_TYPE(x, Safe<int>);
     EXPECT_EQ(x, -3);
   }
 
   {
-    auto x = toUnsigned(MakeSafe(3));
+    auto x = toUnsigned(makeSafe(3));
     EXPECT_VALUE_OF_TYPE(x, Safe<unsigned int>);
     EXPECT_EQ(x, 3);
   }
@@ -205,16 +205,16 @@ TEST(SafeTest, SignConversion) {
 
 TEST(SafeTest, Abs) {
   {
-    auto x = mathAbs(MakeSafe(-3));
+    auto x = mathAbs(makeSafe(-3));
     EXPECT_VALUE_OF_TYPE(x, Safe<int>);
     EXPECT_EQ(x, 3);
 
-    x = mathAbs(MakeSafe(3));
+    x = mathAbs(makeSafe(3));
     EXPECT_EQ(x, 3);
   }
 
   {
-    auto x = mathAbsToUnsigned(MakeSafe(-3));
+    auto x = mathAbsToUnsigned(makeSafe(-3));
     EXPECT_VALUE_OF_TYPE(x, Safe<unsigned int>);
     EXPECT_EQ(x, 3);
   }

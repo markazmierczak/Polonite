@@ -11,7 +11,7 @@
 namespace stp {
 namespace detail {
 
-int32_t SqrtFixed(int32_t x, int count) {
+int32_t fixedSqrt(int32_t x, int count) {
   ASSERT(x >= 0 && count > 0 && count <= 30);
   ASSERT(!(count & 1)); // Implemented only for even fractions.
   count = 15 + (count >> 1);
@@ -36,7 +36,7 @@ int32_t SqrtFixed(int32_t x, int count) {
   return root;
 }
 
-int64_t LSqrtFixed(int64_t x, int count) {
+int64_t longFixedSqrt(int64_t x, int count) {
   ASSERT(x >= 0 && count > 0 && count <= 62);
   ASSERT(!(count & 1)); // Implemented only for even fractions.
   count = 31 + (count >> 1);
@@ -88,7 +88,7 @@ static const uint32_t RSqrt16Lookup[96] = {
   0x21862586, 0x20C19183, 0x20C1B183, 0x20001580
 };
 
-int32_t RSqrtFixed16(int32_t xs) {
+int32_t fixedRsqrt16(int32_t xs) {
   ASSERT(xs > 0);
   uint32_t x = static_cast<uint32_t>(xs);
 
@@ -112,18 +112,18 @@ int32_t RSqrtFixed16(int32_t xs) {
 }
 
 
-void FormatFixedPoint(TextWriter& out, int32_t value, int point) {
+void fixedFormat(TextWriter& out, int32_t value, int point) {
   out << (static_cast<double>(value) / (1 << point));
 }
 
-void FormatFixedPoint(TextWriter& out, const StringSpan& opts, int32_t value, int point) {
+void fixedFormat(TextWriter& out, const StringSpan& opts, int32_t value, int point) {
   if (opts.size() == 1 && toUpperAscii(opts[0]) == 'X') {
     char int_options[3] = { opts[0], '8', '\0' };
     format(out, static_cast<uint32_t>(value), StringSpan(int_options));
   } else {
     if (!opts.isEmpty())
       throw FormatException("Fixed");
-    FormatFixedPoint(out, value, point);
+    fixedFormat(out, value, point);
   }
 }
 

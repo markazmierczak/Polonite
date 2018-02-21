@@ -21,10 +21,10 @@ unsigned Affine::GetTypeMaskSlow() const {
   if (d_[EntryTransX] != 0 || d_[EntryTransY] != 0)
     mask |= TypeMaskTranslate;
 
-  unsigned m00 = RawFloat(d_[EntryScaleX]).ToBits();
-  unsigned m01 = RawFloat(d_[EntryShearX]).ToBits();
-  unsigned m10 = RawFloat(d_[EntryShearY]).ToBits();
-  unsigned m11 = RawFloat(d_[EntryScaleY]).ToBits();
+  unsigned m00 = RawFloat(d_[EntryScaleX]).toBits();
+  unsigned m01 = RawFloat(d_[EntryShearX]).toBits();
+  unsigned m10 = RawFloat(d_[EntryShearY]).toBits();
+  unsigned m11 = RawFloat(d_[EntryScaleY]).toBits();
 
   if (m01 | m10) {
     // The skew components may be scale-inducing, unless we are dealing
@@ -51,7 +51,7 @@ unsigned Affine::GetTypeMaskSlow() const {
   } else {
     // Only test for scale explicitly if not affine, since affine sets the
     // scale bit.
-    const uint32_t One = RawFloat(1.f).ToBits();
+    const uint32_t One = RawFloat(1.f).toBits();
     if ((m00 ^ One) | (m11 ^ One))
       mask |= TypeMaskScale;
 
@@ -677,7 +677,7 @@ bool Affine::GetInverted(Affine& out) const {
   return true;
 }
 
-bool Affine::Decompose(DecomposedAffine& out) const {
+bool Affine::decompose(DecomposedAffine& out) const {
   if (IsTranslate()) {
     out.SetTranslate(GetTransInternal());
   } else {
@@ -760,7 +760,7 @@ bool Affine::operator==(const Affine& other) const {
   return true;
 }
 
-void Affine::FormatImpl(TextWriter& out) const {
+void Affine::formatImpl(TextWriter& out) const {
   out.Write('[');
   for (int i = 0; i < EntryCount; ++i) {
     if (i != 0)
@@ -790,7 +790,7 @@ bool Trylerp(Affine& out, const Affine& x, const Affine& y, double t) {
   }
   DecomposedAffine x_decomp(DecomposedAffine::SkipInit);
   DecomposedAffine y_decomp(DecomposedAffine::SkipInit);
-  if (!x.Decompose(x_decomp) || !y.Decompose(y_decomp))
+  if (!x.decompose(x_decomp) || !y.decompose(y_decomp))
     return false;
 
   DecomposedAffine out_decomp = lerp(x_decomp, y_decomp, t);

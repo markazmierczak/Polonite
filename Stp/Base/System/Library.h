@@ -46,10 +46,10 @@ class BASE_EXPORT LibraryLoadError {
   LibraryLoadError() = default;
 
   friend TextWriter& operator<<(TextWriter& out, const LibraryLoadError& x) {
-    x.FormatImpl(out); return out;
+    x.formatImpl(out); return out;
   }
   friend void format(TextWriter& out, const LibraryLoadError& x, const StringSpan& opts) {
-    x.FormatImpl(out);
+    x.formatImpl(out);
   }
 
  private:
@@ -61,7 +61,7 @@ class BASE_EXPORT LibraryLoadError {
   String message_;
   #endif // OS(*)
 
-  void FormatImpl(TextWriter& out) const;
+  void formatImpl(TextWriter& out) const;
 };
 
 // Platform-independent library type which represents a loadable module.

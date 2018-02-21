@@ -335,7 +335,7 @@ class BASE_EXPORT Xform3 {
 
   // Converts matrix to decomposed representation.
   // If conversion fails, returns false and leaves |decomposed| untouched.
-  bool Decompose(DecomposedXform3& decomposed) const WARN_UNUSED_RESULT;
+  bool decompose(DecomposedXform3& decomposed) const WARN_UNUSED_RESULT;
 
   void Recompose(const DecomposedXform3& decomposed);
 
