@@ -3,7 +3,7 @@
 
 #include "Base/Type/Hashable.h"
 
-#include "Base/Math/BitsShift.h"
+#include "Base/Math/Bits.h"
 
 #include <string.h>
 

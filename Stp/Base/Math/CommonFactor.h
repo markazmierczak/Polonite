@@ -4,7 +4,6 @@
 #ifndef STP_BASE_MATH_COMMONFACTOR_H_
 #define STP_BASE_MATH_COMMONFACTOR_H_
 
-#include "Base/Math/Abs.h"
 #include "Base/Math/Bits.h"
 #include "Base/Type/Common.h"
 #include "Base/Type/Limits.h"
@@ -20,8 +19,8 @@ auto greatestCommonDivisor(T ai, U bi) -> TCommon<T, U> {
   using ResultType = TCommon<T, U>;
   using UCommonType = TMakeUnsigned<ResultType>;
 
-  UCommonType a = absToUnsigned(ai);
-  UCommonType b = absToUnsigned(bi);
+  UCommonType a = mathAbsToUnsigned(ai);
+  UCommonType b = mathAbsToUnsigned(bi);
   if (a == 0)
     return b;
   if (b == 0)
@@ -49,8 +48,8 @@ auto leastCommonMultiple(T ai, U bi) -> TCommon<T, U> {
   using ResultType = TCommon<T, U>;
   using UCommonType = TMakeUnsigned<ResultType>;
 
-  UCommonType x = absToUnsigned(ai / greatestCommonDivisor(ai, bi));
-  UCommonType y = absToUnsigned(bi);
+  UCommonType x = mathAbsToUnsigned(ai / greatestCommonDivisor(ai, bi));
+  UCommonType y = mathAbsToUnsigned(bi);
   ASSERT(static_cast<UCommonType>(Limits<ResultType>::Max) / x > y);
   return static_cast<ResultType>(x * y);
 

@@ -25,43 +25,43 @@ TEST(FixedTest, FromFloat) {
 
 TEST(FixedTest, Floor) {
   constexpr Fixed16 Epsilon = Limits<Fixed16>::Epsilon;
-  EXPECT_EQ(Fixed16(1), Floor(Fixed16(1.5f)));
-  EXPECT_EQ(1, FloorToInt(Fixed16(1.5f)));
-  EXPECT_EQ(1, FloorToInt(Fixed16(2) - Epsilon));
-  EXPECT_EQ(1, FloorToInt(Fixed16(1)));
-  EXPECT_EQ(1, FloorToInt(Fixed16(1) + Epsilon));
-  EXPECT_EQ(-1, FloorToInt(Fixed16(-1)));
-  EXPECT_EQ(-2, FloorToInt(-Fixed16(1) - Epsilon));
-  EXPECT_EQ(-2, FloorToInt(Fixed16(-1.5f)));
-  EXPECT_EQ(-2, FloorToInt(-Fixed16(1) * 2 + Epsilon));
+  EXPECT_EQ(Fixed16(1), mathFloor(Fixed16(1.5f)));
+  EXPECT_EQ(1, mathFloorToInt(Fixed16(1.5f)));
+  EXPECT_EQ(1, mathFloorToInt(Fixed16(2) - Epsilon));
+  EXPECT_EQ(1, mathFloorToInt(Fixed16(1)));
+  EXPECT_EQ(1, mathFloorToInt(Fixed16(1) + Epsilon));
+  EXPECT_EQ(-1, mathFloorToInt(Fixed16(-1)));
+  EXPECT_EQ(-2, mathFloorToInt(-Fixed16(1) - Epsilon));
+  EXPECT_EQ(-2, mathFloorToInt(Fixed16(-1.5f)));
+  EXPECT_EQ(-2, mathFloorToInt(-Fixed16(1) * 2 + Epsilon));
 }
 
 TEST(FixedTest, Ceil) {
   const Fixed16 Epsilon = Limits<Fixed16>::Epsilon;
-  EXPECT_EQ(Fixed16(1) * 2, Ceil(Fixed16(1.5f)));
-  EXPECT_EQ(2, CeilToInt(Fixed16(1.5f)));
-  EXPECT_EQ(2, CeilToInt(Fixed16(1) * 2 - Epsilon));
-  EXPECT_EQ(1, CeilToInt(Fixed16(1)));
-  EXPECT_EQ(2, CeilToInt(Fixed16(1) + Epsilon));
-  EXPECT_EQ(-1, CeilToInt(Fixed16(-1)));
-  EXPECT_EQ(-1, CeilToInt(-Fixed16(1) - Epsilon));
-  EXPECT_EQ(-1, CeilToInt(Fixed16(-1.5f)));
-  EXPECT_EQ(-1, CeilToInt(-Fixed16(1) * 2 + Epsilon));
+  EXPECT_EQ(Fixed16(1) * 2, mathCeil(Fixed16(1.5f)));
+  EXPECT_EQ(2, mathCeilToInt(Fixed16(1.5f)));
+  EXPECT_EQ(2, mathCeilToInt(Fixed16(1) * 2 - Epsilon));
+  EXPECT_EQ(1, mathCeilToInt(Fixed16(1)));
+  EXPECT_EQ(2, mathCeilToInt(Fixed16(1) + Epsilon));
+  EXPECT_EQ(-1, mathCeilToInt(Fixed16(-1)));
+  EXPECT_EQ(-1, mathCeilToInt(-Fixed16(1) - Epsilon));
+  EXPECT_EQ(-1, mathCeilToInt(Fixed16(-1.5f)));
+  EXPECT_EQ(-1, mathCeilToInt(-Fixed16(1) * 2 + Epsilon));
 }
 
 TEST(FixedTest, Round) {
   const Fixed16 Epsilon = Limits<Fixed16>::Epsilon;
-  EXPECT_EQ(Fixed16(2), Round(Fixed16(1.5f)));
-  EXPECT_EQ(2, RoundToInt(Fixed16(1.5f)));
-  EXPECT_EQ(2, RoundToInt(Fixed16(1) * 2 - Epsilon));
-  EXPECT_EQ(1, RoundToInt(Fixed16(1.5f) - Epsilon));
-  EXPECT_EQ(1, RoundToInt(Fixed16(1)));
-  EXPECT_EQ(1, RoundToInt(Fixed16(1) + Epsilon));
-  EXPECT_EQ(-1, RoundToInt(Fixed16(-1)));
-  EXPECT_EQ(-1, RoundToInt(Fixed16(-1.5f) + Epsilon));
-  EXPECT_EQ(-1, RoundToInt(-Fixed16(1) - Epsilon));
-  EXPECT_EQ(-2, RoundToInt(Fixed16(-1.5f)));
-  EXPECT_EQ(-2, RoundToInt(-Fixed16(1) * 2 + Epsilon));
+  EXPECT_EQ(Fixed16(2), mathRound(Fixed16(1.5f)));
+  EXPECT_EQ(2, mathRoundToInt(Fixed16(1.5f)));
+  EXPECT_EQ(2, mathRoundToInt(Fixed16(1) * 2 - Epsilon));
+  EXPECT_EQ(1, mathRoundToInt(Fixed16(1.5f) - Epsilon));
+  EXPECT_EQ(1, mathRoundToInt(Fixed16(1)));
+  EXPECT_EQ(1, mathRoundToInt(Fixed16(1) + Epsilon));
+  EXPECT_EQ(-1, mathRoundToInt(Fixed16(-1)));
+  EXPECT_EQ(-1, mathRoundToInt(Fixed16(-1.5f) + Epsilon));
+  EXPECT_EQ(-1, mathRoundToInt(-Fixed16(1) - Epsilon));
+  EXPECT_EQ(-2, mathRoundToInt(Fixed16(-1.5f)));
+  EXPECT_EQ(-2, mathRoundToInt(-Fixed16(1) * 2 + Epsilon));
 }
 
 TEST(FixedTest, Split) {
@@ -94,13 +94,13 @@ TEST(FixedTest, Sqrt) {
   constexpr int Point = 6;
   auto reference = [](double a) {
     double arg = a / (1 << Point);
-    double rsq = Sqrt(arg);
+    double rsq = mathSqrt(arg);
     return static_cast<uint32_t>(rsq * (1 << Point) + 0.5);
   };
 
   uint32_t Max = Limits<int32_t>::Max;
   for (uint32_t i = 1; i <= Max; ++i) {
-    double result = Sqrt(Fixed<Point>::FromBits(i)).ToBits();
+    double result = mathSqrt(Fixed<Point>::FromBits(i)).ToBits();
     double expected = reference(i);
     EXPECT_NEAR(expected, result, 1.0);
   }
@@ -108,14 +108,14 @@ TEST(FixedTest, Sqrt) {
 
   constexpr double Sqrt2Double = MathConstants<double>::Sqrt2;
   const auto Epsilon16 = Limits<Fixed16>::Epsilon;
-  EXPECT_TRUE(isNear(Fixed16(Sqrt2Double), Sqrt(Fixed16(2)), Epsilon16));
-  EXPECT_TRUE(isNear(Fixed16(8), Sqrt(Fixed16(64)), Epsilon16));
-  EXPECT_TRUE(isNear(Fixed16(0.25f), Sqrt(Fixed16(0.0625)), Epsilon16));
+  EXPECT_TRUE(isNear(Fixed16(Sqrt2Double), mathSqrt(Fixed16(2)), Epsilon16));
+  EXPECT_TRUE(isNear(Fixed16(8), mathSqrt(Fixed16(64)), Epsilon16));
+  EXPECT_TRUE(isNear(Fixed16(0.25f), mathSqrt(Fixed16(0.0625)), Epsilon16));
 
   const auto Epsilon6 = Limits<Fixed26_6>::Epsilon;
-  EXPECT_NEAR(Fixed26_6(Sqrt2Double).ToBits(), Sqrt(Fixed26_6(2)).ToBits(), Epsilon6.ToBits());
-  EXPECT_TRUE(isNear(Fixed26_6(8), Sqrt(Fixed26_6(64)), Epsilon6));
-  EXPECT_TRUE(isNear(Fixed26_6(0.25f), Sqrt(Fixed26_6(0.0625f)), Epsilon6));
+  EXPECT_NEAR(Fixed26_6(Sqrt2Double).ToBits(), mathSqrt(Fixed26_6(2)).ToBits(), Epsilon6.ToBits());
+  EXPECT_TRUE(isNear(Fixed26_6(8), mathSqrt(Fixed26_6(64)), Epsilon6));
+  EXPECT_TRUE(isNear(Fixed26_6(0.25f), mathSqrt(Fixed26_6(0.0625f)), Epsilon6));
 }
 
 TEST(FixedTest, Lerp) {
@@ -125,20 +125,20 @@ TEST(FixedTest, Lerp) {
 }
 
 TEST(FixedTest, RSqrt) {
-  EXPECT_EQ(Fixed16(1), RSqrt(Fixed16(1)));
-  EXPECT_EQ(Fixed16(0.5f), RSqrt(Fixed16(4)));
+  EXPECT_EQ(Fixed16(1), mathRsqrt(Fixed16(1)));
+  EXPECT_EQ(Fixed16(0.5f), mathRsqrt(Fixed16(4)));
 
   #if 0
   // Following code tests all possible values.
   auto reference = [](uint32_t a) {
     double arg = a / 65536.0;
-    double rsq = Sqrt(1.0 / arg);
+    double rsq = mathSqrt(1.0 / arg);
     return static_cast<uint32_t>(rsq * 65536.0 + 0.5);
   };
 
   uint32_t Max = Limits<int32_t>::Max;
   for (uint32_t i = 1; i <= Max; ++i) {
-    double result = RSqrt(Fixed16::FromBits(i)).ToBits();
+    double result = mathRsqrt(Fixed16::FromBits(i)).ToBits();
     double expected = reference(i);
     EXPECT_NEAR(result, expected, 1.0);
   }

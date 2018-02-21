@@ -10,7 +10,7 @@
 namespace stp {
 
 template<typename T, TEnableIf<TIsInteger<T>>* = nullptr>
-inline T RoundUpToMultiple(T x, T mul) {
+inline T roundUpToMultiple(T x, T mul) {
   static const T Max = Limits<T>::Max;
 
   ASSERT(mul && (x <= Max - (Max % mul)));
@@ -20,7 +20,7 @@ inline T RoundUpToMultiple(T x, T mul) {
 }
 
 template<typename T, TEnableIf<TIsInteger<T>>* = nullptr>
-inline T RoundDownToMultiple(T x, T mul) {
+inline T roundDownToMultiple(T x, T mul) {
   static const T Min = Limits<T>::Min;
 
   ASSERT(mul && (x >= Min - (Min % mul)));

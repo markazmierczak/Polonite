@@ -28,7 +28,7 @@ double Line2::DistanceToSquared(Point2 p) const {
 }
 
 float Line2::GetDistanceTo(Point2 p) const {
-  return Sqrt(DistanceToSquared(p));
+  return mathSqrt(DistanceToSquared(p));
 }
 
 bool Line2::Intersects(const Line2& a, const Line2& b, Point2* at_point) {

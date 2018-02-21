@@ -47,14 +47,14 @@ static void TestTemplateVecNf() {
   assert_eq(a+b, 6, 8, 10, 12);
   assert_eq(a*b, 9, 16, 25, 36);
   assert_eq(a*b-b, 6, 12, 20, 30);
-  assert_eq((a*b).Sqrt(), 3, 4, 5, 6);
+  assert_eq((a*b).mathSqrt(), 3, 4, 5, 6);
   assert_eq(a/b, 1, 1, 1, 1);
   assert_eq(VecNx<N,float>(0)-a, -3, -4, -5, -6);
 
   VecNx<N,float> fours(4);
 
-  assert_eq(fours.Sqrt(), 2,2,2,2);
-  assert_nearly_eq(0.001f, fours.RSqrt(), 0.5, 0.5, 0.5, 0.5);
+  assert_eq(fours.mathSqrt(), 2,2,2,2);
+  assert_nearly_eq(0.001f, fours.mathRsqrt(), 0.5, 0.5, 0.5, 0.5);
 
   assert_nearly_eq(0.001f, fours.Reciprocal(), 0.25, 0.25, 0.25, 0.25);
 
@@ -163,7 +163,7 @@ TEST(VnxTest, SaturatedAdd) {
 }
 
 TEST(VnxTest, Abs) {
-  Vec4f fs = Abs(Vec4f(0.f, -0.f, 2.f, -4.f));
+  Vec4f fs = mathAbs(Vec4f(0.f, -0.f, 2.f, -4.f));
   EXPECT_EQ(0.f, fs[0]);
   EXPECT_EQ(0.f, fs[1]);
   EXPECT_EQ(2.f, fs[2]);
@@ -171,7 +171,7 @@ TEST(VnxTest, Abs) {
 }
 
 TEST(VnxTest, Floor) {
-  Vec4f fs = Vec4f(0.4f, -0.4f, 0.6f, -0.6f).Floor();
+  Vec4f fs = Vec4f(0.4f, -0.4f, 0.6f, -0.6f).mathFloor();
   EXPECT_EQ( 0.f, fs[0]);
   EXPECT_EQ(-1.f, fs[1]);
   EXPECT_EQ( 0.f, fs[2]);

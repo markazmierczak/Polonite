@@ -58,7 +58,7 @@ class TimeDeltaF {
 
   static TimeDeltaF Null() { return TimeDeltaF(Limits<double>::NaN); }
 
-  TimeDeltaF GetMagnitude() const { return TimeDeltaF(Abs(secs_)); }
+  TimeDeltaF GetMagnitude() const { return TimeDeltaF(mathAbs(secs_)); }
 
   // Returns true if the time delta is zero.
   bool IsZero() const { return secs_ == 0; }
@@ -101,7 +101,7 @@ class TimeDeltaF {
   }
   template<typename T>
   TimeDeltaF operator%(T a) const {
-    return TimeDeltaF(IeeeRemainder(secs_, a));
+    return TimeDeltaF(mathRemainder(secs_, a));
   }
   template<typename T>
   TimeDeltaF& operator*=(T a) {
@@ -122,7 +122,7 @@ class TimeDeltaF {
   bool operator> (TimeDeltaF other) const { return secs_ >  other.secs_; }
   bool operator>=(TimeDeltaF other) const { return secs_ >= other.secs_; }
 
-  friend TimeDeltaF Abs(TimeDeltaF x) { return x.GetMagnitude(); }
+  friend TimeDeltaF mathAbs(TimeDeltaF x) { return x.GetMagnitude(); }
 
  private:
   // Constructs a delta given the duration in microseconds. This is private

@@ -23,7 +23,7 @@ float Plane::GetDistanceToWithSign(const Point3& point) const {
 }
 
 float Plane::GetDistanceTo(const Point3& point) const {
-  return Abs(GetDistanceToWithSign(point));
+  return mathAbs(GetDistanceToWithSign(point));
 }
 
 Plane::Side Plane::ClassifyPoint(const Point3& point) const {
@@ -57,7 +57,7 @@ bool Plane::IntersectsWith(const Plane& other, Ray3* ray) const {
     double fn01 = DotProduct(normal, other.normal);
     double fn11 = other.normal.GetLength();
     double det = fn00 * fn11 - fn01 * fn01;
-    ASSERT(Abs(det) > Epsilon);
+    ASSERT(mathAbs(det) > Epsilon);
 
     double invdet = 1.0 / det;
     float fc0 = (fn11 * -distance + fn01 * other.distance) * invdet;

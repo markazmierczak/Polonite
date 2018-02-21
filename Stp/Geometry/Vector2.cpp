@@ -37,7 +37,7 @@ double Vector2::GetLengthSquared() const {
 }
 
 float Vector2::GetLength() const {
-  return Hypot(x, y);
+  return mathHypot(x, y);
 }
 
 bool Vector2::TryScaleToLength(double new_length) {
@@ -56,43 +56,43 @@ Vector2 Vector2::GetNormalizedOrThis() const {
   double lsqr = GetLengthSquared();
   if (lsqr <= Limits<double>::Epsilon)
     return *this;
-  return *this * (1 / Sqrt(lsqr));
+  return *this * (1 / mathSqrt(lsqr));
 }
 
 bool Vector2::IsNormalized() const {
   return isNear(GetLengthSquared(), 1.0, static_cast<double>(FLT_EPSILON));
 }
 
-Vector2 Floor(Vector2 v) {
-  return Vector2(Floor(v.x), Floor(v.y));
+Vector2 mathFloor(Vector2 v) {
+  return Vector2(mathFloor(v.x), mathFloor(v.y));
 }
 
-Vector2 Ceil(Vector2 v) {
-  return Vector2(Ceil(v.x), Ceil(v.y));
+Vector2 mathCeil(Vector2 v) {
+  return Vector2(mathCeil(v.x), mathCeil(v.y));
 }
 
-Vector2 Trunc(Vector2 v) {
-  return Vector2(Trunc(v.x), Trunc(v.y));
+Vector2 mathTrunc(Vector2 v) {
+  return Vector2(mathTrunc(v.x), mathTrunc(v.y));
 }
 
-Vector2 Round(Vector2 v) {
-  return Vector2(Round(v.x), Round(v.y));
+Vector2 mathRound(Vector2 v) {
+  return Vector2(mathRound(v.x), mathRound(v.y));
 }
 
-IntVector2 FloorToInt(Vector2 v) {
-  return IntVector2(FloorToInt(v.x), FloorToInt(v.y));
+IntVector2 mathFloorToInt(Vector2 v) {
+  return IntVector2(mathFloorToInt(v.x), mathFloorToInt(v.y));
 }
 
-IntVector2 CeilToInt(Vector2 v) {
-  return IntVector2(CeilToInt(v.x), CeilToInt(v.y));
+IntVector2 mathCeilToInt(Vector2 v) {
+  return IntVector2(mathCeilToInt(v.x), mathCeilToInt(v.y));
 }
 
-IntVector2 TruncToInt(Vector2 v) {
-  return IntVector2(TruncToInt(v.x), TruncToInt(v.y));
+IntVector2 mathTruncToInt(Vector2 v) {
+  return IntVector2(mathTruncToInt(v.x), mathTruncToInt(v.y));
 }
 
-IntVector2 RoundToInt(Vector2 v) {
-  return IntVector2(RoundToInt(v.x), RoundToInt(v.y));
+IntVector2 mathRoundToInt(Vector2 v) {
+  return IntVector2(mathRoundToInt(v.x), mathRoundToInt(v.y));
 }
 
 bool isNear(const Vector2& lhs, const Vector2& rhs, float tolerance) {

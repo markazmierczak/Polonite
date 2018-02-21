@@ -76,93 +76,93 @@ TEST(SafeNumerics, CastTests) {
   double double_small_int = Limits<int>::Min;
 
   // Just test that the casts compile, since the other tests cover logic.
-  EXPECT_EQ(0, AssertedCast<int>(static_cast<size_t>(0)));
-  EXPECT_EQ(0, StrictCast<int>(static_cast<unsigned char>(0)));
-  EXPECT_EQ(0U, StrictCast<unsigned>(static_cast<unsigned char>(0)));
+  EXPECT_EQ(0, assertedCast<int>(static_cast<size_t>(0)));
+  EXPECT_EQ(0, strictCast<int>(static_cast<unsigned char>(0)));
+  EXPECT_EQ(0U, strictCast<unsigned>(static_cast<unsigned char>(0)));
 
   // These casts and coercions will fail to compile:
-  // EXPECT_EQ(0, StrictCast<int>(static_cast<size_t>(0)));
-  // EXPECT_EQ(0, StrictCast<size_t>(static_cast<int>(0)));
+  // EXPECT_EQ(0, strictCast<int>(static_cast<size_t>(0)));
+  // EXPECT_EQ(0, strictCast<size_t>(static_cast<int>(0)));
   // EXPECT_EQ(1ULL, StrictNumeric<size_t>(1));
   // EXPECT_EQ(1, StrictNumeric<size_t>(1U));
 
   // Test various saturation corner cases.
-  EXPECT_EQ(SaturatedCast<int>(small_negative), static_cast<int>(small_negative));
-  EXPECT_EQ(SaturatedCast<int>(small_positive), static_cast<int>(small_positive));
-  EXPECT_EQ(SaturatedCast<unsigned>(small_negative), static_cast<unsigned>(0));
-  EXPECT_EQ(SaturatedCast<int>(double_small), static_cast<int>(double_small));
-  EXPECT_EQ(SaturatedCast<int>(double_large), Limits<int>::Max);
-  EXPECT_EQ(SaturatedCast<float>(double_large), double_infinity);
-  EXPECT_EQ(SaturatedCast<float>(-double_large), -double_infinity);
-  EXPECT_EQ(Limits<int>::Min, SaturatedCast<int>(double_small_int));
-  EXPECT_EQ(Limits<int>::Max, SaturatedCast<int>(double_large_int));
+  EXPECT_EQ(saturatedCast<int>(small_negative), static_cast<int>(small_negative));
+  EXPECT_EQ(saturatedCast<int>(small_positive), static_cast<int>(small_positive));
+  EXPECT_EQ(saturatedCast<unsigned>(small_negative), static_cast<unsigned>(0));
+  EXPECT_EQ(saturatedCast<int>(double_small), static_cast<int>(double_small));
+  EXPECT_EQ(saturatedCast<int>(double_large), Limits<int>::Max);
+  EXPECT_EQ(saturatedCast<float>(double_large), double_infinity);
+  EXPECT_EQ(saturatedCast<float>(-double_large), -double_infinity);
+  EXPECT_EQ(Limits<int>::Min, saturatedCast<int>(double_small_int));
+  EXPECT_EQ(Limits<int>::Max, saturatedCast<int>(double_large_int));
 
   float not_a_number = Limits<float>::Infinity - Limits<float>::Infinity;
   EXPECT_TRUE(isNaN(not_a_number));
-  EXPECT_EQ(0, SaturatedCast<int>(not_a_number));
+  EXPECT_EQ(0, saturatedCast<int>(not_a_number));
 }
 
-TEST(SafeNumerics, IsValueInRangeForNumericType) {
-  EXPECT_TRUE(IsValueInRangeForNumericType<uint32_t>(0));
-  EXPECT_TRUE(IsValueInRangeForNumericType<uint32_t>(1));
-  EXPECT_TRUE(IsValueInRangeForNumericType<uint32_t>(2));
-  EXPECT_FALSE(IsValueInRangeForNumericType<uint32_t>(-1));
-  EXPECT_TRUE(IsValueInRangeForNumericType<uint32_t>(0xffffffffu));
-  EXPECT_TRUE(IsValueInRangeForNumericType<uint32_t>(UINT64_C(0xffffffff)));
-  EXPECT_FALSE(IsValueInRangeForNumericType<uint32_t>(UINT64_C(0x100000000)));
-  EXPECT_FALSE(IsValueInRangeForNumericType<uint32_t>(UINT64_C(0x100000001)));
-  EXPECT_FALSE(IsValueInRangeForNumericType<uint32_t>(Limits<int32_t>::Min));
-  EXPECT_FALSE(IsValueInRangeForNumericType<uint32_t>(Limits<int64_t>::Min));
+TEST(SafeNumerics, isValueInRangeForNumericType) {
+  EXPECT_TRUE(isValueInRangeForNumericType<uint32_t>(0));
+  EXPECT_TRUE(isValueInRangeForNumericType<uint32_t>(1));
+  EXPECT_TRUE(isValueInRangeForNumericType<uint32_t>(2));
+  EXPECT_FALSE(isValueInRangeForNumericType<uint32_t>(-1));
+  EXPECT_TRUE(isValueInRangeForNumericType<uint32_t>(0xffffffffu));
+  EXPECT_TRUE(isValueInRangeForNumericType<uint32_t>(UINT64_C(0xffffffff)));
+  EXPECT_FALSE(isValueInRangeForNumericType<uint32_t>(UINT64_C(0x100000000)));
+  EXPECT_FALSE(isValueInRangeForNumericType<uint32_t>(UINT64_C(0x100000001)));
+  EXPECT_FALSE(isValueInRangeForNumericType<uint32_t>(Limits<int32_t>::Min));
+  EXPECT_FALSE(isValueInRangeForNumericType<uint32_t>(Limits<int64_t>::Min));
 
-  EXPECT_TRUE(IsValueInRangeForNumericType<int32_t>(0));
-  EXPECT_TRUE(IsValueInRangeForNumericType<int32_t>(1));
-  EXPECT_TRUE(IsValueInRangeForNumericType<int32_t>(2));
-  EXPECT_TRUE(IsValueInRangeForNumericType<int32_t>(-1));
-  EXPECT_TRUE(IsValueInRangeForNumericType<int32_t>(0x7fffffff));
-  EXPECT_TRUE(IsValueInRangeForNumericType<int32_t>(0x7fffffffu));
-  EXPECT_FALSE(IsValueInRangeForNumericType<int32_t>(0x80000000u));
-  EXPECT_FALSE(IsValueInRangeForNumericType<int32_t>(0xffffffffu));
-  EXPECT_FALSE(IsValueInRangeForNumericType<int32_t>(INT64_C(0x80000000)));
-  EXPECT_FALSE(IsValueInRangeForNumericType<int32_t>(INT64_C(0xffffffff)));
-  EXPECT_FALSE(IsValueInRangeForNumericType<int32_t>(INT64_C(0x100000000)));
-  EXPECT_TRUE(IsValueInRangeForNumericType<int32_t>(Limits<int32_t>::Min));
-  EXPECT_TRUE(IsValueInRangeForNumericType<int32_t>(
+  EXPECT_TRUE(isValueInRangeForNumericType<int32_t>(0));
+  EXPECT_TRUE(isValueInRangeForNumericType<int32_t>(1));
+  EXPECT_TRUE(isValueInRangeForNumericType<int32_t>(2));
+  EXPECT_TRUE(isValueInRangeForNumericType<int32_t>(-1));
+  EXPECT_TRUE(isValueInRangeForNumericType<int32_t>(0x7fffffff));
+  EXPECT_TRUE(isValueInRangeForNumericType<int32_t>(0x7fffffffu));
+  EXPECT_FALSE(isValueInRangeForNumericType<int32_t>(0x80000000u));
+  EXPECT_FALSE(isValueInRangeForNumericType<int32_t>(0xffffffffu));
+  EXPECT_FALSE(isValueInRangeForNumericType<int32_t>(INT64_C(0x80000000)));
+  EXPECT_FALSE(isValueInRangeForNumericType<int32_t>(INT64_C(0xffffffff)));
+  EXPECT_FALSE(isValueInRangeForNumericType<int32_t>(INT64_C(0x100000000)));
+  EXPECT_TRUE(isValueInRangeForNumericType<int32_t>(Limits<int32_t>::Min));
+  EXPECT_TRUE(isValueInRangeForNumericType<int32_t>(
       static_cast<int64_t>(Limits<int32_t>::Min)));
-  EXPECT_FALSE(IsValueInRangeForNumericType<int32_t>(
+  EXPECT_FALSE(isValueInRangeForNumericType<int32_t>(
       static_cast<int64_t>(Limits<int32_t>::Min) - 1));
-  EXPECT_FALSE(IsValueInRangeForNumericType<int32_t>(Limits<int64_t>::Min));
+  EXPECT_FALSE(isValueInRangeForNumericType<int32_t>(Limits<int64_t>::Min));
 
-  EXPECT_TRUE(IsValueInRangeForNumericType<uint64_t>(0));
-  EXPECT_TRUE(IsValueInRangeForNumericType<uint64_t>(1));
-  EXPECT_TRUE(IsValueInRangeForNumericType<uint64_t>(2));
-  EXPECT_FALSE(IsValueInRangeForNumericType<uint64_t>(-1));
-  EXPECT_TRUE(IsValueInRangeForNumericType<uint64_t>(0xffffffffu));
-  EXPECT_TRUE(IsValueInRangeForNumericType<uint64_t>(UINT64_C(0xffffffff)));
-  EXPECT_TRUE(IsValueInRangeForNumericType<uint64_t>(UINT64_C(0x100000000)));
-  EXPECT_TRUE(IsValueInRangeForNumericType<uint64_t>(UINT64_C(0x100000001)));
-  EXPECT_FALSE(IsValueInRangeForNumericType<uint64_t>(Limits<int32_t>::Min));
-  EXPECT_FALSE(IsValueInRangeForNumericType<uint64_t>(INT64_C(-1)));
-  EXPECT_FALSE(IsValueInRangeForNumericType<uint64_t>(Limits<int64_t>::Min));
+  EXPECT_TRUE(isValueInRangeForNumericType<uint64_t>(0));
+  EXPECT_TRUE(isValueInRangeForNumericType<uint64_t>(1));
+  EXPECT_TRUE(isValueInRangeForNumericType<uint64_t>(2));
+  EXPECT_FALSE(isValueInRangeForNumericType<uint64_t>(-1));
+  EXPECT_TRUE(isValueInRangeForNumericType<uint64_t>(0xffffffffu));
+  EXPECT_TRUE(isValueInRangeForNumericType<uint64_t>(UINT64_C(0xffffffff)));
+  EXPECT_TRUE(isValueInRangeForNumericType<uint64_t>(UINT64_C(0x100000000)));
+  EXPECT_TRUE(isValueInRangeForNumericType<uint64_t>(UINT64_C(0x100000001)));
+  EXPECT_FALSE(isValueInRangeForNumericType<uint64_t>(Limits<int32_t>::Min));
+  EXPECT_FALSE(isValueInRangeForNumericType<uint64_t>(INT64_C(-1)));
+  EXPECT_FALSE(isValueInRangeForNumericType<uint64_t>(Limits<int64_t>::Min));
 
-  EXPECT_TRUE(IsValueInRangeForNumericType<int64_t>(0));
-  EXPECT_TRUE(IsValueInRangeForNumericType<int64_t>(1));
-  EXPECT_TRUE(IsValueInRangeForNumericType<int64_t>(2));
-  EXPECT_TRUE(IsValueInRangeForNumericType<int64_t>(-1));
-  EXPECT_TRUE(IsValueInRangeForNumericType<int64_t>(0x7fffffff));
-  EXPECT_TRUE(IsValueInRangeForNumericType<int64_t>(0x7fffffffu));
-  EXPECT_TRUE(IsValueInRangeForNumericType<int64_t>(0x80000000u));
-  EXPECT_TRUE(IsValueInRangeForNumericType<int64_t>(0xffffffffu));
-  EXPECT_TRUE(IsValueInRangeForNumericType<int64_t>(INT64_C(0x80000000)));
-  EXPECT_TRUE(IsValueInRangeForNumericType<int64_t>(INT64_C(0xffffffff)));
-  EXPECT_TRUE(IsValueInRangeForNumericType<int64_t>(INT64_C(0x100000000)));
-  EXPECT_TRUE(IsValueInRangeForNumericType<int64_t>(INT64_C(0x7fffffffffffffff)));
-  EXPECT_TRUE(IsValueInRangeForNumericType<int64_t>(UINT64_C(0x7fffffffffffffff)));
-  EXPECT_FALSE(IsValueInRangeForNumericType<int64_t>(UINT64_C(0x8000000000000000)));
-  EXPECT_FALSE(IsValueInRangeForNumericType<int64_t>(UINT64_C(0xffffffffffffffff)));
-  EXPECT_TRUE(IsValueInRangeForNumericType<int64_t>(Limits<int32_t>::Min));
-  EXPECT_TRUE(IsValueInRangeForNumericType<int64_t>(
+  EXPECT_TRUE(isValueInRangeForNumericType<int64_t>(0));
+  EXPECT_TRUE(isValueInRangeForNumericType<int64_t>(1));
+  EXPECT_TRUE(isValueInRangeForNumericType<int64_t>(2));
+  EXPECT_TRUE(isValueInRangeForNumericType<int64_t>(-1));
+  EXPECT_TRUE(isValueInRangeForNumericType<int64_t>(0x7fffffff));
+  EXPECT_TRUE(isValueInRangeForNumericType<int64_t>(0x7fffffffu));
+  EXPECT_TRUE(isValueInRangeForNumericType<int64_t>(0x80000000u));
+  EXPECT_TRUE(isValueInRangeForNumericType<int64_t>(0xffffffffu));
+  EXPECT_TRUE(isValueInRangeForNumericType<int64_t>(INT64_C(0x80000000)));
+  EXPECT_TRUE(isValueInRangeForNumericType<int64_t>(INT64_C(0xffffffff)));
+  EXPECT_TRUE(isValueInRangeForNumericType<int64_t>(INT64_C(0x100000000)));
+  EXPECT_TRUE(isValueInRangeForNumericType<int64_t>(INT64_C(0x7fffffffffffffff)));
+  EXPECT_TRUE(isValueInRangeForNumericType<int64_t>(UINT64_C(0x7fffffffffffffff)));
+  EXPECT_FALSE(isValueInRangeForNumericType<int64_t>(UINT64_C(0x8000000000000000)));
+  EXPECT_FALSE(isValueInRangeForNumericType<int64_t>(UINT64_C(0xffffffffffffffff)));
+  EXPECT_TRUE(isValueInRangeForNumericType<int64_t>(Limits<int32_t>::Min));
+  EXPECT_TRUE(isValueInRangeForNumericType<int64_t>(
       static_cast<int64_t>(Limits<int32_t>::Min)));
-  EXPECT_TRUE(IsValueInRangeForNumericType<int64_t>(Limits<int64_t>::Min));
+  EXPECT_TRUE(isValueInRangeForNumericType<int64_t>(Limits<int64_t>::Min));
 }
 
 } // namespace stp

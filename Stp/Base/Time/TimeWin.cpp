@@ -22,9 +22,9 @@ namespace {
 // From MSDN, FILETIME "contains a 64-bit value representing the number of
 // 100-nanosecond intervals since January 1, 1601 (UTC)."
 int64_t FileTimeToMicroseconds(const FILETIME& ft) {
-  // Need to bit_cast to fix alignment, then divide by 10 to convert
+  // Need to bitCast to fix alignment, then divide by 10 to convert
   // 100-nanoseconds to microseconds. This only works on little-endian machines.
-  return bit_cast<int64_t, FILETIME>(ft) / 10;
+  return bitCast<int64_t, FILETIME>(ft) / 10;
 }
 
 FILETIME MicrosecondsToFileTime(int64_t us) {
@@ -32,7 +32,7 @@ FILETIME MicrosecondsToFileTime(int64_t us) {
 
   // Multiply by 10 to convert microseconds to 100-nanoseconds. Bit_cast will
   // handle alignment problems. This only works on little-endian machines.
-  return bit_cast<FILETIME>(us * 10);
+  return bitCast<FILETIME>(us * 10);
 }
 
 int64_t CurrentWallclockMicroseconds() {
@@ -65,7 +65,7 @@ Time Time::Now() {
 }
 
 Time Time::FromFileTime(FILETIME ft) {
-  if (bit_cast<int64_t, FILETIME>(ft) == 0)
+  if (bitCast<int64_t, FILETIME>(ft) == 0)
     return Time();
 
   return Time(FileTimeToMicroseconds(ft) - WindowsEpochDeltaMicroseconds);
@@ -73,7 +73,7 @@ Time Time::FromFileTime(FILETIME ft) {
 
 FILETIME Time::ToFileTime() const {
   if (isNull())
-    return bit_cast<FILETIME, int64_t>(0);
+    return bitCast<FILETIME, int64_t>(0);
 
   return MicrosecondsToFileTime(us_ + WindowsEpochDeltaMicroseconds);
 }

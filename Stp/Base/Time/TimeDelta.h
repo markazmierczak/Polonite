@@ -66,7 +66,7 @@ class BASE_EXPORT TimeDelta {
   // For serializing, use FromInternalValue to reconstitute.
   int64_t ToInternalValue() const { return delta_; }
 
-  TimeDelta GetMagnitude() const { return FromInternalValue(Abs(delta_)); }
+  TimeDelta GetMagnitude() const { return FromInternalValue(mathAbs(delta_)); }
 
   // Returns true if the time delta is zero.
   bool IsZero() const { return delta_ == 0; }
@@ -122,7 +122,7 @@ class BASE_EXPORT TimeDelta {
   bool operator> (TimeDelta other) const { return delta_ >  other.delta_; }
   bool operator>=(TimeDelta other) const { return delta_ >= other.delta_; }
 
-  friend TimeDelta Abs(TimeDelta x) { return x.GetMagnitude(); }
+  friend TimeDelta mathAbs(TimeDelta x) { return x.GetMagnitude(); }
 
  private:
   // Constructs a delta given the duration in microseconds. This is private
@@ -181,7 +181,7 @@ constexpr TimeDelta TimeDelta::FromMillisecondsF(double ms) {
 }
 
 constexpr TimeDelta TimeDelta::FromDouble(double value) {
-  return TimeDelta(AssertedCast<int64_t>(value));
+  return TimeDelta(assertedCast<int64_t>(value));
 }
 
 constexpr int TimeDelta::InDays() const {

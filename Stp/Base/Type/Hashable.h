@@ -34,11 +34,11 @@ inline HashCode partialHash(T x) {
     if constexpr (sizeof(T) == 4) {
       // Clear sign bit.
       // The hash collision will be greater but we handle -0.0 == 0.0 case.
-      auto y = bit_cast<uint32_t>(x) & ~UINT32_C(0x80000000);
+      auto y = bitCast<uint32_t>(x) & ~UINT32_C(0x80000000);
       return static_cast<HashCode>(y);
     } else {
       static_assert(sizeof(T) == 8);
-      return partialHash(bit_cast<uint64_t>(x) & ~UINT64_C(0x8000000000000000));
+      return partialHash(bitCast<uint64_t>(x) & ~UINT64_C(0x8000000000000000));
     }
   } else if constexpr (TIsBoolean<T>) {
     return static_cast<HashCode>(x);

@@ -131,10 +131,10 @@ class BASE_EXPORT Affine {
   // M' = R(angle) * M | counter-clockwise
   void PostRotate(double radians);
 
-  void SetSinCos(float sin_value, float cos_value, Point2 pivot);
-  void SetSinCos(float sin_value, float cos_value, float px, float py);
+  void SetmathSinCos(float sin_value, float cos_value, Point2 pivot);
+  void SetmathSinCos(float sin_value, float cos_value, float px, float py);
 
-  void SetSinCos(float sin_value, float cos_value);
+  void SetmathSinCos(float sin_value, float cos_value);
 
   void SetShear(float kx, float ky);
 

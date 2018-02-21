@@ -66,7 +66,7 @@ struct BASE_EXPORT Angle {
 };
 
 inline double Angle::NormalizeDegrees(double degrees) {
-  degrees = IeeeRemainder(degrees, FullInDegrees);
+  degrees = mathRemainder(degrees, FullInDegrees);
   if (degrees < 0)
     degrees += FullInDegrees;
 
@@ -74,7 +74,7 @@ inline double Angle::NormalizeDegrees(double degrees) {
 }
 
 inline double Angle::NormalizeRadians(double radians) {
-  radians = IeeeRemainder(radians, FullInRadians);
+  radians = mathRemainder(radians, FullInRadians);
   if (radians < 0)
     radians += FullInRadians;
 

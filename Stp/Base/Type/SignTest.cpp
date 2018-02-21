@@ -23,22 +23,22 @@ TEST(SignTest, IsNegativeValue) {
 }
 
 TEST(SignTest, Signum) {
-  EXPECT_EQ(0, signum(0));
-  EXPECT_EQ(1, signum(1));
-  EXPECT_EQ(-1, signum(-1));
-  EXPECT_EQ(-1, signum(-1000));
-  EXPECT_EQ(1, signum(321));
+  EXPECT_EQ(0, mathSignum(0));
+  EXPECT_EQ(1, mathSignum(1));
+  EXPECT_EQ(-1, mathSignum(-1));
+  EXPECT_EQ(-1, mathSignum(-1000));
+  EXPECT_EQ(1, mathSignum(321));
 
-  EXPECT_EQ(0, signum(0.0f));
-  EXPECT_EQ(0, signum(-0.0f));
-  EXPECT_EQ(1, signum(1.0f));
-  EXPECT_EQ(-1, signum(-1.0f));
-  EXPECT_EQ(-1, signum(-0.5f));
-  EXPECT_EQ(1, signum(0.01f));
-  EXPECT_EQ(1, signum(10.0f));
-  EXPECT_EQ(-1, signum(-33.0f));
-  EXPECT_EQ(-1, signum(-Limits<float>::Infinity));
-  EXPECT_EQ(1, signum(Limits<float>::Infinity));
+  EXPECT_EQ(0, mathSignum(0.0f));
+  EXPECT_EQ(0, mathSignum(-0.0f));
+  EXPECT_EQ(1, mathSignum(1.0f));
+  EXPECT_EQ(-1, mathSignum(-1.0f));
+  EXPECT_EQ(-1, mathSignum(-0.5f));
+  EXPECT_EQ(1, mathSignum(0.01f));
+  EXPECT_EQ(1, mathSignum(10.0f));
+  EXPECT_EQ(-1, mathSignum(-33.0f));
+  EXPECT_EQ(-1, mathSignum(-Limits<float>::Infinity));
+  EXPECT_EQ(1, mathSignum(Limits<float>::Infinity));
 }
 
 } // namespace stp

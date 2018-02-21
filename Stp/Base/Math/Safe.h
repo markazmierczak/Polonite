@@ -4,11 +4,8 @@
 #ifndef STP_BASE_MATH_SAFE_H_
 #define STP_BASE_MATH_SAFE_H_
 
-#include "Base/Math/Abs.h"
 #include "Base/Math/OverflowMath.h"
 #include "Base/Math/SafeConversions.h"
-#include "Base/Type/Limits.h"
-#include "Base/Type/Sign.h"
 
 namespace stp {
 
@@ -32,13 +29,13 @@ class Safe {
   constexpr Safe operator--(int) { Safe r = *this; operator--(); return r; }
 
   template<typename U>
-  constexpr operator U() const { return AssertedCast<U>(value_); }
+  constexpr operator U() const { return assertedCast<U>(value_); }
 
   template<typename U>
   constexpr operator Safe<U>() const { return Safe<U>(value_); }
 
   template<typename U, TEnableIf<TIsArithmetic<U>>* = nullptr>
-  constexpr Safe(U other) : value_(AssertedCast<T>(other)) {}
+  constexpr Safe(U other) : value_(assertedCast<T>(other)) {}
 
  private:
   T value_;
@@ -171,14 +168,14 @@ template<typename T>
 constexpr bool TNeedsCheckForAbs = TIsInteger<T> && TIsSigned<T>;
 
 template<typename T, TEnableIf<TNeedsCheckForAbs<T>>* = nullptr>
-constexpr auto Abs(T x) {
+constexpr auto mathAbs(T x) {
   ASSERT(x != Limits<T>::Min);
-  return stp::Abs(x);
+  return stp::mathAbs(x);
 }
 
 template<typename T, TEnableIf<!TNeedsCheckForAbs<T>>* = nullptr>
-constexpr auto Abs(T x) {
-  return stp::Abs(x);
+constexpr auto mathAbs(T x) {
+  return stp::mathAbs(x);
 }
 
 template<typename T, typename TEnabler = void>
@@ -519,13 +516,13 @@ inline constexpr Safe<T>& Safe<T>::operator--() {
 }
 
 template<typename T>
-constexpr auto Abs(Safe<T> x) {
-  return MakeSafe(safe::Abs(x.get()));
+constexpr auto mathAbs(Safe<T> x) {
+  return MakeSafe(safe::mathAbs(x.get()));
 }
 
 template<typename T>
-constexpr auto absToUnsigned(Safe<T> x) {
-  return MakeSafe(absToUnsigned(x.get()));
+constexpr auto mathAbsToUnsigned(Safe<T> x) {
+  return MakeSafe(mathAbsToUnsigned(x.get()));
 }
 
 template<typename T>
@@ -547,13 +544,13 @@ constexpr bool isNegative(Safe<T> x) {
 }
 
 template<typename T>
-constexpr int signum(Safe<T> x) {
-  return signum(x.get());
+constexpr int mathSignum(Safe<T> x) {
+  return mathSignum(x.get());
 }
 
 template<typename TDst, typename TSrc>
-constexpr Safe<TDst> AssertedCast(Safe<TSrc> x) {
-  return MakeSafe(AssertedCast<TDst>(x.get()));
+constexpr Safe<TDst> assertedCast(Safe<TSrc> x) {
+  return MakeSafe(assertedCast<TDst>(x.get()));
 }
 
 template<typename T, typename U, TEnableIf<safe::TAreValidBinaryArguments<T, U>>* = nullptr>

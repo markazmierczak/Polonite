@@ -5,7 +5,6 @@
 #define STP_BASE_MATH_OVERFLOWMATH_H_
 
 #include "Base/Debug/Assert.h"
-#include "Base/Math/Abs.h"
 #include "Base/Type/Limits.h"
 #include "Base/Type/Sign.h"
 #include "Base/Type/IntegerSelection.h"
@@ -127,8 +126,8 @@ inline bool OverflowMul(T x, T y, T* presult) {
 
   // Since the value of x*y is potentially undefined if we have a signed type,
   // we compute it using the unsigned type of the same size.
-  TUint ux = absToUnsigned(x);
-  TUint uy = absToUnsigned(y);
+  TUint ux = mathAbsToUnsigned(x);
+  TUint uy = mathAbsToUnsigned(y);
   TUint uresult = static_cast<TUint>(ux * uy);
   bool is_negative = isNegative(x ^ y);
   *presult = is_negative ? static_cast<TUint>(0) - uresult : uresult;

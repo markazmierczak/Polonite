@@ -232,7 +232,7 @@ template<typename T, TEnableIf<TIsInteger<T>>*>
 inline bool JsonValue::TryCastTo(T& out_value) const {
   if (IsInteger()) {
     int64_t integer = AsInteger();
-    if (!IsValueInRangeForNumericType<T>(integer))
+    if (!isValueInRangeForNumericType<T>(integer))
       return false;
 
     out_value = static_cast<T>(integer);
@@ -243,10 +243,10 @@ inline bool JsonValue::TryCastTo(T& out_value) const {
     return false;
 
   double d = AsDouble();
-  if (Trunc(d) != d)
+  if (mathTrunc(d) != d)
     return false;
 
-  if (!IsValueInRangeForNumericType<T>(d))
+  if (!isValueInRangeForNumericType<T>(d))
     return false;
 
   out_value = static_cast<T>(d);

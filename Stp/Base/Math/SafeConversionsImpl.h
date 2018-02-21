@@ -6,10 +6,8 @@
 #ifndef STP_BASE_MATH_SAFECONVERSIONSIMPL_H_
 #define STP_BASE_MATH_SAFECONVERSIONSIMPL_H_
 
-#include "Base/Math/Abs.h"
+#include "Base/Math/Math.h"
 #include "Base/Type/Limits.h"
-#include "Base/Type/Scalar.h"
-#include "Base/Type/Sign.h"
 
 namespace stp {
 namespace detail {
@@ -166,7 +164,7 @@ struct NarrowingRange {
     static_assert(TsAreSame<T, TDst>, "!");
     static_assert(Shift < DstLimits::Digits, "!");
     return static_cast<T>(ConditionalNegate(
-        absToUnsigned(value) & ~((T(1) << Shift) - T(1)),
+        mathAbsToUnsigned(value) & ~((T(1) << Shift) - T(1)),
         isNegative(value)));
   }
 

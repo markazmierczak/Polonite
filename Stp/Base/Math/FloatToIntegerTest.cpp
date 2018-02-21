@@ -8,38 +8,38 @@
 
 namespace stp {
 
-TEST(FloatToIntegerTest, FloorToInt) {
+TEST(FloatToIntegerTest, mathFloorToInt) {
   int int_min = Limits<int>::Min;
 
-  EXPECT_EQ(-101, FloorToInt(-100.5f));
-  EXPECT_EQ(0, FloorToInt(0.f));
-  EXPECT_EQ(100, FloorToInt(100.5f));
+  EXPECT_EQ(-101, mathFloorToInt(-100.5f));
+  EXPECT_EQ(0, mathFloorToInt(0.f));
+  EXPECT_EQ(100, mathFloorToInt(100.5f));
 
-  EXPECT_EQ(int_min, FloorToInt(int_min * 1.f));
+  EXPECT_EQ(int_min, mathFloorToInt(int_min * 1.f));
 }
 
-TEST(FloatToIntegerTest, CeilToInt) {
+TEST(FloatToIntegerTest, mathCeilToInt) {
   int int_min = Limits<int>::Min;
 
-  EXPECT_EQ(-100, CeilToInt(-100.5f));
-  EXPECT_EQ(0, CeilToInt(0.f));
-  EXPECT_EQ(101, CeilToInt(100.5f));
+  EXPECT_EQ(-100, mathCeilToInt(-100.5f));
+  EXPECT_EQ(0, mathCeilToInt(0.f));
+  EXPECT_EQ(101, mathCeilToInt(100.5f));
 
-  EXPECT_EQ(int_min, CeilToInt(int_min * 1.f));
+  EXPECT_EQ(int_min, mathCeilToInt(int_min * 1.f));
 }
 
-TEST(FloatToIntegerTest, RoundToInt) {
+TEST(FloatToIntegerTest, mathRoundToInt) {
   int int_min = Limits<int>::Min;
 
-  EXPECT_EQ(-100, RoundToInt(-100.1f));
-  EXPECT_EQ(-101, RoundToInt(-100.5f));
-  EXPECT_EQ(-101, RoundToInt(-100.9f));
-  EXPECT_EQ(0, RoundToInt(0.f));
-  EXPECT_EQ(100, RoundToInt(100.1f));
-  EXPECT_EQ(101, RoundToInt(100.5f));
-  EXPECT_EQ(101, RoundToInt(100.9f));
+  EXPECT_EQ(-100, mathRoundToInt(-100.1f));
+  EXPECT_EQ(-101, mathRoundToInt(-100.5f));
+  EXPECT_EQ(-101, mathRoundToInt(-100.9f));
+  EXPECT_EQ(0, mathRoundToInt(0.f));
+  EXPECT_EQ(100, mathRoundToInt(100.1f));
+  EXPECT_EQ(101, mathRoundToInt(100.5f));
+  EXPECT_EQ(101, mathRoundToInt(100.9f));
 
-  EXPECT_EQ(int_min, RoundToInt(int_min * 1.f));
+  EXPECT_EQ(int_min, mathRoundToInt(int_min * 1.f));
 }
 
 } // namespace stp

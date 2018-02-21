@@ -52,17 +52,17 @@ class BASE_EXPORT Half {
 
   explicit operator float() const;
 
-  friend constexpr Half Abs(Half x) { return FromBits(x.bits_ & ~SignBitMask); }
+  friend constexpr Half mathAbs(Half x) { return FromBits(x.bits_ & ~SignBitMask); }
 
   friend constexpr bool isNaN(Half x) {
     // It's a NaN if the exponent bits are all ones and the mantissa
     // bits are not entirely zeros.
-    return Abs(x).ToBits() > ExponentBitMask;
+    return mathAbs(x).ToBits() > ExponentBitMask;
   }
 
   friend constexpr bool isFinite(Half x) { return x.GetExponentBits() != ExponentBitMask; }
 
-  friend constexpr bool isInfinity(Half x) { return Abs(x).ToBits() == ExponentBitMask; }
+  friend constexpr bool isInfinity(Half x) { return mathAbs(x).ToBits() == ExponentBitMask; }
 
   friend constexpr bool IsNormal(Half x) { return x.GetExponentBits() != 0 && isFinite(x); }
 

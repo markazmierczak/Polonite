@@ -37,10 +37,10 @@ struct VecNx<2, float> {
     return (_mm_movemask_epi8(_mm_castps_si128(vec_)) & 0xFF) != 0x00;
   }
 
-  VecNx Abs() const { return _mm_andnot_ps(_mm_set1_ps(-0.f), vec_); }
+  VecNx mathAbs() const { return _mm_andnot_ps(_mm_set1_ps(-0.f), vec_); }
   VecNx Reciprocal() const { return _mm_rcp_ps(vec_); }
-  VecNx Sqrt() const { return _mm_sqrt_ps(vec_); }
-  VecNx RSqrt() const { return _mm_rsqrt_ps(vec_); }
+  VecNx mathSqrt() const { return _mm_sqrt_ps(vec_); }
+  VecNx mathRsqrt() const { return _mm_rsqrt_ps(vec_); }
 
   static VecNx min(const VecNx& l, const VecNx& r) {
     return _mm_min_ps(l.vec_, r.vec_);
@@ -90,12 +90,12 @@ struct VecNx<4, float> {
     return _mm_movemask_epi8(_mm_castps_si128(vec_)) != 0x0000;
   }
 
-  VecNx Abs() const { return _mm_andnot_ps(_mm_set1_ps(-0.f), vec_); }
-  VecNx Sqrt() const { return _mm_sqrt_ps(vec_); }
-  VecNx RSqrt() const { return _mm_rsqrt_ps(vec_); }
+  VecNx mathAbs() const { return _mm_andnot_ps(_mm_set1_ps(-0.f), vec_); }
+  VecNx mathSqrt() const { return _mm_sqrt_ps(vec_); }
+  VecNx mathRsqrt() const { return _mm_rsqrt_ps(vec_); }
   VecNx Reciprocal() const { return _mm_rcp_ps(vec_); }
 
-  VecNx Floor() const {
+  VecNx mathFloor() const {
     #if CPU_SIMD(SSE41)
     return _mm_floor_ps(x.vec_);
     #else

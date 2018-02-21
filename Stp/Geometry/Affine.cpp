@@ -267,8 +267,8 @@ void Affine::SetScaleTranslate(float sx, float sy, float tx, float ty) {
 }
 
 void Affine::SetRotate(double radians, Point2 pivot) {
-  auto fun = SinCos(radians);
-  SetSinCos(fun.sin, fun.cos, pivot);
+  auto fun = mathSinCos(radians);
+  SetmathSinCos(fun.sin, fun.cos, pivot);
 }
 
 void Affine::SetRotate(double radians, float px, float py) {
@@ -276,11 +276,11 @@ void Affine::SetRotate(double radians, float px, float py) {
 }
 
 void Affine::SetRotate(double radians) {
-  auto fun = SinCos(radians);
-  SetSinCos(fun.sin, fun.cos);
+  auto fun = mathSinCos(radians);
+  SetmathSinCos(fun.sin, fun.cos);
 }
 
-void Affine::SetSinCos(float sin_value, float cos_value, Point2 pivot) {
+void Affine::SetmathSinCos(float sin_value, float cos_value, Point2 pivot) {
   const float one_minus_cos_v = 1 - cos_value;
 
   float tx = DotProduct(Vector2(one_minus_cos_v, sin_value), pivot);
@@ -289,11 +289,11 @@ void Affine::SetSinCos(float sin_value, float cos_value, Point2 pivot) {
   *this = Affine(cos_value, sin_value, -sin_value, cos_value, tx, ty);
 }
 
-void Affine::SetSinCos(float sin_value, float cos_value, float pivot_x, float pivot_y) {
-  SetSinCos(sin_value, cos_value, Point2(pivot_x, pivot_y));
+void Affine::SetmathSinCos(float sin_value, float cos_value, float pivot_x, float pivot_y) {
+  SetmathSinCos(sin_value, cos_value, Point2(pivot_x, pivot_y));
 }
 
-void Affine::SetSinCos(float sin_value, float cos_value) {
+void Affine::SetmathSinCos(float sin_value, float cos_value) {
   *this = Affine(cos_value, sin_value, -sin_value, cos_value, 0, 0);
 }
 
@@ -342,8 +342,8 @@ void Affine::Rotate(double radians) {
   if (radians == 0)
     return;
 
-  float sin_angle = Sin(radians);
-  float cos_angle = Cos(radians);
+  float sin_angle = mathSin(radians);
+  float cos_angle = mathCos(radians);
 
   if (IsTranslate()) {
     // Counter-clockwise rotation matrix.
@@ -368,16 +368,16 @@ void Affine::PostRotate(double radians) {
 }
 
 void Affine::SetSkew(double ax, double ay, Point2 pivot) {
-  float kx = Tan(ax);
-  float ky = Tan(ay);
+  float kx = mathTan(ax);
+  float ky = mathTan(ay);
   float tx = -kx * pivot.y;
   float ty = -ky * pivot.x;
   *this = Affine(1, ky, kx, 1, tx, ty);
 }
 
 void Affine::SetSkew(double ax, double ay) {
-  float kx = Tan(ax);
-  float ky = Tan(ay);
+  float kx = mathTan(ax);
+  float ky = mathTan(ay);
   SetShear(kx, ky);
 }
 
@@ -402,7 +402,7 @@ void Affine::Shear(float kx, float ky) {
 }
 
 void Affine::Skew(double radians_x, double radians_y) {
-  Shear(Tan(radians_x), Tan(radians_y));
+  Shear(mathTan(radians_x), mathTan(radians_y));
 }
 
 void Affine::SkewX(double radians) {
@@ -649,7 +649,7 @@ bool Affine::GetInverted(Affine& out) const {
   if (IsTranslate()) {
     out.SetTranslate(-GetTransInternal());
   } else if (IsScaleTranslate()) {
-    if (Abs(d_[EntryScaleX]) <= FLT_EPSILON || Abs(d_[EntryScaleY]) <= FLT_EPSILON)
+    if (mathAbs(d_[EntryScaleX]) <= FLT_EPSILON || mathAbs(d_[EntryScaleY]) <= FLT_EPSILON)
       return false;
 
     float inv_sx = 1.f / d_[EntryScaleX];
@@ -662,7 +662,7 @@ bool Affine::GetInverted(Affine& out) const {
     out.type_mask_ = transforms | TypeMaskRectStaysRect;
   } else {
     float determinant = GetDeterminant();
-    if (Abs(determinant) <= FLT_EPSILON) {
+    if (mathAbs(determinant) <= FLT_EPSILON) {
       // Singular matrix.
       return false;
     }
@@ -695,12 +695,12 @@ bool Affine::Decompose(DecomposedAffine& out) const {
       else
         sy = -sy;
     }
-    if (Abs(sx) <= FLT_EPSILON || Abs(sy) <= FLT_EPSILON)
+    if (mathAbs(sx) <= FLT_EPSILON || mathAbs(sy) <= FLT_EPSILON)
       return false;
     // Remove scale from matrix
     m.Scale(1 / sx, 1 / sy);
 
-    double angle = Atan2(
+    double angle = mathAtan2(
         static_cast<double>(m.d_[EntryShearY]),
         static_cast<double>(m.d_[EntryScaleX]));
 
@@ -718,7 +718,7 @@ bool Affine::Decompose(DecomposedAffine& out) const {
 }
 
 static inline float GetScale(float s0, float s1) {
-  return Sqrt(static_cast<double>(s0) * s0 + static_cast<double>(s1) * s1);
+  return mathSqrt(static_cast<double>(s0) * s0 + static_cast<double>(s1) * s1);
 }
 
 float Affine::DecomposeScaleMagX() const {
@@ -810,7 +810,7 @@ DecomposedAffine lerp(const DecomposedAffine& a, const DecomposedAffine& b, doub
   if ((a_scale_x < 0 && b.scale_y < 0) || (a_scale_y < 0 && b.scale_x < 0)) {
     a_scale_x = -a_scale_x;
     a_scale_y = -a_scale_y;
-    a_angle -= CopySign(Angle::StraightInRadians, a_angle);
+    a_angle -= mathCopySign(Angle::StraightInRadians, a_angle);
   }
 
   a_angle = Angle::NormalizeRadians(a_angle);

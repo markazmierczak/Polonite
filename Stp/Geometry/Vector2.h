@@ -4,7 +4,8 @@
 #ifndef STP_BASE_GEOMETRY_VECTOR2_H_
 #define STP_BASE_GEOMETRY_VECTOR2_H_
 
-#include "Base/Math/Abs.h"
+#include "Base/Export.h"
+#include "Base/Math/Math.h"
 
 namespace stp {
 
@@ -106,8 +107,8 @@ struct BASE_EXPORT Vector2 {
   float y;
 };
 
-inline IntVector2 Abs(const IntVector2& v) { return IntVector2(Abs(v.x), Abs(v.y)); }
-inline Vector2 Abs(const Vector2& v) { return Vector2(Abs(v.x), Abs(v.y)); }
+inline IntVector2 mathAbs(const IntVector2& v) { return IntVector2(mathAbs(v.x), mathAbs(v.y)); }
+inline Vector2 mathAbs(const Vector2& v) { return Vector2(mathAbs(v.x), mathAbs(v.y)); }
 
 inline IntVector2 min(const IntVector2& lhs, const IntVector2& rhs) {
   return IntVector2(min(lhs.x, rhs.x), min(lhs.y, rhs.y));
@@ -129,15 +130,15 @@ BASE_EXPORT Vector2 lerp(const Vector2& a, const Vector2& b, double t);
 
 BASE_EXPORT bool isNear(const Vector2& a, const Vector2& b, float tolerance);
 
-BASE_EXPORT Vector2 Floor(Vector2 v);
-BASE_EXPORT Vector2 Ceil(Vector2 v);
-BASE_EXPORT Vector2 Trunc(Vector2 v);
-BASE_EXPORT Vector2 Round(Vector2 v);
+BASE_EXPORT Vector2 mathFloor(Vector2 v);
+BASE_EXPORT Vector2 mathCeil(Vector2 v);
+BASE_EXPORT Vector2 mathTrunc(Vector2 v);
+BASE_EXPORT Vector2 mathRound(Vector2 v);
 
-BASE_EXPORT IntVector2 FloorToInt(Vector2 v);
-BASE_EXPORT IntVector2 CeilToInt(Vector2 v);
-BASE_EXPORT IntVector2 TruncToInt(Vector2 v);
-BASE_EXPORT IntVector2 RoundToInt(Vector2 v);
+BASE_EXPORT IntVector2 mathFloorToInt(Vector2 v);
+BASE_EXPORT IntVector2 mathCeilToInt(Vector2 v);
+BASE_EXPORT IntVector2 mathTruncToInt(Vector2 v);
+BASE_EXPORT IntVector2 mathRoundToInt(Vector2 v);
 
 inline int CrossProduct(const IntVector2& lhs, const IntVector2& rhs) {
   return lhs.x * rhs.y - lhs.y * rhs.x;

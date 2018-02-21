@@ -17,7 +17,7 @@ int64_t IntVector3::GetLengthSquared() const {
 }
 
 double IntVector3::GetLength() const {
-  return Sqrt(static_cast<double>(GetLengthSquared()));
+  return mathSqrt(static_cast<double>(GetLengthSquared()));
 }
 
 double Vector3::GetLengthSquared() const {
@@ -27,39 +27,39 @@ double Vector3::GetLengthSquared() const {
 }
 
 double Vector3::GetLength() const {
-  return Sqrt(GetLengthSquared());
+  return mathSqrt(GetLengthSquared());
 }
 
-Vector3 Floor(const Vector3& v) {
-  return Vector3(Floor(v.x), Floor(v.y), Floor(v.z));
+Vector3 mathFloor(const Vector3& v) {
+  return Vector3(mathFloor(v.x), mathFloor(v.y), mathFloor(v.z));
 }
 
-Vector3 Ceil(const Vector3& v) {
-  return Vector3(Ceil(v.x), Ceil(v.y), Ceil(v.z));
+Vector3 mathCeil(const Vector3& v) {
+  return Vector3(mathCeil(v.x), mathCeil(v.y), mathCeil(v.z));
 }
 
-Vector3 Trunc(const Vector3& v) {
-  return Vector3(Trunc(v.x), Trunc(v.y), Trunc(v.z));
+Vector3 mathTrunc(const Vector3& v) {
+  return Vector3(mathTrunc(v.x), mathTrunc(v.y), mathTrunc(v.z));
 }
 
-Vector3 Round(const Vector3& v) {
-  return Vector3(Round(v.x), Round(v.y), Round(v.z));
+Vector3 mathRound(const Vector3& v) {
+  return Vector3(mathRound(v.x), mathRound(v.y), mathRound(v.z));
 }
 
-IntVector3 FloorToInt(const Vector3& v) {
-  return IntVector3(FloorToInt(v.x), FloorToInt(v.y), FloorToInt(v.z));
+IntVector3 mathFloorToInt(const Vector3& v) {
+  return IntVector3(mathFloorToInt(v.x), mathFloorToInt(v.y), mathFloorToInt(v.z));
 }
 
-IntVector3 CeilToInt(const Vector3& v) {
-  return IntVector3(CeilToInt(v.x), CeilToInt(v.y), CeilToInt(v.z));
+IntVector3 mathCeilToInt(const Vector3& v) {
+  return IntVector3(mathCeilToInt(v.x), mathCeilToInt(v.y), mathCeilToInt(v.z));
 }
 
-IntVector3 TruncToInt(const Vector3& v) {
-  return IntVector3(TruncToInt(v.x), TruncToInt(v.y), TruncToInt(v.z));
+IntVector3 mathTruncToInt(const Vector3& v) {
+  return IntVector3(mathTruncToInt(v.x), mathTruncToInt(v.y), mathTruncToInt(v.z));
 }
 
-IntVector3 RoundToInt(const Vector3& v) {
-  return IntVector3(RoundToInt(v.x), RoundToInt(v.y), RoundToInt(v.z));
+IntVector3 mathRoundToInt(const Vector3& v) {
+  return IntVector3(mathRoundToInt(v.x), mathRoundToInt(v.y), mathRoundToInt(v.z));
 }
 
 bool Vector3::TryScaleToLength(double new_length) {
@@ -78,7 +78,7 @@ Vector3 Vector3::GetNormalizedOrThis() const {
   double lsqr = GetLengthSquared();
   if (lsqr <= Limits<double>::Epsilon)
     return *this;
-  return *this * (1 / Sqrt(lsqr));
+  return *this * (1 / mathSqrt(lsqr));
 }
 
 bool Vector3::IsNormalized() const {
@@ -141,7 +141,7 @@ Vector3 CrossProduct(const Vector3& lhs, const Vector3& rhs) {
 }
 
 double Angle::BetweenInRadians(const Vector3& base, const Vector3& other) {
-  return Acos(DotProduct(base, other) / base.GetLength() / other.GetLength());
+  return mathAcos(DotProduct(base, other) / base.GetLength() / other.GetLength());
 }
 
 double Angle::ClockwiseBetweenInRadians(

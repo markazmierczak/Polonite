@@ -5,7 +5,8 @@
 
 #include "Base/Containers/ArrayOps.h"
 #include "Base/Io/TextWriter.h"
-#include "Base/Math/Abs.h"
+#include "Base/Math/Math.h"
+#include "Base/Math/Near.h"
 #include "Base/Math/RawFloat.h"
 #include "Base/Simd/Vnx.h"
 #include "Geometry/Affine.h"
@@ -17,7 +18,7 @@ namespace stp {
 
 static inline bool IsDegenerate2x2(float scale_x, float shear_x, float shear_y, float scale_y) {
   float perp_dot = scale_x * scale_y + shear_x * shear_y;
-  return Abs(perp_dot) <= Limits<float>::Epsilon;
+  return mathAbs(perp_dot) <= Limits<float>::Epsilon;
 }
 
 unsigned Xform2::GetTypeMaskSlow() const {
@@ -92,7 +93,7 @@ bool Xform2::IsSimilarity(float tolerance) const {
   float my = d_[EntryScaleY];
   if (!(transforms & TypeMaskAffine)) {
     return !isNear(mx, 0.f, NearlyZeroForGraphics<float>) &&
-        isNear(Abs(mx), Abs(my), NearlyZeroForGraphics<float>);
+        isNear(mathAbs(mx), mathAbs(my), NearlyZeroForGraphics<float>);
   }
 
   float sx = d_[EntryShearX];
@@ -336,13 +337,13 @@ bool Xform2::SetBoundsToBounds(const Bounds2& src, const Bounds2& dst, ScaleToFi
 }
 
 void Xform2::SetRotate(double radians) {
-  auto fun = SinCos(radians);
-  SetSinCos(fun.sin, fun.cos);
+  auto fun = mathSinCos(radians);
+  SetmathSinCos(fun.sin, fun.cos);
 }
 
 void Xform2::SetRotate(double radians, float px, float py) {
-  auto fun = SinCos(radians);
-  SetSinCos(fun.sin, fun.cos, px, py);
+  auto fun = mathSinCos(radians);
+  SetmathSinCos(fun.sin, fun.cos, px, py);
 }
 
 void Xform2::Rotate(double radians) {
@@ -357,7 +358,7 @@ void Xform2::PostRotate(double radians) {
   PostConcat(rot);
 }
 
-void Xform2::SetSinCos(float sin_value, float cos_value) {
+void Xform2::SetmathSinCos(float sin_value, float cos_value) {
   d_[EntryScaleX] = cos_value;
   d_[EntryShearX] = -sin_value;
   d_[EntryTransX] = 0;
@@ -372,7 +373,7 @@ void Xform2::SetSinCos(float sin_value, float cos_value) {
   type_mask_ = TypeMaskUnknown;
 }
 
-void Xform2::SetSinCos(float sin_value, float cos_value, float px, float py) {
+void Xform2::SetmathSinCos(float sin_value, float cos_value, float px, float py) {
   const float OneMinusCosV = 1 - cos_value;
 
   d_[EntryScaleX] = cos_value;
@@ -411,11 +412,11 @@ void Xform2::Shear(float kx, float ky) {
 }
 
 void Xform2::SetSkew(double ax, double ay) {
-  SetShear(Tan(ax), Tan(ay));
+  SetShear(mathTan(ax), mathTan(ay));
 }
 
 void Xform2::Skew(double angle_x, double angle_y) {
-  Shear(Tan(angle_x), Tan(angle_y));
+  Shear(mathTan(angle_x), mathTan(angle_y));
 }
 
 void Xform2::SkewX(double angle) {
@@ -621,7 +622,7 @@ bool Xform2::GetInverted(Xform2& out) const {
   constexpr double NearlyZero = NearlyZeroForGraphics<double>;
   constexpr double MinDet = NearlyZero * NearlyZero * NearlyZero;
 
-  if (Abs(det) <= MinDet)
+  if (mathAbs(det) <= MinDet)
     return false;
 
   double inv_det = 1 / det;
@@ -645,7 +646,7 @@ bool Xform2::IsInvertible() const {
 
   constexpr double NearlyZero = NearlyZeroForGraphics<double>;
   constexpr double MinDet = NearlyZero * NearlyZero * NearlyZero;
-  return Abs(det) > MinDet;
+  return mathAbs(det) > MinDet;
 }
 
 Affine Xform2::GetFlattenedAsAffine() const {

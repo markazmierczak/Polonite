@@ -23,7 +23,7 @@ inline T RandomBitsToUnitFloatingPoint(U bits) {
 
   constexpr int Bits = Limits<T>::Digits;
   U random_bits = bits & ((U(1) << Bits) - 1);
-  T result = LoadExponent(static_cast<T>(random_bits), -1 * Bits);
+  T result = mathLoadExponent(static_cast<T>(random_bits), -1 * Bits);
   ASSERT(0 <= result && result < 1);
   return result;
 }

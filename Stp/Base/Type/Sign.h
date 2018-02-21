@@ -119,12 +119,12 @@ constexpr bool isNegative(T x) {
 
 // https://en.wikipedia.org/wiki/Sign_function
 template<typename T, TEnableIf<TIsUnsigned<T>>* = nullptr>
-constexpr int signum(T x) {
+constexpr int mathSignum(T x) {
   return 0 < x;
 }
 
 template<typename T, TEnableIf<TIsSigned<T>>* = nullptr>
-constexpr int signum(T x) {
+constexpr int mathSignum(T x) {
   return (0 < x) - (x < 0);
 }
 
@@ -137,6 +137,19 @@ template<typename T, TEnableIf<TIsInteger<T>>* = nullptr>
 constexpr TMakeUnsigned<T> toUnsigned(T x) {
   return static_cast<TMakeUnsigned<T>>(x);
 }
+
+template<typename T>
+constexpr auto mathAbsToUnsigned(T x) {
+  using UnsignedType = TMakeUnsigned<T>;
+  using ResultType = TMakeUnsigned<decltype(+x)>;
+
+  auto ux = static_cast<UnsignedType>(x);
+  return isNegative(x) ? static_cast<ResultType>(0) - ux : static_cast<ResultType>(ux);
+}
+
+constexpr int mathAbs(int x) { return x >= 0 ? x : -x; }
+constexpr long mathAbs(long x) { return x >= 0 ? x : -x; }
+constexpr long long mathAbs(long long x) { return x >= 0 ? x : -x; }
 
 } // namespace stp
 

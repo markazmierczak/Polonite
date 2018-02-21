@@ -205,16 +205,16 @@ TEST(SafeTest, SignConversion) {
 
 TEST(SafeTest, Abs) {
   {
-    auto x = Abs(MakeSafe(-3));
+    auto x = mathAbs(MakeSafe(-3));
     EXPECT_VALUE_OF_TYPE(x, Safe<int>);
     EXPECT_EQ(x, 3);
 
-    x = Abs(MakeSafe(3));
+    x = mathAbs(MakeSafe(3));
     EXPECT_EQ(x, 3);
   }
 
   {
-    auto x = absToUnsigned(MakeSafe(-3));
+    auto x = mathAbsToUnsigned(MakeSafe(-3));
     EXPECT_VALUE_OF_TYPE(x, Safe<unsigned int>);
     EXPECT_EQ(x, 3);
   }

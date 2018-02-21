@@ -36,7 +36,7 @@ constexpr int compare(T l, U r) noexcept {
   if (l == r)
     return 0;
   if (isNaN(l))
-    return IsNan(r) ? 0 : -1;
+    return isNaN(r) ? 0 : -1;
   return 1;
 }
 

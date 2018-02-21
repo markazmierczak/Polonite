@@ -95,11 +95,11 @@ bool Xform3::operator==(const Xform3& other) const {
 }
 
 static inline bool ApproximatelyZero(float x, float tolerance) {
-  return Abs(x) <= tolerance;
+  return mathAbs(x) <= tolerance;
 }
 
 static inline bool ApproximatelyOne(float x, float tolerance) {
-  return Abs(x - 1) <= tolerance;
+  return mathAbs(x - 1) <= tolerance;
 }
 
 bool Xform3::isNearTranslate(float tolerance) const {
@@ -143,9 +143,9 @@ bool Xform3::HasIntegerTranslate(float tolerance) const {
         static_cast<int>(GetEntry(EntryTransZ)) == GetEntry(EntryTransZ);
   } else {
     no_fractional_translation =
-        isNear(Round(GetEntry(EntryTransX)), GetEntry(EntryTransX), tolerance) &&
-        isNear(Round(GetEntry(EntryTransY)), GetEntry(EntryTransY), tolerance) &&
-        isNear(Round(GetEntry(EntryTransZ)), GetEntry(EntryTransZ), tolerance);
+        isNear(mathRound(GetEntry(EntryTransX)), GetEntry(EntryTransX), tolerance) &&
+        isNear(mathRound(GetEntry(EntryTransY)), GetEntry(EntryTransY), tolerance) &&
+        isNear(mathRound(GetEntry(EntryTransZ)), GetEntry(EntryTransZ), tolerance);
   }
   return no_fractional_translation;
 }
@@ -461,7 +461,7 @@ void Xform3::SetRotate2D(double radians) {
     return;
   }
   double sin_theta, cos_theta;
-  SinCos(radians).Unpack(sin_theta, cos_theta);
+  mathSinCos(radians).Unpack(sin_theta, cos_theta);
   Set3x3(
       cos_theta, -sin_theta, 0,
       sin_theta, cos_theta, 0,
@@ -475,7 +475,7 @@ void Xform3::SetRotateAbout(float x, float y, float z, double radians) {
       SetIdentity();
       return;
     }
-    double scale = 1 / Sqrt(len2);
+    double scale = 1 / mathSqrt(len2);
     x *= scale;
     y *= scale;
     z *= scale;
@@ -492,7 +492,7 @@ void Xform3::SetRotateAboutUnit(float x, float y, float z, double radians) {
   }
 
   double s, c;
-  SinCos(radians).Unpack(s, c);
+  mathSinCos(radians).Unpack(s, c);
   double C = 1 - c;
   double xs = x * s;
   double ys = y * s;
@@ -528,7 +528,7 @@ void Xform3::RotateAboutXAxis(double radians) {
     return;
 
   double sin_theta, cos_theta;
-  SinCos(radians).Unpack(sin_theta, cos_theta);
+  mathSinCos(radians).Unpack(sin_theta, cos_theta);
 
   Xform3 rot(SkipInit);
   rot.Set3x3(
@@ -547,7 +547,7 @@ void Xform3::RotateAboutYAxis(double radians) {
     return;
 
   double sin_theta, cos_theta;
-  SinCos(radians).Unpack(sin_theta, cos_theta);
+  mathSinCos(radians).Unpack(sin_theta, cos_theta);
 
   Xform3 rot(SkipInit);
   rot.Set3x3(
@@ -623,7 +623,7 @@ void Xform3::Skew(double angle_x, double angle_y) {
 }
 
 void Xform3::SkewRadians(double angle_x, double angle_y) {
-  Shear(Tan(angle_x), Tan(angle_y));
+  Shear(mathTan(angle_x), mathTan(angle_y));
 }
 
 void Xform3::SkewX(double ax) {
@@ -724,7 +724,7 @@ void Xform3::SetFrustum(
 void Xform3::SetPerspective(
     double fov_radians, float aspect_ratio,
     float near_plane, float far_plane) {
-  float ymax = near_plane * Tan(fov_radians);
+  float ymax = near_plane * mathTan(fov_radians);
   float xmax = ymax * aspect_ratio;
   SetFrustum(-xmax, xmax, -ymax, ymax, near_plane, far_plane);
 }
@@ -822,19 +822,19 @@ bool Xform3::Preserves2DAxisAlignment(float epsilon) const {
   // Must test against epsilon, not 0, because we can get values
   // around 6e-17 in the matrix that "should" be 0.
 
-  if (Abs(d_[0][0]) > epsilon) {
+  if (mathAbs(d_[0][0]) > epsilon) {
     col0++;
     row0++;
   }
-  if (Abs(d_[0][1]) > epsilon) {
+  if (mathAbs(d_[0][1]) > epsilon) {
     col1++;
     row0++;
   }
-  if (Abs(d_[1][0]) > epsilon) {
+  if (mathAbs(d_[1][0]) > epsilon) {
     col0++;
     row1++;
   }
-  if (Abs(d_[1][1]) > epsilon) {
+  if (mathAbs(d_[1][1]) > epsilon) {
     col1++;
     row1++;
   }
@@ -1255,7 +1255,7 @@ bool Xform3::Decompose(DecomposedXform3& out) const {
 
   // If the perspective matrix is not invertible, we are also unable to
   // decompose, so we'll bail early.
-  if (Abs(perspective_matrix.GetDeterminant()) < 1e-8)
+  if (mathAbs(perspective_matrix.GetDeterminant()) < 1e-8)
     return false;
 
   if (matrix.GetEntry(EntryPersp0) != 0 ||
@@ -1338,10 +1338,10 @@ bool Xform3::Decompose(DecomposedXform3& out) const {
   double row11 = rows[1].y;
   double row22 = rows[2].z;
 
-  double qx = 0.5 * Sqrt(max(1.0 + row00 - row11 - row22, 0.0));
-  double qy = 0.5 * Sqrt(max(1.0 - row00 + row11 - row22, 0.0));
-  double qz = 0.5 * Sqrt(max(1.0 - row00 - row11 + row22, 0.0));
-  double qw = 0.5 * Sqrt(max(1.0 + row00 + row11 + row22, 0.0));
+  double qx = 0.5 * mathSqrt(max(1.0 + row00 - row11 - row22, 0.0));
+  double qy = 0.5 * mathSqrt(max(1.0 - row00 + row11 - row22, 0.0));
+  double qz = 0.5 * mathSqrt(max(1.0 - row00 - row11 + row22, 0.0));
+  double qw = 0.5 * mathSqrt(max(1.0 + row00 + row11 + row22, 0.0));
 
   if (rows[2].y > rows[1].z)
     qx = -qx;
@@ -1395,7 +1395,7 @@ bool isNear(const Xform3& lhs, const Xform3& rhs, float tolerance) {
 
   for (int row = 0; row < 4; row++) {
     for (int col = 0; col < 4; col++) {
-      const float delta = Abs(lhs.get(row, col) - rhs.get(row, col));
+      const float delta = mathAbs(lhs.get(row, col) - rhs.get(row, col));
       const float tolerance = (col == 3 && row < 3) ? TranslationTolerance : ComponentTolerance;
       if (delta > tolerance)
         return false;

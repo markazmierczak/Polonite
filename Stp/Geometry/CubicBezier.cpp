@@ -6,7 +6,6 @@
 #include "Geometry/CubicBezier.h"
 
 #include "Base/Debug/Assert.h"
-#include "Base/Math/Abs.h"
 #include "Base/Math/Math.h"
 
 namespace stp {
@@ -46,14 +45,14 @@ static double BezierInterp(double x1, double x2, double x) {
   double step = 1.0;
   for (int i = 0; i < MaxSteps; ++i, step *= 0.5) {
     const double error = EvalBezier(x1, x2, t) - x;
-    if (Abs(error) < BezierEpsilon)
+    if (mathAbs(error) < BezierEpsilon)
       break;
     t += error > 0.0 ? -step : step;
   }
 
   // We should have terminated the above loop because we got close to x, not
   // because we exceeded kMaxSteps. Do a assert here to confirm.
-  ASSERT(BezierEpsilon > Abs(EvalBezier(x1, x2, t) - x));
+  ASSERT(BezierEpsilon > mathAbs(EvalBezier(x1, x2, t) - x));
 
   return t;
 }
@@ -81,14 +80,14 @@ CubicBezier::Range CubicBezier::GetRange() const {
   double c = y1_;
 
   // Check if the derivative is constant.
-  if (Abs(a) < BezierEpsilon && Abs(b) < BezierEpsilon)
+  if (mathAbs(a) < BezierEpsilon && mathAbs(b) < BezierEpsilon)
     return Range { 0, 1 };
 
   // Zeros of the function's derivative.
   double t_1 = 0;
   double t_2 = 0;
 
-  if (Abs(a) < BezierEpsilon) {
+  if (mathAbs(a) < BezierEpsilon) {
     // The function's derivative is linear.
     t_1 = -c / b;
   } else {
@@ -98,7 +97,7 @@ CubicBezier::Range CubicBezier::GetRange() const {
     if (discriminant < 0)
       return Range { 0, 1 };
 
-    double discriminant_sqrt = Sqrt(discriminant);
+    double discriminant_sqrt = mathSqrt(discriminant);
     t_1 = (-b + discriminant_sqrt) / (2 * a);
     t_2 = (-b - discriminant_sqrt) / (2 * a);
   }

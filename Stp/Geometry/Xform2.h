@@ -142,10 +142,10 @@ class BASE_EXPORT Xform2 {
   // M' = R(angle) * M
   void PostRotate(double radians);
 
-  void SetSinCos(float sin_value, float cos_value);
+  void SetmathSinCos(float sin_value, float cos_value);
 
-  void SetSinCos(float sin_value, float cos_value, Point2 pivot);
-  void SetSinCos(float sin_value, float cos_value, float px, float py);
+  void SetmathSinCos(float sin_value, float cos_value, Point2 pivot);
+  void SetmathSinCos(float sin_value, float cos_value, float px, float py);
 
   void SetShear(float kx, float ky);
 
@@ -305,8 +305,8 @@ inline void Xform2::SetRotate(double radians, Point2 pivot) {
   SetRotate(radians, pivot.x, pivot.y);
 }
 
-inline void Xform2::SetSinCos(float sin_value, float cos_value, Point2 pivot) {
-  SetSinCos(sin_value, cos_value, pivot.x, pivot.y);
+inline void Xform2::SetmathSinCos(float sin_value, float cos_value, Point2 pivot) {
+  SetmathSinCos(sin_value, cos_value, pivot.x, pivot.y);
 }
 
 inline Xform2 Xform2::operator*(const Xform2& rhs) const {

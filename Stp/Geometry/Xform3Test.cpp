@@ -767,14 +767,14 @@ TEST(Xform3Test, VerifyBlendForRotationAboutX) {
   EXPECT_ROW1_NEAR(1.0, 0.0, 0.0, 0.0, res, ERROR_THRESHOLD);
   EXPECT_ROW2_NEAR(
       0.0,
-      Cos(expected_rotation_angle),
-      -Sin(expected_rotation_angle),
+      mathCos(expected_rotation_angle),
+      -mathSin(expected_rotation_angle),
       0.0,
       res, ERROR_THRESHOLD);
   EXPECT_ROW3_NEAR(
       0.0,
-      Sin(expected_rotation_angle),
-      Cos(expected_rotation_angle),
+      mathSin(expected_rotation_angle),
+      mathCos(expected_rotation_angle),
       0.0,
       res, ERROR_THRESHOLD);
   EXPECT_ROW4_EQ(0.0f, 0.0f, 0.0f, 1.0f, res);
@@ -786,14 +786,14 @@ TEST(Xform3Test, VerifyBlendForRotationAboutX) {
   EXPECT_ROW1_NEAR(1.0, 0.0, 0.0, 0.0, res, ERROR_THRESHOLD);
   EXPECT_ROW2_NEAR(
       0.0,
-      Cos(expected_rotation_angle),
-      -Sin(expected_rotation_angle),
+      mathCos(expected_rotation_angle),
+      -mathSin(expected_rotation_angle),
       0.0,
       res, ERROR_THRESHOLD);
   EXPECT_ROW3_NEAR(
       0.0,
-      Sin(expected_rotation_angle),
-      Cos(expected_rotation_angle),
+      mathSin(expected_rotation_angle),
+      mathCos(expected_rotation_angle),
       0.0,
       res, ERROR_THRESHOLD);
   EXPECT_ROW4_EQ(0.0f, 0.0f, 0.0f, 1.0f, res);
@@ -824,17 +824,17 @@ TEST(Xform3Test, VerifyBlendForRotationAboutY) {
   to.RotateAboutUnit(Vector3(0.0, 1.0, 0.0), Angle::DegreesToRadians(90.0));
   ASSERT_TRUE(Trylerp(res, from, to, 0.25));
   EXPECT_ROW1_NEAR(
-      Cos(expected_rotation_angle),
+      mathCos(expected_rotation_angle),
       0.0,
-      Sin(expected_rotation_angle),
+      mathSin(expected_rotation_angle),
       0.0,
       res,
       ERROR_THRESHOLD);
   EXPECT_ROW2_NEAR(0.0, 1.0, 0.0, 0.0, res, ERROR_THRESHOLD);
   EXPECT_ROW3_NEAR(
-      -Sin(expected_rotation_angle),
+      -mathSin(expected_rotation_angle),
       0.0,
-      Cos(expected_rotation_angle),
+      mathCos(expected_rotation_angle),
       0.0,
       res,
       ERROR_THRESHOLD);
@@ -846,17 +846,17 @@ TEST(Xform3Test, VerifyBlendForRotationAboutY) {
   ASSERT_TRUE(Trylerp(res, from, to, 0.5));
 
   EXPECT_ROW1_NEAR(
-      Cos(expected_rotation_angle),
+      mathCos(expected_rotation_angle),
       0.0,
-      Sin(expected_rotation_angle),
+      mathSin(expected_rotation_angle),
       0.0,
       res,
       ERROR_THRESHOLD);
   EXPECT_ROW2_NEAR(0.0, 1.0, 0.0, 0.0, res, ERROR_THRESHOLD);
   EXPECT_ROW3_NEAR(
-      -Sin(expected_rotation_angle),
+      -mathSin(expected_rotation_angle),
       0.0,
-      Cos(expected_rotation_angle),
+      mathCos(expected_rotation_angle),
       0.0,
       res,
       ERROR_THRESHOLD);
@@ -888,15 +888,15 @@ TEST(Xform3Test, VerifyBlendForRotationAboutZ) {
   to.RotateAboutUnit(Vector3(0.0, 0.0, 1.0), Angle::DegreesToRadians(90.0));
   ASSERT_TRUE(Trylerp(res, from, to, 0.25));
   EXPECT_ROW1_NEAR(
-      Cos(expected_rotation_angle),
-      -Sin(expected_rotation_angle),
+      mathCos(expected_rotation_angle),
+      -mathSin(expected_rotation_angle),
       0.0,
       0.0,
       res,
       ERROR_THRESHOLD);
   EXPECT_ROW2_NEAR(
-      Sin(expected_rotation_angle),
-      Cos(expected_rotation_angle),
+      mathSin(expected_rotation_angle),
+      mathCos(expected_rotation_angle),
       0.0,
       0.0,
       res,
@@ -909,15 +909,15 @@ TEST(Xform3Test, VerifyBlendForRotationAboutZ) {
   to.RotateAboutUnit(Vector3(0.0, 0.0, 1.0), Angle::DegreesToRadians(90.0));
   ASSERT_TRUE(Trylerp(res, from, to, 0.5));
   EXPECT_ROW1_NEAR(
-      Cos(expected_rotation_angle),
-      -Sin(expected_rotation_angle),
+      mathCos(expected_rotation_angle),
+      -mathSin(expected_rotation_angle),
       0.0,
       0.0,
       res,
       ERROR_THRESHOLD);
   EXPECT_ROW2_NEAR(
-      Sin(expected_rotation_angle),
-      Cos(expected_rotation_angle),
+      mathSin(expected_rotation_angle),
+      mathCos(expected_rotation_angle),
       0.0,
       0.0,
       res,
@@ -1009,7 +1009,7 @@ TEST(Xform3Test, FactorTRS) {
     EXPECT_TRUE(success);
     EXPECT_FLOAT_EQ(decomp.translate.x, degrees * 2);
     EXPECT_FLOAT_EQ(decomp.translate.y, -degrees * 3);
-    double rotation = Angle::RadiansToDegrees(2 * Acos(decomp.quaternion.w));
+    double rotation = Angle::RadiansToDegrees(2 * mathAcos(decomp.quaternion.w));
     while (rotation < 0.0)
       rotation += 360.0;
     while (rotation > 360.0)

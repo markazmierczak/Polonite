@@ -165,7 +165,7 @@ TEST(Vector3Test, GetLength) {
         static_cast<double>(v0) * v0 +
         static_cast<double>(v1) * v1 +
         static_cast<double>(v2) * v2;
-    double length = Sqrt(length_squared);
+    double length = mathSqrt(length_squared);
     Vector3 vector(v0, v1, v2);
     EXPECT_DOUBLE_EQ(length_squared, vector.GetLengthSquared());
     EXPECT_DOUBLE_EQ(length, vector.GetLength());

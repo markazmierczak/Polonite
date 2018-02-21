@@ -150,7 +150,7 @@ TEST(Vector2Test, GetLength) {
     int v0 = pair[0];
     int v1 = pair[1];
     double length_squared = static_cast<double>(v0) * v0 + static_cast<double>(v1) * v1;
-    double length = Sqrt(length_squared);
+    double length = mathSqrt(length_squared);
     IntVector2 vector(v0, v1);
     EXPECT_EQ(length_squared, vector.GetLengthSquared());
     EXPECT_FLOAT_EQ(length, vector.GetLength());
@@ -173,7 +173,7 @@ TEST(Vector2Test, GetLength) {
     double v0 = pair[0];
     double v1 = pair[1];
     double length_squared = static_cast<double>(v0) * v0 + static_cast<double>(v1) * v1;
-    double length = Sqrt(length_squared);
+    double length = mathSqrt(length_squared);
     Vector2 vector(v0, v1);
     EXPECT_DOUBLE_EQ(length_squared, vector.GetLengthSquared());
     EXPECT_FLOAT_EQ(length, vector.GetLength());

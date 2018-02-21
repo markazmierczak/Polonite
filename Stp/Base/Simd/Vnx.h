@@ -9,10 +9,8 @@
 
 #include "Base/Compiler/Simd.h"
 #include "Base/Debug/Assert.h"
-#include "Base/Math/Abs.h"
 #include "Base/Math/Math.h"
 #include "Base/Type/Limits.h"
-#include "Base/Type/Sign.h"
 #include "Base/Type/IntegerSelection.h"
 #include "Base/Type/Variable.h"
 
@@ -59,20 +57,20 @@ struct VecNx {
   bool anyTrue() const { return lo_.anyTrue() || hi_.anyTrue(); }
 
   // Returns absolute value for each component.
-  VecNx Abs() const { return { lo_.Abs(), hi_.Abs() }; }
+  VecNx mathAbs() const { return { lo_.mathAbs(), hi_.mathAbs() }; }
 
   // Returns Reciprocal value (1/x) for each component in |x|.
   VecNx Reciprocal() const { return { lo_.Reciprocal(), hi_.Reciprocal() }; }
 
   // Returns square root value for each component in |x|.
-  VecNx Sqrt() const { return { lo_.Sqrt(), hi_.Sqrt() }; }
+  VecNx mathSqrt() const { return { lo_.mathSqrt(), hi_.mathSqrt() }; }
 
   // Returns inverted square root value (i.e. the Reciprocal of square root)
   // for each component in |x|.
-  VecNx RSqrt() const { return { lo_.RSqrt(), hi_.RSqrt() }; }
+  VecNx mathRsqrt() const { return { lo_.mathRsqrt(), hi_.mathRsqrt() }; }
 
   // Returns floor value for each component.
-  VecNx Floor() const { return { lo_.Floor(), hi_.Floor() }; }
+  VecNx mathFloor() const { return { lo_.mathFloor(), hi_.mathFloor() }; }
 
   static VecNx min(const VecNx& l, const VecNx& r) {
     return { Half::min(l.lo_, r.lo_), Half::min(l.hi_, r.hi_) };
@@ -140,11 +138,11 @@ struct VecNx<1,T> {
   bool allTrue() const { return val_ != 0; }
   bool anyTrue() const { return val_ != 0; }
 
-  VecNx Abs() const { return stp::Abs(val_); }
+  VecNx mathAbs() const { return stp::mathAbs(val_); }
   VecNx Reciprocal() const { return T(1) / val_; }
-  VecNx Sqrt() const { return Sqrt(val_); }
-  VecNx RSqrt() const { return VecNx(1) / Sqrt(); }
-  VecNx Floor() const { return Floor(val_); }
+  VecNx mathSqrt() const { return mathSqrt(val_); }
+  VecNx mathRsqrt() const { return VecNx(1) / mathSqrt(); }
+  VecNx mathFloor() const { return mathFloor(val_); }
 
   static VecNx min(const VecNx& l, const VecNx& r) {
     return l.val_ < r.val_ ? l : r;
@@ -201,8 +199,8 @@ struct VecNx<1,T> {
     return FromBits(static_cast<Bits>(b ? -1 : 0));
   }
 
-  static Bits ToBits(T v) { return bit_cast<Bits>(v); }
-  static T FromBits(Bits bits) { return bit_cast<T>(bits); }
+  static Bits ToBits(T v) { return bitCast<Bits>(v); }
+  static T FromBits(Bits bits) { return bitCast<T>(bits); }
 };
 
 template<typename D, typename S, unsigned N>
@@ -216,8 +214,8 @@ inline VecNx<1,D> vnx_cast(const VecNx<1,S>& x) {
 }
 
 template<unsigned N, typename T>
-static VecNx<N,T> Abs(const VecNx<N,T>& x) {
-  return x.Abs();
+static VecNx<N,T> mathAbs(const VecNx<N,T>& x) {
+  return x.mathAbs();
 }
 
 // Returns minimum values for all components from |l| and |r|.
@@ -252,13 +250,13 @@ class VnxMath {
   static VecNx<N,T> Reciprocal(const VecNx<N,T>& x) { return x.Reciprocal(); }
 
   template<unsigned N, typename T>
-  static VecNx<N,T> Sqrt(const VecNx<N,T>& x) { return x.Sqrt(); }
+  static VecNx<N,T> mathSqrt(const VecNx<N,T>& x) { return x.mathSqrt(); }
 
   template<unsigned N, typename T>
-  static VecNx<N,T> RSqrt(const VecNx<N,T>& x) { return x.RSqrt(); }
+  static VecNx<N,T> mathRsqrt(const VecNx<N,T>& x) { return x.mathRsqrt(); }
 
   template<unsigned N, typename T>
-  static VecNx<N,T> Floor(const VecNx<N,T>& x) { return x.Floor(); }
+  static VecNx<N,T> mathFloor(const VecNx<N,T>& x) { return x.mathFloor(); }
 
   // A very generic shuffle.  Can reorder, duplicate, contract, expand...
   //  Vec4f v = { R,G,B,A };

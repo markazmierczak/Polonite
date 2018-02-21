@@ -65,7 +65,7 @@ inline T roundDownToPowerOfTwo(T x) {
 }
 
 template<typename T, TEnableIf<TIsInteger<T>>* = nullptr>
-inline int tryLog2(T x) {
+inline int trymathLog2(T x) {
   return isPowerOfTwo(x) ? whichPowerOfTwo(x) : -1;
 }
 

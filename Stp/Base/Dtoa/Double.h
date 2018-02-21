@@ -38,10 +38,10 @@ namespace dtoa {
 
 // We assume that doubles and uint64_t have the same endianness.
 static uint64_t DoubleToUInt64(double d) {
-  return bit_cast<uint64_t>(d);
+  return bitCast<uint64_t>(d);
 }
 static double UInt64ToDouble(uint64_t d64) {
-  return bit_cast<double>(d64);
+  return bitCast<double>(d64);
 }
 
 // Helper functions for doubles.
@@ -135,7 +135,7 @@ class Double {
     return (d64 & ExponentMask) == ExponentMask;
   }
 
-  bool IsNan() const {
+  bool isNaN() const {
     uint64_t d64 = AsUint64();
     return ((d64 & ExponentMask) == ExponentMask) &&
            ((d64 & SignificandMask) != 0);

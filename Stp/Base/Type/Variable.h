@@ -444,13 +444,13 @@ template<typename T>
 constexpr bool TIsZeroConstructible = TIsZeroConstructibleTmpl<T>::Value;
 
 template<class TDst, class TSrc>
-inline TDst bit_cast(const TSrc& source) {
+inline TDst bitCast(const TSrc& source) {
   static_assert(sizeof(TDst) == sizeof(TSrc),
-                "bit_cast requires source and destination to be the same size");
+                "bitCast requires source and destination to be the same size");
   static_assert(TIsTriviallyCopyable<TDst>,
-                "non-trivially-copyable bit_cast is undefined");
+                "non-trivially-copyable bitCast is undefined");
   static_assert(TIsTriviallyCopyable<TSrc>,
-                "non-trivially-copyable bit_cast is undefined");
+                "non-trivially-copyable bitCast is undefined");
 
   union {
     TDst d;

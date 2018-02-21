@@ -101,8 +101,8 @@ struct BASE_EXPORT Vector3 {
 };
 typedef Vector3 Point3;
 
-inline IntVector3 Abs(const IntVector3& v) { return IntVector3(Abs(v.x), Abs(v.y), Abs(v.z)); }
-inline Vector3 Abs(const Vector3& v) { return Vector3(Abs(v.x), Abs(v.y), Abs(v.z)); }
+inline IntVector3 mathAbs(const IntVector3& v) { return IntVector3(mathAbs(v.x), mathAbs(v.y), mathAbs(v.z)); }
+inline Vector3 mathAbs(const Vector3& v) { return Vector3(mathAbs(v.x), mathAbs(v.y), mathAbs(v.z)); }
 
 BASE_EXPORT IntVector3 min(const IntVector3& lhs, const IntVector3& rhs);
 BASE_EXPORT IntVector3 max(const IntVector3& lhs, const IntVector3& rhs);
@@ -116,15 +116,15 @@ BASE_EXPORT Vector3 lerp(const Vector3& a, const Vector3& b, double t);
 
 BASE_EXPORT bool isNear(const Vector3& lhs, const Vector3& rhs, float tolerance);
 
-BASE_EXPORT Vector3 Floor(const Vector3& v);
-BASE_EXPORT Vector3 Ceil(const Vector3& v);
-BASE_EXPORT Vector3 Trunc(const Vector3& v);
-BASE_EXPORT Vector3 Round(const Vector3& v);
+BASE_EXPORT Vector3 mathFloor(const Vector3& v);
+BASE_EXPORT Vector3 mathCeil(const Vector3& v);
+BASE_EXPORT Vector3 mathTrunc(const Vector3& v);
+BASE_EXPORT Vector3 mathRound(const Vector3& v);
 
-BASE_EXPORT IntVector3 FloorToInt(const Vector3& v);
-BASE_EXPORT IntVector3 CeilToInt(const Vector3& v);
-BASE_EXPORT IntVector3 TruncToInt(const Vector3& v);
-BASE_EXPORT IntVector3 RoundToInt(const Vector3& v);
+BASE_EXPORT IntVector3 mathFloorToInt(const Vector3& v);
+BASE_EXPORT IntVector3 mathCeilToInt(const Vector3& v);
+BASE_EXPORT IntVector3 mathTruncToInt(const Vector3& v);
+BASE_EXPORT IntVector3 mathRoundToInt(const Vector3& v);
 
 BASE_EXPORT Vector3 CrossProduct(const Vector3& lhs, const Vector3& rhs);
 

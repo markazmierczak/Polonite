@@ -10,23 +10,23 @@
 namespace stp {
 
 template<typename T, TEnableIf<TIsFloatingPoint<T>>* = nullptr>
-inline int TruncToInt(T x) {
-  return AssertedCast<int>(x);
+inline int mathTruncToInt(T x) {
+  return assertedCast<int>(x);
 }
 
 template<typename T, TEnableIf<TIsFloatingPoint<T>>* = nullptr>
-inline int FloorToInt(T x) {
-  return AssertedCast<int>(Floor(x));
+inline int mathFloorToInt(T x) {
+  return assertedCast<int>(mathFloor(x));
 }
 
 template<typename T, TEnableIf<TIsFloatingPoint<T>>* = nullptr>
-inline int CeilToInt(T x) {
-  return AssertedCast<int>(Ceil(x));
+inline int mathCeilToInt(T x) {
+  return assertedCast<int>(mathCeil(x));
 }
 
 template<typename T, TEnableIf<TIsFloatingPoint<T>>* = nullptr>
-inline int RoundToInt(T x) {
-  return AssertedCast<int>(Round(x));
+inline int mathRoundToInt(T x) {
+  return assertedCast<int>(mathRound(x));
 }
 
 } // namespace stp

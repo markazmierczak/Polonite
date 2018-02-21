@@ -4,20 +4,24 @@
 #ifndef STP_BASE_MATH_MATH_H_
 #define STP_BASE_MATH_MATH_H_
 
-#include "Base/Type/Scalar.h"
+// Need to include Sign.h to properly handle mathAbs() for integer types.
+#include "Base/Type/Sign.h"
 
 #include <math.h>
 
 namespace stp {
 
-#if 1  // REGION(Basic)
-inline float FusedMulAdd(float x, float y, float z) { return ::fmaf(x, y, z); }
-inline double FusedMulAdd(double x, double y, double z) { return ::fma(x, y, z); }
-inline long double FusedMulAdd(long double x, long double y, long double z) { return ::fmal(x, y, z); }
+inline float mathAbs(float x) { return ::fabsf(x); }
+inline double mathAbs(double x) { return ::fabs(x); }
+inline long double mathAbs(long double x) { return ::fabsl(x); }
 
-inline float IeeeRemainder(float x, float y) { return ::fmodf(x, y); }
-inline double IeeeRemainder(double x, double y) { return ::fmod(x, y); }
-inline long double IeeeRemainder(long double x, long double y) { return ::fmodl(x, y); }
+inline float mathFusedMulAdd(float x, float y, float z) { return ::fmaf(x, y, z); }
+inline double mathFusedMulAdd(double x, double y, double z) { return ::fma(x, y, z); }
+inline long double mathFusedMulAdd(long double x, long double y, long double z) { return ::fmal(x, y, z); }
+
+inline float mathRemainder(float x, float y) { return ::fmodf(x, y); }
+inline double mathRemainder(double x, double y) { return ::fmod(x, y); }
+inline long double mathRemainder(long double x, long double y) { return ::fmodl(x, y); }
 
 namespace detail {
 template<typename T>
@@ -30,87 +34,77 @@ struct DecomposeResultForFloat {
     out_fractional = fractional;
   }
 };
-inline float DecomposeImpl(float x, float* iptr) { return ::modff(x, iptr); }
-inline double DecomposeImpl(double x, double* iptr) { return ::modf(x, iptr); }
-inline long double DecomposeImpl(long double x, long double* iptr) { return ::modfl(x, iptr); }
+inline float mathDecomposeImpl(float x, float* iptr) { return ::modff(x, iptr); }
+inline double mathDecomposeImpl(double x, double* iptr) { return ::modf(x, iptr); }
+inline long double mathDecomposeImpl(long double x, long double* iptr) { return ::modfl(x, iptr); }
 } // namespace detail
 
 template<typename T, TEnableIf<TIsFloatingPoint<T>>* = nullptr>
-inline detail::DecomposeResultForFloat<T> Decompose(T x) {
+inline detail::DecomposeResultForFloat<T> mathDecompose(T x) {
   detail::DecomposeResultForFloat<T> rv;
-  rv.fractional = detail::DecomposeImpl(x, &rv.integral);
+  rv.fractional = detail::mathDecomposeImpl(x, &rv.integral);
   return rv;
 }
-#endif // REGION(Basic)
 
-#if 1  // REGION(Manipulation)
-inline float CopySign(float m, float s) { return ::copysignf(m, s); }
-inline double CopySign(double m, double s) { return ::copysign(m, s); }
-inline long double CopySign(long double m, long double s) { return ::copysignl(m, s); }
+inline float mathCopySign(float m, float s) { return ::copysignf(m, s); }
+inline double mathCopySign(double m, double s) { return ::copysign(m, s); }
+inline long double mathCopySign(long double m, long double s) { return ::copysignl(m, s); }
 
-inline float NextAfter(float from, float to) { return ::nextafterf(from, to); }
-inline double NextAfter(double from, double to) { return ::nextafter(from, to); }
-inline long double NextAfter(long double from, long double to) { return ::nextafterl(from, to); }
-#endif // REGION(Manipulation)
+inline float mathNextAfter(float from, float to) { return ::nextafterf(from, to); }
+inline double mathNextAfter(double from, double to) { return ::nextafter(from, to); }
+inline long double mathNextAfter(long double from, long double to) { return ::nextafterl(from, to); }
 
-#if 1  // REGION(Min/Max)
-inline float IeeeMin(float x, float y) { return ::fminf(x, y); }
-inline double IeeeMin(double x, double y) { return ::fmin(x, y); }
-inline long double IeeeMin(long double x, long double y) { return ::fminl(x, y); }
+inline float mathMin(float x, float y) { return ::fminf(x, y); }
+inline double mathMin(double x, double y) { return ::fmin(x, y); }
+inline long double mathMin(long double x, long double y) { return ::fminl(x, y); }
 
-inline float IeeeMax(float x, float y) { return ::fmaxf(x, y); }
-inline double IeeeMax(double x, double y) { return ::fmax(x, y); }
-inline long double IeeeMax(long double x, long double y) { return ::fmaxl(x, y); }
-#endif // REGION(Min/Max)
+inline float mathMax(float x, float y) { return ::fmaxf(x, y); }
+inline double mathMax(double x, double y) { return ::fmax(x, y); }
+inline long double mathMax(long double x, long double y) { return ::fmaxl(x, y); }
 
-#if 1  // REGION(Nearest Integer)
-inline float Trunc(float x) { return ::truncf(x); }
-inline double Trunc(double x) { return ::trunc(x); }
-inline long double Trunc(long double x) { return ::truncl(x); }
+inline float mathTrunc(float x) { return ::truncf(x); }
+inline double mathTrunc(double x) { return ::trunc(x); }
+inline long double mathTrunc(long double x) { return ::truncl(x); }
 
-inline float Floor(float x) { return ::floorf(x); }
-inline double Floor(double x) { return ::floor(x); }
-inline long double Floor(long double x) { return ::floorl(x); }
+inline float mathFloor(float x) { return ::floorf(x); }
+inline double mathFloor(double x) { return ::floor(x); }
+inline long double mathFloor(long double x) { return ::floorl(x); }
 
-inline float Ceil(float x) { return ::ceilf(x); }
-inline double Ceil(double x) { return ::ceil(x); }
-inline long double Ceil(long double x) { return ::ceill(x); }
+inline float mathCeil(float x) { return ::ceilf(x); }
+inline double mathCeil(double x) { return ::ceil(x); }
+inline long double mathCeil(long double x) { return ::ceill(x); }
 
-inline float Round(float x) { return ::roundf(x); }
-inline double Round(double x) { return ::round(x); }
-inline long double Round(long double x) { return ::roundl(x); }
-#endif // REGION(Nearest Integer)
+inline float mathRound(float x) { return ::roundf(x); }
+inline double mathRound(double x) { return ::round(x); }
+inline long double mathRound(long double x) { return ::roundl(x); }
 
-#if 1  // REGION(Power)
-inline float Sqrt(float x) { return ::sqrtf(x); }
-inline double Sqrt(double x) { return ::sqrt(x); }
-inline long double Sqrt(long double x) { return ::sqrtl(x); }
+inline float mathSqrt(float x) { return ::sqrtf(x); }
+inline double mathSqrt(double x) { return ::sqrt(x); }
+inline long double mathSqrt(long double x) { return ::sqrtl(x); }
 
-inline float Cbrt(float x) { return ::cbrtf(x); }
-inline double Cbrt(double x) { return ::cbrt(x); }
-inline long double Cbrt(long double x) { return ::cbrtl(x); }
+inline float mathCbrt(float x) { return ::cbrtf(x); }
+inline double mathCbrt(double x) { return ::cbrt(x); }
+inline long double mathCbrt(long double x) { return ::cbrtl(x); }
 
-inline float Hypot(float x, float y) { return ::hypotf(x, y); }
-inline double Hypot(double x, double y) { return ::hypot(x, y); }
-inline long double Hypot(long double x, long double y) { return ::hypotl(x, y); }
+inline float mathHypot(float x, float y) { return ::hypotf(x, y); }
+inline double mathHypot(double x, double y) { return ::hypot(x, y); }
+inline long double mathHypot(long double x, long double y) { return ::hypotl(x, y); }
 
-inline float Pow(float base, float exp) { return ::powf(base, exp); }
-inline double Pow(double base, double exp) { return ::pow(base, exp); }
-inline long double Pow(long double base, long double exp) { return ::powl(base, exp); }
-#endif // REGION(Power)
+inline float mathPow(float base, float exp) { return ::powf(base, exp); }
+inline double mathPow(double base, double exp) { return ::pow(base, exp); }
+inline long double mathPow(long double base, long double exp) { return ::powl(base, exp); }
 
-#if 1  // REGION(Trigonometric)
-inline float Sin(float x) { return ::sinf(x); }
-inline double Sin(double x) { return ::sin(x); }
-inline long double Sin(long double x) { return ::sinl(x); }
+inline float mathSin(float x) { return ::sinf(x); }
+inline double mathSin(double x) { return ::sin(x); }
+inline long double mathSin(long double x) { return ::sinl(x); }
 
-inline float Cos(float x) { return ::cosf(x); }
-inline double Cos(double x) { return ::cos(x); }
-inline long double Cos(long double x) { return ::cosl(x); }
+inline float mathCos(float x) { return ::cosf(x); }
+inline double mathCos(double x) { return ::cos(x); }
+inline long double mathCos(long double x) { return ::cosl(x); }
 
-inline float SignBit(float x) { return signbit(x); }
-inline double SignBit(double x) { return signbit(x); }
-inline long double SignBit(long double x) { return signbit(x); }
+inline bool mathHasSignBit(float x) { return signbit(x) != 0; }
+inline bool mathHasSignBit(double x) { return signbit(x) != 0; }
+inline bool mathHasSignBit(long double x) { return signbit(x) != 0; }
 
 namespace detail {
 template<typename T>
@@ -122,104 +116,99 @@ struct SinCosResult {
 };
 
 #if defined(__GLIBC__)
-inline void SinCosImpl(float x, float* sin, float* cos) { sincosf(x, sin, cos); }
-inline void SinCosImpl(double x, double* sin, double* cos) { sincos(x, sin, cos); }
-inline void SinCosImpl(long double x, long double* sin, long double* cos) { sincosl(x, sin, cos); }
+inline void mathSinCosImpl(float x, float* sin, float* cos) { sincosf(x, sin, cos); }
+inline void mathSinCosImpl(double x, double* sin, double* cos) { sincos(x, sin, cos); }
+inline void mathSinCosImpl(long double x, long double* sin, long double* cos) { sincosl(x, sin, cos); }
 #endif
 
 } // namespace detail
 
 template<typename T, TEnableIf<TIsFloatingPoint<T>>* = nullptr>
-inline detail::SinCosResult<T> SinCos(T x) {
+inline detail::SinCosResult<T> mathSinCos(T x) {
   #if defined(__GLIBC__)
   detail::SinCosResult<T> rv;
-  detail::SinCosImpl(x, &rv.sin, &rv.cos);
+  detail::mathSinCosImpl(x, &rv.sin, &rv.cos);
   return rv;
   #else
-  return detail::SinCosResult<T> { Sin(x), Cos(x) };
+  return detail::SinCosResult<T> { mathSin(x), mathCos(x) };
   #endif
 }
 
-inline float Tan(float x) { return ::tanf(x); }
-inline double Tan(double x) { return ::tan(x); }
-inline long double Tan(long double x) { return ::tanl(x); }
+inline float mathTan(float x) { return ::tanf(x); }
+inline double mathTan(double x) { return ::tan(x); }
+inline long double mathTan(long double x) { return ::tanl(x); }
 
-inline float Asin(float x) { return ::asinf(x); }
-inline double Asin(double x) { return ::asin(x); }
-inline long double Asin(long double x) { return ::asinl(x); }
+inline float mathAsin(float x) { return ::asinf(x); }
+inline double mathAsin(double x) { return ::asin(x); }
+inline long double mathAsin(long double x) { return ::asinl(x); }
 
-inline float Acos(float x) { return ::acosf(x); }
-inline double Acos(double x) { return ::acos(x); }
-inline long double Acos(long double x) { return ::acosl(x); }
+inline float mathAcos(float x) { return ::acosf(x); }
+inline double mathAcos(double x) { return ::acos(x); }
+inline long double mathAcos(long double x) { return ::acosl(x); }
 
-inline float Atan(float x) { return ::atanf(x); }
-inline double Atan(double x) { return ::atan(x); }
-inline long double Atan(long double x) { return ::atanl(x); }
+inline float mathAtan(float x) { return ::atanf(x); }
+inline double mathAtan(double x) { return ::atan(x); }
+inline long double mathAtan(long double x) { return ::atanl(x); }
 
-inline float Atan2(float y, float x) { return ::atan2f(y, x); }
-inline double Atan2(double y, double x) { return ::atan2(y, x); }
-inline long double Atan2(long double y, long double x) { return ::atan2l(y, x); }
-#endif // REGION(Trigonometric)
+inline float mathAtan2(float y, float x) { return ::atan2f(y, x); }
+inline double mathAtan2(double y, double x) { return ::atan2(y, x); }
+inline long double mathAtan2(long double y, long double x) { return ::atan2l(y, x); }
 
-#if 1  // REGION(Hyperbolic)
-inline float Sinh(float x) { return ::sinhf(x); }
-inline double Sinh(double x) { return ::sinh(x); }
-inline long double Sinh(long double x) { return ::sinhl(x); }
+inline float mathSinh(float x) { return ::sinhf(x); }
+inline double mathSinh(double x) { return ::sinh(x); }
+inline long double mathSinh(long double x) { return ::sinhl(x); }
 
-inline float Cosh(float x) { return ::coshf(x); }
-inline double Cosh(double x) { return ::cosh(x); }
-inline long double Cosh(long double x) { return ::coshl(x); }
+inline float mathCosh(float x) { return ::coshf(x); }
+inline double mathCosh(double x) { return ::cosh(x); }
+inline long double mathCosh(long double x) { return ::coshl(x); }
 
-inline float Tanh(float x) { return ::tanhf(x); }
-inline double Tanh(double x) { return ::tanh(x); }
-inline long double Tanh(long double x) { return ::tanhl(x); }
+inline float mathTanh(float x) { return ::tanhf(x); }
+inline double mathTanh(double x) { return ::tanh(x); }
+inline long double mathTanh(long double x) { return ::tanhl(x); }
 
-inline float Asinh(float x) { return ::asinhf(x); }
-inline double Asinh(double x) { return ::asinh(x); }
-inline long double Asinh(long double x) { return ::asinhl(x); }
+inline float mathAsinh(float x) { return ::asinhf(x); }
+inline double mathAsinh(double x) { return ::asinh(x); }
+inline long double mathAsinh(long double x) { return ::asinhl(x); }
 
-inline float Acosh(float x) { return ::acoshf(x); }
-inline double Acosh(double x) { return ::acosh(x); }
-inline long double Acosh(long double x) { return ::acoshl(x); }
+inline float mathAcosh(float x) { return ::acoshf(x); }
+inline double mathAcosh(double x) { return ::acosh(x); }
+inline long double mathAcosh(long double x) { return ::acoshl(x); }
 
-inline float Atanh(float x) { return ::atanhf(x); }
-inline double Atanh(double x) { return ::atanh(x); }
-inline long double Atanh(long double x) { return ::atanhl(x); }
-#endif // REGION(Hyperbolic)
+inline float mathAtanh(float x) { return ::atanhf(x); }
+inline double mathAtanh(double x) { return ::atanh(x); }
+inline long double mathAtanh(long double x) { return ::atanhl(x); }
 
-#if 1  // REGION(Exponential)
-inline float LoadExponent(float x, int exp) { return ::ldexpf(x, exp); }
-inline float LoadExponent(double x, int exp) { return ::ldexp(x, exp); }
-inline float LoadExponent(long double x, int exp) { return ::ldexpl(x, exp); }
+inline float mathLoadExponent(float x, int exp) { return ::ldexpf(x, exp); }
+inline float mathLoadExponent(double x, int exp) { return ::ldexp(x, exp); }
+inline float mathLoadExponent(long double x, int exp) { return ::ldexpl(x, exp); }
 
-inline float Exp(float x) { return ::expf(x); }
-inline double Exp(double x) { return ::exp(x); }
-inline long double Exp(long double x) { return ::expl(x); }
+inline float mathExp(float x) { return ::expf(x); }
+inline double mathExp(double x) { return ::exp(x); }
+inline long double mathExp(long double x) { return ::expl(x); }
 
-inline float Exp2(float x) { return ::exp2f(x); }
-inline double Exp2(double x) { return ::exp2(x); }
-inline long double Exp2(long double x) { return ::exp2l(x); }
+inline float mathExp2(float x) { return ::exp2f(x); }
+inline double mathExp2(double x) { return ::exp2(x); }
+inline long double mathExp2(long double x) { return ::exp2l(x); }
 
-inline float ExpM1(float x) { return ::expm1f(x); }
-inline double ExpM1(double x) { return ::expm1(x); }
-inline long double ExpM1(long double x) { return ::expm1l(x); }
+inline float mathExpm1(float x) { return ::expm1f(x); }
+inline double mathExpm1(double x) { return ::expm1(x); }
+inline long double mathExpm1(long double x) { return ::expm1l(x); }
 
-inline float Log(float x) { return ::logf(x); }
-inline double Log(double x) { return ::log(x); }
-inline long double Log(long double x) { return ::logl(x); }
+inline float mathLog(float x) { return ::logf(x); }
+inline double mathLog(double x) { return ::log(x); }
+inline long double mathLog(long double x) { return ::logl(x); }
 
-inline float Log2(float x) { return ::log2f(x); }
-inline double Log2(double x) { return ::log2(x); }
-inline long double Log2(long double x) { return ::log2l(x); }
+inline float mathLog2(float x) { return ::log2f(x); }
+inline double mathLog2(double x) { return ::log2(x); }
+inline long double mathLog2(long double x) { return ::log2l(x); }
 
-inline float Log10(float x) { return ::log10f(x); }
-inline double Log10(double x) { return ::log10(x); }
-inline long double Log10(long double x) { return ::log10l(x); }
+inline float mathLog10(float x) { return ::log10f(x); }
+inline double mathLog10(double x) { return ::log10(x); }
+inline long double mathLog10(long double x) { return ::log10l(x); }
 
-inline float Log1P(float x) { return ::log1pf(x); }
-inline double Log1P(double x) { return ::log1p(x); }
-inline long double Log1P(long double x) { return ::log1pl(x); }
-#endif // REGION(Exponential)
+inline float mathLog1p(float x) { return ::log1pf(x); }
+inline double mathLog1p(double x) { return ::log1p(x); }
+inline long double mathLog1p(long double x) { return ::log1pl(x); }
 
 } // namespace stp
 

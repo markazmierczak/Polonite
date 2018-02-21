@@ -64,7 +64,7 @@ bool DoubleToStringConverter::HandleSpecialValues(
     result_builder->AddString(infinity_symbol_);
     return true;
   }
-  if (double_inspect.IsNan()) {
+  if (double_inspect.isNaN()) {
     if (nan_symbol_ == NULL) return false;
     result_builder->AddString(nan_symbol_);
     return true;

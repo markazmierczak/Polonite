@@ -24,7 +24,7 @@ Quaternion Quaternion::FromAngleAxisUnit(double radians, const Vector3& axis) {
   double angle_2 = radians * 0.5;
 
   double sin_angle, cos_angle;
-  SinCos(angle_2).Unpack(sin_angle, cos_angle);
+  mathSinCos(angle_2).Unpack(sin_angle, cos_angle);
 
   double w = cos_angle;
   double x = axis.x * sin_angle;
@@ -40,8 +40,8 @@ double Quaternion::ToAngleAxis(Vector3* axis) const {
     radians = 0;
     *axis = Vector3(1, 0, 0);
   } else {
-    radians = 2 * Acos(w);
-    double inv_length = 1 / Sqrt(length_squared);
+    radians = 2 * mathAcos(w);
+    double inv_length = 1 / mathSqrt(length_squared);
     *axis = Vector3(x, y, z) * inv_length;
   }
   return radians;
@@ -52,9 +52,9 @@ void Quaternion::SetEulerAngles(double yaw, double pitch, double roll) {
   double sp, cp;
   double sr, cr;
 
-  SinCos(yaw   * 0.5).Unpack(sy, cy);
-  SinCos(pitch * 0.5).Unpack(sp, cp);
-  SinCos(roll  * 0.5).Unpack(sr, cr);
+  mathSinCos(yaw   * 0.5).Unpack(sy, cy);
+  mathSinCos(pitch * 0.5).Unpack(sp, cp);
+  mathSinCos(roll  * 0.5).Unpack(sr, cr);
 
   w = cy * cr * cp + sy * sr * sp;
   x = cy * cr * sp - sy * sr * cp;
@@ -63,20 +63,20 @@ void Quaternion::SetEulerAngles(double yaw, double pitch, double roll) {
 }
 
 Quaternion::EulerAngles Quaternion::ToEulerAngles() const {
-  double pitch = Atan2(2 * (w * x + y * z), 1 - 2 * (x * x + y * y));
-  double yaw = Asin(2 * (w * y - z * x));
-  double roll = Atan2(2 * (w * z + x * y), 1 - 2 * (y * y + z * z));
+  double pitch = mathAtan2(2 * (w * x + y * z), 1 - 2 * (x * x + y * y));
+  double yaw = mathAsin(2 * (w * y - z * x));
+  double roll = mathAtan2(2 * (w * z + x * y), 1 - 2 * (y * y + z * z));
   return EulerAngles { yaw, pitch, roll };
 }
 
 Quaternion Quaternion::FromRotationTo(const Vector3& from, const Vector3& to) {
   double dot = DotProduct(from, to);
-  double norm = Sqrt(from.GetLengthSquared() * to.GetLengthSquared());
+  double norm = mathSqrt(from.GetLengthSquared() * to.GetLengthSquared());
   double real = norm + dot;
   Vector3 axis;
   if (real < Limits<double>::Epsilon * norm) {
     real = 0.0f;
-    axis = Abs(from.x) > Abs(from.z) ? Vector3(-from.y, from.x, 0) : Vector3(0, -from.z, from.y);
+    axis = mathAbs(from.x) > mathAbs(from.z) ? Vector3(-from.y, from.x, 0) : Vector3(0, -from.z, from.y);
   } else {
     axis = CrossProduct(from, to);
   }
@@ -90,14 +90,14 @@ double Quaternion::GetLengthSquared() const {
 }
 
 double Quaternion::GetLength() const {
-  return Sqrt(GetLengthSquared());
+  return mathSqrt(GetLengthSquared());
 }
 
 bool Quaternion::Normalize() {
   double length_squared = GetLengthSquared();
   if (length_squared <= Limits<float>::Epsilon)
     return false;
-  operator*=(1 / Sqrt(length_squared));
+  operator*=(1 / mathSqrt(length_squared));
   return true;
 }
 
@@ -105,7 +105,7 @@ Quaternion Quaternion::GetNormalized() const {
   double length_squared = GetLengthSquared();
   if (length_squared <= Limits<float>::Epsilon)
     return *this;
-  return *this * (1 / Sqrt(length_squared));
+  return *this * (1 / mathSqrt(length_squared));
 }
 
 bool Quaternion::tryGetInverted(Quaternion& out) const {
@@ -145,11 +145,11 @@ Quaternion Slerp(const Quaternion& q1, const Quaternion& q2, double t) {
   if (isNear(dot, 1.0, Epsilon) || isNear(dot, -1.0, Epsilon))
     return q1;
 
-  double denom = Sqrt(1.0 - dot * dot);
-  double theta = Acos(dot);
+  double denom = mathSqrt(1.0 - dot * dot);
+  double theta = mathAcos(dot);
 
   double spt, cpt;
-  SinCos(t * theta).Unpack(spt, cpt);
+  mathSinCos(t * theta).Unpack(spt, cpt);
 
   double w = spt * (1.0 / denom);
 

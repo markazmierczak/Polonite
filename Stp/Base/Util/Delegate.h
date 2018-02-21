@@ -59,7 +59,7 @@ struct SimplifyMethod<sizeof(GenericMethod)> {
     };
 
     X* that = const_cast<X*>(thatc);
-    GnuMemberFunction mf = bit_cast<GnuMemberFunction>(method);
+    GnuMemberFunction mf = bitCast<GnuMemberFunction>(method);
     #if CPU(X86_FAMILY)
     auto* object = reinterpret_cast<GenericClass*>(
         reinterpret_cast<char*>(that) + mf.this_delta);
@@ -101,7 +101,7 @@ struct SimplifyMethod<sizeof(GenericStaticMethod)> {
   template<class X, class XMethod, typename GSMethod>
   static ALWAYS_INLINE GenericClass*
   convert(XMethod method, const X* thatc, GSMethod& gsmethod) {
-    gsmethod = bit_cast<GSMethod>(method);
+    gsmethod = bitCast<GSMethod>(method);
     X* that = const_cast<X*>(thatc);
     return reinterpret_cast<GenericClass*>(that);
   }
@@ -117,7 +117,7 @@ struct SimplifyMethod<sizeof(GenericStaticMethod) + sizeof(int)> {
       int this_delta;
     };
 
-    MSVCExtendedMemberFunction mf = bit_cast<MSVCExtendedMemberFunction>(method);
+    MSVCExtendedMemberFunction mf = bitCast<MSVCExtendedMemberFunction>(method);
 
     gsmethod = mf.function;
     X* that = const_cast<X*>(thatc);
@@ -136,7 +136,7 @@ struct SimplifyMethod<sizeof(GenericStaticMethod) + 2 * sizeof(int)> {
       int vtable_index;
     };
 
-    MSVCVirtualMemberFunction mf = bit_cast<MSVCVirtualMemberFunction>(method);
+    MSVCVirtualMemberFunction mf = bitCast<MSVCVirtualMemberFunction>(method);
     int this_delta = mf.this_delta;
     gsmethod = mf.function;
 
@@ -167,11 +167,11 @@ struct SimplifyMethod<sizeof(MSVCUnknownMemberFunction)> {
   template<class X, class XMethod, typename GSMethod>
   static ALWAYS_INLINE GenericClass*
   convert(XMethod method, const X* thatc, GSMethod& gsmethod) {
-    MSVCUnknownMemberFunction mf = bit_cast<MSVCUnknownMemberFunction>(method);
+    MSVCUnknownMemberFunction mf = bitCast<MSVCUnknownMemberFunction>(method);
 
     GenericClass* gobject = reinterpret_cast<GenericClass*>(thatc);
     int this_delta = mf.this_delta;
-    gsmethod = bit_cast<GSMethod>(mf.function);
+    gsmethod = bitCast<GSMethod>(mf.function);
 
     X* that = const_cast<X*>(thatc);
     // If index is zero, fallback to extended member function.

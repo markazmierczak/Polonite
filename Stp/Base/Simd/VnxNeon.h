@@ -49,14 +49,14 @@ struct VecNx<2, float> {
     return vget_lane_u32(v,0) || vget_lane_u32(v,1);
   }
 
-  VecNx Abs() const { return vabs_f32(vec_); }
+  VecNx mathAbs() const { return vabs_f32(vec_); }
 
   VecNx Reciprocal() const {
     float32x2_t est0 = vrsqrte_f32(vec_);
     return vmul_f32(vrsqrts_f32(vec_, vmul_f32(est0, est0)), est0);
   }
 
-  VecNx Sqrt() const {
+  VecNx mathSqrt() const {
     #if CPU(ARM64)
     return vsqrt_f32(vec_);
     #else
@@ -67,7 +67,7 @@ struct VecNx<2, float> {
     #endif
   }
 
-  VecNx RSqrt() const {
+  VecNx mathRsqrt() const {
     float32x2_t est0 = vrsqrte_f32(vec_);
     return vmul_f32(vrsqrts_f32(vec_, vmul_f32(est0, est0)), est0);
   }
@@ -132,7 +132,7 @@ struct VecNx<4, float> {
     return vgetq_lane_u32(v,0) || vgetq_lane_u32(v,1) || vgetq_lane_u32(v,2) || vgetq_lane_u32(v,3);
   }
 
-  VecNx Abs() const { return vabsq_f32(vec_); }
+  VecNx mathAbs() const { return vabsq_f32(vec_); }
 
   VecNx Reciprocal() const {
     float32x4_t est0 = vrecpeq_f32(vec_),
@@ -140,7 +140,7 @@ struct VecNx<4, float> {
     return est1;
   }
 
-  VecNx Sqrt() const {
+  VecNx mathSqrt() const {
     #if CPU(ARM64)
     return vsqrtq_f32(vec_);
     #else
@@ -151,12 +151,12 @@ struct VecNx<4, float> {
     #endif
   }
 
-  VecNx RSqrt() const {
+  VecNx mathRsqrt() const {
     float32x4_t est0 = vrsqrteq_f32(vec_);
     return vmulq_f32(vrsqrtsq_f32(vec_, vmulq_f32(est0, est0)), est0);
   }
 
-  VecNx Floor() const {
+  VecNx mathFloor() const {
     #if CPU(ARM64)
     return vrndmq_f32(vec_);
     #else

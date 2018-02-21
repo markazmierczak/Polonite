@@ -141,7 +141,7 @@ inline void uninitializedFill(T* items, int count, U&& value) noexcept(TIsNoexce
   if constexpr (TIsNoexceptCopyConstructible<T>) {
     if constexpr (detail::TIsCopyInitializableWithMemset<T>) {
       if (count)
-        ::memset(items, bit_cast<uint8_t>(value), toUnsigned(count));
+        ::memset(items, bitCast<uint8_t>(value), toUnsigned(count));
     } else {
       for (int i = 0; i < count; ++i)
         new (items + i) T(value);
@@ -165,7 +165,7 @@ inline void fillObjects(T* items, int count, const U& value) noexcept(TIsNoexcep
   if constexpr (TIsNoexceptCopyAssignable<T>) {
     if constexpr (detail::TIsCopyInitializableWithMemset<T>) {
       if (count)
-        ::memset(items, bit_cast<uint8_t>(value), toUnsigned(count));
+        ::memset(items, bitCast<uint8_t>(value), toUnsigned(count));
     } else {
       for (int i = 0; i < count; ++i)
         items[i] = value;

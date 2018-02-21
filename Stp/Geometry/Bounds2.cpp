@@ -6,27 +6,27 @@
 namespace stp {
 
 Bounds2 RoundOut(const Bounds2& b) {
-  return Bounds2(Floor(b.min), Ceil(b.max));
+  return Bounds2(mathFloor(b.min), mathCeil(b.max));
 }
 
 Bounds2 RoundIn(const Bounds2& b) {
-  return Bounds2(Ceil(b.min), Ceil(b.max));
+  return Bounds2(mathCeil(b.min), mathCeil(b.max));
 }
 
 Bounds2 RoundNearest(const Bounds2& b) {
-  return Bounds2(Round(b.min), Round(b.max));
+  return Bounds2(mathRound(b.min), mathRound(b.max));
 }
 
 IntBounds2 RoundOutToInt(const Bounds2& b) {
-  return IntBounds2(FloorToInt(b.min), CeilToInt(b.max));
+  return IntBounds2(mathFloorToInt(b.min), mathCeilToInt(b.max));
 }
 
 IntBounds2 RoundInToInt(const Bounds2& b) {
-  return IntBounds2(CeilToInt(b.min), FloorToInt(b.max));
+  return IntBounds2(mathCeilToInt(b.min), mathFloorToInt(b.max));
 }
 
 IntBounds2 RoundNearestToInt(const Bounds2& b) {
-  return IntBounds2(RoundToInt(b.min), RoundToInt(b.max));
+  return IntBounds2(mathRoundToInt(b.min), mathRoundToInt(b.max));
 }
 
 bool IntBounds2::Intersects(const IntBounds2& lhs, const IntBounds2& rhs) {

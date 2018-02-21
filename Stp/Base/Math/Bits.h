@@ -4,6 +4,7 @@
 #ifndef STP_BASE_MATH_BITS_H_
 #define STP_BASE_MATH_BITS_H_
 
+#include "Base/Debug/Assert.h"
 #include "Base/Math/BitsImpl.h"
 
 namespace stp {
@@ -52,6 +53,28 @@ inline int countBitsPopulation(T x) {
 template<typename T>
 inline T reverseBits(T x) {
   return detail::reverseBitsImpl(toUnsigned(x));
+}
+
+// The behavior of left shifting signed value is undefined if last bit is toggled.
+// This function casts value to unsigned before shifting.
+template<typename T>
+constexpr T arithmeticShiftLeft(T x, int shift) {
+  ASSERT(0 <= shift && shift < static_cast<int>(8 * sizeof(T)));
+  return static_cast<T>(toUnsigned(x) << shift);
+}
+
+template<typename T, TEnableIf<TIsInteger<T> && TIsUnsigned<T>>* = nullptr>
+constexpr T rotateBitsRight(T x, int shift) {
+  constexpr int MaxShift = 8 * sizeof(T);
+  ASSERT(0 <= shift && shift < MaxShift);
+  return shift ? ((x >> shift) | (x << (MaxShift - shift))) : x;
+}
+
+template<typename T, TEnableIf<TIsInteger<T> && TIsUnsigned<T>>* = nullptr>
+constexpr T rotateBitsLeft(T x, int shift) {
+  constexpr int MaxShift = 8 * sizeof(T);
+  ASSERT(0 <= shift && shift < MaxShift);
+  return shift ? ((x << shift) | (x >> (MaxShift - shift))) : x;
 }
 
 } // namespace stp

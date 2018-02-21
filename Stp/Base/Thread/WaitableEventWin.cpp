@@ -70,7 +70,7 @@ static bool WaitUntil(HANDLE handle, TimeTicks now, TimeTicks end_time) {
       delta = MinDelta;
     
     // Truncate the timeout to milliseconds.
-    DWORD timeout_ms = SaturatedCast<DWORD>(delta.InMilliseconds());
+    DWORD timeout_ms = saturatedCast<DWORD>(delta.InMilliseconds());
     DWORD result = ::WaitForSingleObject(handle, timeout_ms);
     switch (result) {
       case WAIT_OBJECT_0:

@@ -136,14 +136,14 @@ class RawFloatingPoint {
 
   constexpr RawFloatingPoint operator-() const { return FromBits(bits_ ^ SignBitMask); }
 
-  friend constexpr RawFloatingPoint Abs(RawFloatingPoint x) {
+  friend constexpr RawFloatingPoint mathAbs(RawFloatingPoint x) {
     return FromBits(x.bits_ & ~SignBitMask);
   }
 
-  friend constexpr bool IsNan(RawFloatingPoint x) {
+  friend constexpr bool isNaN(RawFloatingPoint x) {
     // It's a NaN if the exponent bits are all ones and the mantissa
     // bits are not entirely zeros.
-    return Abs(x).ToBits() > ExponentBitMask;
+    return mathAbs(x).ToBits() > ExponentBitMask;
   }
 
   friend constexpr bool isFinite(RawFloatingPoint x) {
@@ -151,7 +151,7 @@ class RawFloatingPoint {
   }
 
   friend constexpr bool isInfinity(RawFloatingPoint x) {
-    return Abs(x).ToBits() == ExponentBitMask;
+    return mathAbs(x).ToBits() == ExponentBitMask;
   }
 
   friend constexpr bool IsNormal(RawFloatingPoint x) {
@@ -166,7 +166,7 @@ class RawFloatingPoint {
   friend constexpr bool isNearUlp(const RawFloatingPoint& lhs, const RawFloatingPoint& rhs) {
     // The IEEE standard says that any comparison operation involving
     // a NaN must return false.
-    if (IsNan(lhs) || IsNan(rhs))
+    if (isNaN(lhs) || isNaN(rhs))
       return false;
 
     return DistanceBetweenSignAndMagnitudeNumbers(lhs.bits_, rhs.bits_) <= MaxUlps;

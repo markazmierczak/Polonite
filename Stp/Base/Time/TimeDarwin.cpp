@@ -47,7 +47,7 @@ int64_t MachAbsoluteTimeToTicks(uint64_t mach_absolute_time) {
   // Don't bother with the rollover handling that the Windows version does.
   // With numer and denom = 1 (the expected case), the 64-bit absolute time
   // reported in nanoseconds is enough to last nearly 585 years.
-  return AssertedCast<int64_t>(result.ValueOrDie());
+  return assertedCast<int64_t>(result.ValueOrDie());
 }
 #endif // OS(MAC)
 

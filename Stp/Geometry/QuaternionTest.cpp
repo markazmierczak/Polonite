@@ -28,7 +28,7 @@ TEST(QuaternionTest, Identity) {
 TEST(QuaternionTest, AxisAngleCommon) {
   double radians = 0.5;
   auto q = Quaternion::FromAngleAxisUnit(radians, Vector3(1, 0, 0));
-  CompareQuaternions(Quaternion(Cos(radians / 2), Sin(radians / 2), 0, 0), q);
+  CompareQuaternions(Quaternion(mathCos(radians / 2), mathSin(radians / 2), 0, 0), q);
 }
 
 TEST(QuaternionTest, FromRotationTo) {

@@ -30,7 +30,7 @@ Point3 Ray3::GetClosestPoint(const Ray3& other) const {
   float d2121 = DotProduct(p21, p21);
 
   float d = d2121 * d4343 - d4321 * d4321;
-  if (Abs(d) <= Limits<float>::Epsilon)
+  if (mathAbs(d) <= Limits<float>::Epsilon)
     return origin;
 
   float n = d1343 * d4321 - d1321 * d4343;
@@ -60,7 +60,7 @@ bool Ray3::IntersectsTriangle(
     if (det <= Limits<float>::Epsilon)
       return false;
   } else {
-    if (Abs(det) <= Limits<float>::Epsilon)
+    if (mathAbs(det) <= Limits<float>::Epsilon)
       return false;
   }
 
