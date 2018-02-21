@@ -6,19 +6,18 @@
 #include "Base/Math/Alignment.h"
 
 namespace stp {
-namespace detail {
 
-void* aligned_malloc(size_t size, size_t alignment) noexcept {
+void* tryAllocateAlignedMemory(int size, int alignment) noexcept {
   ASSERT(size > 0);
   ASSERT(isPowerOfTwo(alignment));
-  ASSERT(alignment >= sizeof(void*));
+  ASSERT(alignment >= isizeof(void*));
 
   void* ptr;
   #if COMPILER(MSVC)
-  ptr = _aligned_malloc(size, alignment);
+  ptr = _alignedMallocImpl(toUnsigned(size), toUnsigned(alignment));
   #else
   // posix_memalign() added in API level 16 for Android.
-  if (posix_memalign(&ptr, alignment, size))
+  if (posix_memalign(&ptr, toUnsigned(alignment), toUnsigned(size)))
     ptr = nullptr;
   #endif
 
@@ -26,5 +25,4 @@ void* aligned_malloc(size_t size, size_t alignment) noexcept {
   return ptr;
 }
 
-} // namespace detail
 } // namespace stp

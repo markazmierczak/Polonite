@@ -20,15 +20,15 @@ class BASE_EXPORT RefCountedThreadSafeBase {
 
   ~RefCountedThreadSafeBase() {
     #ifndef NDEBUG
-    ASSERT(in_dtor_, "RefCountedThreadSafeBase object deleted without calling DecRef()");
+    ASSERT(in_dtor_, "RefCountedThreadSafeBase object deleted without calling decRef()");
     #endif
   }
 
-  bool HasOneRef() const {
+  bool hasOneRef() const {
     return AtomicRefCountIsOne(&const_cast<RefCountedThreadSafeBase*>(this)->ref_count_);
   }
 
-  void IncRef() const {
+  void incRef() const {
     #ifndef NDEBUG
     ASSERT(!in_dtor_);
     #endif
@@ -36,7 +36,7 @@ class BASE_EXPORT RefCountedThreadSafeBase {
   }
 
  protected:
-  bool DecRefBase() const {
+  bool decRefBase() const {
     #ifndef NDEBUG
     ASSERT(!in_dtor_);
     ASSERT(!AtomicRefCountIsZero(&ref_count_));
@@ -62,8 +62,8 @@ class BASE_EXPORT RefCountedThreadSafeBase {
 template<typename T>
 class RefCountedThreadSafe : public RefCountedThreadSafeBase {
  public:
-  void DecRef() const {
-    if (DecRefBase())
+  void decRef() const {
+    if (decRefBase())
       delete static_cast<const T*>(this);
   }
 

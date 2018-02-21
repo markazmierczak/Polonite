@@ -46,7 +46,7 @@ class OwnPtr {
   explicit operator bool() const { return ptr_ != nullptr; }
 
   template<typename... TArgs>
-  static OwnPtr New(TArgs&&... args);
+  static OwnPtr create(TArgs&&... args);
 
   friend void swap(OwnPtr& l, OwnPtr& r) { swap(l.ptr_, r.ptr_); }
 
@@ -76,7 +76,7 @@ class OwnPtr {
 
 template<typename T, class TAllocator>
 template<typename... TArgs>
-inline OwnPtr<T, TAllocator> OwnPtr<T, TAllocator>::New(TArgs&&... args) {
+inline OwnPtr<T, TAllocator> OwnPtr<T, TAllocator>::create(TArgs&&... args) {
   if constexpr (TIsNoexceptConstructible<T, TArgs...>) {
     void* raw_ptr = TAllocator::allocate(isizeof(T));
     return OwnPtr(new(raw_ptr) T(forward<TArgs>(args)...));
@@ -102,7 +102,7 @@ struct TIsTriviallyEqualityComparableTmpl<OwnPtr<T, TAllocator>> : TTrue {};
 
 // Helper to transfer ownership of a raw pointer to a OwnPtr<T>.
 template<typename T>
-inline OwnPtr<T> MakeOwnPtr(T* ptr) {
+inline OwnPtr<T> makeOwnPtr(T* ptr) {
   return OwnPtr<T>(ptr);
 }
 

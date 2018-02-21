@@ -81,7 +81,7 @@ char* JsonStringBuilder::appendUninitialized(int n) {
   int new_length = size_ + n;
   if (capacity_ < new_length) {
     capacity_ = recommendCapacity(new_length);
-    data_ = Reallocate(data_, capacity_);
+    data_ = reallocate(data_, capacity_);
   }
   return data_ + exchange(size_, new_length);
 }

@@ -13,11 +13,11 @@ namespace detail {
 NativeThreadLocal::Slot ThreadData::g_tls_for_current;
 
 ThreadData* ThreadData::Current() {
-  return static_cast<ThreadData*>(NativeThreadLocal::GetValue(g_tls_for_current));
+  return static_cast<ThreadData*>(NativeThreadLocal::getValue(g_tls_for_current));
 }
 
 void ThreadData::Register(ThreadData* that) {
-  NativeThreadLocal::SetValue(g_tls_for_current, that);
+  NativeThreadLocal::setValue(g_tls_for_current, that);
 }
 
 void ThreadData::Adopt() {
@@ -58,9 +58,9 @@ void ThreadData::OnDestroy(void* opaque) {
 
 void ThreadData::ClassInit() {
   #if OS(WIN)
-  g_tls_for_current = NativeThreadLocal::Allocate();
+  g_tls_for_current = NativeThreadLocal::allocate();
   #elif OS(POSIX)
-  g_tls_for_current = NativeThreadLocal::Allocate(OnDestroy);
+  g_tls_for_current = NativeThreadLocal::allocate(OnDestroy);
   #endif
 }
 
@@ -68,7 +68,7 @@ void ThreadData::ClassFini() {
   // Dispose main thread data.
   Dispose(Current());
 
-  NativeThreadLocal::Free(g_tls_for_current);
+  NativeThreadLocal::deallocate(g_tls_for_current);
 }
 
 } // namespace detail

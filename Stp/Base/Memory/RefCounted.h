@@ -19,25 +19,25 @@ class RefCountedBase {
   }
 
   ~RefCountedBase() {
-    ASSERT(ref_count_ == 0, "RefCountedBase object deleted without calling DecRef()");
+    ASSERT(ref_count_ == 0, "RefCountedBase object deleted without calling decRef()");
   }
 
-  bool HasOneRef() const { return ref_count_ == 1; }
+  bool hasOneRef() const { return ref_count_ == 1; }
 
-  void IncRef() const {
+  void incRef() const {
     ASSERT(ref_count_ > 0);
     ref_count_++;
   }
 
   #ifndef NDEBUG
-  void VerifyAdoption() {
+  void verifyAdoption() {
     ASSERT(ref_count_ == -1);
     ref_count_ = 1;
   }
   #endif
 
  protected:
-  bool DecRefBase() const {
+  bool decRefBase() const {
     ASSERT(ref_count_ > 0);
     return --ref_count_ == 0;
   }
@@ -48,17 +48,17 @@ class RefCountedBase {
   DISALLOW_COPY_AND_ASSIGN(RefCountedBase);
 };
 
-inline void RefAdopted(RefCountedBase* refed) {
+inline void refAdopted(RefCountedBase* refed) {
   #ifndef NDEBUG
-  refed->VerifyAdoption();
+  refed->verifyAdoption();
   #endif
 }
 
 template<typename T>
 class RefCounted : public RefCountedBase {
  public:
-  void DecRef() const {
-    if (DecRefBase())
+  void decRef() const {
+    if (decRefBase())
       delete static_cast<const T*>(this);
   }
 

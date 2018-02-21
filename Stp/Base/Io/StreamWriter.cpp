@@ -59,9 +59,9 @@ class SimpleBufferAllocator : public PolymorphicAllocator {
  public:
   explicit SimpleBufferAllocator(Buffer& buffer) : buffer_(buffer) {}
 
-  void* Allocate(int size) override { return buffer_.appendUninitialized(size); }
-  void* Reallocate(void* ptr, int old_size, int new_size) { ASSERT(false); return nullptr; }
-  void Deallocate(void* ptr, int size) { ASSERT(false); }
+  void* allocate(int size) override { return buffer_.appendUninitialized(size); }
+  void* reallocate(void* ptr, int old_size, int new_size) { ASSERT(false); return nullptr; }
+  void deallocate(void* ptr, int size) { ASSERT(false); }
 
  private:
   Buffer& buffer_;

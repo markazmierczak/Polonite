@@ -24,7 +24,7 @@ class BASE_EXPORT BasicThreadLocal {
   void Init(void (*dtor)(void*));
   void Fini();
 
-  void* Get() { return NativeThreadLocal::GetValue(slot_); }
+  void* Get() { return NativeThreadLocal::getValue(slot_); }
   void Set(void* value);
 
   #if OS(WIN)

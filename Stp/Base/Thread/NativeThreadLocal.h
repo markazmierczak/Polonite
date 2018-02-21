@@ -28,19 +28,19 @@ class BASE_EXPORT NativeThreadLocal {
   #endif
 
   #if OS(WIN)
-  static Slot Allocate();
+  static Slot allocate();
   #elif OS(POSIX)
-  static Slot Allocate(void (*dtor)(void*) = nullptr);
+  static Slot allocate(void (*dtor)(void*) = nullptr);
   #endif
 
-  static void Free(Slot key);
+  static void deallocate(Slot key);
 
-  static void SetValue(Slot key, void* value);
+  static void setValue(Slot key, void* value);
 
-  static void* GetValue(Slot key);
+  static void* getValue(Slot key);
 };
 
-inline void* NativeThreadLocal::GetValue(Slot slot) {
+inline void* NativeThreadLocal::getValue(Slot slot) {
   #if OS(WIN)
   return ::TlsGetValue(slot);
   #elif OS(POSIX)
@@ -48,7 +48,7 @@ inline void* NativeThreadLocal::GetValue(Slot slot) {
   #endif // OS(*)
 }
 
-inline void NativeThreadLocal::SetValue(Slot slot, void* value) {
+inline void NativeThreadLocal::setValue(Slot slot, void* value) {
   #if OS(WIN)
   bool ok = ::TlsSetValue(slot, value) != 0;
   #elif OS(POSIX)

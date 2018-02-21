@@ -8,20 +8,20 @@
 namespace stp {
 
 #if OS(WIN)
-NativeThreadLocal::Slot NativeThreadLocal::Allocate() {
+NativeThreadLocal::Slot NativeThreadLocal::allocate() {
   Slot slot = ::TlsAlloc();
   if (slot == TLS_OUT_OF_INDEXES)
     throw Exception::with(Exception(), "run out of TLS indices");
   return slot;
 }
 
-void NativeThreadLocal::Free(Slot slot) {
+void NativeThreadLocal::deallocate(Slot slot) {
   if (!::TlsFree(slot))
     ASSERT(false, "failed to deallocate TLS slot");
 }
 
 #elif OS(POSIX)
-NativeThreadLocal::Slot NativeThreadLocal::Allocate(void (*dtor)(void*)) {
+NativeThreadLocal::Slot NativeThreadLocal::allocate(void (*dtor)(void*)) {
   Slot slot;
   auto error = static_cast<PosixErrorCode>(pthread_key_create(&slot, dtor));
   if (!IsOk(error))
@@ -29,7 +29,7 @@ NativeThreadLocal::Slot NativeThreadLocal::Allocate(void (*dtor)(void*)) {
   return slot;
 }
 
-void NativeThreadLocal::Free(Slot slot) {
+void NativeThreadLocal::deallocate(Slot slot) {
   if (pthread_key_delete(slot) != 0)
     ASSERT(false, "failed to deallocate TLS slot");
 }

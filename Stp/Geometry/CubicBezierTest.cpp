@@ -71,65 +71,65 @@ TEST(CubicBezierTest, GetRange) {
   double min, max;
 
   // Derivative is a constant.
-  auto function = OwnPtr<CubicBezier>::New(0.25, (1.0 / 3.0), 0.75, (2.0 / 3.0));
+  auto function = OwnPtr<CubicBezier>::create(0.25, (1.0 / 3.0), 0.75, (2.0 / 3.0));
   function->GetRange().Unpack(min, max);
   EXPECT_EQ(0, min);
   EXPECT_EQ(1, max);
 
   // Derivative is linear.
-  function = OwnPtr<CubicBezier>::New(0.25, -0.5, 0.75, (-1.0 / 6.0));
+  function = OwnPtr<CubicBezier>::create(0.25, -0.5, 0.75, (-1.0 / 6.0));
   function->GetRange().Unpack(min, max);
   EXPECT_NEAR(min, -0.225, epsilon);
   EXPECT_EQ(1, max);
 
   // Derivative has no real roots.
-  function = OwnPtr<CubicBezier>::New(0.25, 0.25, 0.75, 0.5);
+  function = OwnPtr<CubicBezier>::create(0.25, 0.25, 0.75, 0.5);
   function->GetRange().Unpack(min, max);
   EXPECT_EQ(0, min);
   EXPECT_EQ(1, max);
 
   // Derivative has exactly one real root.
-  function = OwnPtr<CubicBezier>::New(0.0, 1.0, 1.0, 0.0);
+  function = OwnPtr<CubicBezier>::create(0.0, 1.0, 1.0, 0.0);
   function->GetRange().Unpack(min, max);
   EXPECT_EQ(0, min);
   EXPECT_EQ(1, max);
 
   // Derivative has one root < 0 and one root > 1.
-  function = OwnPtr<CubicBezier>::New(0.25, 0.1, 0.75, 0.9);
+  function = OwnPtr<CubicBezier>::create(0.25, 0.1, 0.75, 0.9);
   function->GetRange().Unpack(min, max);
   EXPECT_EQ(0, min);
   EXPECT_EQ(1, max);
 
   // Derivative has two roots in [0,1].
-  function = OwnPtr<CubicBezier>::New(0.25, 2.5, 0.75, 0.5);
+  function = OwnPtr<CubicBezier>::create(0.25, 2.5, 0.75, 0.5);
   function->GetRange().Unpack(min, max);
   EXPECT_EQ(0, min);
   EXPECT_NEAR(max, 1.28818, epsilon);
-  function = OwnPtr<CubicBezier>::New(0.25, 0.5, 0.75, -1.5);
+  function = OwnPtr<CubicBezier>::create(0.25, 0.5, 0.75, -1.5);
   function->GetRange().Unpack(min, max);
   EXPECT_NEAR(min, -0.28818, epsilon);
   EXPECT_EQ(1, max);
 
   // Derivative has one root < 0 and one root in [0,1].
-  function = OwnPtr<CubicBezier>::New(0.25, 0.1, 0.75, 1.5);
+  function = OwnPtr<CubicBezier>::create(0.25, 0.1, 0.75, 1.5);
   function->GetRange().Unpack(min, max);
   EXPECT_EQ(0, min);
   EXPECT_NEAR(max, 1.10755, epsilon);
 
   // Derivative has one root in [0,1] and one root > 1.
-  function = OwnPtr<CubicBezier>::New(0.25, -0.5, 0.75, 0.9);
+  function = OwnPtr<CubicBezier>::create(0.25, -0.5, 0.75, 0.9);
   function->GetRange().Unpack(min, max);
   EXPECT_NEAR(min, -0.10755, epsilon);
   EXPECT_EQ(1, max);
 
   // Derivative has two roots < 0.
-  function = OwnPtr<CubicBezier>::New(0.25, 0.3, 0.75, 0.633);
+  function = OwnPtr<CubicBezier>::create(0.25, 0.3, 0.75, 0.633);
   function->GetRange().Unpack(min, max);
   EXPECT_EQ(0, min);
   EXPECT_EQ(1, max);
 
   // Derivative has two roots > 1.
-  function = OwnPtr<CubicBezier>::New(0.25, 0.367, 0.75, 0.7);
+  function = OwnPtr<CubicBezier>::create(0.25, 0.367, 0.75, 0.7);
   function->GetRange().Unpack(min, max);
   EXPECT_EQ(0.f, min);
   EXPECT_EQ(1.f, max);

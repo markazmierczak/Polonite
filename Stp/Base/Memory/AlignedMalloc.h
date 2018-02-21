@@ -5,9 +5,6 @@
 #define STP_BASE_MEMORY_ALIGNEDMALLOC_H_
 
 #include "Base/Debug/Assert.h"
-#include "Base/Error/BasicExceptions.h"
-#include "Base/Type/Limits.h"
-#include "Base/Type/Sign.h"
 
 #if COMPILER(MSVC)
 # include <malloc.h>
@@ -17,48 +14,22 @@
 
 namespace stp {
 
-namespace detail {
+BASE_EXPORT void* tryAllocateAlignedMemory(int size, int alignment) noexcept;
 
-BASE_EXPORT void* aligned_malloc(size_t size, size_t alignment) noexcept;
-
-// Accepts null pointer - no action performed.
-inline void aligned_free(void* ptr) noexcept {
+template<typename T>
+inline void freeAlignedMemory(T* ptr) noexcept {
   #if COMPILER(MSVC)
-  _aligned_free(ptr);
+  _alignedFreeImpl(ptr);
   #else
   free(ptr);
   #endif
 }
 
-} // namespace detail
-
-template<typename TValue, typename TSize>
-inline TValue* TryAlignedAllocate(TSize count) noexcept {
-  ASSERT(count > 0);
-  auto ucount = toUnsigned(count);
-  if (UNLIKELY(Limits<size_t>::Max / sizeof(TValue) < ucount))
-    return nullptr;
-  return (TValue*)detail::aligned_malloc(count * sizeof(TValue), alignof(TValue));
-}
-
-template<typename T>
-inline void AlignedFree(T* ptr) noexcept {
-  detail::aligned_free(ptr);
-}
-
-template<typename TValue, typename TSize>
-inline TValue* AlignedAllocate(TSize count) {
-  TValue* ptr = TryAlignedAllocate<TValue, TSize>(count);
-  if (!ptr)
-    throw OutOfMemoryException();
-  return ptr;
-}
-
-template<typename T>
+template<int TAlignment>
 class AlignedAllocator {
  public:
-  static void* allocate(int size) { return detail::aligned_malloc(toUnsigned(size), alignof(T)); }
-  static void deallocate(void* ptr, int size) { detail::aligned_free(ptr); }
+  static void* allocate(int size) { return tryAllocateAlignedMemory(size, TAlignment); }
+  static void deallocate(void* ptr, int size) noexcept { freeAlignedMemory(ptr); }
 };
 
 } // namespace stp

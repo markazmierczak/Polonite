@@ -116,7 +116,7 @@ FileStream* ConsoleWriter::openStdStream(StdDescriptor std_descriptor) {
 }
 
 FileStream* Console::openLogFile(const FilePath& path) {
-  auto stream = OwnPtr<FileStream>::New();
+  auto stream = OwnPtr<FileStream>::create();
   if (!IsOk(stream->TryCreate(path, FileMode::Create, FileAccess::WriteOnly)))
     return nullptr;
 

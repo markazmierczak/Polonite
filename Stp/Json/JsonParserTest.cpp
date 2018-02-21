@@ -11,7 +11,7 @@
 namespace stp {
 
 static OwnPtr<JsonParser> NewTestParser(StringSpan input) {
-  auto parser = OwnPtr<JsonParser>::New();
+  auto parser = OwnPtr<JsonParser>::create();
   parser->start_pos_ = input.data();
   parser->pos_ = parser->start_pos_;
   parser->end_pos_ = parser->start_pos_ + input.size();

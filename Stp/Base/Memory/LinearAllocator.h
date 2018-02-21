@@ -31,7 +31,7 @@ class BASE_EXPORT LinearAllocator {
 
   ~LinearAllocator();
 
-  // Call this to deallocate the most-recently allocated ptr by Allocate().
+  // Call this to deallocate the most-recently allocated ptr by allocate().
   // On success, the number of bytes freed is returned, or 0 if the block could
   // not be unallocated. This is a hint to the underlying allocator that
   // the previous allocation may be reused, but the implementation is free
@@ -94,7 +94,7 @@ inline TValue* TryAllocate(LinearAllocator& allocator, TSize count) {
 }
 
 template<typename TValue, typename TSize>
-inline TValue* Allocate(LinearAllocator& allocator, TSize count) {
+inline TValue* allocate(LinearAllocator& allocator, TSize count) {
   TValue* ptr = TryAllocate<TValue, TSize>(allocator, count);
   if (!ptr)
     throw OutOfMemoryException();

@@ -103,7 +103,7 @@ TEST(Function, Swap) {
 }
 
 TEST(Function, NonCopyableLambda) {
-  auto ptr_int = OwnPtr<int>::New(900);
+  auto ptr_int = OwnPtr<int>::create(900);
   EXPECT_EQ(900, *ptr_int);
 
   struct {

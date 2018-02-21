@@ -35,13 +35,13 @@ namespace detail {
 template<typename TDecoder>
 inline TextDecoder* MakeTextDecoder(
     PolymorphicAllocator& allocator, const TextEncodingConfig* config) {
-  return new(allocator.Allocate(isizeof(TDecoder))) TDecoder(config);
+  return new(allocator.allocate(isizeof(TDecoder))) TDecoder(config);
 }
 
 template<typename TEncoder>
 inline TextEncoder* MakeTextEncoder(
     PolymorphicAllocator& allocator, const TextEncodingConfig* config) {
-  return new(allocator.Allocate(isizeof(TEncoder))) TEncoder(config);
+  return new(allocator.allocate(isizeof(TEncoder))) TEncoder(config);
 }
 
 } // namespace detail

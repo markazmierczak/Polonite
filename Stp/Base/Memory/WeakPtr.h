@@ -22,7 +22,7 @@ class BASE_EXPORT WeakReference {
   // deleted from another via WeakPtr::~WeakPtr().
   class BASE_EXPORT Flag : public RefCountedThreadSafe<Flag> {
    public:
-    static RefPtr<Flag> Create() { return AdoptRef(new Flag()); }
+    static RefPtr<Flag> Create() { return adoptRef(new Flag()); }
 
     // A sentinel object used by WeakReference objects that don't point to
     // a valid Flag, either because they're default constructed or because
@@ -42,7 +42,7 @@ class BASE_EXPORT WeakReference {
       #endif
       // The flag being invalidated with a single ref implies that there are no
       // weak pointers in existence. Allow deletion on other thread in this case.
-      ASSERT(thread_checker_.CalledOnValidThread() || HasOneRef(),
+      ASSERT(thread_checker_.CalledOnValidThread() || hasOneRef(),
              "WeakPtrs must be invalidated on the same sequenced thread");
       valid_ = 0;
     }
@@ -120,7 +120,7 @@ class BASE_EXPORT WeakReferenceOwner {
   }
 
   bool HasRefs() const {
-    return flag_ != WeakReference::Flag::Null && !flag_->HasOneRef();
+    return flag_ != WeakReference::Flag::Null && !flag_->hasOneRef();
   }
 
   void Invalidate() {

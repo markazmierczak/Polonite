@@ -79,18 +79,18 @@ TEST(ContiguousAllocatorTest, Basic) {
 
 TEST(ContiguousAllocatorTest, Alignment) {
   LinearAllocator allocator;
-  ignoreResult(Allocate<uint8_t>(allocator, 1));
-  ignoreResult(Allocate<int>(allocator, 1));
-  ignoreResult(Allocate<uint8_t>(allocator, 1));
+  ignoreResult(allocate<uint8_t>(allocator, 1));
+  ignoreResult(allocate<int>(allocator, 1));
+  ignoreResult(allocate<uint8_t>(allocator, 1));
 
   EXPECT_EQ(allocator.GetTotalUsed(), 9u);
 
   allocator.Reset();
-  double* double_ptr = Allocate<double>(allocator, 1);
+  double* double_ptr = allocate<double>(allocator, 1);
   EXPECT_TRUE(isAlignedTo(double_ptr, alignof(double)));
-  uint8_t* byte_after_double_ptr = Allocate<uint8_t>(allocator, 1);
+  uint8_t* byte_after_double_ptr = allocate<uint8_t>(allocator, 1);
   EXPECT_TRUE(isAlignedTo(byte_after_double_ptr, alignof(double)));
-  double_ptr = Allocate<double>(allocator, 1);
+  double_ptr = allocate<double>(allocator, 1);
   EXPECT_TRUE(isAlignedTo(double_ptr, alignof(double)));
 }
 

@@ -13,40 +13,40 @@ template<typename T>
 class RefPtr;
 
 template<typename T>
-RefPtr<T> AdoptRef(T* ptr);
+RefPtr<T> adoptRef(T* ptr);
 
-ALWAYS_INLINE void RefAdopted(const void*) {}
+ALWAYS_INLINE void refAdopted(const void*) {}
 
 template<typename T>
 class RefPtr {
  public:
   RefPtr() noexcept : ptr_(nullptr) {}
-  ~RefPtr() { DecRefIfNotNull(ptr_); }
+  ~RefPtr() { decRefIfNotNull(ptr_); }
 
-  RefPtr(T* ptr) noexcept : ptr_(ptr) { IncRefIfNotNull(ptr); }
+  RefPtr(T* ptr) noexcept : ptr_(ptr) { incRefIfNotNull(ptr); }
 
   RefPtr(RefPtr&& o) noexcept : ptr_(exchange(o.ptr_, nullptr)) {}
 
   RefPtr& operator=(RefPtr&& o) noexcept {
     T* old_ptr = exchange(ptr_, exchange(o.ptr_, nullptr));
-    DecRefIfNotNull(old_ptr);
+    decRefIfNotNull(old_ptr);
     return *this;
   }
 
-  RefPtr(const RefPtr& o) noexcept : ptr_(o.ptr_) { IncRefIfNotNull(ptr_); }
+  RefPtr(const RefPtr& o) noexcept : ptr_(o.ptr_) { incRefIfNotNull(ptr_); }
   RefPtr& operator=(const RefPtr& o) noexcept { Reset(o.ptr_); return *this; }
 
   template<typename U>
-  RefPtr(const RefPtr<U>& o) noexcept : ptr_(o.get()) { IncRefIfNotNull(ptr_); }
+  RefPtr(const RefPtr<U>& o) noexcept : ptr_(o.get()) { incRefIfNotNull(ptr_); }
 
   RefPtr(nullptr_t) noexcept : ptr_(nullptr) {}
-  RefPtr& operator=(nullptr_t) noexcept { Reset(); return *this; }
+  RefPtr& operator=(nullptr_t) noexcept { reset(); return *this; }
 
   [[nodiscard]] T* release() { return exchange(ptr_, nullptr); }
 
-  void Reset(T* new_ptr = nullptr) {
-    IncRefIfNotNull(new_ptr);
-    DecRefIfNotNull(exchange(ptr_, new_ptr));
+  void reset(T* new_ptr = nullptr) {
+    incRefIfNotNull(new_ptr);
+    decRefIfNotNull(exchange(ptr_, new_ptr));
   }
 
   ALWAYS_INLINE T* get() const { return ptr_; }
@@ -60,22 +60,22 @@ class RefPtr {
   friend void swap(RefPtr& lhs, RefPtr& rhs) { swap(lhs.ptr_, rhs.ptr_); }
 
  private:
-  friend RefPtr AdoptRef<T>(T* ptr);
+  friend RefPtr adoptRef<T>(T* ptr);
 
-  enum AdoptRefEnum { AdoptValue };
+  enum adoptRefEnum { AdoptValue };
 
   T* ptr_;
 
-  RefPtr(T* ptr, AdoptRefEnum) : ptr_(ptr) {}
+  RefPtr(T* ptr, adoptRefEnum) : ptr_(ptr) {}
 
-  ALWAYS_INLINE void IncRefIfNotNull(T* ptr) {
+  ALWAYS_INLINE void incRefIfNotNull(T* ptr) {
     if (ptr)
-      ptr->IncRef();
+      ptr->incRef();
   }
 
-  ALWAYS_INLINE void DecRefIfNotNull(T* ptr) {
+  ALWAYS_INLINE void decRefIfNotNull(T* ptr) {
     if (ptr)
-      ptr->DecRef();
+      ptr->decRef();
   }
 
   template<typename U>
@@ -106,8 +106,8 @@ template<typename T>
 struct TIsTriviallyEqualityComparableTmpl<RefPtr<T>> : TTrue {};
 
 template<typename T>
-RefPtr<T> AdoptRef(T* ptr) {
-  RefAdopted(ptr);
+RefPtr<T> adoptRef(T* ptr) {
+  refAdopted(ptr);
   return RefPtr<T>(ptr, RefPtr<T>::AdoptValue);
 }
 

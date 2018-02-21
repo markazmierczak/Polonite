@@ -12,29 +12,29 @@
 namespace stp {
 
 TEST(AlignedMemory, DynamicAllocation) {
-  void* p = detail::aligned_malloc(8, 8);
+  void* p = tryAllocateAlignedMemory(8, 8);
   EXPECT_TRUE(p);
   EXPECT_ALIGNED(p, 8);
-  detail::aligned_free(p);
+  freeAlignedMemory(p);
 
-  p = detail::aligned_malloc(8, 16);
+  p = tryAllocateAlignedMemory(8, 16);
   EXPECT_TRUE(p);
   EXPECT_ALIGNED(p, 16);
-  detail::aligned_free(p);
+  freeAlignedMemory(p);
 
-  p = detail::aligned_malloc(8, 256);
+  p = tryAllocateAlignedMemory(8, 256);
   EXPECT_TRUE(p);
   EXPECT_ALIGNED(p, 256);
-  detail::aligned_free(p);
+  freeAlignedMemory(p);
 
-  p = detail::aligned_malloc(8, 4096);
+  p = tryAllocateAlignedMemory(8, 4096);
   EXPECT_TRUE(p);
   EXPECT_ALIGNED(p, 4096);
-  detail::aligned_free(p);
+  freeAlignedMemory(p);
 }
 
 TEST(AlignedMemory, ScopedDynamicAllocation) {
-  auto p = OwnPtr<double, AlignedAllocator<double>>::New(8);
+  auto p = OwnPtr<double, AlignedAllocator<alignof(double)>>::create(8);
   EXPECT_TRUE(p != nullptr);
   EXPECT_ALIGNED(p.get(), 4);
 }

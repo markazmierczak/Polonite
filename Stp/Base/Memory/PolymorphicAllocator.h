@@ -10,9 +10,9 @@ namespace stp {
 
 class PolymorphicAllocator {
  public:
-  virtual void* Allocate(int size) = 0;
-  virtual void* Reallocate(void* ptr, int old_size, int new_size) = 0;
-  virtual void Deallocate(void* ptr, int size) = 0;
+  virtual void* allocate(int size) = 0;
+  virtual void* reallocate(void* ptr, int old_size, int new_size) = 0;
+  virtual void deallocate(void* ptr, int size) = 0;
 };
 
 } // namespace stp

@@ -55,7 +55,7 @@ void BasicThreadLocal::OnThreadExit() {
 
 void BasicThreadLocal::Init(void (*dtor)(void*)) {
   dtor_ = dtor;
-  slot_ = NativeThreadLocal::Allocate(dtor_);
+  slot_ = NativeThreadLocal::allocate(dtor_);
   #if OS(WIN)
   AutoLock guard(&g_tls_lock);
   appendToList(&g_tls_root);
@@ -65,7 +65,7 @@ void BasicThreadLocal::Init(void (*dtor)(void*)) {
 }
 
 void BasicThreadLocal::Fini() {
-  NativeThreadLocal::Free(slot_);
+  NativeThreadLocal::deallocate(slot_);
   #if OS(WIN)
   AutoLock guard(&g_tls_lock);
   removeFromList();
@@ -79,7 +79,7 @@ void BasicThreadLocal::Set(void* value) {
   if (dtor_)
     old = Get();
 
-  NativeThreadLocal::SetValue(slot_, value);
+  NativeThreadLocal::setValue(slot_, value);
 
   if (old)
     dtor_(old);

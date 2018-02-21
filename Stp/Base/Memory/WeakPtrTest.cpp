@@ -609,7 +609,7 @@ TEST(WeakPtrDeathTest, NonOwnerThreadDeletesWeakPtrAfterReference) {
   // (introduces deadlock on Linux).
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  auto target = OwnPtr<Target>::New();
+  auto target = OwnPtr<Target>::create();
 
   // Main thread creates an arrow referencing the Target.
   Arrow arrow;
@@ -633,7 +633,7 @@ TEST(WeakPtrDeathTest, NonOwnerThreadDeletesObjectAfterReference) {
   // (introduces deadlock on Linux).
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  auto target = OwnPtr<Target>::New();
+  auto target = OwnPtr<Target>::create();
 
   // Main thread creates an arrow referencing the Target, and references it, so
   // that it becomes bound to the thread.
@@ -652,7 +652,7 @@ TEST(WeakPtrDeathTest, NonOwnerThreadReferencesObjectAfterDeletion) {
   // (introduces deadlock on Linux).
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  auto target = OwnPtr<Target>::New();
+  auto target = OwnPtr<Target>::create();
 
   // Main thread creates an arrow referencing the Target.
   Arrow arrow;

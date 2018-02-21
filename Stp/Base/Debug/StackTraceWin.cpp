@@ -63,7 +63,7 @@ bool InitializeSymbols() {
   // add the directory of the executable to symbol search path.
   // All following errors are non-fatal.
   const int SymbolsArraySize = 1024;
-  auto symbols_path = OwnPtr<wchar_t[]>::New(SymbolsArraySize);
+  auto symbols_path = OwnPtr<wchar_t[]>::create(SymbolsArraySize);
 
   // Note: The below function takes buffer size as number of characters,
   // not number of bytes!
