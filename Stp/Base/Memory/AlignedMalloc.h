@@ -19,7 +19,7 @@ BASE_EXPORT void* tryAllocateAlignedMemory(int size, int alignment) noexcept;
 template<typename T>
 inline void freeAlignedMemory(T* ptr) noexcept {
   #if COMPILER(MSVC)
-  _alignedFreeImpl(ptr);
+  _aligned_free(ptr);
   #else
   free(ptr);
   #endif

@@ -14,7 +14,7 @@ void* tryAllocateAlignedMemory(int size, int alignment) noexcept {
 
   void* ptr;
   #if COMPILER(MSVC)
-  ptr = _alignedMallocImpl(toUnsigned(size), toUnsigned(alignment));
+  ptr = _aligned_malloc(toUnsigned(size), toUnsigned(alignment));
   #else
   // posix_memalign() added in API level 16 for Android.
   if (posix_memalign(&ptr, toUnsigned(alignment), toUnsigned(size)))
