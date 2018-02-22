@@ -29,7 +29,7 @@ static inline float32x4_t armv7_vrndmq_f32(float32x4_t v) {
 
 template<>
 struct VecNx<2, float> {
-  static constexpr int Size() { return 2; }
+  static constexpr int Size = 2;
 
   VecNx(float32x2_t vec) : vec_(vec) {}
 
@@ -37,8 +37,8 @@ struct VecNx<2, float> {
   VecNx(float val) : vec_(vdup_n_f32(val)) {}
   VecNx(float a, float b) { vec_ = (float32x2_t) { a, b }; }
 
-  static VecNx Load(const float* ptr) { return vld1_f32(ptr); }
-  void Store(float* ptr) const { vst1_f32(ptr, vec_); }
+  static VecNx load(const float* ptr) { return vld1_f32(ptr); }
+  void store(float* ptr) const { vst1_f32(ptr, vec_); }
 
   bool allTrue() const {
     auto v = vreinterpret_u32_f32(vec_);
@@ -51,7 +51,7 @@ struct VecNx<2, float> {
 
   VecNx mathAbs() const { return vabs_f32(vec_); }
 
-  VecNx Reciprocal() const {
+  VecNx reciprocal() const {
     float32x2_t est0 = vrsqrte_f32(vec_);
     return vmul_f32(vrsqrts_f32(vec_, vmul_f32(est0, est0)), est0);
   }
@@ -101,7 +101,7 @@ struct VecNx<2, float> {
   VecNx operator!=(const VecNx& o) const { return vreinterpret_f32_u32(vmvn_u32(vceq_f32(vec_, o.vec_))); }
 
   float operator[](int k) const {
-    ASSERT(0 <= k && k < Size());
+    ASSERT(0 <= k && k < Size);
     union { float32x2_t v; float fs[2]; } pun = {vec_};
     return pun.fs[k];
   }
@@ -111,7 +111,7 @@ struct VecNx<2, float> {
 
 template<>
 struct VecNx<4, float> {
-  static constexpr int Size() { return 4; }
+  static constexpr int Size = 4;
 
   VecNx(float32x4_t vec) : vec_(vec) {}
 
@@ -119,8 +119,8 @@ struct VecNx<4, float> {
   VecNx(float val) : vec_(vdupq_n_f32(val)) {}
   VecNx(float a, float b, float c, float d) { vec_ = (float32x4_t) { a, b, c, d }; }
 
-  static VecNx Load(const float* ptr) { return vld1q_f32(ptr); }
-  void Store(float* ptr) const { vst1q_f32(ptr, vec_); }
+  static VecNx load(const float* ptr) { return vld1q_f32(ptr); }
+  void store(float* ptr) const { vst1q_f32(ptr, vec_); }
 
   bool allTrue() const {
     auto v = vreinterpretq_u32_f32(vec_);
@@ -134,7 +134,7 @@ struct VecNx<4, float> {
 
   VecNx mathAbs() const { return vabsq_f32(vec_); }
 
-  VecNx Reciprocal() const {
+  VecNx reciprocal() const {
     float32x4_t est0 = vrecpeq_f32(vec_),
                 est1 = vmulq_f32(vrecpsq_f32(est0, vec_), est0);
     return est1;
@@ -171,7 +171,7 @@ struct VecNx<4, float> {
     return vmaxq_f32(l.vec_, r.vec_);
   }
 
-  static VecNx Ternary(const VecNx& c, const VecNx& t, const VecNx& e) {
+  static VecNx ternary(const VecNx& c, const VecNx& t, const VecNx& e) {
     return vbslq_f32(vreinterpretq_u32_f32(c.vec_), t.vec_, e.vec_);
   }
 
@@ -197,7 +197,7 @@ struct VecNx<4, float> {
   VecNx operator!=(const VecNx& o) const { return vreinterpretq_f32_u32(vmvnq_u32(vceqq_f32(vec_, o.vec_))); }
 
   float operator[](int k) const {
-    ASSERT(0 <= k && k < Size());
+    ASSERT(0 <= k && k < Size);
     union { float32x4_t v; float fs[4]; } pun = {vec_};
     return pun.fs[k];
   }
@@ -207,7 +207,7 @@ struct VecNx<4, float> {
 
 template<>
 struct VecNx<4, int32_t> {
-  static constexpr int Size() { return 4; }
+  static constexpr int Size = 4;
 
   VecNx(const int32x4_t& vec) : vec_(vec) {}
 
@@ -217,14 +217,14 @@ struct VecNx<4, int32_t> {
     vec_ = (int32x4_t) { a, b, c, d };
   }
 
-  static VecNx Load(const int32_t* ptr) { return vld1q_s32(ptr); }
-  void Store(int32_t* ptr) const { vst1q_s32(ptr, vec_); }
+  static VecNx load(const int32_t* ptr) { return vld1q_s32(ptr); }
+  void store(int32_t* ptr) const { vst1q_s32(ptr, vec_); }
 
   static VecNx min(const VecNx& l, const VecNx& r) {
     return vminq_s32(l.vec_, r.vec_);
   }
 
-  static VecNx Ternary(const VecNx& c, const VecNx& t, const VecNx& e) {
+  static VecNx ternary(const VecNx& c, const VecNx& t, const VecNx& e) {
     return vbslq_f32(vreinterpretq_u32_s32(c.vec_), t.vec_, e.vec_);
   }
 
@@ -250,7 +250,7 @@ struct VecNx<4, int32_t> {
   }
 
   int32_t operator[](int k) const {
-    ASSERT(0 <= k && k < Size());
+    ASSERT(0 <= k && k < Size);
     union { int32x4_t v; int32_t is[4]; } pun = {vec_};
     return pun.is[k];
   }
@@ -260,7 +260,7 @@ struct VecNx<4, int32_t> {
 
 template<>
 struct VecNx<4, uint32_t> {
-  static constexpr int Size() { return 4; }
+  static constexpr int Size = 4;
 
   VecNx(const uint32x4_t& vec) : vec_(vec) {}
 
@@ -270,14 +270,14 @@ struct VecNx<4, uint32_t> {
     vec_ = (uint32x4_t) { a, b, c, d };
   }
 
-  static VecNx Load(const uint32_t* ptr) { return vld1q_u32(ptr); }
-  void Store(uint32_t* ptr) const { vst1q_u32(ptr, vec_); }
+  static VecNx load(const uint32_t* ptr) { return vld1q_u32(ptr); }
+  void store(uint32_t* ptr) const { vst1q_u32(ptr, vec_); }
 
   static VecNx min(const VecNx& l, const VecNx& r) {
     return vminq_u32(l.vec_, r.vec_);
   }
 
-  static VecNx Ternary(const VecNx& c, const VecNx& t, const VecNx& e) {
+  static VecNx ternary(const VecNx& c, const VecNx& t, const VecNx& e) {
     return vbslq_u32(c.vec_, t.vec_, e.vec_);
   }
 
@@ -297,7 +297,7 @@ struct VecNx<4, uint32_t> {
   VecNx operator> (const VecNx& o) const { return vcgtq_u32(vec_, o.vec_); }
 
   uint32_t operator[](int k) const {
-    ASSERT(0 <= k && k < Size());
+    ASSERT(0 <= k && k < Size);
     union { uint32x4_t v; uint32_t is[4]; } pun = {vec_};
     return pun.is[k];
   }
@@ -307,7 +307,7 @@ struct VecNx<4, uint32_t> {
 
 template<>
 struct VecNx<4, uint16_t> {
-  static constexpr int Size() { return 4; }
+  static constexpr int Size = 4;
 
   VecNx(const uint16x4_t& vec) : vec_(vec) {}
 
@@ -317,14 +317,14 @@ struct VecNx<4, uint16_t> {
     vec_ = (uint16x4_t) { a,b,c,d };
   }
 
-  static VecNx Load(const uint16_t* ptr) { return vld1_u16(ptr); }
-  void Store(uint16_t* ptr) const { vst1_u16(ptr, vec_); }
+  static VecNx load(const uint16_t* ptr) { return vld1_u16(ptr); }
+  void store(uint16_t* ptr) const { vst1_u16(ptr, vec_); }
 
   static VecNx min(const VecNx& l, const VecNx& r) {
     return vmin_u16(l.vec_, r.vec_);
   }
 
-  static VecNx Ternary(const VecNx& c, const VecNx& t, const VecNx& e) {
+  static VecNx ternary(const VecNx& c, const VecNx& t, const VecNx& e) {
     return vbsl_u16(c.vec_, t.vec_, e.vec_);
   }
 
@@ -336,7 +336,7 @@ struct VecNx<4, uint16_t> {
   VecNx operator>>(int amount) const { return vec_ >> VecNx(amount).vec_; }
 
   uint16_t operator[](int k) const {
-    ASSERT(0 <= k && k < Size());
+    ASSERT(0 <= k && k < Size);
     union { uint16x4_t v; uint16_t us[4]; } pun = {vec_};
     return pun.us[k];
   }
@@ -346,7 +346,7 @@ struct VecNx<4, uint16_t> {
 
 template<>
 struct VecNx<8, uint16_t> {
-  static constexpr int Size() { return 8; }
+  static constexpr int Size = 8;
 
   VecNx(const uint16x8_t& vec) : vec_(vec) {}
 
@@ -357,13 +357,13 @@ struct VecNx<8, uint16_t> {
     vec_ = (uint16x8_t) { a,b,c,d, e,f,g,h };
   }
 
-  static VecNx Load(const uint16_t* ptr) { return vld1q_u16(ptr); }
-  void Store(uint16_t* ptr) const { vst1q_u16(ptr, vec_); }
+  static VecNx load(const uint16_t* ptr) { return vld1q_u16(ptr); }
+  void store(uint16_t* ptr) const { vst1q_u16(ptr, vec_); }
 
   static VecNx min(const VecNx& l, const VecNx& r) {
     return vminq_u16(l.vec_, r.vec_);
   }
-  static VecNx Ternary(const VecNx& c, const VecNx& t, const VecNx& e) {
+  static VecNx ternary(const VecNx& c, const VecNx& t, const VecNx& e) {
     return vbslq_u16(c.vec_, t.vec_, e.vec_);
   }
 
@@ -375,7 +375,7 @@ struct VecNx<8, uint16_t> {
   VecNx operator>>(int amount) const { return vec_ >> VecNx(amount).vec_; }
 
   uint16_t operator[](int k) const {
-    ASSERT(0 <= k && k < Size());
+    ASSERT(0 <= k && k < Size);
     union { uint16x8_t v; uint16_t us[8]; } pun = {vec_};
     return pun.us[k];
   }
@@ -385,7 +385,7 @@ struct VecNx<8, uint16_t> {
 
 template<>
 struct VecNx<4, uint8_t> {
-  static constexpr int Size() { return 4; }
+  static constexpr int Size = 4;
 
   typedef uint32_t alignas(1) unaligned_uint32_t;
 
@@ -396,15 +396,15 @@ struct VecNx<4, uint8_t> {
     vec_ = (uint8x8_t){a,b,c,d, 0,0,0,0};
   }
 
-  static VecNx Load(const uint8_t* ptr) {
+  static VecNx load(const uint8_t* ptr) {
     return (uint8x8_t)vld1_dup_u32((const uint32_t*)ptr);
   }
-  void Store(uint8_t* ptr) const {
+  void store(uint8_t* ptr) const {
     vst1_lane_u32((unaligned_uint32_t*)ptr, (uint32x2_t)vec_, 0);
   }
 
   uint8_t operator[](int k) const {
-    ASSERT(0 <= k && k < Size());
+    ASSERT(0 <= k && k < Size);
     union { uint8x8_t v; uint8_t us[8]; } pun = {vec_};
     return pun.us[k];
   }
@@ -416,7 +416,7 @@ struct VecNx<4, uint8_t> {
 
 template<>
 struct VecNx<16, uint8_t> {
-  static constexpr int Size() { return 16; }
+  static constexpr int Size = 16;
 
   VecNx(const uint8x16_t& vec) : vec_(vec) {}
 
@@ -429,8 +429,8 @@ struct VecNx<16, uint8_t> {
     vec_ = (uint8x16_t) { a,b,c,d, e,f,g,h, i,j,k,l, m,n,o,p };
   }
 
-  static VecNx Load(const uint8_t* ptr) { return vld1q_u8(ptr); }
-  void Store(uint8_t* ptr) const { vst1q_u8(ptr, vec_); }
+  static VecNx load(const uint8_t* ptr) { return vld1q_u8(ptr); }
+  void store(uint8_t* ptr) const { vst1q_u8(ptr, vec_); }
 
   static VecNx min(const VecNx& l, const VecNx& r) {
     return vminq_u8(l.vec_, r.vec_);
@@ -440,7 +440,7 @@ struct VecNx<16, uint8_t> {
     return vqaddq_u8(l.vec_, r.vec_);
   }
 
-  static VecNx Ternary(const VecNx& c, const VecNx& t, const VecNx& e) {
+  static VecNx ternary(const VecNx& c, const VecNx& t, const VecNx& e) {
     return vbslq_u8(c.vec_, t.vec_, e.vec_);
   }
 
@@ -450,7 +450,7 @@ struct VecNx<16, uint8_t> {
   VecNx operator<(const VecNx& o) const { return vcltq_u8(vec_, o.vec_); }
 
   uint8_t operator[](int k) const {
-    ASSERT(0 <= k && k < Size());
+    ASSERT(0 <= k && k < Size);
     union { uint8x16_t v; uint8_t us[16]; } pun = {vec_};
     return pun.us[k];
   }
@@ -459,41 +459,41 @@ struct VecNx<16, uint8_t> {
 };
 
 template<>
-inline Vec4i vnx_cast<int32_t, float>(const Vec4f& src) {
+inline Vec4i vnxCast<int32_t, float>(const Vec4f& src) {
   return vcvtq_s32_f32(src.vec_);
 
 }
 template<>
-inline Vec4f vnx_cast<float, int32_t>(const Vec4i& src) {
+inline Vec4f vnxCast<float, int32_t>(const Vec4i& src) {
   return vcvtq_f32_s32(src.vec_);
 }
 
 template<>
-inline Vec4h vnx_cast<uint16_t, float>(const Vec4f& src) {
+inline Vec4h vnxCast<uint16_t, float>(const Vec4f& src) {
   return vqmovn_u32(vcvtq_u32_f32(src.vec_));
 }
 
 template<>
-inline Vec4f vnx_cast<float, uint16_t>(const Vec4h& src) {
+inline Vec4f vnxCast<float, uint16_t>(const Vec4h& src) {
   return vcvtq_f32_u32(vmovl_u16(src.vec_));
 }
 
 template<>
-inline Vec4b vnx_cast<uint8_t, float>(const Vec4f& src) {
+inline Vec4b vnxCast<uint8_t, float>(const Vec4f& src) {
   uint32x4_t _32 = vcvtq_u32_f32(src.vec_);
   uint16x4_t _16 = vqmovn_u32(_32);
   return vqmovn_u16(vcombine_u16(_16, _16));
 }
 
 template<>
-inline Vec4f vnx_cast<float, uint8_t>(const Vec4b& src) {
+inline Vec4f vnxCast<float, uint8_t>(const Vec4b& src) {
   uint16x8_t _16 = vmovl_u8 (src.vec_) ;
   uint32x4_t _32 = vmovl_u16(vget_low_u16(_16));
   return vcvtq_f32_u32(_32);
 }
 
 template<>
-inline Vec16b vnx_cast<uint8_t, float>(const Vec16f& src) {
+inline Vec16b vnxCast<uint8_t, float>(const Vec16f& src) {
   Vec8f ab, cd;
   VnxMath::Split(src, &ab, &cd);
 
@@ -507,33 +507,33 @@ inline Vec16b vnx_cast<uint8_t, float>(const Vec16f& src) {
 }
 
 template<>
-inline Vec4h vnx_cast<uint16_t, uint8_t>(const Vec4b& src) {
+inline Vec4h vnxCast<uint16_t, uint8_t>(const Vec4b& src) {
   return vget_low_u16(vmovl_u8(src.vec_));
 }
 
 template<>
-inline Vec4b vnx_cast<uint8_t, uint16_t>(const Vec4h& src) {
+inline Vec4b vnxCast<uint8_t, uint16_t>(const Vec4h& src) {
   return vmovn_u16(vcombine_u16(src.vec_, src.vec_));
 }
 
 template<>
-inline Vec4b vnx_cast<uint8_t, int32_t>(const Vec4i& src) {
+inline Vec4b vnxCast<uint8_t, int32_t>(const Vec4i& src) {
   uint16x4_t _16 = vqmovun_s32(src.vec_);
   return vqmovn_u16(vcombine_u16(_16, _16));
 }
 
 template<>
-inline Vec4i vnx_cast<int32_t, uint16_t>(const Vec4h& src) {
+inline Vec4i vnxCast<int32_t, uint16_t>(const Vec4h& src) {
   return vreinterpretq_s32_u32(vmovl_u16(src.vec_));
 }
 
 template<>
-inline Vec4h vnx_cast<uint16_t, int32_t>(const Vec4i& src) {
+inline Vec4h vnxCast<uint16_t, int32_t>(const Vec4i& src) {
   return vmovn_u32(vreinterpretq_u32_s32(src.vec_));
 }
 
 template<>
-inline Vec4i vnx_cast<int32_t, uint32_t>(const Vec4u& src) {
+inline Vec4i vnxCast<int32_t, uint32_t>(const Vec4u& src) {
   return vreinterpretq_s32_u32(src.vec_);
 }
 

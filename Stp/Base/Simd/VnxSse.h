@@ -17,7 +17,7 @@ namespace stp {
 
 template<>
 struct VecNx<2, float> {
-  static constexpr int Size() { return 2; }
+  static constexpr int Size = 2;
 
   VecNx(const __m128& vec) : vec_(vec) {}
 
@@ -25,10 +25,10 @@ struct VecNx<2, float> {
   VecNx(float val) : vec_(_mm_set1_ps(val)) {}
   VecNx(float a, float b) : vec_(_mm_setr_ps(a,b,0,0)) {}
 
-  static VecNx Load(const float* ptr) {
+  static VecNx load(const float* ptr) {
     return _mm_castsi128_ps(_mm_loadl_epi64((const __m128i*)ptr));
   }
-  void Store(float* ptr) const { _mm_storel_pi((__m64*)ptr, vec_); }
+  void store(float* ptr) const { _mm_storel_pi((__m64*)ptr, vec_); }
 
   bool allTrue() const {
     return (_mm_movemask_epi8(_mm_castps_si128(vec_)) & 0xFF) == 0xFF;
@@ -38,7 +38,7 @@ struct VecNx<2, float> {
   }
 
   VecNx mathAbs() const { return _mm_andnot_ps(_mm_set1_ps(-0.f), vec_); }
-  VecNx Reciprocal() const { return _mm_rcp_ps(vec_); }
+  VecNx reciprocal() const { return _mm_rcp_ps(vec_); }
   VecNx mathSqrt() const { return _mm_sqrt_ps(vec_); }
   VecNx mathRsqrt() const { return _mm_rsqrt_ps(vec_); }
 
@@ -62,7 +62,7 @@ struct VecNx<2, float> {
   VecNx operator>=(const VecNx& o) const { return _mm_cmpge_ps(vec_, o.vec_); }
 
   float operator[](int k) const {
-    ASSERT(0 <= k && k < Size());
+    ASSERT(0 <= k && k < Size);
     union { __m128 v; float fs[4]; } pun = {vec_};
     return pun.fs[k];
   }
@@ -72,7 +72,7 @@ struct VecNx<2, float> {
 
 template<>
 struct VecNx<4, float> {
-  static constexpr int Size() { return 4; }
+  static constexpr int Size = 4;
 
   VecNx(const __m128& vec) : vec_(vec) {}
 
@@ -80,8 +80,8 @@ struct VecNx<4, float> {
   VecNx(float val) : vec_( _mm_set1_ps(val) ) {}
   VecNx(float a, float b, float c, float d) : vec_(_mm_setr_ps(a,b,c,d)) {}
 
-  static VecNx Load(const float* ptr) { return _mm_loadu_ps(ptr); }
-  void Store(float* ptr) const { _mm_storeu_ps(ptr, vec_); }
+  static VecNx load(const float* ptr) { return _mm_loadu_ps(ptr); }
+  void store(float* ptr) const { _mm_storeu_ps(ptr, vec_); }
 
   bool allTrue() const {
     return _mm_movemask_epi8(_mm_castps_si128(vec_)) == 0xFFFF;
@@ -93,7 +93,7 @@ struct VecNx<4, float> {
   VecNx mathAbs() const { return _mm_andnot_ps(_mm_set1_ps(-0.f), vec_); }
   VecNx mathSqrt() const { return _mm_sqrt_ps(vec_); }
   VecNx mathRsqrt() const { return _mm_rsqrt_ps(vec_); }
-  VecNx Reciprocal() const { return _mm_rcp_ps(vec_); }
+  VecNx reciprocal() const { return _mm_rcp_ps(vec_); }
 
   VecNx mathFloor() const {
     #if CPU_SIMD(SSE41)
@@ -117,7 +117,7 @@ struct VecNx<4, float> {
     return _mm_max_ps(l.vec_, r.vec_);
   }
 
-  static VecNx Ternary(const VecNx& c, const VecNx& t, const VecNx& e) {
+  static VecNx ternary(const VecNx& c, const VecNx& t, const VecNx& e) {
     #if CPU_SIMD(SSE41)
     return _mm_blendv_ps(e.vec_, t.vec_, c.vec_);
     #else
@@ -139,7 +139,7 @@ struct VecNx<4, float> {
   VecNx operator>=(const VecNx& o) const { return _mm_cmpge_ps(vec_, o.vec_); }
 
   float operator[](int k) const {
-    ASSERT(0 <= k && k < Size());
+    ASSERT(0 <= k && k < Size);
     union { __m128 v; float fs[4]; } pun = {vec_};
     return pun.fs[k];
   }
@@ -149,7 +149,7 @@ struct VecNx<4, float> {
 
 template<>
 struct VecNx<4, int32_t> {
-  static constexpr int Size() { return 4; }
+  static constexpr int Size = 4;
 
   VecNx(const __m128i& vec) : vec_(vec) {}
 
@@ -157,12 +157,12 @@ struct VecNx<4, int32_t> {
   VecNx(int32_t val) : vec_(_mm_set1_epi32(val)) {}
   VecNx(int32_t a, int32_t b, int32_t c, int32_t d) : vec_(_mm_setr_epi32(a,b,c,d)) {}
 
-  static VecNx Load(const int32_t* ptr) {
+  static VecNx load(const int32_t* ptr) {
     return _mm_loadu_si128((const __m128i*)ptr);
   }
-  void Store(int32_t* ptr) const { _mm_storeu_si128((__m128i*)ptr, vec_); }
+  void store(int32_t* ptr) const { _mm_storeu_si128((__m128i*)ptr, vec_); }
 
-  static VecNx Ternary(const VecNx& c, const VecNx& t, const VecNx& e) {
+  static VecNx ternary(const VecNx& c, const VecNx& t, const VecNx& e) {
     #if CPU_SIMD(SSE41)
     return _mm_blendv_epi8(e.vec_, t.vec_, c.vec_);
     #else
@@ -193,7 +193,7 @@ struct VecNx<4, int32_t> {
   VecNx operator >(const VecNx& o) const { return _mm_cmpgt_epi32 (vec_, o.vec_); }
 
   int32_t operator[](int k) const {
-    ASSERT(0 <= k && k < Size());
+    ASSERT(0 <= k && k < Size);
     union { __m128i v; int32_t is[4]; } pun = {vec_};
     return pun.is[k];
   }
@@ -203,7 +203,7 @@ struct VecNx<4, int32_t> {
 
 template<>
 struct VecNx<4, uint32_t> {
-  static constexpr int Size() { return 4; }
+  static constexpr int Size = 4;
 
   VecNx(const __m128i& vec) : vec_(vec) {}
 
@@ -211,12 +211,12 @@ struct VecNx<4, uint32_t> {
   VecNx(uint32_t val) : vec_(_mm_set1_epi32(val)) {}
   VecNx(uint32_t a, uint32_t b, uint32_t c, uint32_t d) : vec_(_mm_setr_epi32(a,b,c,d)) {}
 
-  static VecNx Load(const uint32_t* ptr) {
+  static VecNx load(const uint32_t* ptr) {
     return _mm_loadu_si128((const __m128i*)ptr);
   }
-  void Store(uint32_t* ptr) const { _mm_storeu_si128((__m128i*)ptr, vec_); }
+  void store(uint32_t* ptr) const { _mm_storeu_si128((__m128i*)ptr, vec_); }
 
-  static VecNx Ternary(const VecNx& c, const VecNx& t, const VecNx& e) {
+  static VecNx ternary(const VecNx& c, const VecNx& t, const VecNx& e) {
     #if CPU_SIMD(SSE41)
     return _mm_blendv_epi8(e.vec_, t.vec_, c.vec_);
     #else
@@ -238,7 +238,7 @@ struct VecNx<4, uint32_t> {
   VecNx operator==(const VecNx& o) const { return _mm_cmpeq_epi32 (vec_, o.vec_); }
 
   uint32_t operator[](int k) const {
-    ASSERT(0 <= k && k < Size());
+    ASSERT(0 <= k && k < Size);
     union { __m128i v; uint32_t is[4]; } pun = {vec_};
     return pun.is[k];
   }
@@ -248,7 +248,7 @@ struct VecNx<4, uint32_t> {
 
 template<>
 struct VecNx<4, uint16_t> {
-  static constexpr int Size() { return 4; }
+  static constexpr int Size = 4;
 
   VecNx(const __m128i& vec) : vec_(vec) {}
 
@@ -257,10 +257,10 @@ struct VecNx<4, uint16_t> {
   VecNx(uint16_t a, uint16_t b, uint16_t c, uint16_t d)
       : vec_(_mm_setr_epi16(a,b,c,d,0,0,0,0)) {}
 
-  static Vec4h Load(const uint16_t* ptr) {
+  static Vec4h load(const uint16_t* ptr) {
     return _mm_loadl_epi64((const __m128i*)ptr);
   }
-  void Store(uint16_t* ptr) const { _mm_storel_epi64((__m128i*)ptr, vec_); }
+  void store(uint16_t* ptr) const { _mm_storel_epi64((__m128i*)ptr, vec_); }
 
   VecNx operator+(const VecNx& o) const { return _mm_add_epi16(vec_, o.vec_); }
   VecNx operator-(const VecNx& o) const { return _mm_sub_epi16(vec_, o.vec_); }
@@ -270,7 +270,7 @@ struct VecNx<4, uint16_t> {
   VecNx operator>>(int amount) const { return _mm_srli_epi16(vec_, amount); }
 
   uint16_t operator[](int k) const {
-    ASSERT(0 <= k && k < Size());
+    ASSERT(0 <= k && k < Size);
     union { __m128i v; uint16_t us[8]; } pun = {vec_};
     return pun.us[k];
   }
@@ -280,7 +280,7 @@ struct VecNx<4, uint16_t> {
 
 template<>
 struct VecNx<8, uint16_t> {
-  static constexpr int Size() { return 8; }
+  static constexpr int Size = 8;
 
   VecNx(const __m128i& vec) : vec_(vec) {}
 
@@ -290,10 +290,10 @@ struct VecNx<8, uint16_t> {
         uint16_t e, uint16_t f, uint16_t g, uint16_t h)
       : vec_(_mm_setr_epi16(a,b,c,d,e,f,g,h)) {}
 
-  static VecNx Load(const uint16_t* ptr) {
+  static VecNx load(const uint16_t* ptr) {
     return _mm_loadu_si128((const __m128i*)ptr);
   }
-  void Store(uint16_t* ptr) const { _mm_storeu_si128((__m128i*)ptr, vec_); }
+  void store(uint16_t* ptr) const { _mm_storeu_si128((__m128i*)ptr, vec_); }
 
   static VecNx min(const VecNx& a, const VecNx& b) {
     // No unsigned _mm_min_epu16, so we'll shift into a space where we can use
@@ -305,7 +305,7 @@ struct VecNx<8, uint16_t> {
                                               _mm_sub_epi8(b.vec_, top_8x)));
   }
 
-  static VecNx Ternary(const VecNx& c, const VecNx& t, const VecNx& e) {
+  static VecNx ternary(const VecNx& c, const VecNx& t, const VecNx& e) {
     #if CPU_SIMD(SSE41)
     return _mm_blendv_epi8(e.vec_, t.vec_, c.vec_);
     #else
@@ -322,7 +322,7 @@ struct VecNx<8, uint16_t> {
   VecNx operator>>(int amount) const { return _mm_srli_epi16(vec_, amount); }
 
   uint16_t operator[](int k) const {
-    ASSERT(0 <= k && k < Size());
+    ASSERT(0 <= k && k < Size);
     union { __m128i v; uint16_t us[8]; } pun = {vec_};
     return pun.us[k];
   }
@@ -332,7 +332,7 @@ struct VecNx<8, uint16_t> {
 
 template<>
 struct VecNx<4, uint8_t> {
-  static constexpr int Size() { return 4; }
+  static constexpr int Size = 4;
 
   VecNx(const __m128i& vec) : vec_(vec) {}
 
@@ -340,17 +340,17 @@ struct VecNx<4, uint8_t> {
   VecNx(uint8_t a, uint8_t b, uint8_t c, uint8_t d)
       : vec_(_mm_setr_epi8(a,b,c,d, 0,0,0,0, 0,0,0,0, 0,0,0,0)) {}
 
-  static VecNx Load(const uint8_t* ptr) {
+  static VecNx load(const uint8_t* ptr) {
     return _mm_cvtsi32_si128(*(const int*)ptr);
   }
-  void Store(uint8_t* ptr) const { *(int*)ptr = _mm_cvtsi128_si32(vec_); }
+  void store(uint8_t* ptr) const { *(int*)ptr = _mm_cvtsi128_si32(vec_); }
 
   __m128i vec_;
 };
 
 template<>
 struct VecNx<16, uint8_t> {
-  static constexpr int Size() { return 16; }
+  static constexpr int Size = 16;
 
   VecNx(const __m128i& vec) : vec_(vec) {}
 
@@ -363,10 +363,10 @@ struct VecNx<16, uint8_t> {
       uint8_t m, uint8_t n, uint8_t o, uint8_t p)
       : vec_(_mm_setr_epi8(a,b,c,d, e,f,g,h, i,j,k,l, m,n,o,p)) {}
 
-  static VecNx Load(const uint8_t* ptr) {
+  static VecNx load(const uint8_t* ptr) {
     return _mm_loadu_si128((const __m128i*)ptr);
   }
-  void Store(uint8_t* ptr) const { _mm_storeu_si128((__m128i*)ptr, vec_); }
+  void store(uint8_t* ptr) const { _mm_storeu_si128((__m128i*)ptr, vec_); }
 
   static VecNx min(const VecNx& l, const VecNx& r) {
     return _mm_min_epu8(l.vec_, r.vec_);
@@ -376,7 +376,7 @@ struct VecNx<16, uint8_t> {
     return _mm_adds_epu8(l.vec_, r.vec_);
   }
 
-  static VecNx Ternary(const VecNx& c, const VecNx& t, const VecNx& e) {
+  static VecNx ternary(const VecNx& c, const VecNx& t, const VecNx& e) {
     return _mm_or_si128(_mm_and_si128   (c.vec_, t.vec_),
                         _mm_andnot_si128(c.vec_, e.vec_));
   }
@@ -393,7 +393,7 @@ struct VecNx<16, uint8_t> {
   }
 
   uint8_t operator[](int k) const {
-    ASSERT(0 <= k && k < Size());
+    ASSERT(0 <= k && k < Size);
     union { __m128i v; uint8_t us[16]; } pun = {vec_};
     return pun.us[k];
   }
@@ -402,17 +402,17 @@ struct VecNx<16, uint8_t> {
 };
 
 template<>
-inline Vec4f vnx_cast<float, int32_t>(const Vec4i& src) {
+inline Vec4f vnxCast<float, int32_t>(const Vec4i& src) {
   return _mm_cvtepi32_ps(src.vec_);
 }
 
 template<>
-inline Vec4i vnx_cast<int32_t, float, 4>(const Vec4f& src) {
+inline Vec4i vnxCast<int32_t, float, 4>(const Vec4f& src) {
   return _mm_cvttps_epi32(src.vec_);
 }
 
 template<>
-inline Vec4h vnx_cast<uint16_t, int32_t>(const Vec4i& src) {
+inline Vec4h vnxCast<uint16_t, int32_t>(const Vec4i& src) {
   #if CPU_SIMD(SSE3)
   // With SSSE3, we can just shuffle the low 2 bytes from each lane right into place.
   const int _ = ~0;
@@ -425,12 +425,12 @@ inline Vec4h vnx_cast<uint16_t, int32_t>(const Vec4i& src) {
 }
 
 template<>
-inline Vec4h vnx_cast<uint16_t, float>(const Vec4f& src) {
-  return vnx_cast<uint16_t>(vnx_cast<int32_t>(src));
+inline Vec4h vnxCast<uint16_t, float>(const Vec4f& src) {
+  return vnxCast<uint16_t>(vnxCast<int32_t>(src));
 }
 
 template<>
-inline Vec4b vnx_cast<uint8_t, float>(const Vec4f& src) {
+inline Vec4b vnxCast<uint8_t, float>(const Vec4f& src) {
   auto _32 = _mm_cvttps_epi32(src.vec_);
   #if CPU_SIMD(SSE3)
   const int _ = ~0;
@@ -442,7 +442,7 @@ inline Vec4b vnx_cast<uint8_t, float>(const Vec4f& src) {
 }
 
 template<>
-inline Vec4f vnx_cast<float, uint8_t>(const Vec4b& src) {
+inline Vec4f vnxCast<float, uint8_t>(const Vec4b& src) {
   #if CPU_SIMD(SSE3)
   const int _ = ~0;
   auto _32 = _mm_shuffle_epi8(src.vec_, _mm_setr_epi8(0,_,_,_, 1,_,_,_, 2,_,_,_, 3,_,_,_));
@@ -454,19 +454,19 @@ inline Vec4f vnx_cast<float, uint8_t>(const Vec4b& src) {
 }
 
 template<>
-inline Vec4f vnx_cast<float, uint16_t>(const Vec4h& src) {
+inline Vec4f vnxCast<float, uint16_t>(const Vec4h& src) {
   auto _32 = _mm_unpacklo_epi16(src.vec_, _mm_setzero_si128());
   return _mm_cvtepi32_ps(_32);
 }
 
 template<>
-inline Vec16b vnx_cast<uint8_t, float>(const Vec16f& src) {
+inline Vec16b vnxCast<uint8_t, float>(const Vec16f& src) {
   Vec8f ab, cd;
-  VnxMath::Split(src, &ab, &cd);
+  VnxMath::split(src, &ab, &cd);
 
   Vec4f a,b,c,d;
-  VnxMath::Split(ab, &a, &b);
-  VnxMath::Split(cd, &c, &d);
+  VnxMath::split(ab, &a, &b);
+  VnxMath::split(cd, &c, &d);
 
   return _mm_packus_epi16(_mm_packus_epi16(_mm_cvttps_epi32(a.vec_),
                                            _mm_cvttps_epi32(b.vec_)),
@@ -475,27 +475,27 @@ inline Vec16b vnx_cast<uint8_t, float>(const Vec16f& src) {
 }
 
 template<>
-inline Vec4h vnx_cast<uint16_t, uint8_t>(const Vec4b& src) {
+inline Vec4h vnxCast<uint16_t, uint8_t>(const Vec4b& src) {
   return _mm_unpacklo_epi8(src.vec_, _mm_setzero_si128());
 }
 
 template<>
-inline Vec4b vnx_cast<uint8_t, uint16_t>(const Vec4h& src) {
+inline Vec4b vnxCast<uint8_t, uint16_t>(const Vec4h& src) {
   return _mm_packus_epi16(src.vec_, src.vec_);
 }
 
 template<>
-inline Vec4i vnx_cast<int32_t, uint16_t>(const Vec4h& src) {
+inline Vec4i vnxCast<int32_t, uint16_t>(const Vec4h& src) {
   return _mm_unpacklo_epi16(src.vec_, _mm_setzero_si128());
 }
 
 template<>
-inline Vec4b vnx_cast<uint8_t, int32_t>(const Vec4i& src) {
+inline Vec4b vnxCast<uint8_t, int32_t>(const Vec4i& src) {
   return _mm_packus_epi16(_mm_packus_epi16(src.vec_, src.vec_), src.vec_);
 }
 
 template<>
-inline Vec4i vnx_cast<int32_t, uint32_t>(const Vec4u& src) {
+inline Vec4i vnxCast<int32_t, uint32_t>(const Vec4u& src) {
   return src.vec_;
 }
 

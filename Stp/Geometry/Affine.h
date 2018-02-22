@@ -202,11 +202,11 @@ class BASE_EXPORT Affine {
 
   // Copy entries for this matrix into buffer, in the same order as the
   // EntryType enum.
-  void Store(float data[EntryCount]) const;
+  void store(float data[EntryCount]) const;
 
   // Set this matrix to the entries from the buffer, in the same order as the
   // EntryType enum.
-  void Load(float data[EntryCount]);
+  void load(float data[EntryCount]);
 
   Affine operator*(const Affine& rhs) const;
   float operator[](int entry) const { return Get(entry); }

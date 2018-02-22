@@ -483,11 +483,11 @@ static_assert(sizeof(Point2) == 2 * sizeof(float), "!");
 
 inline Vec4f Vec4fLoadPoints(const Point2* points) {
   // reinterpret_cast to AliasedType of first member is allowed.
-  return Vec4f::Load(reinterpret_cast<const float*>(points));
+  return Vec4f::load(reinterpret_cast<const float*>(points));
 }
 
 inline void Vec4fStorePoints(const Vec4f& vec, Point2* points) {
-  vec.Store(reinterpret_cast<float*>(points));
+  vec.store(reinterpret_cast<float*>(points));
 }
 
 void MapPointsOptIdentity(const Affine& m, Point2* dst, const Point2* src, int count) {
@@ -743,11 +743,11 @@ void Affine::Recompose(const DecomposedAffine& decomposed) {
   Scale(decomposed.scale_x, decomposed.scale_y);
 }
 
-void Affine::Store(float data[EntryCount]) const {
+void Affine::store(float data[EntryCount]) const {
   copyObjectsNonOverlapping(data, d_, EntryCount);
 }
 
-void Affine::Load(float data[EntryCount]) {
+void Affine::load(float data[EntryCount]) {
   copyObjectsNonOverlapping(d_, data, EntryCount);
   InvalidateTypes();
 }

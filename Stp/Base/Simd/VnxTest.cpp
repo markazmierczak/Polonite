@@ -13,12 +13,12 @@
 namespace stp {
 
 template<int N>
-static void TestTemplateVecNf() {
+static void testTemplateVecNf() {
   auto assert_nearly_eq = [&](float eps, const VecNx<N, float>& v,
       float a, float b, float c, float d) {
     auto close = [=](float a, float b) { return fabsf(a-b) <= eps; };
     float vals[4];
-    v.Store(vals);
+    v.store(vals);
     bool ok = close(vals[0], a) && close(vals[1], b) &&
               close(   v[0], a) && close(   v[1], b);
     EXPECT_TRUE(ok);
@@ -33,7 +33,7 @@ static void TestTemplateVecNf() {
   };
 
   float vals[] = {3, 4, 5, 6};
-  VecNx<N,float> a = VecNx<N,float>::Load(vals),
+  VecNx<N,float> a = VecNx<N,float>::load(vals),
       b(a),
       c = a;
   VecNx<N,float> d;
@@ -56,7 +56,7 @@ static void TestTemplateVecNf() {
   assert_eq(fours.mathSqrt(), 2,2,2,2);
   assert_nearly_eq(0.001f, fours.mathRsqrt(), 0.5, 0.5, 0.5, 0.5);
 
-  assert_nearly_eq(0.001f, fours.Reciprocal(), 0.25, 0.25, 0.25, 0.25);
+  assert_nearly_eq(0.001f, fours.reciprocal(), 0.25, 0.25, 0.25, 0.25);
 
   assert_eq(min(a, fours), 3, 4, 4, 4);
   assert_eq(max(a, fours), 4, 4, 5, 6);
@@ -74,15 +74,15 @@ static void TestTemplateVecNf() {
 }
 
 TEST(VnxTest, Vecf) {
-  TestTemplateVecNf<2>();
-  TestTemplateVecNf<4>();
+  testTemplateVecNf<2>();
+  testTemplateVecNf<4>();
 }
 
 template<int N, typename T>
-void test_Ni() {
+static void testNi() {
   auto assert_eq = [&](const VecNx<N,T>& v, T a, T b, T c, T d, T e, T f, T g, T h) {
     T vals[8];
-    v.Store(vals);
+    v.store(vals);
 
     switch (N) {
       case 8: EXPECT_TRUE(vals[4] == e && vals[5] == f && vals[6] == g && vals[7] == h);
@@ -98,7 +98,7 @@ void test_Ni() {
   };
 
   T vals[] = { 1,2,3,4,5,6,7,8 };
-  VecNx<N,T> a = VecNx<N,T>::Load(vals),
+  VecNx<N,T> a = VecNx<N,T>::load(vals),
       b(a),
       c = a;
   VecNx<N,T> d;
@@ -120,13 +120,13 @@ void test_Ni() {
 }
 
 TEST(VnxTest, Veci) {
-  test_Ni<2, uint16_t>();
-  test_Ni<4, uint16_t>();
-  test_Ni<8, uint16_t>();
+  testNi<2, uint16_t>();
+  testNi<4, uint16_t>();
+  testNi<8, uint16_t>();
 
-  test_Ni<2, int32_t>();
-  test_Ni<4, int32_t>();
-  test_Ni<8, int32_t>();
+  testNi<2, int32_t>();
+  testNi<4, int32_t>();
+  testNi<8, int32_t>();
 }
 
 TEST(VnxTest, MinLt) {
@@ -178,14 +178,14 @@ TEST(VnxTest, Floor) {
   EXPECT_EQ(-1.f, fs[3]);
 }
 
-TEST(VnxTest, Shuffle) {
+TEST(VnxTest, shuffle) {
   Vec4f f4(0, 10, 20, 30);
 
-  Vec2f f2 = VnxMath::Shuffle<2,1>(f4);
+  Vec2f f2 = VnxMath::shuffle<2,1>(f4);
   EXPECT_EQ(20, f2[0]);
   EXPECT_EQ(10, f2[1]);
 
-  f4 = VnxMath::Shuffle<0,1,1,0>(f2);
+  f4 = VnxMath::shuffle<0,1,1,0>(f2);
   EXPECT_EQ(20, f4[0]);
   EXPECT_EQ(10, f4[1]);
   EXPECT_EQ(10, f4[2]);
@@ -195,13 +195,13 @@ TEST(VnxTest, Shuffle) {
 TEST(VnxTest, IntFloatConversion) {
   Vec4f f(-2.3f, 1.f, 0.45f, 0.6f);
 
-  Vec4i i = vnx_cast<int>(f);
+  Vec4i i = vnxCast<int>(f);
   EXPECT_EQ(-2, i[0]);
   EXPECT_EQ( 1, i[1]);
   EXPECT_EQ( 0, i[2]);
   EXPECT_EQ( 0, i[3]);
 
-  f = vnx_cast<float>(i);
+  f = vnxCast<float>(i);
   EXPECT_EQ(-2.f, f[0]);
   EXPECT_EQ( 1.f, f[1]);
   EXPECT_EQ( 0.f, f[2]);
@@ -212,7 +212,7 @@ TEST(VnxTest, UInt16FloatConversion) {
   {
     // u16 --> float
     Vec4h h4 = Vec4h(15, 17, 257, 65535);
-    Vec4f f4 = vnx_cast<float>(h4);
+    Vec4f f4 = vnxCast<float>(h4);
     EXPECT_EQ(   15.f, f4[0]);
     EXPECT_EQ(   17.f, f4[1]);
     EXPECT_EQ(  257.f, f4[2]);
@@ -221,7 +221,7 @@ TEST(VnxTest, UInt16FloatConversion) {
   {
     // float -> u16
     Vec4f f4 = Vec4f(15, 17, 257, 65535);
-    Vec4h h4 = vnx_cast<uint16_t>(f4);
+    Vec4h h4 = vnxCast<uint16_t>(f4);
     EXPECT_EQ(   15u, h4[0]);
     EXPECT_EQ(   17u, h4[1]);
     EXPECT_EQ(  257u, h4[2]);
@@ -237,11 +237,11 @@ TEST(VnxTest, UInt16FloatConversion) {
       NextUInt16(), NextUInt16(),
       NextUInt16(), NextUInt16(),
     };
-    Vec4h u4_0 = Vec4h::Load(s16);
-    Vec4f f4 = vnx_cast<float>(u4_0);
-    Vec4h u4_1 = vnx_cast<uint16_t>(f4);
+    Vec4h u4_0 = Vec4h::load(s16);
+    Vec4f f4 = vnxCast<float>(u4_0);
+    Vec4h u4_1 = vnxCast<uint16_t>(f4);
     uint16_t d16[4];
-    u4_1.Store(d16);
+    u4_1.store(d16);
     EXPECT_TRUE(memcmp(s16, d16, sizeof(s16)) == 0);
   }
 }
@@ -251,7 +251,7 @@ TEST(VnxTest, Int32UInt16Conversion) {
   // These are pretty hard to get wrong.
   for (int i = 0; i <= 0x7FFF; i++) {
     uint16_t expected = (uint16_t)i;
-    uint16_t actual = vnx_cast<uint16_t>(Vec4i(i))[0];
+    uint16_t actual = vnxCast<uint16_t>(Vec4i(i))[0];
 
     EXPECT_EQ(expected, actual);
   }
@@ -259,7 +259,7 @@ TEST(VnxTest, Int32UInt16Conversion) {
   // A naive implementation with _mm_packs_epi32 would succeed up to 0x7fff but fail here:
   for (int i = 0x8000; (1) && i <= 0xFFFF; i++) {
     uint16_t expected = (uint16_t)i;
-    uint16_t actual = vnx_cast<uint16_t>(Vec4i(i))[0];
+    uint16_t actual = vnxCast<uint16_t>(Vec4i(i))[0];
 
     EXPECT_EQ(expected, actual);
   }

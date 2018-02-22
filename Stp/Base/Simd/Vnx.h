@@ -40,14 +40,14 @@ struct VecNx {
         hi_(i,j,k,l, m,n,o,p) { static_assert(N==16, "!"); }
 
   // Loads vector from memory.
-  static VecNx Load(const T ptr[N]) {
-    return { Half::Load(ptr), Half::Load(ptr + N/2) };
+  static VecNx load(const T ptr[N]) {
+    return { Half::load(ptr), Half::load(ptr + N/2) };
   }
 
   // Stores vector to memory.
-  void Store(T* ptr) const {
-    lo_.Store(ptr + 0);
-    hi_.Store(ptr + N/2);
+  void store(T* ptr) const {
+    lo_.store(ptr + 0);
+    hi_.store(ptr + N/2);
   }
 
   // Returns true if all components are != 0.
@@ -59,8 +59,8 @@ struct VecNx {
   // Returns absolute value for each component.
   VecNx mathAbs() const { return { lo_.mathAbs(), hi_.mathAbs() }; }
 
-  // Returns Reciprocal value (1/x) for each component in |x|.
-  VecNx Reciprocal() const { return { lo_.Reciprocal(), hi_.Reciprocal() }; }
+  // Returns reciprocal value (1/x) for each component in |x|.
+  VecNx reciprocal() const { return { lo_.reciprocal(), hi_.reciprocal() }; }
 
   // Returns square root value for each component in |x|.
   VecNx mathSqrt() const { return { lo_.mathSqrt(), hi_.mathSqrt() }; }
@@ -80,9 +80,9 @@ struct VecNx {
   }
 
   // Ternary operator for vectors.
-  static VecNx Ternary(const VecNx& c, const VecNx& t, const VecNx& e) {
-    return { Half::Ternary(c.lo_, t.lo_, e.lo_),
-             Half::Ternary(c.hi_, t.hi_, e.hi_) };
+  static VecNx ternary(const VecNx& c, const VecNx& t, const VecNx& e) {
+    return { Half::ternary(c.lo_, t.lo_, e.lo_),
+             Half::ternary(c.hi_, t.hi_, e.hi_) };
   }
 
   // Saturated addition.
@@ -132,14 +132,14 @@ struct VecNx<1,T> {
   VecNx() = default;
   VecNx(T val) : val_(val) {}
 
-  static VecNx Load(const T* ptr) { return *ptr; }
-  void Store(T* ptr) const { *ptr = val_; }
+  static VecNx load(const T* ptr) { return *ptr; }
+  void store(T* ptr) const { *ptr = val_; }
 
   bool allTrue() const { return val_ != 0; }
   bool anyTrue() const { return val_ != 0; }
 
   VecNx mathAbs() const { return stp::mathAbs(val_); }
-  VecNx Reciprocal() const { return T(1) / val_; }
+  VecNx reciprocal() const { return T(1) / val_; }
   VecNx mathSqrt() const { return mathSqrt(val_); }
   VecNx mathRsqrt() const { return VecNx(1) / mathSqrt(); }
   VecNx mathFloor() const { return mathFloor(val_); }
@@ -150,7 +150,7 @@ struct VecNx<1,T> {
   static VecNx max(const VecNx& l, const VecNx& r) {
     return l.val_ > r.val_ ? l : r;
   }
-  static VecNx Ternary(const VecNx& c, const VecNx& t, const VecNx& e) {
+  static VecNx ternary(const VecNx& c, const VecNx& t, const VecNx& e) {
     return c.val_ != 0 ? t : e;
   }
   static VecNx saturatedAdd(const VecNx& x, const VecNx& y) {
@@ -175,12 +175,12 @@ struct VecNx<1,T> {
   VecNx operator|(const VecNx& y) const { return fromBits(toBits(val_) | toBits(y.val_)); }
   VecNx operator^(const VecNx& y) const { return fromBits(toBits(val_) ^ toBits(y.val_)); }
 
-  VecNx operator==(const VecNx& y) const { return ConditionValue(val_ == y.val_); }
-  VecNx operator!=(const VecNx& y) const { return ConditionValue(val_ != y.val_); }
-  VecNx operator<=(const VecNx& y) const { return ConditionValue(val_ <= y.val_); }
-  VecNx operator>=(const VecNx& y) const { return ConditionValue(val_ >= y.val_); }
-  VecNx operator< (const VecNx& y) const { return ConditionValue(val_ <  y.val_); }
-  VecNx operator> (const VecNx& y) const { return ConditionValue(val_ >  y.val_); }
+  VecNx operator==(const VecNx& y) const { return conditionValue(val_ == y.val_); }
+  VecNx operator!=(const VecNx& y) const { return conditionValue(val_ != y.val_); }
+  VecNx operator<=(const VecNx& y) const { return conditionValue(val_ <= y.val_); }
+  VecNx operator>=(const VecNx& y) const { return conditionValue(val_ >= y.val_); }
+  VecNx operator< (const VecNx& y) const { return conditionValue(val_ <  y.val_); }
+  VecNx operator> (const VecNx& y) const { return conditionValue(val_ >  y.val_); }
 
   T operator[](unsigned k) const {
     ASSERT(k == 0);
@@ -195,7 +195,7 @@ struct VecNx<1,T> {
   T val_;
 
  private:
-  static VecNx ConditionValue(bool b) {
+  static VecNx conditionValue(bool b) {
     return fromBits(static_cast<Bits>(b ? -1 : 0));
   }
 
@@ -204,12 +204,12 @@ struct VecNx<1,T> {
 };
 
 template<typename D, typename S, unsigned N>
-inline VecNx<N,D> vnx_cast(const VecNx<N,S>& x) {
-  return { vnx_cast<D>(x.lo_), vnx_cast<D>(x.hi_) };
+inline VecNx<N,D> vnxCast(const VecNx<N,S>& x) {
+  return { vnxCast<D>(x.lo_), vnxCast<D>(x.hi_) };
 }
 
 template<typename D, typename S>
-inline VecNx<1,D> vnx_cast(const VecNx<1,S>& x) {
+inline VecNx<1,D> vnxCast(const VecNx<1,S>& x) {
   return static_cast<D>(x.val_);
 }
 
@@ -235,10 +235,8 @@ class VnxMath {
  public:
   // Ternary operator for vectors.
   template<unsigned N, typename T>
-  static VecNx<N,T> Ternary(const VecNx<N,T>& cond,
-                            const VecNx<N,T>& then,
-                            const VecNx<N,T>& els) {
-    return VecNx<N,T>::Ternary(cond, then, els);
+  static VecNx<N,T> ternary(const VecNx<N,T>& cond, const VecNx<N,T>& then, const VecNx<N,T>& els) {
+    return VecNx<N,T>::ternary(cond, then, els);
   }
 
   template<unsigned N, typename T>
@@ -247,7 +245,7 @@ class VnxMath {
   }
 
   template<unsigned N, typename T>
-  static VecNx<N,T> Reciprocal(const VecNx<N,T>& x) { return x.Reciprocal(); }
+  static VecNx<N,T> reciprocal(const VecNx<N,T>& x) { return x.reciprocal(); }
 
   template<unsigned N, typename T>
   static VecNx<N,T> mathSqrt(const VecNx<N,T>& x) { return x.mathSqrt(); }
@@ -265,20 +263,20 @@ class VnxMath {
   //  Shuffle<2,1,2,1,2,1,2,1>(v) ~~> {B,G,B,G,B,G,B,G}
   //  Shuffle<3,3,3,3>(v)         ~~> {A,A,A,A}
   template<int... Ix, unsigned N, typename T>
-  static VecNx<sizeof...(Ix),T> Shuffle(const VecNx<N,T>& v) {
+  static VecNx<sizeof...(Ix),T> shuffle(const VecNx<N,T>& v) {
     return { v[Ix]... };
   }
 
   // VecNx<N,T> ~~> VecNx<N/2,T> + VecNx<N/2,T>
   template<unsigned N, typename T>
-  static void Split(const VecNx<N,T>& v, VecNx<N/2,T>* lo, VecNx<N/2,T>* hi) {
+  static void split(const VecNx<N,T>& v, VecNx<N/2,T>* lo, VecNx<N/2,T>* hi) {
     *lo = v.lo_;
     *hi = v.hi_;
   }
 
   // VecNx<N/2,T> + VecNx<N/2,T> ~~> VecNx<N,T>
   template<unsigned N, typename T>
-  static VecNx<N*2,T> Join(const VecNx<N,T>& lo, const VecNx<N,T>& hi) {
+  static VecNx<N*2,T> join(const VecNx<N,T>& lo, const VecNx<N,T>& hi) {
     return { lo, hi };
   }
 };

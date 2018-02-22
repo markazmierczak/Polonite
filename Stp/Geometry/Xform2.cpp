@@ -684,15 +684,15 @@ void Xform2::MapPointsTrans(const Xform2& m, Point2 dst[], const Point2 src[], i
 
     Vec4f trans4(tx, ty, tx, ty);
     if (count & 1) {
-      (Vec4f::Load(src->AsFloats()) + trans4).Store(dst->AsFloats());
+      (Vec4f::load(src->AsFloats()) + trans4).store(dst->AsFloats());
       src += 2;
       dst += 2;
     }
     count >>= 1;
 
     for (int i = 0; i < count; ++i) {
-      (Vec4f::Load((src + 0)->AsFloats()) + trans4).Store((dst + 0)->AsFloats());
-      (Vec4f::Load((src + 2)->AsFloats()) + trans4).Store((dst + 2)->AsFloats());
+      (Vec4f::load((src + 0)->AsFloats()) + trans4).store((dst + 0)->AsFloats());
+      (Vec4f::load((src + 2)->AsFloats()) + trans4).store((dst + 2)->AsFloats());
       src += 4;
       dst += 4;
     }
@@ -718,15 +718,15 @@ void Xform2::MapPointsScale(const Xform2& m, Point2 dst[], const Point2 src[], i
     Vec4f trans4(tx, ty, tx, ty);
     Vec4f scale4(sx, sy, sx, sy);
     if (count & 1) {
-      (Vec4f::Load(src->AsFloats()) * scale4 + trans4).Store(dst->AsFloats());
+      (Vec4f::load(src->AsFloats()) * scale4 + trans4).store(dst->AsFloats());
       src += 2;
       dst += 2;
     }
     count >>= 1;
 
     for (int i = 0; i < count; ++i) {
-      (Vec4f::Load((src + 0)->AsFloats()) * scale4 + trans4).Store((dst + 0)->AsFloats());
-      (Vec4f::Load((src + 2)->AsFloats()) * scale4 + trans4).Store((dst + 2)->AsFloats());
+      (Vec4f::load((src + 0)->AsFloats()) * scale4 + trans4).store((dst + 0)->AsFloats());
+      (Vec4f::load((src + 2)->AsFloats()) * scale4 + trans4).store((dst + 2)->AsFloats());
       src += 4;
       dst += 4;
     }
@@ -757,9 +757,9 @@ void Xform2::MapPointsAffin(const Xform2& m, Point2 dst[], const Point2 src[], i
     Vec4f scale4(sx, sy, sx, sy);
     Vec4f  skew4(kx, ky, kx, ky); // applied to swizzle of src4
     for (int i = 0; i < count; ++i) {
-      Vec4f src4 = Vec4f::Load(src->AsFloats());
+      Vec4f src4 = Vec4f::load(src->AsFloats());
       Vec4f swz4 = VnxMath::Shuffle<1,0,3,2>(src4); // y0 x0, y1 x1
-      (src4 * scale4 + swz4 * skew4 + trans4).Store(dst->AsFloats());
+      (src4 * scale4 + swz4 * skew4 + trans4).store(dst->AsFloats());
       src += 2;
       dst += 2;
     }
