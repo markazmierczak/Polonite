@@ -19,7 +19,7 @@ TEST(TemporaryDirectory, FullPath) {
   {
     TemporaryDirectory dir;
     EXPECT_TRUE(dir.set(test_path));
-    EXPECT_TRUE(dir.IsValid());
+    EXPECT_TRUE(dir.isValid());
   }
   EXPECT_FALSE(DirectoryExists(test_path));
 
@@ -29,9 +29,9 @@ TEST(TemporaryDirectory, FullPath) {
     // Now the dir doesn't exist, so ensure that it gets created.
     EXPECT_TRUE(DirectoryExists(test_path));
     // When we call release(), it shouldn't get destroyed when leaving scope.
-    FilePath path = dir.Take();
+    FilePath path = dir.take();
     EXPECT_EQ(path.chars, test_path.chars);
-    EXPECT_FALSE(dir.IsValid());
+    EXPECT_FALSE(dir.isValid());
   }
   EXPECT_TRUE(DirectoryExists(test_path));
 
@@ -49,7 +49,7 @@ TEST(TemporaryDirectory, TempDir) {
   FilePath test_path;
   {
     TemporaryDirectory dir;
-    EXPECT_TRUE(dir.Create());
+    EXPECT_TRUE(dir.create());
     test_path = dir.path();
     EXPECT_TRUE(DirectoryExists(test_path));
     FilePath tmp_dir;
@@ -68,7 +68,7 @@ TEST(TemporaryDirectory, UniqueTempDirUnderPath) {
   FilePath test_path;
   {
     TemporaryDirectory dir;
-    EXPECT_TRUE(dir.CreateUnder(base_path));
+    EXPECT_TRUE(dir.createUnder(base_path));
     test_path = dir.path();
     EXPECT_TRUE(DirectoryExists(test_path));
     EXPECT_TRUE(base_path.IsParent(test_path));
@@ -80,25 +80,25 @@ TEST(TemporaryDirectory, UniqueTempDirUnderPath) {
 
 TEST(TemporaryDirectory, MultipleInvocations) {
   TemporaryDirectory dir;
-  EXPECT_TRUE(dir.Create());
-  EXPECT_FALSE(dir.Create());
+  EXPECT_TRUE(dir.create());
+  EXPECT_FALSE(dir.create());
   EXPECT_TRUE(dir.remove());
-  EXPECT_TRUE(dir.Create());
-  EXPECT_FALSE(dir.Create());
+  EXPECT_TRUE(dir.create());
+  EXPECT_FALSE(dir.create());
   TemporaryDirectory other_dir;
-  EXPECT_TRUE(other_dir.set(dir.Take()));
-  EXPECT_TRUE(dir.Create());
-  EXPECT_FALSE(dir.Create());
-  EXPECT_FALSE(other_dir.Create());
+  EXPECT_TRUE(other_dir.set(dir.take()));
+  EXPECT_TRUE(dir.create());
+  EXPECT_FALSE(dir.create());
+  EXPECT_FALSE(other_dir.create());
 }
 
 #if OS(WIN)
 TEST(TemporaryDirectory, LockedTempDir) {
   TemporaryDirectory dir;
-  EXPECT_TRUE(dir.Create());
+  EXPECT_TRUE(dir.create());
   File file(dir.path().append(FILE_PATH_LITERAL("temp")),
                   File::FLAG_CREATE_ALWAYS | File::FLAG_WRITE);
-  EXPECT_TRUE(file.IsValid());
+  EXPECT_TRUE(file.isValid());
   EXPECT_EQ(File::FILE_OK, file.error_details());
   EXPECT_FALSE(dir.remove());  // We should not be able to delete.
   EXPECT_FALSE(dir.path().empty());  // We should still have a valid path.

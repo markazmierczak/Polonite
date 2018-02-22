@@ -9,18 +9,18 @@
 
 namespace stp {
 
-void Stream::WriteByte(byte_t b) {
-  Write(BufferSpan(&b, 1));
+void Stream::writeByte(byte_t b) {
+  write(BufferSpan(&b, 1));
 }
 
-int Stream::TryReadByte() {
+int Stream::tryReadByte() {
   byte_t b;
-  int rv = ReadAtMost(MutableBufferSpan(&b, 1));
+  int rv = readAtMost(MutableBufferSpan(&b, 1));
   return rv == 1 ? static_cast<int>(b) : -1;
 }
 
-byte_t Stream::ReadByte() {
-  int b = TryReadByte();
+byte_t Stream::readByte() {
+  int b = tryReadByte();
   if (b >= 0) {
     ASSERT(b < 256);
     return static_cast<byte_t>(b);
@@ -28,18 +28,18 @@ byte_t Stream::ReadByte() {
   throw EndOfStreamException();
 }
 
-void Stream::PositionalRead(int64_t offset, MutableBufferSpan output) {
-  SetPosition(offset);
-  Read(output);
+void Stream::positionalRead(int64_t offset, MutableBufferSpan output) {
+  setPosition(offset);
+  read(output);
 }
 
-void Stream::PositionalWrite(int64_t offset, BufferSpan input) {
-  SetPosition(offset);
-  Write(input);
+void Stream::positionalWrite(int64_t offset, BufferSpan input) {
+  setPosition(offset);
+  write(input);
 }
 
-void Stream::Read(MutableBufferSpan buffer) {
-  int rv = ReadAtMost(buffer);
+void Stream::read(MutableBufferSpan buffer) {
+  int rv = readAtMost(buffer);
   if (rv != buffer.size())
     throw EndOfStreamException();
 }
@@ -48,32 +48,32 @@ namespace {
 
 class NullStream final : public Stream {
  public:
-  void Close() override { ASSERT(false); }
-  bool IsOpen() const noexcept override { return true; }
-  int ReadAtMost(MutableBufferSpan output) override { return 0; }
-  void Write(BufferSpan output) override {}
-  void PositionalRead(int64_t offset, MutableBufferSpan output) override;
-  void PositionalWrite(int64_t offset, BufferSpan input) override {}
-  void WriteByte(byte_t byte) override {}
-  int TryReadByte() override { return -1; }
-  int64_t Seek(int64_t offset, SeekOrigin origin) override { return 0; }
-  void Flush() override {}
-  bool CanRead() override { return true; }
-  bool CanWrite() override { return true; }
-  bool CanSeek() override { return true; }
-  void SetLength(int64_t length) override {}
-  int64_t GetLength() override { return 0; }
-  void SetPosition(int64_t position) override {}
-  int64_t GetPosition() override { return 0; }
+  void close() override { ASSERT(false); }
+  bool isOpen() const noexcept override { return true; }
+  int readAtMost(MutableBufferSpan output) override { return 0; }
+  void write(BufferSpan output) override {}
+  void positionalRead(int64_t offset, MutableBufferSpan output) override;
+  void positionalWrite(int64_t offset, BufferSpan input) override {}
+  void writeByte(byte_t byte) override {}
+  int tryReadByte() override { return -1; }
+  int64_t seek(int64_t offset, SeekOrigin origin) override { return 0; }
+  void flush() override {}
+  bool canRead() override { return true; }
+  bool canWrite() override { return true; }
+  bool canSeek() override { return true; }
+  void setLength(int64_t length) override {}
+  int64_t getLength() override { return 0; }
+  void setPosition(int64_t position) override {}
+  int64_t getPosition() override { return 0; }
 };
 
-void NullStream::PositionalRead(int64_t offset, MutableBufferSpan output) {
+void NullStream::positionalRead(int64_t offset, MutableBufferSpan output) {
   output.fill(0);
 }
 
 } // namespace
 
-Stream& Stream::Null() {
+Stream& Stream::nullStream() {
   static AlignedStorage<NullStream> g_storage;
   return *new(g_storage.bytes) NullStream();
 }

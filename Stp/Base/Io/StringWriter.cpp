@@ -9,7 +9,7 @@
 
 namespace stp {
 
-TextEncoding StringWriter::GetEncoding() const {
+TextEncoding StringWriter::getEncoding() const {
   return BuiltinTextEncodings::Utf8();
 }
 

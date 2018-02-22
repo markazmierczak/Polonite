@@ -11,7 +11,7 @@ NativeProcessId NativeProcess::GetCurrentId() {
   return getpid();
 }
 
-NativeProcessHandle NativeProcess::GetCurrentHandle() {
+NativeProcessHandle NativeProcess::getCurrentHandle() {
   return NativeProcess::GetCurrentId();
 }
 

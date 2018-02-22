@@ -13,7 +13,7 @@ class BASE_EXPORT StringWriter final : public TextWriter {
  public:
   explicit StringWriter(String* string) : string_(*string) {}
 
-  TextEncoding GetEncoding() const override;
+  TextEncoding getEncoding() const override;
 
  protected:
   void onWriteChar(char c) override;

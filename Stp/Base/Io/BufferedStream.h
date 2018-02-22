@@ -12,57 +12,43 @@ namespace stp {
 // NOTE: For mixed read/write operation the underlying stream is required to
 //       be seekable.
 class BASE_EXPORT BufferedStream final : public Stream {
+  DISALLOW_COPY_AND_ASSIGN(BufferedStream);
  public:
   static constexpr int DefaultBufferSize = 4096;
 
   BufferedStream();
   ~BufferedStream() override;
 
-  ALWAYS_INLINE Stream* GetUnderlying() const { return underlying_; }
+  ALWAYS_INLINE Stream* getUnderlying() const { return underlying_; }
 
   // The |new_size| must be greater than zero.
   // The size of buffer can be changed only when buffers are flushed.
   // Otherwise the behavior is undefined.
-  void SetBufferSize(int new_size);
-  ALWAYS_INLINE int GetBufferSize() const { return buffer_size_; }
+  void setBufferSize(int new_size);
+  ALWAYS_INLINE int getBufferSize() const { return buffer_size_; }
 
-  void FlushBuffers();
+  void flushBuffers();
 
-  void Open(OwnPtr<Stream> underlying) { OpenInternal(underlying.release(), true); }
-  void Open(Stream* underlying) { OpenInternal(underlying, false); }
+  void open(OwnPtr<Stream> underlying) { openInternal(underlying.release(), true); }
+  void open(Stream* underlying) { openInternal(underlying, false); }
 
-  void Close() override;
-  bool IsOpen() const noexcept override;
-  int ReadAtMost(MutableBufferSpan output) override;
-  void Write(BufferSpan input) override;
-  void WriteByte(byte_t byte) override;
-  int TryReadByte() override;
-  int64_t Seek(int64_t offset, SeekOrigin origin) override;
-  void Flush() override;
-  bool CanRead() override;
-  bool CanWrite() override;
-  bool CanSeek() override;
-  void SetLength(int64_t length) override;
-  int64_t GetLength() override;
-  void SetPosition(int64_t position) override;
-  int64_t GetPosition() override;
+  void close() override;
+  bool isOpen() const noexcept override;
+  int readAtMost(MutableBufferSpan output) override;
+  void write(BufferSpan input) override;
+  void writeByte(byte_t byte) override;
+  int tryReadByte() override;
+  int64_t seek(int64_t offset, SeekOrigin origin) override;
+  void flush() override;
+  bool canRead() override;
+  bool canWrite() override;
+  bool canSeek() override;
+  void setLength(int64_t length) override;
+  int64_t getLength() override;
+  void setPosition(int64_t position) override;
+  int64_t getPosition() override;
 
  private:
-  void OpenInternal(Stream* underlying, bool owned);
-
-  bool HasPendingWrite() const { return write_pos_ > 0; }
-  bool HasPendingRead() const { return read_pos_ < read_len_; }
-
-  void FlushWriteBuffer();
-  void FlushReadBuffer();
-
-  void ClearReadBufferBeforeWrite();
-
-  int ReadFromBuffer(MutableBufferSpan output);
-  int WriteToBuffer(BufferSpan input);
-
-  void EnsureBufferAllocated();
-
   Stream* underlying_ = nullptr;
   // A buffer for reading/writing. Allocated on first use.
   byte_t* buffer_ = nullptr;
@@ -77,7 +63,20 @@ class BASE_EXPORT BufferedStream final : public Stream {
   // Whether underlying is owned.
   bool owned_ = false;
 
-  DISALLOW_COPY_AND_ASSIGN(BufferedStream);
+  void openInternal(Stream* underlying, bool owned);
+
+  bool hasPendingWrite() const { return write_pos_ > 0; }
+  bool hasPendingRead() const { return read_pos_ < read_len_; }
+
+  void flushWriteBuffer();
+  void flushReadBuffer();
+
+  void clearReadBufferBeforeWrite();
+
+  int readFromBuffer(MutableBufferSpan output);
+  int writeToBuffer(BufferSpan input);
+
+  void ensureBufferAllocated();
 };
 
 } // namespace stp

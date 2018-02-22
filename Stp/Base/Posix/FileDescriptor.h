@@ -26,10 +26,10 @@ class BASE_EXPORT FileDescriptor {
 
   [[nodiscard]] int release() noexcept { return exchange(fd_, InvalidFd); }
 
-  void Reset(int new_fd = InvalidFd);
+  void reset(int new_fd = InvalidFd);
 
   ALWAYS_INLINE int get() const { return fd_; }
-  ALWAYS_INLINE bool IsValid() const { return fd_ != InvalidFd; }
+  ALWAYS_INLINE bool isValid() const { return fd_ != InvalidFd; }
 
   [[nodiscard]] FileDescriptor Duplicate();
   [[nodiscard]] FileDescriptor TryDuplicate() noexcept { return FileDescriptor(::dup(fd_)); }
@@ -62,24 +62,24 @@ class BASE_EXPORT FileDescriptor {
 };
 
 inline FileDescriptor::~FileDescriptor() {
-  if (IsValid())
+  if (isValid())
     Close();
 }
 
-inline void FileDescriptor::Reset(int new_fd) {
+inline void FileDescriptor::reset(int new_fd) {
   FileDescriptor tmp(new_fd);
   swap(*this, tmp);
 }
 
 inline int FileDescriptor::TryReadNoBestEffort(MutableBufferSpan buffer) {
-  ASSERT(IsValid());
+  ASSERT(isValid());
   ssize_t rv = HANDLE_EINTR(::read(fd_, buffer.data(), toUnsigned(buffer.size())));
   ASSERT(-1 <= rv && rv <= buffer.size());
   return static_cast<int>(rv);
 }
 
 inline int FileDescriptor::TryWriteNoBestEffort(BufferSpan buffer) {
-  ASSERT(IsValid());
+  ASSERT(isValid());
   ssize_t rv = HANDLE_EINTR(::write(fd_, buffer.data(), toUnsigned(buffer.size())));
   ASSERT(-1 <= rv && rv <= buffer.size());
   return static_cast<int>(rv);

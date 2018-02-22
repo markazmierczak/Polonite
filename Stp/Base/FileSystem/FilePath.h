@@ -53,15 +53,15 @@ class BASE_EXPORT FilePath {
 
   void truncate(int at) { chars_.truncate(at); }
 
-  SpanType GetRoot() const { return toSpan().GetRoot(); }
-  SpanType GetDirectoryName() const { return toSpan().GetDirectoryName(); }
+  SpanType getRoot() const { return toSpan().getRoot(); }
+  SpanType getDirectoryName() const { return toSpan().getDirectoryName(); }
 
-  bool CdUp();
+  bool cdUp();
 
-  SpanType GetFileName() const { return toSpan().GetFileName(); }
-  SpanType GetFileNameWithoutExtension() const { return toSpan().GetFileNameWithoutExtension(); }
+  SpanType getFileName() const { return toSpan().getFileName(); }
+  SpanType getFileNameWithoutExtension() const { return toSpan().getFileNameWithoutExtension(); }
 
-  void StripTrailingSeparators();
+  void stripTrailingSeparators();
 
   int indexOfSeparator() const { return toSpan().indexOfSeparator(); }
   int indexOfSeparator(int begin) const { return toSpan().indexOfSeparator(begin); }
@@ -70,30 +70,30 @@ class BASE_EXPORT FilePath {
 
   int indexOfDriveLetter() const { return toSpan().indexOfDriveLetter(); }
 
-  StringSpan GetExtension() const { return toSpan().GetExtension(); }
-  bool MatchesExtension(StringSpan extension) const { return toSpan().MatchesExtension(extension); }
-  void RemoveExtension();
-  bool ReplaceExtension(StringSpan extension);
+  StringSpan getExtension() const { return toSpan().getExtension(); }
+  bool matchesExtension(StringSpan extension) const { return toSpan().matchesExtension(extension); }
+  void removeExtension();
+  bool replaceExtension(StringSpan extension);
 
-  bool IsAbsolute() const { return toSpan().IsAbsolute(); }
-  bool IsRelative() const { return toSpan().IsRelative(); }
+  bool isAbsolute() const { return toSpan().IsAbsolute(); }
+  bool isRelative() const { return toSpan().IsRelative(); }
 
   FilePathEnumerator enumerate() const { return toSpan().enumerate(); }
 
   // Normalize all path separators to given type on Windows or do nothing on POSIX systems.
-  void NormalizeSeparators() { NormalizeSeparatorsTo(FilePathSeparator); }
-  void NormalizeSeparatorsTo(CharType separator);
+  void normalizeSeparators() { normalizeSeparatorsTo(FilePathSeparator); }
+  void normalizeSeparatorsTo(CharType separator);
 
   // Returns a FilePath object from a path name in UTF encoding.
-  static FilePath FromString(StringSpan string);
+  static FilePath fromString(StringSpan string);
 
-  void AddComponent(SpanType component);
-  void AddComponentAscii(StringSpan component);
+  void addComponent(SpanType component);
+  void addComponentAscii(StringSpan component);
 
-  int GetRootLength() const { return toSpan().GetRootLength(); }
-  int GetDirectoryNameLength() const { return toSpan().GetDirectoryNameLength(); }
+  int getRootLength() const { return toSpan().getRootLength(); }
+  int getDirectoryNameLength() const { return toSpan().getDirectoryNameLength(); }
   int indexOfExtension() const { return toSpan().indexOfExtension(); }
-  int CountTrailingSeparators() const { return toSpan().CountTrailingSeparators(); }
+  int countTrailingSeparators() const { return toSpan().countTrailingSeparators(); }
 
   friend bool operator<=(const FilePath& l, const FilePathSpan& r) { return l.toSpan() <= r; }
   friend bool operator>=(const FilePath& l, const FilePathSpan& r) { return l.toSpan() >= r; }
@@ -122,13 +122,13 @@ class BASE_EXPORT FilePath {
 };
 
 namespace detail {
-BASE_EXPORT FilePath CombineFilePaths(Span<FilePathSpan> components);
+BASE_EXPORT FilePath combineFilePaths(Span<FilePathSpan> components);
 }
 
 template<typename... Ts>
-inline FilePath CombineFilePaths(const Ts&... args) {
+inline FilePath combineFilePaths(const Ts&... args) {
   auto array = makeArray<FilePathSpan>(args...);
-  return detail::CombineFilePaths(array);
+  return detail::combineFilePaths(array);
 }
 
 template<>

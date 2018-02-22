@@ -18,12 +18,12 @@ FilePath ProcCommon::GetRootDirectory() {
 }
 
 FilePath ProcCommon::DirectoryForProcess(NativeProcessHandle pid) {
-  if (pid == NativeProcess::GetCurrentHandle())
+  if (pid == NativeProcess::getCurrentHandle())
     return FilePath(FILE_PATH_LITERAL("/proc/self"));
 
   FilePath path = GetRootDirectory();
   FilePathWriter writer(path);
-  writer.EnsureSeparator();
+  writer.ensureSeparator();
   writer << pid;
   return path;
 }

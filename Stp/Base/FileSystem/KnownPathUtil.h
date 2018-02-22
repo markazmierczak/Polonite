@@ -21,15 +21,15 @@ enum Option {
 typedef FilePath (*ProvideType)();
 
 namespace detail {
-BASE_EXPORT FilePath ResolveInternal(Key& key, ProvideType provider, bool directory, Option option);
+BASE_EXPORT FilePath resolveInternal(Key& key, ProvideType provider, bool directory, Option option);
 }
 
-inline FilePath ResolveFile(Key& key, ProvideType provider, Option option) {
-  return detail::ResolveInternal(key, provider, false, option);
+inline FilePath resolveFile(Key& key, ProvideType provider, Option option) {
+  return detail::resolveInternal(key, provider, false, option);
 }
 
-inline FilePath ResolveDirectory(Key& key, ProvideType provider, Option option) {
-  return detail::ResolveInternal(key, provider, true, option);
+inline FilePath resolveDirectory(Key& key, ProvideType provider, Option option) {
+  return detail::resolveInternal(key, provider, true, option);
 }
 
 class BASE_EXPORT NotFoundException : public Exception {
@@ -37,7 +37,7 @@ class BASE_EXPORT NotFoundException : public Exception {
   explicit NotFoundException(FilePath path) noexcept;
   StringSpan getName() const noexcept override;
 
-  const FilePath& GetPath() const noexcept { return path_; }
+  const FilePath& getPath() const noexcept { return path_; }
 
  private:
   FilePath path_;

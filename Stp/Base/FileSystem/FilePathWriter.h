@@ -13,9 +13,9 @@ class BASE_EXPORT FilePathWriter final : public TextWriter {
  public:
   explicit FilePathWriter(FilePath& path) : path_(path) {}
 
-  void EnsureSeparator();
+  void ensureSeparator();
 
-  TextEncoding GetEncoding() const override;
+  TextEncoding getEncoding() const override;
 
  protected:
   void onWriteChar(char c) override;

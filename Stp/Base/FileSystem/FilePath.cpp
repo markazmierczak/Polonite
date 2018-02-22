@@ -29,12 +29,12 @@ void FilePath::shrinkToFit() {
   chars_.shrinkToFit();
 }
 
-bool FilePath::CdUp() {
-  truncate(GetDirectoryNameLength());
+bool FilePath::cdUp() {
+  truncate(getDirectoryNameLength());
   return !isEmpty();
 }
 
-void FilePath::RemoveExtension() {
+void FilePath::removeExtension() {
   int pos = indexOfExtension();
   if (pos >= 0)
     truncate(pos);
@@ -62,10 +62,10 @@ static bool isEmptyOrSpecialCase(Span<FilePathChar> path) {
  *   Whether it starts with a dot is not important (both cases are handled identically).
  * @return false if this path is empty or its filename is dot or dot-dot, true otherwise.
  */
-bool FilePath::ReplaceExtension(StringSpan extension) {
+bool FilePath::replaceExtension(StringSpan extension) {
   int pos = indexOfExtension();
   if (pos < 0) {
-    FilePathSpan filename = GetFileName();
+    FilePathSpan filename = getFileName();
     if (isEmptyOrSpecialCase(filename.chars()))
       return false;
   } else {
@@ -79,32 +79,32 @@ bool FilePath::ReplaceExtension(StringSpan extension) {
   return true;
 }
 
-void FilePath::StripTrailingSeparators() {
-  chars_.removeSuffix(CountTrailingSeparators());
+void FilePath::stripTrailingSeparators() {
+  chars_.removeSuffix(countTrailingSeparators());
 }
 
-void FilePath::NormalizeSeparatorsTo(CharType separator) {
-  ASSERT(IsFilePathSeparator(separator));
+void FilePath::normalizeSeparatorsTo(CharType separator) {
+  ASSERT(isFilePathSeparator(separator));
   #if OS(WIN)
-  Replace(chars_, separator == Separator ? AltSeparator : Separator, separator);
+  replace(chars_, separator == Separator ? AltSeparator : Separator, separator);
   #endif
 }
 
-FilePath FilePath::FromString(StringSpan string) {
+FilePath FilePath::fromString(StringSpan string) {
   #if OS(POSIX)
   return FilePath(string.data(), string.size());
   #elif OS(WIN)
-  return FromStringTmpl(string);
+  return fromStringTmpl(string);
   #endif
 }
 
-void FilePath::AddComponent(FilePathSpan component) {
+void FilePath::addComponent(FilePathSpan component) {
   ASSERT(!component.IsAbsolute());
   ASSERT(!chars_.isSourceOf(component.chars()));
 
   bool need_separator = false;
   if (!isEmpty())
-    need_separator = !IsFilePathSeparator(chars_.getLast());
+    need_separator = !isFilePathSeparator(chars_.getLast());
 
   int length = component.size();
   CharType* dst = chars_.appendUninitialized(length + (need_separator ? 1 : 0));
@@ -114,12 +114,12 @@ void FilePath::AddComponent(FilePathSpan component) {
   uninitializedCopy(dst, component.data(), length);
 }
 
-void FilePath::AddComponentAscii(StringSpan component) {
+void FilePath::addComponentAscii(StringSpan component) {
   ASSERT(isAscii(component));
 
   bool need_separator = false;
   if (!isEmpty())
-    need_separator = !IsFilePathSeparator(chars_.getLast());
+    need_separator = !isFilePathSeparator(chars_.getLast());
 
   int length = component.size();
   auto* src = component.data();
@@ -133,14 +133,14 @@ void FilePath::AddComponentAscii(StringSpan component) {
 
 namespace detail {
 
-FilePath CombineFilePaths(Span<FilePathSpan> components) {
+FilePath combineFilePaths(Span<FilePathSpan> components) {
   int n = components.size();
   FilePath result;
   result.ensureCapacity(accumulateSpan(components, n, [](int init, const FilePathSpan& component) {
     return init + component.size();
   }));
   for (int i = 0; i < n; ++i)
-    result.AddComponent(components[i]);
+    result.addComponent(components[i]);
   return result;
 }
 

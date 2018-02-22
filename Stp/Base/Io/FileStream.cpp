@@ -16,87 +16,87 @@ FileStream::~FileStream() {
   // NOTE: Do not flush here. It may cause slow down.
   // User of this API must call Flush() manually instead.
 
-  if (native_.IsValid()) {
+  if (native_.isValid()) {
     if (lifetime_ == AutoClose)
-      native_.Reset();
+      native_.reset();
     else
       ignoreResult(native_.release());
   }
 }
 
-bool FileStream::IsOpen() const noexcept {
-  return native_.IsValid();
+bool FileStream::isOpen() const noexcept {
+  return native_.isValid();
 }
 
-void FileStream::Open(const FilePath& path, FileMode mode, FileAccess access) {
-  auto error_code = TryOpen(path, mode, access);
-  if (!IsOk(error_code))
+void FileStream::open(const FilePath& path, FileMode mode, FileAccess access) {
+  auto error_code = tryOpen(path, mode, access);
+  if (!isOk(error_code))
     throw FileSystemException(error_code, path);
 }
 
-void FileStream::Create(const FilePath& path, FileMode mode, FileAccess access) {
-  auto error_code = TryCreate(path, mode, access);
-  if (!IsOk(error_code))
+void FileStream::create(const FilePath& path, FileMode mode, FileAccess access) {
+  auto error_code = tryCreate(path, mode, access);
+  if (!isOk(error_code))
     throw FileSystemException(error_code, path);
 }
 
-SystemErrorCode FileStream::TryOpen(const FilePath& path, FileMode mode, FileAccess access) {
+SystemErrorCode FileStream::tryOpen(const FilePath& path, FileMode mode, FileAccess access) {
   ASSERT(mode >= FileMode::OpenExisting);
-  return TryOpenInternal(path, mode, access);
+  return tryOpenInternal(path, mode, access);
 }
 
-SystemErrorCode FileStream::TryCreate(const FilePath& path, FileMode mode, FileAccess access) {
+SystemErrorCode FileStream::tryCreate(const FilePath& path, FileMode mode, FileAccess access) {
   ASSERT(mode <= FileMode::CreateNew);
-  return TryOpenInternal(path, mode, access);
+  return tryOpenInternal(path, mode, access);
 }
 
-void FileStream::OpenNative(NativeFile native_file, FileAccess access, NativeFileLifetime lifetime) {
+void FileStream::openNative(NativeFile native_file, FileAccess access, NativeFileLifetime lifetime) {
   ASSERT(native_file != InvalidNativeFile);
-  ASSERT(!IsOpen());
+  ASSERT(!isOpen());
 
   access_ = access;
   lifetime_ = lifetime;
-  native_.Reset(native_file);
+  native_.reset(native_file);
 }
 
-void FileStream::Close() {
-  ASSERT(IsOpen());
+void FileStream::close() {
+  ASSERT(isOpen());
 
   auto nf = native_.release();
   lifetime_ = AutoClose;
   seekable_ = -1;
 
-  CloseInternal(nf);
+  closeInternal(nf);
 }
 
-bool FileStream::CanRead() {
-  return IsOpen() && access_ != FileAccess::WriteOnly;
+bool FileStream::canRead() {
+  return isOpen() && access_ != FileAccess::WriteOnly;
 }
 
-bool FileStream::CanWrite() {
-  return IsOpen() && access_ != FileAccess::ReadOnly;
+bool FileStream::canWrite() {
+  return isOpen() && access_ != FileAccess::ReadOnly;
 }
 
-bool FileStream::CanSeek() {
+bool FileStream::canSeek() {
   if (seekable_ < 0) {
-    if (!IsOpen())
+    if (!isOpen())
       return false;
-    seekable_ = CanSeekInternal() ? 1 : 0;
+    seekable_ = canSeekInternal() ? 1 : 0;
   }
   return seekable_ > 0;
 }
 
-void FileStream::Flush() {
+void FileStream::flush() {
   // No data is cached by the application, use SyncToDisk() to
   // synchronize the data down to the disk.
 }
 
-void FileStream::SetPosition(int64_t position) {
-  Seek(position, SeekOrigin::Begin);
+void FileStream::setPosition(int64_t position) {
+  seek(position, SeekOrigin::Begin);
 }
 
-int64_t FileStream::GetPosition() {
-  return Seek(0, SeekOrigin::Current);
+int64_t FileStream::getPosition() {
+  return seek(0, SeekOrigin::Current);
 }
 
 } // namespace stp

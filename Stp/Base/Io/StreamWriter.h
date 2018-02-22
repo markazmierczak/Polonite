@@ -27,7 +27,7 @@ class BASE_EXPORT StreamWriter final : public TextWriter {
   bool GetAutoFlush() const { return auto_flush_; }
 
   Stream& GetStream() const { return stream_; }
-  TextEncoding GetEncoding() const override;
+  TextEncoding getEncoding() const override;
 
  protected:
   void onWriteChar(char c) override;

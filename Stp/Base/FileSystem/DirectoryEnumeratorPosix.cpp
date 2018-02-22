@@ -7,14 +7,14 @@
 
 namespace stp {
 
-SystemErrorCode DirectoryEnumerator::TryOpen(const FilePath& path, StringSpan pattern) {
-  ASSERT(!IsOpen());
+SystemErrorCode DirectoryEnumerator::tryOpen(const FilePath& path, StringSpan pattern) {
+  ASSERT(!isOpen());
   pattern_ = pattern;
-  return TryOpen(path);
+  return tryOpen(path);
 }
 
-SystemErrorCode DirectoryEnumerator::TryOpen(const FilePath& path) {
-  ASSERT(!IsOpen());
+SystemErrorCode DirectoryEnumerator::tryOpen(const FilePath& path) {
+  ASSERT(!isOpen());
   DIR* dir = ::opendir(toNullTerminated(path));
   if (dir) {
     current_dir_ = dir;
@@ -23,14 +23,14 @@ SystemErrorCode DirectoryEnumerator::TryOpen(const FilePath& path) {
   return getLastPosixErrorCode();
 }
 
-void DirectoryEnumerator::Close() noexcept {
-  ASSERT(IsOpen());
+void DirectoryEnumerator::close() noexcept {
+  ASSERT(isOpen());
   DIR* dir = exchange(current_dir_, nullptr);
   if (::closedir(dir) != 0)
     ASSERT(false);
 }
 
-static bool IsDotEntry(const FilePathChar* basename) {
+static bool isDotEntry(const FilePathChar* basename) {
   if (basename[0] != '.')
     return false;
   if (basename[1] == '\0')
@@ -38,14 +38,14 @@ static bool IsDotEntry(const FilePathChar* basename) {
   return basename[1] == '.' && basename[2] == '\0';
 }
 
-bool DirectoryEnumerator::TryMoveNext(SystemErrorCode& out_error_code) {
-  ASSERT(IsOpen());
+bool DirectoryEnumerator::tryMoveNext(SystemErrorCode& out_error_code) {
+  ASSERT(isOpen());
   DIR* dir = current_dir_;
 
   errno = 0;
   struct dirent* dent;
   while ((dent = ::readdir(dir)) != nullptr) {
-    if (IsDotEntry(dent->d_name))
+    if (isDotEntry(dent->d_name))
       continue;
 
     if (!pattern_.isEmpty()) {

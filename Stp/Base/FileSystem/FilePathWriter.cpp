@@ -9,7 +9,7 @@
 
 namespace stp {
 
-TextEncoding FilePathWriter::GetEncoding() const {
+TextEncoding FilePathWriter::getEncoding() const {
   #if HAVE_UTF8_NATIVE_VALIDATION
   return &Utf8Codec;
   #else
@@ -20,10 +20,10 @@ TextEncoding FilePathWriter::GetEncoding() const {
   #endif
 }
 
-void FilePathWriter::EnsureSeparator() {
+void FilePathWriter::ensureSeparator() {
   if (path_.isEmpty())
     return;
-  if (IsFilePathSeparator(path_.chars().getLast()))
+  if (isFilePathSeparator(path_.chars().getLast()))
     return;
   path_.chars().add(FilePathSeparator);
 }

@@ -39,7 +39,7 @@ constexpr FilePathChar FilePathSeparator = L'\\';
 constexpr FilePathChar FilePathAltSeparator = L'/';
 #endif
 
-constexpr bool IsFilePathSeparator(FilePathChar c) {
+constexpr bool isFilePathSeparator(FilePathChar c) {
   return c == FilePathSeparator || c == FilePathAltSeparator;
 }
 
@@ -67,15 +67,15 @@ class BASE_EXPORT FilePathSpan {
 
   void truncate(int at) { chars_.truncate(at); }
 
-  FilePathSpan GetRoot() const;
-  FilePathSpan GetDirectoryName() const;
+  FilePathSpan getRoot() const;
+  FilePathSpan getDirectoryName() const;
 
-  bool CdUp();
+  bool cdUp();
 
-  FilePathSpan GetFileName() const;
-  FilePathSpan GetFileNameWithoutExtension() const;
+  FilePathSpan getFileName() const;
+  FilePathSpan getFileNameWithoutExtension() const;
 
-  void StripTrailingSeparators();
+  void stripTrailingSeparators();
 
   int indexOfSeparator() const;
   int indexOfSeparator(int begin) const;
@@ -84,30 +84,30 @@ class BASE_EXPORT FilePathSpan {
 
   int indexOfDriveLetter() const;
 
-  bool HasExtension() const;
-  String GetExtension() const;
-  bool MatchesExtension(StringSpan extension) const;
-  void RemoveExtension();
+  bool hasExtension() const;
+  String getExtension() const;
+  bool matchesExtension(StringSpan extension) const;
+  void removeExtension();
 
-  bool IsAbsolute() const { return GetRootLength() > 0; }
+  bool IsAbsolute() const { return getRootLength() > 0; }
   bool IsRelative() const { return !IsAbsolute(); }
 
   FilePathEnumerator enumerate() const;
 
-  int GetRootLength() const;
-  int GetDirectoryNameLength() const;
+  int getRootLength() const;
+  int getDirectoryNameLength() const;
   int indexOfExtension() const;
-  int CountTrailingSeparators() const;
+  int countTrailingSeparators() const;
 
-  friend bool operator<=(const FilePathSpan& l, const FilePathSpan& r) { return l.CompareTo(r) <= 0; }
-  friend bool operator>=(const FilePathSpan& l, const FilePathSpan& r) { return l.CompareTo(r) >= 0; }
-  friend bool operator< (const FilePathSpan& l, const FilePathSpan& r) { return l.CompareTo(r) <  0; }
-  friend bool operator> (const FilePathSpan& l, const FilePathSpan& r) { return l.CompareTo(r) >  0; }
+  friend bool operator<=(const FilePathSpan& l, const FilePathSpan& r) { return l.compareTo(r) <= 0; }
+  friend bool operator>=(const FilePathSpan& l, const FilePathSpan& r) { return l.compareTo(r) >= 0; }
+  friend bool operator< (const FilePathSpan& l, const FilePathSpan& r) { return l.compareTo(r) <  0; }
+  friend bool operator> (const FilePathSpan& l, const FilePathSpan& r) { return l.compareTo(r) >  0; }
 
-  friend bool operator==(const FilePathSpan& l, const FilePathSpan& r) { return l.EqualsTo(r); }
+  friend bool operator==(const FilePathSpan& l, const FilePathSpan& r) { return l.equalsTo(r); }
   friend bool operator!=(const FilePathSpan& l, const FilePathSpan& r) { return !operator==(l, r); }
-  friend HashCode partialHash(const FilePathSpan& x) { return x.HashImpl(); }
-  friend int compare(const FilePathSpan& l, const FilePathSpan& r) { return l.CompareTo(r); }
+  friend HashCode partialHash(const FilePathSpan& x) { return x.hashImpl(); }
+  friend int compare(const FilePathSpan& l, const FilePathSpan& r) { return l.compareTo(r); }
   friend TextWriter& operator<<(TextWriter& out, const FilePathSpan& x) {
     x.formatImpl(out);
     return out;
@@ -117,15 +117,15 @@ class BASE_EXPORT FilePathSpan {
   }
 
  private:
-  bool EqualsTo(const FilePathSpan& other) const;
-  int CompareTo(const FilePathSpan& other) const;
-  HashCode HashImpl() const;
+  bool equalsTo(const FilePathSpan& other) const;
+  int compareTo(const FilePathSpan& other) const;
+  HashCode hashImpl() const;
   void formatImpl(TextWriter& out) const;
 
   Span<CharType> chars_;
 };
 
-inline FilePathSpan MakeFilePathSpanFromNullTerminated(const FilePathChar* cstr) {
+inline FilePathSpan makeFilePathSpanFromNullTerminated(const FilePathChar* cstr) {
   return FilePathSpan(makeSpanFromNullTerminated(cstr));
 }
 
@@ -133,16 +133,16 @@ class BASE_EXPORT FilePathEnumerator {
  public:
   explicit FilePathEnumerator(FilePathSpan path);
 
-  FilePathSpan GetCurrent() const { return path_.getSlice(now_pos_, now_len_); }
+  FilePathSpan getCurrent() const { return path_.getSlice(now_pos_, now_len_); }
 
-  FilePathEnumerator* Next();
+  FilePathEnumerator* next();
 
   class Iterator {
    public:
     explicit Iterator(FilePathEnumerator* e) : enumerator_(e) {}
 
-    Iterator& operator++() { enumerator_ = enumerator_->Next(); return *this; }
-    FilePathSpan operator*() const { return enumerator_->GetCurrent(); }
+    Iterator& operator++() { enumerator_ = enumerator_->next(); return *this; }
+    FilePathSpan operator*() const { return enumerator_->getCurrent(); }
 
     bool operator==(const Iterator& o) const { return enumerator_ == o.enumerator_; }
     bool operator!=(const Iterator& o) const { return enumerator_ != o.enumerator_; }

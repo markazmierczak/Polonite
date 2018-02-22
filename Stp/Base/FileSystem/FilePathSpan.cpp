@@ -30,48 +30,48 @@ int FilePathSpan::indexOfDriveLetter() const {
   return -1;
 }
 
-/** @fn bool FilePathSpan::IsAbsolute() const
+/** @fn bool FilePathSpan::isAbsolute() const
  * Returns true if this path contains an absolute path.
  * On Windows, an absolute path begins with either a drive letter specification
  * followed by a separator character, or with two separator characters.
  * On POSIX platforms, an absolute path begins with a separator character.
  */
 
-int FilePathSpan::GetRootLength() const {
+int FilePathSpan::getRootLength() const {
   // FIXME for UNC consume whole \\abc\def
   #if OS(WIN)
   int letter = indexOfDriveLetter();
   if (letter >= 0) {
     // Look for a separator right after the drive specification.
     int pos = letter + 2;
-    if (size_ > pos && IsFilePathSeparator(chars_[pos]))
+    if (size_ > pos && isFilePathSeparator(chars_[pos]))
       ++pos;
     return pos;
   }
   // Look for a pair of leading separators.
-  if (size() > 1 && IsFilePathSeparator(chars_[0]) && IsFilePathSeparator(chars_[1]))
+  if (size() > 1 && isFilePathSeparator(chars_[0]) && isFilePathSeparator(chars_[1]))
     return 2;
   #else
   // Look for a separator in the first position.
-  if (size() > 0 && IsFilePathSeparator(chars_[0])) {
+  if (size() > 0 && isFilePathSeparator(chars_[0])) {
     // Detect alternative root.
-    return (size() > 1 && IsFilePathSeparator(chars_[1])) ? 2 : 1;
+    return (size() > 1 && isFilePathSeparator(chars_[1])) ? 2 : 1;
   }
   #endif
   return 0;
 }
 
-FilePathSpan FilePathSpan::GetRoot() const {
-  return FilePathSpan(data(), GetRootLength());
+FilePathSpan FilePathSpan::getRoot() const {
+  return FilePathSpan(data(), getRootLength());
 }
 
-int FilePathSpan::GetDirectoryNameLength() const {
-  int root_len = GetRootLength();
+int FilePathSpan::getDirectoryNameLength() const {
+  int root_len = getRootLength();
   int last_separator = lastIndexOfSeparator();
 
   int pos = last_separator;
   for (; pos > root_len; --pos) {
-    if (!IsFilePathSeparator(chars_[pos - 1]))
+    if (!isFilePathSeparator(chars_[pos - 1]))
       break;
   }
   return pos <= root_len ? root_len : pos;
@@ -83,8 +83,8 @@ int FilePathSpan::GetDirectoryNameLength() const {
  * If this object refers to root directory, returns root directory.
  * If this object only contains one component returns empty string.
  */
-FilePathSpan FilePathSpan::GetDirectoryName() const {
-  return FilePathSpan(chars_.data(), GetDirectoryNameLength());
+FilePathSpan FilePathSpan::getDirectoryName() const {
+  return FilePathSpan(chars_.data(), getDirectoryNameLength());
 }
 
 /**
@@ -92,8 +92,8 @@ FilePathSpan FilePathSpan::GetDirectoryName() const {
  * object, either a file or a directory. If this object refers to
  * the root directory, returns empty path.
  */
-FilePathSpan FilePathSpan::GetFileName() const {
-  int root_len = GetRootLength();
+FilePathSpan FilePathSpan::getFileName() const {
+  int root_len = getRootLength();
 
   // Keep everything after the final separator.
   int last_separator = lastIndexOfSeparator();
@@ -105,34 +105,34 @@ FilePathSpan FilePathSpan::GetFileName() const {
   return FilePathSpan(chars_.getSlice(last_separator + 1));
 }
 
-FilePathSpan FilePathSpan::GetFileNameWithoutExtension() const {
-  FilePathSpan filename = GetFileName();
-  filename.RemoveExtension();
+FilePathSpan FilePathSpan::getFileNameWithoutExtension() const {
+  FilePathSpan filename = getFileName();
+  filename.removeExtension();
   return filename;
 }
 
-int FilePathSpan::CountTrailingSeparators() const {
-  int root_length = GetRootLength();
+int FilePathSpan::countTrailingSeparators() const {
+  int root_length = getRootLength();
   int count = 0;
   int length = size();
   for (; count < length - root_length; ++count) {
-    if (!IsFilePathSeparator(chars_[length - (count + 1)]))
+    if (!isFilePathSeparator(chars_[length - (count + 1)]))
       break;
   }
   return count;
 }
 
-void FilePathSpan::StripTrailingSeparators() {
-  chars_.removeSuffix(CountTrailingSeparators());
+void FilePathSpan::stripTrailingSeparators() {
+  chars_.removeSuffix(countTrailingSeparators());
 }
 
 /**
  * Same as GetDirectoryName() but in-place.
  * Return true if path is non-empty after operation.
  */
-bool FilePathSpan::CdUp() {
-  int root_length = GetRootLength();
-  chars_.truncate(GetDirectoryNameLength());
+bool FilePathSpan::cdUp() {
+  int root_length = getRootLength();
+  chars_.truncate(getDirectoryNameLength());
   return chars_.size() != root_length;
 }
 
@@ -173,19 +173,19 @@ int FilePathSpan::indexOfExtension() const {
     if (c == '.') {
       char before = this_data[i - 1];
       if (i == this_size - 1) {
-        if (IsFilePathSeparator(before))
+        if (isFilePathSeparator(before))
           return -1; // dot
         if (before == '.') {
-          if (this_size == 2 || IsFilePathSeparator(this_data[i - 2]))
+          if (this_size == 2 || isFilePathSeparator(this_data[i - 2]))
             return -1; // dot dot
         }
         return i;
       }
-      if (IsFilePathSeparator(before))
+      if (isFilePathSeparator(before))
         return -1; // hidden file, e.g. ".git"
       return i;
     }
-    if (IsFilePathSeparator(c))
+    if (isFilePathSeparator(c))
       return -1;
     if (!isAscii(c))
       return -1;
@@ -193,16 +193,16 @@ int FilePathSpan::indexOfExtension() const {
   return -1;
 }
 
-bool FilePathSpan::HasExtension() const {
+bool FilePathSpan::hasExtension() const {
   return indexOfExtension() >= 0;
 }
 
 /**
  * Returns `.jpg` for path `C:\pics\jojo.jpg`, or an empty string if
- * the file has no extension. If non-empty, GetExtension() will always start
+ * the file has no extension. If non-empty, getExtension() will always start
  * with precisely one dot.
  */
-String FilePathSpan::GetExtension() const {
+String FilePathSpan::getExtension() const {
   int pos = indexOfExtension();
 
   String result;
@@ -222,7 +222,7 @@ String FilePathSpan::GetExtension() const {
  * Returns true if the file path matches the specified extension.
  * The test is case insensitive.
  */
-bool FilePathSpan::MatchesExtension(StringSpan extension) const {
+bool FilePathSpan::matchesExtension(StringSpan extension) const {
   ASSERT(isAscii(extension));
 
   int pos = indexOfExtension();
@@ -254,7 +254,7 @@ bool FilePathSpan::MatchesExtension(StringSpan extension) const {
  * Trims extension from this string, e.g."
  * "C:\pics\jojo.jpg" -> "C:\pics\jojo"
  */
-void FilePathSpan::RemoveExtension() {
+void FilePathSpan::removeExtension() {
   int pos = indexOfExtension();
   if (pos >= 0)
     chars_.truncate(pos);
@@ -262,29 +262,29 @@ void FilePathSpan::RemoveExtension() {
 
 void FilePathSpan::formatImpl(TextWriter& out) const {
   #if HAVE_UTF8_NATIVE_VALIDATION
-  out.Write(chars_);
+  out.write(chars_);
   #else
-  WriteWtf(out, chars_);
+  writeWtf(out, chars_);
   #endif
 }
 
 FilePathEnumerator::FilePathEnumerator(FilePathSpan path)
     : path_(path) {
-  int root_size = path_.GetRootLength();
+  int root_size = path_.getRootLength();
   if (root_size > 0)
     now_len_ = root_size;
   else
     now_len_ = max(0, path_.indexOfSeparator());
 }
 
-FilePathEnumerator* FilePathEnumerator::Next() {
+FilePathEnumerator* FilePathEnumerator::next() {
   int path_size = path_.size();
   auto* path_chars = path_.data();
   // skip old component and separators
   int old_end = now_pos_ + now_len_;
   int pos = old_end;
   for (; pos < path_size; ++pos) {
-    if (!IsFilePathSeparator(path_chars[pos]))
+    if (!isFilePathSeparator(path_chars[pos]))
       break;
   }
   // check if we are done

@@ -19,9 +19,9 @@ class BASE_EXPORT ClipTextWriter final : public TextWriter {
   ClipTextWriter(TextWriter* base, int limit);
 
   // Returns true if any write was cut off due the limit.
-  bool ReachedLimit() const { return remaining_ < 0; }
+  bool hasReachedLimit() const { return remaining_ < 0; }
 
-  TextEncoding GetEncoding() const override;
+  TextEncoding getEncoding() const override;
 
  protected:
   void onWriteChar(char c) override;
@@ -30,7 +30,7 @@ class BASE_EXPORT ClipTextWriter final : public TextWriter {
   void onIndent(int count, char c) override;
 
  private:
-  bool Grow(int n);
+  bool grow(int n);
 
   TextWriter& base_;
   int remaining_;

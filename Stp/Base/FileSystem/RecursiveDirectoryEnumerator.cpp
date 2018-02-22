@@ -10,58 +10,58 @@ namespace stp {
 RecursiveDirectoryEnumerator::RecursiveDirectoryEnumerator() {}
 RecursiveDirectoryEnumerator::~RecursiveDirectoryEnumerator() {}
 
-SystemErrorCode RecursiveDirectoryEnumerator::TryOpen(FilePath root_path) {
-  ASSERT(!IsOpen());
+SystemErrorCode RecursiveDirectoryEnumerator::tryOpen(FilePath root_path) {
+  ASSERT(!isOpen());
   current_dir_path_ = move(root_path);
-  return base_.TryOpen(root_path);
+  return base_.tryOpen(root_path);
 }
 
-void RecursiveDirectoryEnumerator::Open(FilePath root_path) {
-  auto error_code = TryOpen(move(root_path));
-  if (!IsOk(error_code))
+void RecursiveDirectoryEnumerator::open(FilePath root_path) {
+  auto error_code = tryOpen(move(root_path));
+  if (!isOk(error_code))
     throw FileSystemException(error_code, current_dir_path_);
 }
 
-void RecursiveDirectoryEnumerator::Close() {
-  ASSERT(IsOpen());
-  base_.Close();
+void RecursiveDirectoryEnumerator::close() {
+  ASSERT(isOpen());
+  base_.close();
   current_dir_path_.clear();
   pending_dir_paths_.clear();
 }
 
-bool RecursiveDirectoryEnumerator::TryMoveNext(SystemErrorCode& out_error_code) {
-  ASSERT(IsOpen());
+bool RecursiveDirectoryEnumerator::tryMoveNext(SystemErrorCode& out_error_code) {
+  ASSERT(isOpen());
   while (true) {
-    if (base_.IsOpen()) {
-      if (base_.TryMoveNext(out_error_code)) {
-        if (base_.IsDirectory())
-          pending_dir_paths_.Push(CombineFilePaths(current_dir_path_, base_.GetFileName()));
+    if (base_.isOpen()) {
+      if (base_.tryMoveNext(out_error_code)) {
+        if (base_.isDirectory())
+          pending_dir_paths_.push(combineFilePaths(current_dir_path_, base_.getFileName()));
         return true;
       }
-      base_.Close();
-      if (!IsOk(out_error_code))
+      base_.close();
+      if (!isOk(out_error_code))
         return false;
     }
     if (pending_dir_paths_.isEmpty()) {
       out_error_code = SystemErrorCode::Ok;
       break;
     }
-    current_dir_path_ = pending_dir_paths_.Pop();
-    out_error_code = base_.TryOpen(current_dir_path_);
+    current_dir_path_ = pending_dir_paths_.pop();
+    out_error_code = base_.tryOpen(current_dir_path_);
   }
   return false;
 }
 
-bool RecursiveDirectoryEnumerator::MoveNext() {
+bool RecursiveDirectoryEnumerator::moveNext() {
   SystemErrorCode error_code;
-  bool has_next = TryMoveNext(error_code);
-  if (!has_next && !IsOk(error_code))
+  bool has_next = tryMoveNext(error_code);
+  if (!has_next && !isOk(error_code))
     throw FileSystemException(error_code, current_dir_path_);
   return has_next;
 }
 
-FilePath RecursiveDirectoryEnumerator::GetEntryFullPath() const {
-  return CombineFilePaths(current_dir_path_, base().GetFileName());
+FilePath RecursiveDirectoryEnumerator::getEntryFullPath() const {
+  return combineFilePaths(current_dir_path_, base().getFileName());
 }
 
 } // namespace stp

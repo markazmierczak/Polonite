@@ -21,7 +21,7 @@ static inline FilePath appendAppName(FilePath&& path) {
   return path;
 }
 
-FilePath GetTempDirPath() {
+FilePath getTempDirPath() {
   auto provider = []() {
     wchar_t path[MAX_PATH + 1];
     DWORD length = ::GetTempPathW(MAX_PATH, path);
@@ -30,10 +30,10 @@ FilePath GetTempDirPath() {
     return FilePath(path, static_cast<int>(length));
   };
   static known_path::Key g_key = 0;
-  return known_path::ResolveDirectory(g_key, provider, known_path::NotValidated);
+  return known_path::resolveDirectory(g_key, provider, known_path::NotValidated);
 }
 
-FilePath GetCurrentDirPath() {
+FilePath getCurrentDirPath() {
   // Cannot be cached for obvious reasons.
   FilePath path;
   int buffer_length = 1;
@@ -43,7 +43,7 @@ FilePath GetCurrentDirPath() {
     if (rv < buffer_length) {
       if (rv == 0)
         throw SystemException(getLastWinErrorCode());
-      path.TruncateCharacters(rv);
+      path.truncateCharacters(rv);
       return path;
     }
     buffer_length = rv;
@@ -51,31 +51,31 @@ FilePath GetCurrentDirPath() {
   }
 }
 
-bool SetCurrentDirPath(const FilePath& directory) {
+bool setCurrentDirPath(const FilePath& directory) {
   return ::SetCurrentDirectoryW(toNullTerminated(directory)) != 0;
 }
 
-FilePath GetAppUserDataPath() {
+FilePath getAppUserDataPath() {
   auto provider = []() {
-    return appendAppName(GetWinLocalAppDataPath());
+    return appendAppName(getWinLocalAppDataPath());
   };
   static known_path::Key g_key = 0;
-  return known_path::ResolveDirectory(g_key, provider, known_path::EnsureCreated);
+  return known_path::resolveDirectory(g_key, provider, known_path::EnsureCreated);
 }
 
-FilePath GetAppCachePath() {
+FilePath getAppCachePath() {
   auto provider = []() {
     // Windows has no notion of cache directory.
     // Use subdir in application user data.
-    FilePath path = GetAppUserDataPath();
+    FilePath path = getAppUserDataPath();
     path.appendAscii("Cache");
     return path;
   };
   static known_path::Key g_key = 0;
-  return known_path::ResolveDirectory(g_key, provider, known_path::EnsureCreated);
+  return known_path::resolveDirectory(g_key, provider, known_path::EnsureCreated);
 }
 
-static FilePath GetModuleFile(HMODULE module) {
+static FilePath getModuleFile(HMODULE module) {
   static constexpr int StackCapacity = 256;
   wchar_t stack_buffer[StackCapacity];
 
@@ -90,7 +90,7 @@ static FilePath GetModuleFile(HMODULE module) {
     wchar_t* dst = path.appendCharactersUninitialized(capacity - 1);
     rv = static_cast<int>(::GetModuleFileNameW(module, dst, capacity));
     if (rv < capacity) {
-      path.TruncateCharacters(rv);
+      path.truncateCharacters(rv);
       return path;
     }
     path.clear();
@@ -98,13 +98,13 @@ static FilePath GetModuleFile(HMODULE module) {
   throw SystemException(getLastWinErrorCode());
 }
 
-FilePath GetExecutableFilePath() {
-  auto provider = []() { return GetModuleFile(0); };
+FilePath getExecutableFilePath() {
+  auto provider = []() { return getModuleFile(0); };
   static known_path::Key g_key = 0;
   return known_path::ResolveFile(g_key, provider, known_path::NotValidated);
 }
 
-FilePath GetWindowsPath() {
+FilePath getWindowsPath() {
   auto provider = []() {
     wchar_t path[MAX_PATH];
     int rv = static_cast<int>(::GetWindowsDirectoryW(path, MAX_PATH));
@@ -112,10 +112,10 @@ FilePath GetWindowsPath() {
     return FilePath(path, rv);
   };
   static known_path::Key g_key = 0;
-  return known_path::ResolveDirectory(g_key, provider, known_path::NotValidated);
+  return known_path::resolveDirectory(g_key, provider, known_path::NotValidated);
 }
 
-static FilePath ShGetKnownFolderPathWrapper(REFKNOWNFOLDERID rfid) {
+static FilePath shGetKnownFolderPathWrapper(REFKNOWNFOLDERID rfid) {
   win::ScopedCoMem<wchar_t> path_buf;
   HRESULT rv = ::SHGetKnownFolderPath(rfid, 0, NULL, &path_buf);
   if (rv == S_OK)
@@ -126,21 +126,21 @@ static FilePath ShGetKnownFolderPathWrapper(REFKNOWNFOLDERID rfid) {
 #define DEFINE_SHELL_BASED_FOLDER(NAME, FOLDERID) \
   FilePath NAME() { \
     auto provider = []() { \
-      return ShGetKnownFolderPathWrapper(FOLDERID); \
+      return shGetKnownFolderPathWrapper(FOLDERID); \
     }; \
     static known_path::Key g_key = 0; \
     return known_path::ResolveDirectory(g_key, provider, known_path::NotValidated); \
   }
 
-DEFINE_SHELL_BASED_FOLDER(GetHomeDirPath, FOLDERID_Profile)
-DEFINE_SHELL_BASED_FOLDER(GetProgramFilesPath, FOLDERID_ProgramFiles)
-DEFINE_SHELL_BASED_FOLDER(GetWinAppDataPath, FOLDERID_RoamingAppData)
-DEFINE_SHELL_BASED_FOLDER(GetWinLocalAppDataPath, FOLDERID_LocalAppData)
-DEFINE_SHELL_BASED_FOLDER(GetWinCommonDesktopPath, FOLDERID_PublicDesktop)
-DEFINE_SHELL_BASED_FOLDER(GetWinUserDesktopPath, FOLDERID_Desktop)
-DEFINE_SHELL_BASED_FOLDER(GetWinCommonStartMenuPath, FOLDERID_CommonPrograms)
-DEFINE_SHELL_BASED_FOLDER(GetWinStartMenuPath, FOLDERID_Programs)
-DEFINE_SHELL_BASED_FOLDER(GetWinFontsPath, FOLDERID_Fonts)
+DEFINE_SHELL_BASED_FOLDER(getHomeDirPath, FOLDERID_Profile)
+DEFINE_SHELL_BASED_FOLDER(getProgramFilesPath, FOLDERID_ProgramFiles)
+DEFINE_SHELL_BASED_FOLDER(getWinAppDataPath, FOLDERID_RoamingAppData)
+DEFINE_SHELL_BASED_FOLDER(getWinLocalAppDataPath, FOLDERID_LocalAppData)
+DEFINE_SHELL_BASED_FOLDER(getWinCommonDesktopPath, FOLDERID_PublicDesktop)
+DEFINE_SHELL_BASED_FOLDER(getWinUserDesktopPath, FOLDERID_Desktop)
+DEFINE_SHELL_BASED_FOLDER(getWinCommonStartMenuPath, FOLDERID_CommonPrograms)
+DEFINE_SHELL_BASED_FOLDER(getWinStartMenuPath, FOLDERID_Programs)
+DEFINE_SHELL_BASED_FOLDER(getWinFontsPath, FOLDERID_Fonts)
 
 #undef DEFINE_SHELL_BASED_FOLDER
 

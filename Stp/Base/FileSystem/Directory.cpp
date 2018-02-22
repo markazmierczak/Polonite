@@ -11,27 +11,27 @@
 
 namespace stp {
 
-void Directory::Create(const FilePath& path) {
-  auto error_code = TryCreate(path);
-  if (!IsOk(error_code))
+void Directory::create(const FilePath& path) {
+  auto error_code = tryCreate(path);
+  if (!isOk(error_code))
     throw FileSystemException(error_code, path);
 }
 
-void Directory::CreatePath(const FilePath& path) {
-  auto error_code = TryCreatePath(path);
-  if (!IsOk(error_code))
+void Directory::createPath(const FilePath& path) {
+  auto error_code = tryCreatePath(path);
+  if (!isOk(error_code))
     throw FileSystemException(error_code, path);
 }
 
-void Directory::RemoveEmpty(const FilePath& path) {
+void Directory::removeEmpty(const FilePath& path) {
   auto error_code = tryRemoveEmpty(path);
-  if (!IsOk(error_code))
+  if (!isOk(error_code))
     throw FileSystemException(error_code, path);
 }
 
-SystemErrorCode Directory::TryCreatePath(const FilePath& path) {
-  SystemErrorCode error_code = TryCreate(path);
-  if (IsOk(error_code))
+SystemErrorCode Directory::tryCreatePath(const FilePath& path) {
+  SystemErrorCode error_code = tryCreate(path);
+  if (isOk(error_code))
     return error_code;
 
   // Slow path: Collect a list of all parent directories.
@@ -47,7 +47,7 @@ SystemErrorCode Directory::TryCreatePath(const FilePath& path) {
   FilePathSpan subpath = path;
   do {
     subpaths.add(subpath.size());
-  } while (subpath.CdUp());
+  } while (subpath.cdUp());
 
   int path_length = path.size();
   FilePathChar* copyd = copy.data();
@@ -58,43 +58,43 @@ SystemErrorCode Directory::TryCreatePath(const FilePath& path) {
     FilePathChar char_copy = copyd[offset];
     copy.chars().truncate(offset);
 
-    error_code = TryCreate(copy);
+    error_code = tryCreate(copy);
 
     *copy.chars().appendUninitialized(path_length - offset) = char_copy;
 
-    if (!IsOk(error_code))
+    if (!isOk(error_code))
       break;
   }
   return error_code;
 }
 
-void Directory::RemoveRecursively(const FilePath& path) {
+void Directory::removeRecursively(const FilePath& path) {
   List<FilePath> directories;
   directories.add(FilePath(path));
 
   RecursiveDirectoryEnumerator enumerator;
   while (!directories.isEmpty()) {
-    enumerator.Open(directories.getLast());
+    enumerator.open(directories.getLast());
 
     bool has_nested = false;
-    while (enumerator.MoveNext()) {
-      FilePath full_path = enumerator.GetEntryFullPath();
-      if (enumerator.base().IsDirectory()) {
+    while (enumerator.moveNext()) {
+      FilePath full_path = enumerator.getEntryFullPath();
+      if (enumerator.base().isDirectory()) {
         directories.add(move(full_path));
         has_nested = true;
       } else {
-        File::Delete(full_path);
+        File::remove(full_path);
       }
     }
     if (!has_nested) {
-      RemoveEmpty(directories.getLast());
+      removeEmpty(directories.getLast());
       directories.removeLast();
     }
-    enumerator.Close();
+    enumerator.close();
   }
 }
 
-uint64_t Directory::ComputeSize(const FilePath& path) {
+uint64_t Directory::computeSize(const FilePath& path) {
   uint64_t result = 0;
 
   #if OS(POSIX)
@@ -102,23 +102,23 @@ uint64_t Directory::ComputeSize(const FilePath& path) {
   #endif
 
   RecursiveDirectoryEnumerator enumerator;
-  enumerator.Open(path);
-  while (enumerator.MoveNext()) {
+  enumerator.open(path);
+  while (enumerator.moveNext()) {
     #if OS(WIN)
-    result += enumerator.GetSize();
+    result += enumerator.getSize();
     #elif OS(POSIX)
-    File::GetInfo(enumerator.GetEntryFullPath(), file_info);
-    result += file_info.GetSize();
+    File::getInfo(enumerator.getEntryFullPath(), file_info);
+    result += file_info.getSize();
     #endif
   }
-  enumerator.Close();
+  enumerator.close();
   return result;
 }
 
-Directory::DriveSpaceInfo Directory::GetDriveSpaceInfo(const FilePath& path) {
+Directory::DriveSpaceInfo Directory::getDriveSpaceInfo(const FilePath& path) {
   DriveSpaceInfo info;
   auto error_code = tryGetDriveSpaceInfo(path, info);
-  if (!IsOk(error_code))
+  if (!isOk(error_code))
     throw FileSystemException(error_code, path);
   return info;
 }

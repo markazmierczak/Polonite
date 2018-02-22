@@ -13,7 +13,7 @@ class BASE_EXPORT InlineStringWriter final : public TextWriter {
  public:
   explicit InlineStringWriter(InlineListBase<char>* string) : string_(*string) {}
 
-  TextEncoding GetEncoding() const override;
+  TextEncoding getEncoding() const override;
 
  protected:
   void onWriteChar(char c) override;

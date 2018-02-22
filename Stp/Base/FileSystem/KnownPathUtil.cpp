@@ -27,8 +27,7 @@ int g_next_key = 0;
 
 namespace detail {
 
-FilePath ResolveInternal(
-    int& key, ProvideType provider, bool directory, Option option) {
+FilePath resolveInternal(int& key, ProvideType provider, bool directory, Option option) {
   FilePath path;
 
   bool resolved = false;
@@ -52,19 +51,19 @@ FilePath ResolveInternal(
 
   path = (*provider)();
 
-  if (!path.isEmpty() && !path.IsAbsolute())
-    path = File::MakeAbsolutePath(path);
+  if (!path.isEmpty() && !path.isAbsolute())
+    path = File::makeAbsolutePath(path);
 
   if (option != NotValidated) {
     if (option == EnsureCreated) {
       ASSERT(directory);
-      Directory::Create(path);
+      Directory::create(path);
     } else if (option == EnsureExists) {
       bool exists;
       if (directory) {
-        exists = Directory::Exists(path);
+        exists = Directory::exists(path);
       } else {
-        exists = File::Exists(path);
+        exists = File::exists(path);
       }
       if (!exists)
         throw NotFoundException(move(path));

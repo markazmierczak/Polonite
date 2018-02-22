@@ -11,7 +11,7 @@
 
 namespace stp {
 
-bool File::Exists(const FilePath& path) {
+bool File::exists(const FilePath& path) {
   return ::GetFileAttributesW(toNullTerminated(path)) != INVALID_FILE_ATTRIBUTES;
 }
 
@@ -21,7 +21,7 @@ SystemErrorCode File::tryGetInfo(const FilePath& path, FileInfo& out) {
   return WinErrorCode::Success;
 }
 
-SystemErrorCode File::TryMakeAbsolutePath(const FilePath& input, FilePath& output) {
+SystemErrorCode File::tryMakeAbsolutePath(const FilePath& input, FilePath& output) {
   output.clear();
 
   int buffer_length = 1;
@@ -40,7 +40,7 @@ SystemErrorCode File::TryMakeAbsolutePath(const FilePath& input, FilePath& outpu
   }
 }
 
-SystemErrorCode File::TryMakeLongPath(const FilePath& input, FilePath& output) {
+SystemErrorCode File::tryMakeLongPath(const FilePath& input, FilePath& output) {
   output.clear();
 
   int buffer_length = 1;
@@ -59,20 +59,20 @@ SystemErrorCode File::TryMakeLongPath(const FilePath& input, FilePath& output) {
   }
 }
 
-SystemErrorCode File::TryDelete(const FilePath& path) {
+SystemErrorCode File::tryRemove(const FilePath& path) {
   if (!::DeleteFileW(toNullTerminated(path)))
     return getLastWinErrorCode();
   return WinErrorCode::Success;
 }
 
-SystemErrorCode File::TryDeleteAfterReboot(const FilePath& path) {
+SystemErrorCode File::tryRemoveAfterReboot(const FilePath& path) {
   DWORD flags = MOVEFILE_DELAY_UNTIL_REBOOT | MOVEFILE_REPLACE_EXISTING;
   if (!::MoveFileExW(toNullTerminated(path), NULL, flags))
     return getLastWinErrorCode();
   return WinErrorCode::Success;
 }
 
-SystemErrorCode File::TryReplace(const FilePath& from, const FilePath& to) {
+SystemErrorCode File::tryReplace(const FilePath& from, const FilePath& to) {
   // Try a simple move first. It will only succeed when |to| doesn't already exist.
   if (::MoveFileW(toNullTerminated(from), toNullTerminated(to)))
     return WinErrorCode::Success;
@@ -86,14 +86,14 @@ SystemErrorCode File::TryReplace(const FilePath& from, const FilePath& to) {
   return getLastWinErrorCode();
 }
 
-SystemErrorCode File::TryCreateTemporaryIn(const FilePath& dir, FilePath& output_path) {
+SystemErrorCode File::tryCreateTemporaryIn(const FilePath& dir, FilePath& output_path) {
   wchar_t temp_name[MAX_PATH + 1];
 
   if (!::GetTempFileNameW(toNullTerminated(dir), L"", 0, temp_name))
     return getLastWinErrorCode();
 
-  auto temp_cpath = FilePath::FromNullTerminated(temp_name);
-  WinErrorCode long_rv = TryMakeLongPath(temp_cpath, output_path);
+  auto temp_cpath = FilePath::fromNullTerminated(temp_name);
+  WinErrorCode long_rv = tryMakeLongPath(temp_cpath, output_path);
   if (!IsOk(long_rv)) {
     // GetLongPathNameW() failed, but we still have a temporary file.
     output_path = temp_cpath;

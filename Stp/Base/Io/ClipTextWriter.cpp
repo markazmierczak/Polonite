@@ -15,7 +15,7 @@ ClipTextWriter::ClipTextWriter(TextWriter* base, int limit)
   ASSERT(limit >= 0);
 }
 
-bool ClipTextWriter::Grow(int n) {
+bool ClipTextWriter::grow(int n) {
   if (remaining_ >= n) {
     remaining_ -= n;
   } else {
@@ -25,25 +25,25 @@ bool ClipTextWriter::Grow(int n) {
   return n;
 }
 
-TextEncoding ClipTextWriter::GetEncoding() const {
-  return base_.GetEncoding();
+TextEncoding ClipTextWriter::getEncoding() const {
+  return base_.getEncoding();
 }
 
 void ClipTextWriter::onWriteChar(char c) {
-  if (Grow(1) > 0)
+  if (grow(1) > 0)
     base_ << c;
 }
 
 void ClipTextWriter::onWriteRune(char32_t rune) {
-  if (Grow(1) > 0)
+  if (grow(1) > 0)
     base_ << rune;
 }
 
-static bool SplitsCharacterAt(StringSpan text, int at) {
+static bool splitsCharacterAt(StringSpan text, int at) {
   return Utf8::IsEncodedTrail(text[at]);
 }
 
-static void TrimLastCharacter(StringSpan& text) {
+static void trimLastCharacter(StringSpan& text) {
   bool lead = false;
   while (!lead && !text.isEmpty()) {
     lead = Utf8::IsEncodedLead(text.getLast());
@@ -51,18 +51,18 @@ static void TrimLastCharacter(StringSpan& text) {
   }
 }
 
-static void CutText(StringSpan& text, int at) {
-  bool splits = SplitsCharacterAt(text, at);
+static void cutText(StringSpan& text, int at) {
+  bool splits = splitsCharacterAt(text, at);
   text.truncate(at);
   if (splits)
-    TrimLastCharacter(text);
+    trimLastCharacter(text);
 }
 
 void ClipTextWriter::onWriteString(StringSpan text) {
-  int n = Grow(text.size());
+  int n = grow(text.size());
   if (n < text.size()) {
     if (n > 0)
-      CutText(text, n);
+      cutText(text, n);
     if (n <= 0)
       return;
   }
@@ -70,7 +70,7 @@ void ClipTextWriter::onWriteString(StringSpan text) {
 }
 
 void ClipTextWriter::onIndent(int count, char c) {
-  int n = Grow(count);
+  int n = grow(count);
   if (n > 0)
     base_.indent(n, c);
 }

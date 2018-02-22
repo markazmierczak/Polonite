@@ -5,14 +5,14 @@
 
 namespace stp {
 
-bool Directory::Exists(const FilePath& path) {
+bool Directory::exists(const FilePath& path) {
   DWORD fileattr = ::GetFileAttributesW(toNullTerminated(path));
   if (fileattr != INVALID_FILE_ATTRIBUTES)
     return (fileattr & FILE_ATTRIBUTE_DIRECTORY) != 0;
   return false;
 }
 
-SystemErrorCode Directory::TryCreate(const FilePath& path) {
+SystemErrorCode Directory::tryCreate(const FilePath& path) {
   if (::CreateDirectoryW(toNullTerminated(path), nullptr) != 0)
     return WinErrorCode::Success;
 
@@ -20,7 +20,7 @@ SystemErrorCode Directory::TryCreate(const FilePath& path) {
   if (error.GetCode() == WinErrorCode::AlreadyExists) {
     // This error code doesn't indicate whether we were racing with someone
     // creating the same directory, or a file with the same path.
-    if (Exists(path))
+    if (exists(path))
       return WinErrorCode::Success;
   }
   return error;
@@ -37,13 +37,13 @@ SystemErrorCode Directory::tryGetDriveSpaceInfo(const FilePath& path, DriveSpace
   if (!::GetDiskFreeSpaceExW(toNullTerminated(path), &available, &total, &free))
     return getLastWinErrorCode();
 
-  auto ULargeIntToInt64 = [](ULARGE_INTEGER bytes) {
+  auto ulargeIntToInt64 = [](ULARGE_INTEGER bytes) {
     ASSERT(bytes.QuadPart <= INT64_MAX);
     return static_cast<int64_t>(bytes.QuadPart);
   };
-  out_space.available = ULargeIntToInt64(available);
-  out_space.total = ULargeIntToInt64(total);
-  out_space.free = ULargeIntToInt64(free);
+  out_space.available = ulargeIntToInt64(available);
+  out_space.total = ulargeIntToInt64(total);
+  out_space.free = ulargeIntToInt64(free);
   return WinErrorCode::Success;
 }
 

@@ -20,9 +20,9 @@ bool MemoryMappedFile::MapFileRegionToMemory(
   int data_offset = 0;
 
   if (region == MemoryMappedFile::Region::WholeFile) {
-    int64_t file_len = file_.GetLength();
+    int64_t file_len = file_.getLength();
     if (file_len < 0) {
-      LOG(ERROR, "fstat failed, fd={}", file_.GetNativeFile());
+      LOG(ERROR, "fstat failed, fd={}", file_.getNativeFile());
       return false;
     }
     map_size = static_cast<size_t>(file_len);
@@ -62,14 +62,14 @@ bool MemoryMappedFile::MapFileRegionToMemory(
       // POSIX won't auto-extend the file when it is written so it must first
       // be explicitly extended to the maximum size. Zeros will fill the new
       // space.
-      file_.SetLength(max(file_.GetLength(), region.offset + region.size));
+      file_.setLength(max(file_.getLength(), region.offset + region.size));
       flags |= PROT_READ | PROT_WRITE;
       break;
   }
   data_ = static_cast<char*>(mmap(
-      NULL, map_size, flags, MAP_SHARED, file_.GetNativeFile(), map_start));
+      NULL, map_size, flags, MAP_SHARED, file_.getNativeFile(), map_start));
   if (data_ == MAP_FAILED) {
-    LOG(ERROR, "mmap failed, fd={}", file_.GetNativeFile());
+    LOG(ERROR, "mmap failed, fd={}", file_.getNativeFile());
     return false;
   }
   data_ += data_offset;
@@ -79,7 +79,7 @@ bool MemoryMappedFile::MapFileRegionToMemory(
 void MemoryMappedFile::CloseHandles() {
   if (data_)
     munmap(data_, length_);
-  file_.Close();
+  file_.close();
 
   data_ = nullptr;
   length_ = 0;

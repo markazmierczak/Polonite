@@ -11,11 +11,11 @@ TEST(Base64Test, Basic) {
   auto input = BufferSpan("hello world");
   const StringSpan expected = "aGVsbG8gd29ybGQ=";
 
-  String encoded = Base64::Encode(input);
+  String encoded = Base64::encode(input);
   EXPECT_EQ(expected, encoded);
 
   Buffer decoded;
-  EXPECT_TRUE(Base64::TryDecode(encoded, decoded));
+  EXPECT_TRUE(Base64::tryDecode(encoded, decoded));
   EXPECT_EQ(input, decoded);
 }
 

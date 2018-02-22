@@ -9,9 +9,9 @@
 namespace stp {
 
 #if HAVE_FILE_PATH_WITH_DRIVE_LETTER
-static int EqualCaseInsensitive(const wchar_t* lhs, const wchar_t* rhs, int size) {
-  int lhs_letter_pos = FindDriveLetter(lhs, size);
-  int rhs_letter_pos = FindDriveLetter(rhs, size);
+static int equalCaseInsensitive(const wchar_t* lhs, const wchar_t* rhs, int size) {
+  int lhs_letter_pos = findDriveLetter(lhs, size);
+  int rhs_letter_pos = findDriveLetter(rhs, size);
 
   if (lhs_letter_pos < 0 || rhs_letter_pos < 0)
     return RawWString::compare(lhs, rhs, size);
@@ -30,22 +30,22 @@ static int EqualCaseInsensitive(const wchar_t* lhs, const wchar_t* rhs, int size
 }
 #endif
 
-bool FilePathSpan::EqualsTo(const FilePathSpan& other) const {
+bool FilePathSpan::equalsTo(const FilePathSpan& other) const {
   if (size() != other.size())
     return false;
   #if HAVE_FILE_PATH_WITH_DRIVE_LETTER
-  return EqualCaseInsensitive(data_, other.data(), size_) == 0;
+  return equalCaseInsensitive(data_, other.data(), size_) == 0;
   #else
   return chars_ == other.chars_;
   #endif
 }
 
-int FilePathSpan::CompareTo(const FilePathSpan& other) const {
+int FilePathSpan::compareTo(const FilePathSpan& other) const {
   // TODO not implemented
   throw NotImplementedException();
 }
 
-HashCode FilePathSpan::HashImpl() const {
+HashCode FilePathSpan::hashImpl() const {
   return partialHash(chars_);
 }
 

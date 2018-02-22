@@ -11,24 +11,24 @@
 
 namespace stp {
 
-FilePath GetTempDirPath() {
+FilePath getTempDirPath() {
   auto provider = []() {
     FilePath path;
     if (Environment::tryGet("TMPDIR", path))
       return path;
 
     #if OS(ANDROID)
-    path = GetAppCachePath();
+    path = getAppCachePath();
     #else
     path = FILE_PATH_LITERAL("/tmp");
     #endif
     return path;
   };
   static known_path::Key g_key = 0;
-  return known_path::ResolveDirectory(g_key, provider, known_path::NotValidated);
+  return known_path::resolveDirectory(g_key, provider, known_path::NotValidated);
 }
 
-FilePath GetHomeDirPath() {
+FilePath getHomeDirPath() {
   auto provider = []() {
     #if OS(ANDROID)
     throw Exception::with(
@@ -41,19 +41,19 @@ FilePath GetHomeDirPath() {
 
     ASSERT(false, "unable to get home directory");
     #endif
-    return GetTempDirPath();
+    return getTempDirPath();
   };
   static known_path::Key g_key = 0;
-  return known_path::ResolveDirectory(g_key, provider, known_path::NotValidated);
+  return known_path::resolveDirectory(g_key, provider, known_path::NotValidated);
 }
 
-FilePath GetCurrentDirPath() {
+FilePath getCurrentDirPath() {
   // Cannot be cached through "resolver" mechanism for obvious reason
   // (current directory is not a constant).
   constexpr int StackLength = 256;
   char stack_buffer[StackLength];
   if (::getcwd(stack_buffer, StackLength) != nullptr)
-    return FilePath(MakeFilePathSpanFromNullTerminated(stack_buffer));
+    return FilePath(makeFilePathSpanFromNullTerminated(stack_buffer));
 
   FilePath path;
   for (int buffer_len = StackLength * 2; errno == ERANGE; buffer_len *= 2) {
@@ -68,7 +68,7 @@ FilePath GetCurrentDirPath() {
   throw SystemException(getLastSystemErrorCode());
 }
 
-bool SetCurrentDirPath(const FilePath& path) {
+bool setCurrentDirPath(const FilePath& path) {
   return ::chdir(toNullTerminated(path)) == 0;
 }
 

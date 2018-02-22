@@ -13,31 +13,31 @@ class BASE_EXPORT Base64 {
   STATIC_ONLY(Base64);
  public:
   // Encodes the input bytes in base64.
-  static String Encode(BufferSpan input);
+  static String encode(BufferSpan input);
 
   // Decodes the base64 input string.
-  [[nodiscard]] static bool TryDecode(StringSpan input, Buffer& output);
+  [[nodiscard]] static bool tryDecode(StringSpan input, Buffer& output);
 
   // Low-level function - encodes input bytes and writes base64 representation
   // to the output. Returns number of characters written to the output.
-  static int Encode(MutableStringSpan output, BufferSpan input);
+  static int encode(MutableStringSpan output, BufferSpan input);
 
-  static int EstimateEncodedLength(int input_size);
+  static int estimateEncodedLength(int input_size);
 
   // Low-level function - decodes input characters in base64 and writes decoded bytes
   // to the output. Returns the number of characters decoded or negative number
   // if an error occurred.
-  [[nodiscard]] static int TryDecode(StringSpan input, MutableBufferSpan output);
+  [[nodiscard]] static int tryDecode(StringSpan input, MutableBufferSpan output);
 
-  static int EstimateDecodedSize(int input_size);
+  static int estimateDecodedSize(int input_size);
 };
 
-inline int Base64::EstimateEncodedLength(int input_size) {
+inline int Base64::estimateEncodedLength(int input_size) {
   ASSERT(input_size >= 0);
   return (toUnsigned(input_size) + 2) / 3 * 4 + 1;
 }
 
-inline int Base64::EstimateDecodedSize(int input_size) {
+inline int Base64::estimateDecodedSize(int input_size) {
   ASSERT(input_size >= 0);
   return toUnsigned(input_size) / 4 * 3 + 2;
 }

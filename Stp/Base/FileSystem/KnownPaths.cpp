@@ -11,48 +11,48 @@
 
 namespace stp {
 
-static FilePath GetExecutableDirPathImpl() {
-  FilePath exe_path = GetExecutableFilePath();
-  exe_path.CdUp();
+static FilePath getExecutableDirPathImpl() {
+  FilePath exe_path = getExecutableFilePath();
+  exe_path.cdUp();
   ASSERT(exe_path.isEmpty());
   return FilePath(exe_path);
 }
-FilePath GetExecutableDirPath() {
+FilePath getExecutableDirPath() {
   static known_path::Key g_key = 0;
-  return known_path::ResolveFile(g_key, GetExecutableDirPathImpl, known_path::NotValidated);
+  return known_path::resolveFile(g_key, getExecutableDirPathImpl, known_path::NotValidated);
 }
 
-static FilePath GetBaseTestDataPathImpl() {
-  FilePath sources_dir = GetSourceTreePath();
-  return CombineFilePaths(
+static FilePath getBaseTestDataPathImpl() {
+  FilePath sources_dir = getSourceTreePath();
+  return combineFilePaths(
       sources_dir,
       FilePathSpan(FILE_PATH_LITERAL("Base")),
       FilePathSpan(FILE_PATH_LITERAL("Test")),
       FilePathSpan(FILE_PATH_LITERAL("Data"))
   );
 }
-FilePath GetBaseTestDataPath() {
+FilePath getBaseTestDataPath() {
   static known_path::Key g_key = 0;
-  return known_path::ResolveDirectory(g_key, GetBaseTestDataPathImpl, known_path::EnsureExists);
+  return known_path::resolveDirectory(g_key, getBaseTestDataPathImpl, known_path::EnsureExists);
 }
 
-static FilePath GetSourceTreePathImpl() {
+static FilePath getSourceTreePathImpl() {
   FilePath path;
   if (Environment::tryGet("DIR_SOURCE_ROOT", path))
     return path;
   #if OS(LINUX) || OS(WIN)
   // Unit tests execute two levels deep from the source root.
   // For example:  Out/{Debug|Release}/BaseUnitTests
-  path = GetExecutableDirPath();
-  bool ok = path.CdUp() && path.CdUp();
+  path = getExecutableDirPath();
+  bool ok = path.cdUp() && path.cdUp();
   ASSERT_UNUSED(ok, ok);
   return path;
   #endif // OS(*)
 }
 
-FilePath GetSourceTreePath() {
+FilePath getSourceTreePath() {
   static known_path::Key g_key = 0;
-  return known_path::ResolveDirectory(g_key, GetSourceTreePathImpl, known_path::EnsureExists);
+  return known_path::resolveDirectory(g_key, getSourceTreePathImpl, known_path::EnsureExists);
 }
 
 } // namespace stp

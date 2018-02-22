@@ -24,7 +24,7 @@ void NativeThread::SetPriority(NativeThreadObject thread, ThreadPriority priorit
   if (priority == ThreadPriority::Idle) {
     sched_param param = { 0 };
     error = static_cast<PosixErrorCode>(pthread_setschedparam(thread, SCHED_IDLE, &param));
-    if (!IsOk(error))
+    if (!isOk(error))
       throw Exception::withDebug(SystemException(error), "unable to set idle policy for thread");
     return;
   }
@@ -45,7 +45,7 @@ void NativeThread::SetPriority(NativeThreadObject thread, ThreadPriority priorit
 
   sched_param param = { p };
   error = static_cast<PosixErrorCode>(pthread_setschedparam(thread, policy, &param));
-  if (!IsOk(error))
+  if (!isOk(error))
     throw Exception::withDebug(SystemException(error), "unable to set idle policy for thread");
 }
 #endif // OS(*)

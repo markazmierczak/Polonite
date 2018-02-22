@@ -72,11 +72,11 @@ bool InitializeSymbols() {
     return false;
   }
 
-  FilePath path = GetExecutableDirPath();
+  FilePath path = getExecutableDirPath();
   WString new_path = WString::ConcatArgs(
       makeSpanFromNullTerminated(symbols_path.get()),
       L";",
-      GetExePath().GetDirectoryName().AsCharactersUnsafe());
+      GetExePath().getDirectoryName().AsCharactersUnsafe());
 
   if (!::SymSetSearchPathW(current_process_handle, toNullTerminated(new_path))) {
     LOG(WARN, "SymSetSearchPath failed");

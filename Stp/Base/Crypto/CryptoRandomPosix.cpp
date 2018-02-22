@@ -15,12 +15,12 @@ namespace {
 class URandom {
  public:
   URandom() {
-    stream_.Open(
+    stream_.open(
         FilePath(FILE_PATH_LITERAL("/dev/urandom")),
         FileMode::OpenExisting, FileAccess::ReadOnly);
   }
 
-  void read(MutableBufferSpan buffer) { stream_.Read(buffer); }
+  void read(MutableBufferSpan buffer) { stream_.read(buffer); }
 
  private:
   FileStream stream_;

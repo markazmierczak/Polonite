@@ -38,7 +38,7 @@ bool MemoryMappedFile::Initialize(const FilePath& file_name, Access access) {
       file_access = FileAccess::ReadOnly;
       ASSERT(false);
   }
-  if (!file_.TryOpen(file_name, file_mode, file_access)) {
+  if (!file_.tryOpen(file_name, file_mode, file_access)) {
     LOG(ERROR, "couldn't open {}", file_name);
     return false;
   }

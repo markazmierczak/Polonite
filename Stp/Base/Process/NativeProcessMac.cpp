@@ -23,7 +23,7 @@ NativeProcessId NativeProcess::GetParentId(NativeProcessHandle process) {
   return info.kp_eproc.e_ppid;
 }
 
-FilePath NativeProcess::GetExecutablePath(NativeProcessHandle process) {
+FilePath NativeProcess::getExecutablePath(NativeProcessHandle process) {
   char pathbuf[PROC_PIDPATHINFO_MAXSIZE];
   if (!proc_pidpath(process, pathbuf, sizeof(pathbuf)))
     throw SomeException();

@@ -11,16 +11,14 @@
 namespace stp {
 
 class BASE_EXPORT AtExitManager {
+  DISALLOW_COPY_AND_ASSIGN(AtExitManager);
  public:
   typedef Function<void()> Callback;
 
   AtExitManager();
   ~AtExitManager();
 
-  DISALLOW_COPY_AND_ASSIGN(AtExitManager);
-
   static void registerCallback(void (*func)(void*), void* param);
-
   static void registerCallback(Callback callback);
 
   static void processCallbacksNow();

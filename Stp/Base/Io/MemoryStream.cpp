@@ -20,14 +20,14 @@ MemoryStream::~MemoryStream() {
 }
 
 void MemoryStream::OpenNewBytes() {
-  ASSERT(!IsOpen());
+  ASSERT(!isOpen());
   open_ = true;
   writable_ = true;
   expandable_ = true;
 }
 
 void MemoryStream::AdoptAndOpen(Buffer&& bytes) {
-  ASSERT(!IsOpen());
+  ASSERT(!isOpen());
   open_ = true;
   writable_ = true;
   expandable_ = true;
@@ -37,7 +37,7 @@ void MemoryStream::AdoptAndOpen(Buffer&& bytes) {
 }
 
 void MemoryStream::OpenInternal(void* data, int length, bool writable) {
-  ASSERT(!IsOpen());
+  ASSERT(!isOpen());
   ASSERT(length >= 0);
   open_ = true;
   writable_ = writable;
@@ -53,8 +53,8 @@ Buffer MemoryStream::CloseAndrelease() {
   return Buffer::adoptMemory(ptr, size, capacity);
 }
 
-void MemoryStream::Close() {
-  ASSERT(IsOpen());
+void MemoryStream::close() {
+  ASSERT(isOpen());
 
   if (capacity_ > 0) {
     freeMemory(memory_);
@@ -69,12 +69,12 @@ void MemoryStream::Close() {
   expandable_ = false;
 }
 
-bool MemoryStream::IsOpen() const noexcept {
+bool MemoryStream::isOpen() const noexcept {
   return open_;
 }
 
-int MemoryStream::ReadAtMost(MutableBufferSpan output) {
-  ASSERT(CanRead());
+int MemoryStream::readAtMost(MutableBufferSpan output) {
+  ASSERT(canRead());
   int available = length_ - position_;
   int n = output.size();
 
@@ -91,13 +91,13 @@ int MemoryStream::ReadAtMost(MutableBufferSpan output) {
   return n;
 }
 
-void MemoryStream::Write(BufferSpan input) {
-  PositionalWrite(position_, input);
+void MemoryStream::write(BufferSpan input) {
+  positionalWrite(position_, input);
   position_ += input.size();
 }
 
-void MemoryStream::PositionalRead(int64_t offset, MutableBufferSpan output) {
-  ASSERT(CanRead());
+void MemoryStream::positionalRead(int64_t offset, MutableBufferSpan output) {
+  ASSERT(canRead());
   ASSERT(offset >= 0);
 
   int n = output.size();
@@ -109,8 +109,8 @@ void MemoryStream::PositionalRead(int64_t offset, MutableBufferSpan output) {
   }
 }
 
-void MemoryStream::PositionalWrite(int64_t offset, BufferSpan input) {
-  ASSERT(CanWrite());
+void MemoryStream::positionalWrite(int64_t offset, BufferSpan input) {
+  ASSERT(canWrite());
   ASSERT(offset >= 0);
 
   int n = input.size();
@@ -128,8 +128,8 @@ void MemoryStream::PositionalWrite(int64_t offset, BufferSpan input) {
   }
 }
 
-void MemoryStream::WriteByte(byte_t byte) {
-  ASSERT(CanWrite());
+void MemoryStream::writeByte(byte_t byte) {
+  ASSERT(canWrite());
 
   if (position_ >= length_) {
     int new_length = position_ + 1;
@@ -147,15 +147,15 @@ void MemoryStream::WriteByte(byte_t byte) {
   memory_[position_++] = byte;
 }
 
-int MemoryStream::TryReadByte() {
-  ASSERT(CanRead());
+int MemoryStream::tryReadByte() {
+  ASSERT(canRead());
   if (position_ >= length_)
     return -1;
   return memory_[position_++];
 }
 
-int64_t MemoryStream::Seek(int64_t offset, SeekOrigin origin) {
-  ASSERT(CanSeek());
+int64_t MemoryStream::seek(int64_t offset, SeekOrigin origin) {
+  ASSERT(canSeek());
 
   int64_t new_pos;
   switch (origin) {
@@ -178,24 +178,24 @@ int64_t MemoryStream::Seek(int64_t offset, SeekOrigin origin) {
   return new_pos;
 }
 
-void MemoryStream::Flush() {
-  ASSERT(IsOpen());
+void MemoryStream::flush() {
+  ASSERT(isOpen());
   // Nothing to do, we directly write to memory.
 }
 
-bool MemoryStream::CanRead() {
-  return IsOpen();
+bool MemoryStream::canRead() {
+  return isOpen();
 }
 
-bool MemoryStream::CanWrite() {
+bool MemoryStream::canWrite() {
   return writable_;
 }
 
-bool MemoryStream::CanSeek() {
-  return IsOpen();
+bool MemoryStream::canSeek() {
+  return isOpen();
 }
 
-void MemoryStream::SetLength(int64_t new_length) {
+void MemoryStream::setLength(int64_t new_length) {
   ASSERT(new_length >= 0);
 
   if (new_length > length_) {
@@ -220,19 +220,19 @@ void MemoryStream::SetLength(int64_t new_length) {
   length_ = new_length;
 }
 
-int64_t MemoryStream::GetLength() {
+int64_t MemoryStream::getLength() {
   return length_;
 }
 
-void MemoryStream::SetPosition(int64_t new_position) {
-  ASSERT(CanSeek());
+void MemoryStream::setPosition(int64_t new_position) {
+  ASSERT(canSeek());
   ASSERT(new_position >= 0);
   if (new_position >= MaxCapacity_)
     throw Exception::with(IoException(), "cannot seek past memory limit");
   position_ = static_cast<int>(new_position);
 }
 
-int64_t MemoryStream::GetPosition() {
+int64_t MemoryStream::getPosition() {
   return position_;
 }
 

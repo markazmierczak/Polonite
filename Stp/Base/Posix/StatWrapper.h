@@ -24,7 +24,7 @@ namespace posix {
 #define WRAP_CALL(x) x##64
 #endif
 
-inline int CallStat(const char* path, stat_wrapper_t* sb) {
+inline int callStat(const char* path, stat_wrapper_t* sb) {
   return WRAP_CALL(stat)(path, sb);
 }
 inline int CallLstat(const char* path, stat_wrapper_t* sb) {

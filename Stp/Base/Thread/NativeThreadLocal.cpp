@@ -24,7 +24,7 @@ void NativeThreadLocal::deallocate(Slot slot) {
 NativeThreadLocal::Slot NativeThreadLocal::allocate(void (*dtor)(void*)) {
   Slot slot;
   auto error = static_cast<PosixErrorCode>(pthread_key_create(&slot, dtor));
-  if (!IsOk(error))
+  if (!isOk(error))
     throw Exception::with(SystemException(error), "run out of TLS indices");
   return slot;
 }

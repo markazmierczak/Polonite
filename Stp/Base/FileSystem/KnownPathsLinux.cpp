@@ -15,43 +15,42 @@ namespace stp {
 
 using linux::Xdg;
 
-static FilePath AddAppName(FilePath path) {
-  path.AddComponentAscii(Application::instance().getName());
+static FilePath addAppName(FilePath path) {
+  path.addComponentAscii(Application::instance().getName());
   return path;
 }
 
-FilePath GetExecutableFilePath() {
+FilePath getExecutableFilePath() {
   auto provider = []() {
-    return NativeProcess::GetExecutablePath(NativeProcess::GetCurrentHandle());
+    return NativeProcess::getExecutablePath(NativeProcess::getCurrentHandle());
   };
   static known_path::Key g_key = 0;
-  return known_path::ResolveFile(g_key, provider, known_path::NotValidated);
+  return known_path::resolveFile(g_key, provider, known_path::NotValidated);
 }
 
-FilePath GetUserDesktopPath() {
+FilePath getUserDesktopPath() {
   auto provider = []() {
-    return Xdg::GetUserDirectory("DESKTOP", "Desktop");
+    return Xdg::getUserDirectory("DESKTOP", "Desktop");
   };
   static known_path::Key g_key = 0;
-  return known_path::ResolveDirectory(g_key, provider, known_path::NotValidated);
+  return known_path::resolveDirectory(g_key, provider, known_path::NotValidated);
 }
 
-FilePath GetAppUserDataPath() {
+FilePath getAppUserDataPath() {
   // See http://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html
   auto provider = []() {
-    return AddAppName(Xdg::GetDirectory(
-        Xdg::ConfigHomeEnvVar, Xdg::DotConfigDir));
+    return addAppName(Xdg::getDirectory(Xdg::ConfigHomeEnvVar, Xdg::DotConfigDir));
   };
   static known_path::Key g_key = 0;
-  return known_path::ResolveDirectory(g_key, provider, known_path::EnsureCreated);
+  return known_path::resolveDirectory(g_key, provider, known_path::EnsureCreated);
 }
 
-FilePath GetAppCachePath() {
+FilePath getAppCachePath() {
   auto provider = []() {
-    return AddAppName(Xdg::GetDirectory("XDG_CACHE_HOME", ".cache"));
+    return addAppName(Xdg::getDirectory("XDG_CACHE_HOME", ".cache"));
   };
   static known_path::Key g_key = 0;
-  return known_path::ResolveDirectory(g_key, provider, known_path::EnsureCreated);
+  return known_path::resolveDirectory(g_key, provider, known_path::EnsureCreated);
 }
 
 } // namespace stp

@@ -15,8 +15,8 @@ template<typename T>
 struct TIsArrayHelper : TFalse {
 };
 
-template<typename T, int Size>
-struct TIsArrayHelper<T[Size]> : TTrue {};
+template<typename T, int N>
+struct TIsArrayHelper<T[N]> : TTrue {};
 
 template<typename T>
 struct TIsArrayHelper<T[]> : TTrue {};

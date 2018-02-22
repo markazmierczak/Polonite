@@ -21,9 +21,9 @@ static_assert(static_cast<int>(SeekOrigin::Begin) == SEEK_SET &&
               static_cast<int>(SeekOrigin::End) == SEEK_END,
               "SeekOrigin must match the system headers");
 
-SystemErrorCode FileStream::TryOpenInternal(
+SystemErrorCode FileStream::tryOpenInternal(
     const FilePath& path, FileMode mode, FileAccess access) {
-  ASSERT(!IsOpen());
+  ASSERT(!isOpen());
 
   int mode_flags = 0;
   switch (mode) {
@@ -67,7 +67,7 @@ SystemErrorCode FileStream::TryOpenInternal(
   if (descriptor == -1)
     return getLastPosixErrorCode();
 
-  native_.Reset(descriptor);
+  native_.reset(descriptor);
   access_ = access;
   #if ASSERT_IS_ON
   append_ = mode == FileMode::Append;
@@ -75,14 +75,14 @@ SystemErrorCode FileStream::TryOpenInternal(
   return SystemErrorCode::Ok;
 }
 
-void FileStream::CloseInternal(NativeFile fd) {
+void FileStream::closeInternal(NativeFile fd) {
   int rv = IGNORE_EINTR(::close(fd));
   if (rv != 0)
     throw SystemException(getLastPosixErrorCode());
 }
 
-int FileStream::ReadAtMost(MutableBufferSpan output) {
-  ASSERT(CanRead());
+int FileStream::readAtMost(MutableBufferSpan output) {
+  ASSERT(canRead());
   int bytes_read = 0;
   int fd = native_.get();
   do {
@@ -102,8 +102,8 @@ int FileStream::ReadAtMost(MutableBufferSpan output) {
   return bytes_read;
 }
 
-void FileStream::Write(BufferSpan input) {
-  ASSERT(CanWrite());
+void FileStream::write(BufferSpan input) {
+  ASSERT(canWrite());
   int fd = native_.get();
   do {
     ssize_t prv = ::write(fd, input.data(), toUnsigned(input.size()));
@@ -130,8 +130,8 @@ void FileStream::Write(BufferSpan input) {
 #define ftruncate ftruncate64
 #endif
 
-void FileStream::PositionalRead(int64_t offset, MutableBufferSpan output) {
-  ASSERT(CanRead() && CanSeek());
+void FileStream::positionalRead(int64_t offset, MutableBufferSpan output) {
+  ASSERT(canRead() && canSeek());
   ASSERT(offset >= 0);
   int fd = native_.get();
   do {
@@ -152,8 +152,8 @@ void FileStream::PositionalRead(int64_t offset, MutableBufferSpan output) {
   } while (!output.isEmpty());
 }
 
-void FileStream::PositionalWrite(int64_t offset, BufferSpan input) {
-  ASSERT(CanWrite() && CanSeek());
+void FileStream::positionalWrite(int64_t offset, BufferSpan input) {
+  ASSERT(canWrite() && canSeek());
   // Linux has bug and does not follow POSIX requirements.
   // Thus we disable positional write on all systems in this mode.
   ASSERT(!append_);
@@ -174,8 +174,8 @@ void FileStream::PositionalWrite(int64_t offset, BufferSpan input) {
   } while (!input.isEmpty());
 }
 
-int64_t FileStream::Seek(int64_t offset, SeekOrigin origin) {
-  ASSERT(CanSeek());
+int64_t FileStream::seek(int64_t offset, SeekOrigin origin) {
+  ASSERT(canSeek());
   int64_t rv = ::lseek(native_.get(), offset, static_cast<int>(origin));
   ASSERT(rv >= -1);
   if (rv < 0)
@@ -183,8 +183,8 @@ int64_t FileStream::Seek(int64_t offset, SeekOrigin origin) {
   return rv;
 }
 
-bool FileStream::CanSeekInternal() {
-  ASSERT(IsOpen());
+bool FileStream::canSeekInternal() {
+  ASSERT(isOpen());
 
   stat_wrapper_t file_info;
   if (posix::CallFstat(native_.get(), &file_info) != 0)
@@ -199,8 +199,8 @@ bool FileStream::CanSeekInternal() {
   return false;
 }
 
-int64_t FileStream::GetLength() {
-  ASSERT(IsOpen());
+int64_t FileStream::getLength() {
+  ASSERT(isOpen());
 
   stat_wrapper_t file_info;
   if (posix::CallFstat(native_.get(), &file_info) != 0)
@@ -209,17 +209,17 @@ int64_t FileStream::GetLength() {
   return file_info.st_size;
 }
 
-void FileStream::SetLength(int64_t length) {
+void FileStream::setLength(int64_t length) {
   ASSERT(length >= 0);
-  ASSERT(IsOpen());
+  ASSERT(isOpen());
 
   int rv = HANDLE_EINTR(::ftruncate(native_.get(), length));
   if (rv != 0)
     throw SystemException(getLastPosixErrorCode());
 }
 
-void FileStream::SyncToDisk() {
-  ASSERT(IsOpen());
+void FileStream::syncToDisk() {
+  ASSERT(isOpen());
 
   #if OS(LINUX) || OS(ANDROID)
   int rv = HANDLE_EINTR(::fdatasync(native_.get()));
@@ -230,18 +230,18 @@ void FileStream::SyncToDisk() {
     throw SystemException(getLastPosixErrorCode());
 }
 
-void FileStream::GetInfo(FileStreamInfo& out) {
-  ASSERT(IsOpen());
+void FileStream::getInfo(FileStreamInfo& out) {
+  ASSERT(isOpen());
   if (posix::CallFstat(native_.get(), &out.stat_) != 0)
     throw SystemException(getLastPosixErrorCode());
 }
 
-void FileStream::SetTimes(Time last_accessed, Time last_modified, Time creation_time) {
+void FileStream::setTimes(Time last_accessed, Time last_modified, Time creation_time) {
   ASSERT(creation_time.isNull(), "creation_time not supported on POSIX");
   ASSERT(!last_accessed.isNull());
   ASSERT(!last_modified.isNull());
 
-  ASSERT(IsOpen());
+  ASSERT(isOpen());
 
   #ifdef __USE_XOPEN2K8
   // futimens should be available, but futimes might not be

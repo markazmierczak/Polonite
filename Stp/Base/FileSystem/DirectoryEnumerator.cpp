@@ -12,28 +12,28 @@ DirectoryEnumerator::DirectoryEnumerator() {
 }
 
 DirectoryEnumerator::~DirectoryEnumerator() {
-  if (IsOpen())
-    Close();
+  if (isOpen())
+    close();
 }
 
-void DirectoryEnumerator::Open(const FilePath& path) {
-  ASSERT(!IsOpen());
-  auto error_code = TryOpen(path);
-  if (!IsOk(error_code))
+void DirectoryEnumerator::open(const FilePath& path) {
+  ASSERT(!isOpen());
+  auto error_code = tryOpen(path);
+  if (!isOk(error_code))
     throw FileSystemException(error_code, path);
 }
 
-void DirectoryEnumerator::Open(const FilePath& path, StringSpan pattern) {
-  ASSERT(!IsOpen());
-  auto error_code = TryOpen(path, pattern);
-  if (!IsOk(error_code))
+void DirectoryEnumerator::open(const FilePath& path, StringSpan pattern) {
+  ASSERT(!isOpen());
+  auto error_code = tryOpen(path, pattern);
+  if (!isOk(error_code))
     throw FileSystemException(error_code, path);
 }
 
-bool DirectoryEnumerator::MoveNext() {
+bool DirectoryEnumerator::moveNext() {
   SystemErrorCode error_code;
-  bool has_next = TryMoveNext(error_code);
-  if (!has_next && !IsOk(error_code))
+  bool has_next = tryMoveNext(error_code);
+  if (!has_next && !isOk(error_code))
     throw FileSystemException(error_code);
   return has_next;
 }

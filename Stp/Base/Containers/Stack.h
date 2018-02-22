@@ -24,14 +24,14 @@ class Stack {
   template<typename U>
   bool contains(const U& item) const { return list_.contains(item); }
 
-  const T& Peek() const { return list_.getLast(); }
-  T& Peek() { return list_.getLast(); }
+  const T& peek() const { return list_.getLast(); }
+  T& peek() { return list_.getLast(); }
 
-  void Push(T item) { list_.add(move(item)); }
-  T Pop();
+  void push(T item) { list_.add(move(item)); }
+  T pop();
 
-  const T* TryPeek() const { return isEmpty() ? nullptr : &Peek(); }
-  T* TryPeek() { return isEmpty() ? nullptr : &Peek(); }
+  const T* TryPeek() const { return isEmpty() ? nullptr : &peek(); }
+  T* TryPeek() { return isEmpty() ? nullptr : &peek(); }
 
   void ensureCapacity(int request) { list_.ensureCapacity(request); }
   void willGrow(int n) { list_.willGrow(n); }
@@ -53,7 +53,7 @@ class Stack {
 };
 
 template<typename T, class TList>
-inline T Stack<T, TList>::Pop() {
+inline T Stack<T, TList>::pop() {
   T value = move(list_.getLast());
   list_.removeLast();
   return value;

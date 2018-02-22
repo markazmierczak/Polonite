@@ -9,16 +9,16 @@
 
 namespace stp {
 
-String Base64::Encode(BufferSpan input) {
+String Base64::encode(BufferSpan input) {
   String out;
-  int estimated = EstimateEncodedLength(input.size());
+  int estimated = estimateEncodedLength(input.size());
   char* dst = out.appendUninitialized(estimated);
-  int dst_length = Encode(MutableStringSpan(dst, estimated), input);
+  int dst_length = encode(MutableStringSpan(dst, estimated), input);
   out.truncate(dst_length);
   return out;
 }
 
-int Base64::Encode(MutableStringSpan output, BufferSpan input) {
+int Base64::encode(MutableStringSpan output, BufferSpan input) {
   char* p = output.data();
 
   int input_size = input.size();
@@ -69,14 +69,14 @@ int Base64::Encode(MutableStringSpan output, BufferSpan input) {
   return written;
 }
 
-bool Base64::TryDecode(StringSpan input, Buffer& output) {
+bool Base64::tryDecode(StringSpan input, Buffer& output) {
   output.clear();
 
-  int max_output_size = EstimateDecodedSize(input.size());
+  int max_output_size = estimateDecodedSize(input.size());
   void* dst = output.appendUninitialized(max_output_size);
 
   // Does not null terminate result since result is binary data!
-  int actual_output_size = TryDecode(input, MutableBufferSpan(dst, max_output_size));
+  int actual_output_size = tryDecode(input, MutableBufferSpan(dst, max_output_size));
   if (actual_output_size < 0)
     return false;
 
@@ -86,14 +86,14 @@ bool Base64::TryDecode(StringSpan input, Buffer& output) {
 
 static constexpr uint32_t BadChar = 0x01FFFFFF;
 
-static inline uint8_t* WriteDecodedFour(uint8_t* p, uint32_t x) {
+static inline uint8_t* writeDecodedFour(uint8_t* p, uint32_t x) {
   *p++ = (x >>  0) & 0xFF;
   *p++ = (x >>  8) & 0xFF;
   *p++ = (x >> 16) & 0xFF;
   return p;
 }
 
-int Base64::TryDecode(StringSpan input, MutableBufferSpan output) {
+int Base64::tryDecode(StringSpan input, MutableBufferSpan output) {
   static constexpr int DecodeError = -1;
 
   int len = input.size();
@@ -130,7 +130,7 @@ int Base64::TryDecode(StringSpan input, MutableBufferSpan output) {
 
     if (x >= BadChar)
       return DecodeError;
-    p = WriteDecodedFour(p, x);
+    p = writeDecodedFour(p, x);
   }
 
   switch (leftover) {

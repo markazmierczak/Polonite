@@ -9,12 +9,12 @@
 namespace stp {
 namespace {
 
-TEST(DirectoryTest, GetDriveSpaceInfo) {
+TEST(DirectoryTest, getDriveSpaceInfo) {
   // We aren't actually testing that it's correct, just that it's sane.
-  FilePath tmp_path = GetTempDirPath();
+  FilePath tmp_path = getTempDirPath();
   ASSERT_FALSE(tmp_path.isEmpty());
 
-  auto space = Directory::GetDriveSpaceInfo(tmp_path);
+  auto space = Directory::getDriveSpaceInfo(tmp_path);
   EXPECT_GT(space.available, 0);
   EXPECT_GT(space.total, 0);
   EXPECT_GT(space.free, 0);

@@ -12,7 +12,7 @@ namespace stp {
 
 bool MemoryMappedFile::MapFileRegionToMemory(
     const MemoryMappedFile::Region& region, Access access) {
-  if (!file_.IsOpen())
+  if (!file_.isOpen())
     return false;
 
   int flags = 0;
@@ -32,7 +32,7 @@ bool MemoryMappedFile::MapFileRegionToMemory(
 
   const uint32_t size_high = 0;
   file_mapping_.Reset(::CreateFileMapping(
-      file_.GetNativeFile(), NULL, flags, size_high, size_low, NULL));
+      file_.getNativeFile(), NULL, flags, size_high, size_low, NULL));
   if (!file_mapping_.IsValid())
     return false;
 
@@ -42,7 +42,7 @@ bool MemoryMappedFile::MapFileRegionToMemory(
 
   if (region == MemoryMappedFile::Region::WholeFile) {
     ASSERT(access != ReadWriteExtend);
-    int64_t file_len = file_.GetLength();
+    int64_t file_len = file_.getLength();
     if (file_len <= 0 || file_len > Limits<int32_t>::Max)
       return false;
     length_ = static_cast<int>(file_len);
@@ -85,8 +85,8 @@ void MemoryMappedFile::CloseHandles() {
     ::UnmapViewOfFile(data_);
   if (file_mapping_.IsValid())
     file_mapping_.Reset();
-  if (file_.IsOpen())
-    file_.Close();
+  if (file_.isOpen())
+    file_.close();
 
   data_ = nullptr;
   length_ = 0;

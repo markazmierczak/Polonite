@@ -271,7 +271,7 @@ TEST_F(FilePathTest, Combine) {
   for (const auto& item : cases) {
     FilePath root(item.inputs[0]);
     FilePathSpan leaf = item.inputs[1];
-    FilePath observed_path = CombineFilePaths(root, leaf);
+    FilePath observed_path = combineFilePaths(root, leaf);
     EXPECT_EQ(item.expected, observed_path);
 
     String ascii = formattableToString(leaf);
@@ -280,7 +280,7 @@ TEST_F(FilePathTest, Combine) {
   }
 }
 
-TEST_F(FilePathTest, StripTrailingSeparators) {
+TEST_F(FilePathTest, stripTrailingSeparators) {
   const UnaryTestData cases[] = {
     { FPL(""),              FPL("") },
     { FPL("/"),             FPL("/") },
@@ -337,7 +337,7 @@ TEST_F(FilePathTest, StripTrailingSeparators) {
   };
   for (const auto& item : cases) {
     FilePathSpan observed = item.input;
-    observed.StripTrailingSeparators();
+    observed.stripTrailingSeparators();
     EXPECT_EQ(item.expected, observed);
   }
 }
@@ -560,7 +560,7 @@ TEST_F(FilePathTest, Extension) {
   }
 }
 
-TEST_F(FilePathTest, RemoveExtension) {
+TEST_F(FilePathTest, removeExtension) {
   const UnaryTestData cases[] = {
     { FPL(""),                    FPL("") },
     { FPL("."),                   FPL(".") },
@@ -581,7 +581,7 @@ TEST_F(FilePathTest, RemoveExtension) {
   };
   for (const auto& item : cases) {
     FilePath path(item.input);
-    path.RemoveExtension();
+    path.removeExtension();
     EXPECT_EQ(item.expected, path);
   }
 }
@@ -621,12 +621,12 @@ TEST_F(FilePathTest, ChangeExtension) {
   };
   for (const auto& item : cases) {
     FilePath path(item.input);
-    path.ReplaceExtension(item.ext);
+    path.replaceExtension(item.ext);
     EXPECT_EQ(item.expected, path);
   }
 }
 
-TEST_F(FilePathTest, MatchesExtension) {
+TEST_F(FilePathTest, matchesExtension) {
   struct MatchesExtensionTestData {
     FilePathLiteral input;
     StringSpan ext;
@@ -661,7 +661,7 @@ TEST_F(FilePathTest, MatchesExtension) {
 
   for (const auto& item : cases) {
     FilePathSpan path = item.input;
-    EXPECT_EQ(item.expected, path.MatchesExtension(item.ext));
+    EXPECT_EQ(item.expected, path.matchesExtension(item.ext));
   }
 }
 
@@ -683,7 +683,7 @@ TEST_F(FilePathTest, FromToString) {
   #endif
 
   for (const auto& item : cases) {
-    FilePath from_utf8 = FilePath::FromString(item.string);
+    FilePath from_utf8 = FilePath::fromString(item.string);
     EXPECT_EQ(item.path, from_utf8);
     EXPECT_EQ(item.string, formattableToString(item.path));
   }

@@ -23,7 +23,7 @@ class PthreadAttributes {
  public:
   PthreadAttributes() {
     auto error = static_cast<PosixErrorCode>(pthread_attr_init(&attr_));
-    if (!IsOk(error))
+    if (!isOk(error))
       throw SystemException(error);
   }
 
@@ -82,7 +82,7 @@ NativeThread::ObjectHandlePair NativeThread::Create(
   pthread_t thread;
   auto error = static_cast<PosixErrorCode>(
       pthread_create(&thread, attributes.get(), ThreadFunc, static_cast<void*>(delegate)));
-  if (!IsOk(error))
+  if (!isOk(error))
     throw Exception::withDebug(SystemException(error), "unable to create new thread");
   return ObjectHandlePair { thread, thread };
 }
@@ -90,14 +90,14 @@ NativeThread::ObjectHandlePair NativeThread::Create(
 int NativeThread::Join(NativeThreadObject thread) {
   void* exit_code;
   auto error = static_cast<PosixErrorCode>(pthread_join(thread, &exit_code));
-  if (!IsOk(error))
+  if (!isOk(error))
     throw Exception::withDebug(SystemException(error), "unable to join thread");
   return static_cast<int>(reinterpret_cast<intptr_t>(exit_code));
 }
 
 void NativeThread::Detach(NativeThreadObject thread) {
   auto error = static_cast<PosixErrorCode>(pthread_detach(thread));
-  if (!IsOk(error))
+  if (!isOk(error))
     throw Exception::withDebug(SystemException(error), "unable to detach thread");
 }
 

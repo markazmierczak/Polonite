@@ -14,18 +14,17 @@ class RecursiveDirectoryEnumerator {
   RecursiveDirectoryEnumerator();
   ~RecursiveDirectoryEnumerator();
 
-  void Open(FilePath root_path);
-  SystemErrorCode TryOpen(FilePath root_path);
+  void open(FilePath root_path);
+  SystemErrorCode tryOpen(FilePath root_path);
+  void close();
 
-  bool IsOpen() const { return base_.IsOpen() || !pending_dir_paths_.isEmpty(); }
+  bool isOpen() const { return base_.isOpen() || !pending_dir_paths_.isEmpty(); }
 
-  void Close();
+  bool tryMoveNext(SystemErrorCode& out_error_code);
+  bool moveNext();
 
-  bool TryMoveNext(SystemErrorCode& out_error_code);
-  bool MoveNext();
-
-  FilePath GetEntryFullPath() const;
-  const FilePath& GetCurrentDirPath() const { return current_dir_path_; }
+  FilePath getEntryFullPath() const;
+  const FilePath& getCurrentDirPath() const { return current_dir_path_; }
 
   const DirectoryEnumerator& base() const { return base_; }
 

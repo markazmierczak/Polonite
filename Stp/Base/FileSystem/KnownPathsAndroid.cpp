@@ -12,8 +12,8 @@
 
 namespace stp {
 
-FilePath GetExecutableFilePath() {
-  return NativeProcess::GetExecutablePath(NativeProcess::GetCurrentHandle());
+FilePath getExecutableFilePath() {
+  return NativeProcess::getExecutablePath(NativeProcess::getCurrentHandle());
 }
 
 } // namespace stp

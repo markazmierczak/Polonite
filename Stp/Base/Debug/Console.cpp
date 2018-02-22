@@ -70,9 +70,9 @@ static FilePath resolveLogFilePath(const String* option) {
   else
     basename = *option;
 
-  auto path = FilePath::FromString(basename);
-  if (!path.IsAbsolute())
-    path = CombineFilePaths(GetCurrentDirPath(), path);
+  auto path = FilePath::fromString(basename);
+  if (!path.isAbsolute())
+    path = combineFilePaths(getCurrentDirPath(), path);
   return path;
 }
 
@@ -119,7 +119,7 @@ void Console::classInit() {
     FilePath path = resolveLogFilePath(option);
 
     // Delete old log file.
-    File::Delete(path);
+    File::remove(path);
 
     g_log_file = openLogFile(path);
     if (!g_log_file)
@@ -138,7 +138,7 @@ void Console::classFini() {
 ConsoleWriter* Console::g_out_ = nullptr;
 ConsoleWriter* Console::g_err_ = nullptr;
 
-TextEncoding ConsoleWriter::GetEncoding() const {
+TextEncoding ConsoleWriter::getEncoding() const {
   return BuiltinTextEncodings::Utf8();
 }
 
@@ -146,13 +146,13 @@ void ConsoleWriter::onWriteString(StringSpan text) {
   auto data = BufferSpan(text);
 
   if (active_destinations_ & StandardOutputDestination)
-    std_->Write(data);
+    std_->write(data);
   if (active_destinations_ & SystemDebugLogDestination) {
     if (log_level_ != LogLevelUSER)
       printToSystemDebugLog(text);
   }
   if (active_destinations_ & FileDestination)
-    g_log_file->Write(data);
+    g_log_file->write(data);
 }
 
 } // namespace stp

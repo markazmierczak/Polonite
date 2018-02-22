@@ -17,7 +17,7 @@ FileDescriptor& FileDescriptor::operator=(FileDescriptor&& other) noexcept {
 }
 
 void FileDescriptor::Close() {
-  ASSERT(IsValid());
+  ASSERT(isValid());
   // It's important to crash here.
   // There are security implications to not closing a file descriptor properly.
   // As file descriptors are "capabilities", keeping them open would make the
@@ -32,7 +32,7 @@ void FileDescriptor::Close() {
 
 FileDescriptor FileDescriptor::Duplicate() {
   FileDescriptor rv = TryDuplicate();
-  if (!rv.IsValid()) {
+  if (!rv.isValid()) {
     throw Exception::withDebug(
         SystemException(getLastPosixErrorCode()), "failed to duplicate file descriptor");
   }
@@ -41,7 +41,7 @@ FileDescriptor FileDescriptor::Duplicate() {
 
 FileDescriptor FileDescriptor::DuplicateTo(int new_fd) {
   FileDescriptor rv = TryDuplicateTo(new_fd);
-  if (!rv.IsValid()) {
+  if (!rv.isValid()) {
     throw Exception::withDebug(
         SystemException(getLastPosixErrorCode()), "failed to duplicate file descriptor");
   }

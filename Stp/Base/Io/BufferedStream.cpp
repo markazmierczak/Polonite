@@ -19,28 +19,28 @@ BufferedStream::~BufferedStream() {
     freeMemory(buffer_);
 }
 
-void BufferedStream::EnsureBufferAllocated() {
+void BufferedStream::ensureBufferAllocated() {
   if (!buffer_ && buffer_size_ > 0)
     buffer_ = (byte_t*)allocateMemory(buffer_size_);
 }
 
-void BufferedStream::SetBufferSize(int new_size) {
+void BufferedStream::setBufferSize(int new_size) {
   ASSERT(new_size > 0);
   if (buffer_) {
-    FlushBuffers();
+    flushBuffers();
     buffer_ = (byte_t*)reallocateMemory(buffer_, new_size);
   }
   buffer_size_ = new_size;
 }
 
-void BufferedStream::FlushWriteBuffer() {
-  ASSERT(HasPendingWrite());
-  underlying_->Write(BufferSpan(buffer_, write_pos_));
+void BufferedStream::flushWriteBuffer() {
+  ASSERT(hasPendingWrite());
+  underlying_->write(BufferSpan(buffer_, write_pos_));
   write_pos_ = 0;
 }
 
-void BufferedStream::FlushReadBuffer() {
-  ASSERT(HasPendingRead());
+void BufferedStream::flushReadBuffer() {
+  ASSERT(hasPendingRead());
 
   int offset = read_pos_ - read_len_;
 
@@ -48,30 +48,30 @@ void BufferedStream::FlushReadBuffer() {
   read_len_ = 0;
 
   if (offset != 0)
-    underlying_->Seek(offset, SeekOrigin::Current);
+    underlying_->seek(offset, SeekOrigin::Current);
 }
 
-void BufferedStream::FlushBuffers() {
-  if (HasPendingWrite()) {
-    FlushWriteBuffer();
-  } else if (HasPendingRead()) {
+void BufferedStream::flushBuffers() {
+  if (hasPendingWrite()) {
+    flushWriteBuffer();
+  } else if (hasPendingRead()) {
     // Ignore the flush if stream is not seekable.
-    if (underlying_->CanSeek())
-      FlushReadBuffer();
+    if (underlying_->canSeek())
+      flushReadBuffer();
   }
 }
 
-void BufferedStream::ClearReadBufferBeforeWrite() {
+void BufferedStream::clearReadBufferBeforeWrite() {
   if (read_pos_ == read_len_) {
     read_pos_ = 0;
     read_len_ = 0;
   } else {
-    ASSERT(underlying_->CanSeek(), "underlying stream must be seekable for mixed R/W operations");
-    FlushReadBuffer();
+    ASSERT(underlying_->canSeek(), "underlying stream must be seekable for mixed R/W operations");
+    flushReadBuffer();
   }
 }
 
-int BufferedStream::ReadFromBuffer(MutableBufferSpan output) {
+int BufferedStream::readFromBuffer(MutableBufferSpan output) {
   int in_buffer = read_len_ - read_pos_;
   if (in_buffer == 0)
     return 0;
@@ -86,14 +86,14 @@ int BufferedStream::ReadFromBuffer(MutableBufferSpan output) {
   return count;
 }
 
-int BufferedStream::WriteToBuffer(BufferSpan input) {
+int BufferedStream::writeToBuffer(BufferSpan input) {
   ASSERT(write_pos_ >= 0);
 
   int bytes_to_write = min(buffer_size_ - write_pos_, input.size());
   if (bytes_to_write == 0)
     return 0;
 
-  EnsureBufferAllocated();
+  ensureBufferAllocated();
 
   auto* input_bytes = static_cast<const byte_t*>(input.data());
   uninitializedCopy(buffer_ + write_pos_, input_bytes, bytes_to_write);
@@ -101,22 +101,22 @@ int BufferedStream::WriteToBuffer(BufferSpan input) {
   return bytes_to_write;
 }
 
-bool BufferedStream::IsOpen() const noexcept {
+bool BufferedStream::isOpen() const noexcept {
   return underlying_ != nullptr;
 }
 
-void BufferedStream::OpenInternal(Stream* underlying, bool owned = false) {
-  ASSERT(underlying->IsOpen(), "given underlying stream must be open");
-  ASSERT(!IsOpen());
+void BufferedStream::openInternal(Stream* underlying, bool owned = false) {
+  ASSERT(underlying->isOpen(), "given underlying stream must be open");
+  ASSERT(!isOpen());
   underlying_ = underlying;
   owned_ = owned;
 }
 
-void BufferedStream::Close() {
-  ASSERT(IsOpen());
+void BufferedStream::close() {
+  ASSERT(isOpen());
 
-  if (HasPendingWrite()) {
-    FlushWriteBuffer();
+  if (hasPendingWrite()) {
+    flushWriteBuffer();
   } else {
     read_pos_ = 0;
     read_len_ = 0;
@@ -127,21 +127,21 @@ void BufferedStream::Close() {
     // Call Close directly instead of indirectly through destructor.
     // This enables exception chaining.
     OwnPtr<Stream> guard(underlying);
-    underlying->Close();
+    underlying->close();
   }
 }
 
-void BufferedStream::Flush() {
-  ASSERT(IsOpen());
-  FlushBuffers();
-  underlying_->Flush();
+void BufferedStream::flush() {
+  ASSERT(isOpen());
+  flushBuffers();
+  underlying_->flush();
 }
 
-int BufferedStream::ReadAtMost(MutableBufferSpan output) {
-  ASSERT(CanRead());
+int BufferedStream::readAtMost(MutableBufferSpan output) {
+  ASSERT(canRead());
 
   // Try to satisfy the request with data from internal buffer.
-  int from_buffer = ReadFromBuffer(output);
+  int from_buffer = readFromBuffer(output);
   if (from_buffer == output.size())
     return output.size();
 
@@ -150,71 +150,71 @@ int BufferedStream::ReadAtMost(MutableBufferSpan output) {
 
   int already_satisfied = from_buffer;
 
-  if (HasPendingWrite()) {
-    FlushWriteBuffer();
+  if (hasPendingWrite()) {
+    flushWriteBuffer();
   } else {
     read_pos_ = 0;
     read_len_ = 0;
   }
   // Bypass the buffer if caller requests more bytes than buffer can hold.
   if (output.size() >= buffer_size_) {
-    int direct_read = underlying_->ReadAtMost(output);
+    int direct_read = underlying_->readAtMost(output);
     return direct_read + already_satisfied;
   }
 
-  EnsureBufferAllocated();
-  read_len_ = underlying_->ReadAtMost(MutableBufferSpan(buffer_, buffer_size_));
+  ensureBufferAllocated();
+  read_len_ = underlying_->readAtMost(MutableBufferSpan(buffer_, buffer_size_));
 
-  from_buffer = ReadFromBuffer(output);
+  from_buffer = readFromBuffer(output);
   return from_buffer + already_satisfied;
 }
 
-void BufferedStream::Write(BufferSpan input) {
-  ASSERT(CanWrite());
+void BufferedStream::write(BufferSpan input) {
+  ASSERT(canWrite());
 
   if (write_pos_ == 0)
-    ClearReadBufferBeforeWrite();
+    clearReadBufferBeforeWrite();
 
   // This heuristic decides whether to use or not to use the buffer.
   int total_count = write_pos_ + input.size();
   bool use_buffer = total_count <= buffer_size_ * 2;
 
   if (use_buffer) {
-    int wrote = WriteToBuffer(input);
+    int wrote = writeToBuffer(input);
     if (write_pos_ == buffer_size_) {
       // The source spans two buffers. Make second write.
       input.removePrefix(wrote);
-      FlushWriteBuffer();
-      wrote = WriteToBuffer(input);
+      flushWriteBuffer();
+      wrote = writeToBuffer(input);
     }
     ASSERT(wrote == input.size());
   } else {
-    FlushWriteBuffer();
-    underlying_->Write(input);
+    flushWriteBuffer();
+    underlying_->write(input);
   }
 }
 
-void BufferedStream::WriteByte(byte_t byte) {
+void BufferedStream::writeByte(byte_t byte) {
   if (write_pos_ == 0) {
-    ASSERT(CanWrite());
-    ClearReadBufferBeforeWrite();
-    EnsureBufferAllocated();
+    ASSERT(canWrite());
+    clearReadBufferBeforeWrite();
+    ensureBufferAllocated();
   } else if (write_pos_ == buffer_size_) {
-    FlushWriteBuffer();
+    flushWriteBuffer();
   }
   buffer_[write_pos_++] = byte;
 }
 
-int BufferedStream::TryReadByte() {
-  if (HasPendingRead())
+int BufferedStream::tryReadByte() {
+  if (hasPendingRead())
     return buffer_[read_pos_++];
 
-  ASSERT(CanRead());
-  if (HasPendingWrite())
-    FlushWriteBuffer();
+  ASSERT(canRead());
+  if (hasPendingWrite())
+    flushWriteBuffer();
 
-  EnsureBufferAllocated();
-  read_len_ = underlying_->ReadAtMost(MutableBufferSpan(buffer_, buffer_size_));
+  ensureBufferAllocated();
+  read_len_ = underlying_->readAtMost(MutableBufferSpan(buffer_, buffer_size_));
   read_pos_ = 0;
 
   if (read_len_ == 0)
@@ -223,76 +223,76 @@ int BufferedStream::TryReadByte() {
   return buffer_[read_pos_++];
 }
 
-bool BufferedStream::CanRead() {
-  return underlying_ && underlying_->CanRead();
+bool BufferedStream::canRead() {
+  return underlying_ && underlying_->canRead();
 }
 
-bool BufferedStream::CanWrite() {
-  return underlying_ && underlying_->CanWrite();
+bool BufferedStream::canWrite() {
+  return underlying_ && underlying_->canWrite();
 }
 
-bool BufferedStream::CanSeek() {
-  return underlying_ && underlying_->CanSeek();
+bool BufferedStream::canSeek() {
+  return underlying_ && underlying_->canSeek();
 }
 
-void BufferedStream::SetLength(int64_t length) {
-  ASSERT(IsOpen());
-  FlushBuffers();
-  underlying_->SetLength(length);
+void BufferedStream::setLength(int64_t length) {
+  ASSERT(isOpen());
+  flushBuffers();
+  underlying_->setLength(length);
 }
 
-int64_t BufferedStream::GetLength() {
-  if (HasPendingWrite())
-    FlushWriteBuffer();
-  return underlying_->GetLength();
+int64_t BufferedStream::getLength() {
+  if (hasPendingWrite())
+    flushWriteBuffer();
+  return underlying_->getLength();
 }
 
-void BufferedStream::SetPosition(int64_t position) {
+void BufferedStream::setPosition(int64_t position) {
   ASSERT(position >= 0);
-  ASSERT(CanSeek());
+  ASSERT(canSeek());
 
-  if (HasPendingWrite())
-    FlushWriteBuffer();
+  if (hasPendingWrite())
+    flushWriteBuffer();
 
   read_pos_ = 0;
   read_len_ = 0;
-  underlying_->SetPosition(position);
+  underlying_->setPosition(position);
 }
 
-int64_t BufferedStream::GetPosition() {
-  ASSERT(CanSeek());
-  int64_t underlying_pos = underlying_->GetPosition();
+int64_t BufferedStream::getPosition() {
+  ASSERT(canSeek());
+  int64_t underlying_pos = underlying_->getPosition();
   return underlying_pos + (read_pos_ - read_len_ + write_pos_);
 }
 
-int64_t BufferedStream::Seek(int64_t offset, SeekOrigin origin) {
-  ASSERT(CanSeek());
+int64_t BufferedStream::seek(int64_t offset, SeekOrigin origin) {
+  ASSERT(canSeek());
 
-  if (HasPendingWrite()) {
-    FlushWriteBuffer();
-    return underlying_->Seek(offset, origin);
+  if (hasPendingWrite()) {
+    flushWriteBuffer();
+    return underlying_->seek(offset, origin);
   }
 
   int64_t old_pos = -1;
   if (read_len_ > 0) {
     if (origin == SeekOrigin::Current)
       offset -= read_len_ - read_pos_;
-    old_pos = GetPosition();
+    old_pos = getPosition();
   }
 
-  int64_t new_pos = underlying_->Seek(offset, origin);
+  int64_t new_pos = underlying_->seek(offset, origin);
 
   if (read_len_ > 0) {
     int64_t new_read_pos = new_pos - old_pos + read_pos_;
     if (0 <= new_read_pos && new_read_pos < read_len_) {
       read_pos_ = static_cast<int>(new_read_pos);
-      underlying_->Seek(read_len_ - read_pos_, SeekOrigin::Current);
+      underlying_->seek(read_len_ - read_pos_, SeekOrigin::Current);
     } else {
       read_pos_ = 0;
       read_len_ = 0;
     }
   }
-  ASSERT(new_pos == GetPosition());
+  ASSERT(new_pos == getPosition());
   return new_pos;
 }
 

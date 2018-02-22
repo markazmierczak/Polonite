@@ -23,9 +23,9 @@ void PerfTestSuite::onDidInit() {
   if (!command_line.tryGet("log-file", log_path)) {
     #if OS(ANDROID)
     FilePath tmp_dir = GetAppCachePath();
-    log_path = CombineFilePaths(tmp_dir, log_path.GetFileName());
+    log_path = combineFilePaths(tmp_dir, log_path.GetFileName());
     #else
-    log_path = GetExecutableFilePath();
+    log_path = getExecutableFilePath();
     #endif
     log_path.ChangeExtension(".log");
   }

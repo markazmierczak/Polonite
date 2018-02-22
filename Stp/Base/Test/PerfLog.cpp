@@ -15,7 +15,7 @@ static FileStream* g_perf_log_stream = nullptr;
 bool InitPerfLog(const FilePath& log_file) {
   ASSERT(!g_perf_log_stream);
   g_perf_log_stream = new FileStream();
-  return !!g_perf_log_stream->TryCreate(log_file);
+  return !!g_perf_log_stream->tryCreate(log_file);
 }
 
 void FinalizePerfLog() {

@@ -20,7 +20,7 @@ struct AnsiColor {
 };
 
 bool ConsoleWriter::shouldUseColors(const FileStream& stream) {
-  int fd = stream.GetNativeFile();
+  int fd = stream.getNativeFile();
 
   if (!::isatty(fd))
     return false;
@@ -69,7 +69,7 @@ void ConsoleWriter::setForegroundColor(ConsoleColor color) {
   byte_t sequence[] = "\033[;??m";
   sequence[3] = ansi.intense ? '9' : '3';
   sequence[4] = ansi.code;
-  std_->Write(BufferSpan(sequence));
+  std_->write(BufferSpan(sequence));
 }
 
 void ConsoleWriter::setBackgroundColor(ConsoleColor color) {
@@ -81,11 +81,11 @@ void ConsoleWriter::setBackgroundColor(ConsoleColor color) {
   if (ansi.intense) {
     byte_t sequence[] = "\033[;10?m";
     sequence[5] = ansi.code;
-    std_->Write(BufferSpan(sequence));
+    std_->write(BufferSpan(sequence));
   } else {
     byte_t sequence[] = "\033[;4?m";
     sequence[4] = ansi.code;
-    std_->Write(BufferSpan(sequence));
+    std_->write(BufferSpan(sequence));
   }
 }
 
@@ -101,7 +101,7 @@ void ConsoleWriter::resetColors() {
     return;
   flush();
   byte_t sequence[] = "\033[m";
-  std_->Write(BufferSpan(sequence));
+  std_->write(BufferSpan(sequence));
 }
 
 FileStream* ConsoleWriter::openStdStream(StdDescriptor std_descriptor) {
@@ -111,13 +111,13 @@ FileStream* ConsoleWriter::openStdStream(StdDescriptor std_descriptor) {
     return nullptr;
 
   auto* stream = new FileStream();
-  stream->OpenNative(fd, FileAccess::WriteOnly, FileStream::DontClose);
+  stream->openNative(fd, FileAccess::WriteOnly, FileStream::DontClose);
   return stream;
 }
 
 FileStream* Console::openLogFile(const FilePath& path) {
   auto stream = OwnPtr<FileStream>::create();
-  if (!IsOk(stream->TryCreate(path, FileMode::Create, FileAccess::WriteOnly)))
+  if (!isOk(stream->tryCreate(path, FileMode::Create, FileAccess::WriteOnly)))
     return nullptr;
 
   return stream.release();

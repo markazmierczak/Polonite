@@ -59,7 +59,7 @@ class BASE_EXPORT Wtf16 {
 
 // Converts WTF to strict UTF and writes to the output.
 // This conversion is lossy.
-BASE_EXPORT void WriteWtf(TextWriter& out, StringSpan wtf8);
+BASE_EXPORT void writeWtf(TextWriter& out, StringSpan wtf8);
 
 BASE_EXPORT String WtfToUtf8(StringSpan wtf8);
 

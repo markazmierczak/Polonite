@@ -12,10 +12,10 @@ NativeProcessId NativeProcess::GetParentId(NativeProcessHandle process) {
   return getppid();
 }
 
-FilePath NativeProcess::GetExecutablePath(NativeProcessHandle process) {
+FilePath NativeProcess::getExecutablePath(NativeProcessHandle process) {
   FilePath exe_file = linux::ProcCommon::DirectoryForProcess(process);
-  exe_file.AddComponentAscii("exe");
-  return File::ReadSymbolicLink(exe_file);
+  exe_file.addComponentAscii("exe");
+  return File::readSymbolicLink(exe_file);
 }
 
 } // namespace stp

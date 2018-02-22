@@ -8,22 +8,22 @@
 
 namespace stp {
 
-SystemErrorCode DirectoryEnumerator::TryOpen(const FilePath& path, StringSpan pattern) {
+SystemErrorCode DirectoryEnumerator::tryOpen(const FilePath& path, StringSpan pattern) {
   appendUnicode(pattern_, pattern);
-  return TryOpen(path);
+  return tryOpen(path);
 }
 
-SystemErrorCode DirectoryEnumerator::TryOpen(const FilePath& path) {
-  ASSERT(!IsOpen());
+SystemErrorCode DirectoryEnumerator::tryOpen(const FilePath& path) {
+  ASSERT(!isOpen());
   search_path_.clear();
   search_path_.ensureCapacity(path.size() + pattern_.size() + 2);
   search_path_ = path;
 
   auto search_ops =  FindExSearchNameMatch;
   if (pattern_.isEmpty()) {
-    search_path_.AddComponent(FILE_PATH_LITERAL("*"));
+    search_path_.addComponent(FILE_PATH_LITERAL("*"));
   } else {
-    search_path_.AddComponent(pattern_);
+    search_path_.addComponent(pattern_);
   }
 
   find_handle_ = ::FindFirstFileExW(
@@ -48,8 +48,8 @@ SystemErrorCode DirectoryEnumerator::TryOpen(const FilePath& path) {
   return error;
 }
 
-void DirectoryEnumerator::Close() noexcept {
-  ASSERT(IsOpen());
+void DirectoryEnumerator::close() noexcept {
+  ASSERT(isOpen());
   pattern_.clear();
   if (status_ != Status::Empty) {
     HANDLE handle = exchange(find_handle_, INVALID_HANDLE_VALUE);
@@ -59,7 +59,7 @@ void DirectoryEnumerator::Close() noexcept {
   status_ = Status::Closed;
 }
 
-static bool IsDotEntry(const FilePathChar* basename) {
+static bool isDotEntry(const FilePathChar* basename) {
   if (basename[0] != '.')
     return false;
   if (basename[1] == '\0')
@@ -67,17 +67,17 @@ static bool IsDotEntry(const FilePathChar* basename) {
   return basename[1] == '.' && basename[2] == '\0';
 }
 
-bool DirectoryEnumerator::TryMoveNext(SystemErrorCode& out_error_code) {
-  ASSERT(IsOpen());
+bool DirectoryEnumerator::tryMoveNext(SystemErrorCode& out_error_code) {
+  ASSERT(isOpen());
   if (status_ != Status::AtNext) {
     if (status_ == Status::Empty)
       return false;
     status_ = Status::AtNext;
-    if (!IsDotEntry(find_data_.cFileName))
+    if (!isDotEntry(find_data_.cFileName))
       return true;
   }
   while (::FindNextFileW(find_handle_, &find_data_) != 0) {
-    if (IsDotEntry(find_data_.cFileName))
+    if (isDotEntry(find_data_.cFileName))
       continue;
     return true;
   }
@@ -89,22 +89,22 @@ bool DirectoryEnumerator::TryMoveNext(SystemErrorCode& out_error_code) {
   return false;
 }
 
-uint64_t DirectoryEnumerator::GetSize() const {
+uint64_t DirectoryEnumerator::getSize() const {
   ULARGE_INTEGER size;
   size.HighPart = find_data_.nFileSizeHigh;
   size.LowPart  = find_data_.nFileSizeLow;
   return size.QuadPart;
 }
 
-Time DirectoryEnumerator::GetLastAccessTime() const {
+Time DirectoryEnumerator::getLastAccessTime() const {
   return Time::FromFileTime(find_data_.ftLastAccessTime);
 }
 
-Time DirectoryEnumerator::GetLastModifiedTime() const {
+Time DirectoryEnumerator::getLastModifiedTime() const {
   return Time::FromFileTime(find_data_.ftLastWriteTime);
 }
 
-Time DirectoryEnumerator::GetCreationTime() const {
+Time DirectoryEnumerator::getCreationTime() const {
   return Time::FromFileTime(find_data_.ftCreationTime);
 }
 

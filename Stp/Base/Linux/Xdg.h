@@ -33,11 +33,11 @@ class BASE_EXPORT Xdg {
   // a directory path. |fallback_dir| is the directory relative to $HOME that we
   // use if |env_name| cannot be found or is empty. |fallback_dir| may be null.
   // Examples of |env_name| are XDG_CONFIG_HOME and XDG_DATA_HOME.
-  static FilePath GetDirectory(const char* env_name, StringSpan fallback_dir);
+  static FilePath getDirectory(const char* env_name, StringSpan fallback_dir);
 
   // This looks up "well known" user directories like the desktop and music
   // folder. Examples of |dir_name| are DESKTOP and MUSIC.
-  static FilePath GetUserDirectory(const char* dir_name, StringSpan fallback_dir);
+  static FilePath getUserDirectory(const char* dir_name, StringSpan fallback_dir);
 
   // Return an entry from the DesktopEnvironment enum with a best guess
   // of which desktop environment we're using.

@@ -76,7 +76,7 @@ void ConsoleWriter::setColors(ConsoleColor foreground_, ConsoleColor background_
 
 void ConsoleWriter::fetchDefaultColors() {
   CONSOLE_SCREEN_BUFFER_INFO buffer_info;
-  if (!GetConsoleScreenBufferInfo(std_->GetNativeFile(), &buffer_info)) {
+  if (!GetConsoleScreenBufferInfo(std_->getNativeFile(), &buffer_info)) {
     uses_colors_ = false;
     return;
   }
@@ -97,7 +97,7 @@ void ConsoleWriter::UpdateAttributes(unsigned attributes) {
 
   flush();
 
-  ::SetConsoleTextAttribute(std_->GetNativeFile(), attributes);
+  ::SetConsoleTextAttribute(std_->getNativeFile(), attributes);
 }
 
 void ConsoleWriter::printToSystemDebugLog(StringSpan text) {
@@ -105,7 +105,7 @@ void ConsoleWriter::printToSystemDebugLog(StringSpan text) {
 }
 
 bool ConsoleWriter::shouldUseColors(const FileStream& stream) {
-  HANDLE std_handle = stream.GetNativeFile();
+  HANDLE std_handle = stream.getNativeFile();
   if (::GetFileType(std_handle) != FILE_TYPE_CHAR)
     return false;
 

@@ -13,28 +13,28 @@ namespace linux {
 constexpr char Xdg::ConfigHomeEnvVar[];
 constexpr char Xdg::DotConfigDir[];
 
-FilePath Xdg::GetDirectory(const char* env_name, StringSpan fallback_dir) {
+FilePath Xdg::getDirectory(const char* env_name, StringSpan fallback_dir) {
   FilePath path;
   String env_value;
   if (Environment::tryGet(env_name, path)) {
-    path.StripTrailingSeparators();
+    path.stripTrailingSeparators();
   } else {
-    path = GetHomeDirPath();
-    path.AddComponentAscii(fallback_dir);
+    path = getHomeDirPath();
+    path.addComponentAscii(fallback_dir);
   }
   return path;
 }
 
-FilePath Xdg::GetUserDirectory(const char* dir_name, StringSpan fallback_dir) {
+FilePath Xdg::getUserDirectory(const char* dir_name, StringSpan fallback_dir) {
   FilePath path;
   char* xdg_dir = xdg_user_dir_lookup(dir_name);
   if (xdg_dir) {
-    path = MakeFilePathSpanFromNullTerminated(xdg_dir);
+    path = makeFilePathSpanFromNullTerminated(xdg_dir);
     free(xdg_dir);
-    path.StripTrailingSeparators();
+    path.stripTrailingSeparators();
   } else {
-    path = GetHomeDirPath();
-    path.AddComponentAscii(fallback_dir);
+    path = getHomeDirPath();
+    path.addComponentAscii(fallback_dir);
   }
   return path;
 }

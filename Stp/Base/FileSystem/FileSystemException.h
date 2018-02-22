@@ -20,8 +20,8 @@ class BASE_EXPORT FileSystemException : public SystemException {
   FileSystemException(SystemErrorCode error_code, FilePathSpan path, FilePathSpan aux_path)
       : SystemException(error_code), path_(path), aux_path_(aux_path) {}
 
-  const FilePath& GetPath() const { return path_; }
-  const FilePath& GetAuxPath() const { return aux_path_; }
+  const FilePath& getPath() const { return path_; }
+  const FilePath& getAuxPath() const { return aux_path_; }
 
   StringSpan getName() const noexcept override;
 

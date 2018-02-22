@@ -1,7 +1,5 @@
 // Copyright 2017 Polonite Authors. All rights reserved.
-// Copyright (c) 2011 The Chromium Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
+// Distributed under MIT license that can be found in the LICENSE file.
 
 #include "Base/FileSystem/TemporaryDirectory.h"
 
@@ -20,11 +18,23 @@
 
 namespace stp {
 
+/**
+ * @class TemporaryDirectory
+ * An object representing a temporary / scratch directory that should be cleaned
+ * up (recursively) when this object is destroyed.
+ */
+
+/**
+ * No directory is owned/created initially.
+ */
 TemporaryDirectory::TemporaryDirectory() {
 }
 
+/**
+ * Recursively delete path.
+ */
 TemporaryDirectory::~TemporaryDirectory() {
-  if (IsValid()) {
+  if (isValid()) {
     try {
       remove();
     } catch (IoException& exception) {
@@ -33,38 +43,63 @@ TemporaryDirectory::~TemporaryDirectory() {
   }
 }
 
-void TemporaryDirectory::Create() {
-  FilePath system_temp_dir = GetTempDirPath();
+/**
+ * @fn TemporaryDirectory::isValid
+ * Returns true if path_ is non-empty.
+ */
+
+/**
+ * Creates a unique directory in system-wide temporary directory,
+ * and takes ownership of it.
+ */
+void TemporaryDirectory::create() {
+  FilePath system_temp_dir = getTempDirPath();
   String prefix = Application::instance().getName();
-  CreateInternal(system_temp_dir, prefix);
+  createInternal(system_temp_dir, prefix);
 }
 
-void TemporaryDirectory::CreateUnder(const FilePath& base_path) {
-  ASSERT(!IsValid());
+/**
+ * Creates a unique directory under a given path, and takes ownership of it.
+ */
+void TemporaryDirectory::createUnder(const FilePath& base_path) {
+  ASSERT(!isValid());
 
   // If |base_path| does not exist, create it.
-  Directory::CreatePath(base_path);
+  Directory::createPath(base_path);
 
   // Create a new, uniquely named directory under |base_path|.
-  CreateInternal(base_path, "temp_dir");
+  createInternal(base_path, "temp_dir");
 }
 
-void TemporaryDirectory::Create(FilePath path) {
-  ASSERT(!IsValid());
+/**
+ * Takes ownership of directory at @a path, creating it if necessary.
+ * Don't call multiple times unless @ref take() has been called first.
+ */
+void TemporaryDirectory::create(FilePath path) {
+  ASSERT(!isValid());
 
-  Directory::CreatePath(path);
+  Directory::createPath(path);
 
   path_ = move(path);
 }
 
+/**
+ * Deletes the temporary directory wrapped by this object.
+ */
 void TemporaryDirectory::remove() {
-  ASSERT(IsValid());
+  ASSERT(isValid());
   FilePath path = move(path_);
-  Directory::RemoveRecursively(path);
+  Directory::removeRecursively(path);
 }
 
+/**
+ * @fn TemporaryDirectory::take
+ * Caller takes ownership of the temporary directory so it won't be destroyed
+ * when this object goes out of scope.
+ */
+
 #if OS(WIN)
-void TemporaryDirectory::CreateInternal(FilePathSpan base_dir, StringSpan prefix) {
+void TemporaryDirectory::createInternal(FilePathSpan base_dir, StringSpan prefix) {
   FilePath sub_dir = base_dir;
 
   CryptoRandom rng;
@@ -73,7 +108,7 @@ void TemporaryDirectory::CreateInternal(FilePathSpan base_dir, StringSpan prefix
     // If the one exists, keep trying another path name until we reach some limit.
     FilePathWriter writer(sub_dir);
 
-    writer.EnsureSeparator();
+    writer.ensureSeparator();
     writer << prefix;
     writer << NativeProcess::GetCurrentId();
     writer << '_';
@@ -92,7 +127,7 @@ void TemporaryDirectory::CreateInternal(FilePathSpan base_dir, StringSpan prefix
   throw FileException() << "unable to create temporary directory with unique name" << base_dir;
 }
 #elif OS(POSIX)
-void TemporaryDirectory::CreateInternal(FilePathSpan base_dir, StringSpan prefix) {
+void TemporaryDirectory::createInternal(FilePathSpan base_dir, StringSpan prefix) {
   String tmpl = String::ConcatArgs(".stp.", prefix, ".XXXXXX");
 
   FilePath sub_dir;
@@ -100,7 +135,7 @@ void TemporaryDirectory::CreateInternal(FilePathSpan base_dir, StringSpan prefix
   sub_dir = base_dir;
 
   FilePathWriter writer(sub_dir);
-  writer.EnsureSeparator();
+  writer.ensureSeparator();
   writer << tmpl;
 
   // this should be OK since mkdtemp just replaces characters in place

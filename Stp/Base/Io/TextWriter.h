@@ -12,7 +12,7 @@ class TextEncoding;
 
 class BASE_EXPORT TextWriter {
  public:
-  static TextWriter& null();
+  static TextWriter& nullWriter();
 
   TextWriter() {}
   virtual ~TextWriter() {}
@@ -21,7 +21,7 @@ class BASE_EXPORT TextWriter {
 
   void flush() { onFlush(); }
 
-  virtual TextEncoding GetEncoding() const = 0;
+  virtual TextEncoding getEncoding() const = 0;
 
   // Simple RTTI:
   virtual bool isConsoleWriter() const;

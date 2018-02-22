@@ -22,18 +22,18 @@
 
 namespace stp {
 
-bool Directory::Exists(const FilePath& path) {
+bool Directory::exists(const FilePath& path) {
   stat_wrapper_t file_info;
-  if (posix::CallStat(toNullTerminated(path), &file_info) == 0)
+  if (posix::callStat(toNullTerminated(path), &file_info) == 0)
     return S_ISDIR(file_info.st_mode);
   return false;
 }
 
-SystemErrorCode Directory::TryCreate(const FilePath& path) {
+SystemErrorCode Directory::tryCreate(const FilePath& path) {
   if (::mkdir(toNullTerminated(path), 0775) == 0)
     return PosixErrorCode::Ok;
   auto error_code = getLastSystemErrorCode();
-  if (Exists(path))
+  if (exists(path))
     return PosixErrorCode::Ok;
   return error_code;
 }
@@ -45,7 +45,7 @@ SystemErrorCode Directory::tryRemoveEmpty(const FilePath& path) {
 }
 
 #if OS(LINUX)
-static bool IsStatsZeroIfUnlimited(const FilePath& path) {
+static bool isStatsZeroIfUnlimited(const FilePath& path) {
   struct statfs stats;
   if (HANDLE_EINTR(::statfs(toNullTerminated(path), &stats)) != 0)
     return false;
@@ -66,17 +66,17 @@ SystemErrorCode Directory::tryGetDriveSpaceInfo(const FilePath& path, DriveSpace
     return getLastPosixErrorCode();
 
   #if OS(LINUX)
-  const bool zero_size_means_unlimited = stats.f_blocks == 0 && IsStatsZeroIfUnlimited(path);
+  const bool zero_size_means_unlimited = stats.f_blocks == 0 && isStatsZeroIfUnlimited(path);
   #else
   const bool zero_size_means_unlimited = false;
   #endif
 
-  auto Normalize = [zero_size_means_unlimited](int64_t blocks, int64_t frsize) {
+  auto normalize = [zero_size_means_unlimited](int64_t blocks, int64_t frsize) {
     return zero_size_means_unlimited ? Limits<int64_t>::Max : (blocks * frsize);
   };
-  out_space.total = Normalize(stats.f_blocks, stats.f_frsize);
-  out_space.free = Normalize(stats.f_bfree, stats.f_frsize);
-  out_space.available = Normalize(stats.f_bavail, stats.f_frsize);
+  out_space.total = normalize(stats.f_blocks, stats.f_frsize);
+  out_space.free = normalize(stats.f_bfree, stats.f_frsize);
+  out_space.available = normalize(stats.f_bavail, stats.f_frsize);
   return PosixErrorCode::Ok;
 }
 

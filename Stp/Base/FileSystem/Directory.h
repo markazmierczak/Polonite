@@ -14,25 +14,25 @@ class BASE_EXPORT Directory {
   STATIC_ONLY(Directory);
  public:
   // Returns true if the given path exists and the path points to a directory.
-  static bool Exists(const FilePath& path);
+  static bool exists(const FilePath& path);
 
-  static void Create(const FilePath& path);
-  static SystemErrorCode TryCreate(const FilePath& path);
+  static void create(const FilePath& path);
+  static SystemErrorCode tryCreate(const FilePath& path);
 
-  static void RemoveEmpty(const FilePath& path);
+  static void removeEmpty(const FilePath& path);
   static SystemErrorCode tryRemoveEmpty(const FilePath& path);
 
   // Creates a directory, as well as creating any parent directories, if they don't exist.
   // Returns 'true' on successful creation, or if the directory already exists.
-  static void CreatePath(const FilePath& path);
-  static SystemErrorCode TryCreatePath(const FilePath& path);
+  static void createPath(const FilePath& path);
+  static SystemErrorCode tryCreatePath(const FilePath& path);
 
   // Deletes a file or directory (recursively).
   // EQUIVALENT TO "rm -rf", SO USE WITH CAUTION.
-  static void RemoveRecursively(const FilePath& path);
+  static void removeRecursively(const FilePath& path);
 
   // Returns the total number of bytes used by all the files under |root_path|.
-  static uint64_t ComputeSize(const FilePath& path);
+  static uint64_t computeSize(const FilePath& path);
 
   // Retrieves the disk space in bytes on the volume containing |path|.
   struct DriveSpaceInfo {
@@ -40,7 +40,7 @@ class BASE_EXPORT Directory {
     int64_t free;      // total free space available on drive, in bytes
     int64_t available; // similar to free, but takes disk quotas into account
   };
-  static DriveSpaceInfo GetDriveSpaceInfo(const FilePath& path);
+  static DriveSpaceInfo getDriveSpaceInfo(const FilePath& path);
   static SystemErrorCode tryGetDriveSpaceInfo(const FilePath& path, DriveSpaceInfo& out_info);
 };
 

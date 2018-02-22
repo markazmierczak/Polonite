@@ -27,23 +27,23 @@ class BASE_EXPORT MemoryStream final : public Stream {
 
   void ensureCapacity(int request);
 
-  void Close() override;
-  bool IsOpen() const noexcept override;
-  int ReadAtMost(MutableBufferSpan output) override;
-  void Write(BufferSpan input) override;
-  void PositionalRead(int64_t offset, MutableBufferSpan output) override;
-  void PositionalWrite(int64_t offset, BufferSpan input) override;
-  void WriteByte(byte_t byte) override;
-  int TryReadByte() override;
-  int64_t Seek(int64_t offset, SeekOrigin origin) override;
-  void Flush() override;
-  bool CanRead() override;
-  bool CanWrite() override;
-  bool CanSeek() override;
-  void SetLength(int64_t length) override;
-  int64_t GetLength() override;
-  void SetPosition(int64_t position) override;
-  int64_t GetPosition() override;
+  void close() override;
+  bool isOpen() const noexcept override;
+  int readAtMost(MutableBufferSpan output) override;
+  void write(BufferSpan input) override;
+  void positionalRead(int64_t offset, MutableBufferSpan output) override;
+  void positionalWrite(int64_t offset, BufferSpan input) override;
+  void writeByte(byte_t byte) override;
+  int tryReadByte() override;
+  int64_t seek(int64_t offset, SeekOrigin origin) override;
+  void flush() override;
+  bool canRead() override;
+  bool canWrite() override;
+  bool canSeek() override;
+  void setLength(int64_t length) override;
+  int64_t getLength() override;
+  void setPosition(int64_t position) override;
+  int64_t getPosition() override;
 
  private:
   byte_t* memory_ = nullptr;

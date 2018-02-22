@@ -125,7 +125,7 @@ static inline void WriteWtfTmpl(TextWriter& out, Span<T> wtf) {
   }
 }
 
-void WriteWtf(TextWriter& out, StringSpan wtf) { WriteWtfTmpl(out, wtf); }
+void writeWtf(TextWriter& out, StringSpan wtf) { WriteWtfTmpl(out, wtf); }
 
 template<typename T>
 static inline String WtfToUtf8Tmpl(Span<T> wtf) {
@@ -133,7 +133,7 @@ static inline String WtfToUtf8Tmpl(Span<T> wtf) {
   utf.ensureCapacity(wtf.size());
 
   StringWriter writer(&utf);
-  WriteWtf(writer, wtf);
+  writeWtf(writer, wtf);
   return utf;
 }
 
@@ -145,7 +145,7 @@ static inline void appendWtfTmpl(List<TOutput>& output, Span<TInput> wtf) {
     output.ensureCapacity(output.size() + wtf.size());
   }
   StringWriter writer(&output);
-  WriteWtf(writer, wtf);
+  writeWtf(writer, wtf);
 }
 
 void appendWtf(String& output, StringSpan wtf) { appendWtfTmpl(output, wtf); }

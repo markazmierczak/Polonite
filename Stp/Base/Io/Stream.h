@@ -16,45 +16,43 @@ enum class SeekOrigin {
 };
 
 class BASE_EXPORT Stream {
+  DISALLOW_COPY_AND_ASSIGN(Stream);
  public:
-  static Stream& Null();
+  static Stream& nullStream();
 
   Stream() = default;
   virtual ~Stream() {}
 
-  virtual void Close() = 0;
+  virtual void close() = 0;
 
-  virtual bool IsOpen() const noexcept = 0;
+  virtual bool isOpen() const noexcept = 0;
 
-  virtual int ReadAtMost(MutableBufferSpan output) = 0;
-  void Read(MutableBufferSpan output);
+  virtual int readAtMost(MutableBufferSpan output) = 0;
+  void read(MutableBufferSpan output);
 
-  virtual void Write(BufferSpan input) = 0;
+  virtual void write(BufferSpan input) = 0;
 
-  virtual void PositionalRead(int64_t offset, MutableBufferSpan output);
-  virtual void PositionalWrite(int64_t offset, BufferSpan input);
+  virtual void positionalRead(int64_t offset, MutableBufferSpan output);
+  virtual void positionalWrite(int64_t offset, BufferSpan input);
 
-  virtual void WriteByte(byte_t byte);
-  virtual int TryReadByte();
-  byte_t ReadByte();
+  virtual void writeByte(byte_t byte);
+  virtual int tryReadByte();
+  byte_t readByte();
 
-  virtual int64_t Seek(int64_t offset, SeekOrigin origin) = 0;
+  virtual int64_t seek(int64_t offset, SeekOrigin origin) = 0;
 
-  virtual void Flush() = 0;
+  virtual void flush() = 0;
 
-  virtual bool CanRead() = 0;
-  virtual bool CanWrite() = 0;
-  virtual bool CanSeek() = 0;
+  virtual bool canRead() = 0;
+  virtual bool canWrite() = 0;
+  virtual bool canSeek() = 0;
 
   // The file position is undefined after this operation.
-  virtual void SetLength(int64_t length) = 0;
-  virtual int64_t GetLength() = 0;
+  virtual void setLength(int64_t length) = 0;
+  virtual int64_t getLength() = 0;
 
-  virtual void SetPosition(int64_t position) = 0;
-  virtual int64_t GetPosition() = 0;
-
- private:
-  DISALLOW_COPY_AND_ASSIGN(Stream);
+  virtual void setPosition(int64_t position) = 0;
+  virtual int64_t getPosition() = 0;
 };
 
 } // namespace stp

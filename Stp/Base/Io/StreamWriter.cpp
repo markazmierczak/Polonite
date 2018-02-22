@@ -44,7 +44,7 @@ StreamWriter::~StreamWriter() {
     DestroyEncoder();
 }
 
-TextEncoding StreamWriter::GetEncoding() const {
+TextEncoding StreamWriter::getEncoding() const {
   return encoding_;
 }
 
@@ -83,13 +83,13 @@ void StreamWriter::onFlush() {
   if (buffer_.isEmpty())
     return;
   FlushBuffer();
-  stream_.Flush();
+  stream_.flush();
 }
 
 void StreamWriter::FlushBuffer() {
   if (buffer_.isEmpty())
     return;
-  stream_.Write(buffer_);
+  stream_.write(buffer_);
   buffer_.clear();
 }
 
@@ -103,7 +103,7 @@ void StreamWriter::SetAutoFlush(bool auto_flush) {
 
 void StreamWriter::WriteToBuffer(BufferSpan input) {
   if (UNLIKELY(auto_flush_)) {
-    stream_.Write(input);
+    stream_.write(input);
     return;
   }
 
@@ -115,7 +115,7 @@ void StreamWriter::WriteToBuffer(BufferSpan input) {
   }
   if (input.size() >= buffer_.capacity() + remaining_capacity) {
     FlushBuffer();
-    stream_.Write(input);
+    stream_.write(input);
     return;
   }
 

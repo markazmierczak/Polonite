@@ -16,22 +16,23 @@
 namespace stp {
 
 class FileInfo {
+  DISALLOW_COPY_AND_ASSIGN(FileInfo);
  public:
   FileInfo() = default;
 
-  uint64_t GetSize() const;
+  uint64_t getSize() const;
 
-  Time GetLastAccessTime() const;
-  Time GetLastModifiedTime() const;
+  Time getLastAccessTime() const;
+  Time getLastModifiedTime() const;
   #if OS(WIN)
-  Time GetCreationTime() const;
+  Time getCreationTime() const;
   #endif
 
-  bool IsDirectory() const;
+  bool isDirectory() const;
   #if OS(WIN)
-  bool IsReadOnly() const { return (attr_data_.dwFileAttributes & FILE_ATTRIBUTE_READONLY) != 0; }
+  bool isReadOnly() const { return (attr_data_.dwFileAttributes & FILE_ATTRIBUTE_READONLY) != 0; }
   #elif OS(POSIX)
-  bool IsSymbolicLink() const { return S_ISLNK(stat_.st_mode); }
+  bool isSymbolicLink() const { return S_ISLNK(stat_.st_mode); }
   #endif
 
  private:
@@ -43,43 +44,41 @@ class FileInfo {
   #elif OS(POSIX)
   stat_wrapper_t stat_;
   #endif
-
-  DISALLOW_COPY_AND_ASSIGN(FileInfo);
 };
 
 #if OS(WIN)
-inline bool FileInfo::IsDirectory() const {
+inline bool FileInfo::isDirectory() const {
   return (attr_data_.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) != 0;
 }
 
-inline uint64_t FileInfo::GetSize() const {
+inline uint64_t FileInfo::getSize() const {
   ULARGE_INTEGER size;
   size.HighPart = attr_data_.nFileSizeHigh;
   size.LowPart  = attr_data_.nFileSizeLow;
   return size.QuadPart;
 }
 
-inline Time FileInfo::GetLastAccessTime() const {
+inline Time FileInfo::getLastAccessTime() const {
   return Time::FromFileTime(attr_data_.ftLastAccessTime);
 }
-inline Time FileInfo::GetLastModifiedTime() const {
+inline Time FileInfo::getLastModifiedTime() const {
   return Time::FromFileTime(attr_data_.ftLastWriteTime);
 }
-inline Time FileInfo::GetCreationTime() const {
+inline Time FileInfo::getCreationTime() const {
   return Time::FromFileTime(attr_data_.ftCreationTime);
 }
 #elif OS(POSIX)
-inline uint64_t FileInfo::GetSize() const {
+inline uint64_t FileInfo::getSize() const {
   return stat_.st_size;
 }
-inline bool FileInfo::IsDirectory() const {
+inline bool FileInfo::isDirectory() const {
   return S_ISDIR(stat_.st_mode);
 }
 
-inline Time FileInfo::GetLastAccessTime() const {
+inline Time FileInfo::getLastAccessTime() const {
   return Time::FromTimeT(stat_.st_atime);
 }
-inline Time FileInfo::GetLastModifiedTime() const {
+inline Time FileInfo::getLastModifiedTime() const {
   return Time::FromTimeT(stat_.st_mtime);
 }
 #endif // OS(*)

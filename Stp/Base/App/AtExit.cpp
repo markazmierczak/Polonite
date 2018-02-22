@@ -56,7 +56,7 @@ void AtExitManager::registerCallback(Callback callback) {
 
   AutoLock lock(&g_top_manager_->lock_);
   ASSERT(!g_top_manager_->processing_callbacks_);
-  g_top_manager_->stack_.Push(move(callback));
+  g_top_manager_->stack_.push(move(callback));
 }
 
 /**
@@ -77,7 +77,7 @@ void AtExitManager::processCallbacksNow() {
   }
 
   while (!tasks.isEmpty()) {
-    Callback task = tasks.Pop();
+    Callback task = tasks.pop();
     task();
   }
 

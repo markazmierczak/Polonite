@@ -84,7 +84,7 @@ namespace {
 
 class NullTextWriter final : public TextWriter {
  public:
-  TextEncoding GetEncoding() const { return TextEncoding(); }
+  TextEncoding getEncoding() const { return TextEncoding(); }
   void onWriteChar(char c) override {}
   void onWriteRune(char32_t c) override {}
   void onWriteString(StringSpan text) override {}
@@ -93,7 +93,7 @@ class NullTextWriter final : public TextWriter {
 
 } // namespace
 
-TextWriter& TextWriter::null() {
+TextWriter& TextWriter::nullWriter() {
   static AlignedStorage<NullTextWriter> g_storage;
   return *new(g_storage.bytes) NullTextWriter();
 }

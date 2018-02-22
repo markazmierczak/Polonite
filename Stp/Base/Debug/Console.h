@@ -40,7 +40,7 @@ class ConsoleWriter : public TextWriter {
 
   void setLogLevel(LogLevel level) { log_level_ = level; }
 
-  TextEncoding GetEncoding() const override;
+  TextEncoding getEncoding() const override;
   bool isConsoleWriter() const override;
 
  private:

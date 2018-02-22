@@ -38,14 +38,14 @@ class BASE_EXPORT NativeProcess {
   static NativeProcessId GetCurrentId();
 
   // Returns the NativeProcessHandle of the current process.
-  static NativeProcessHandle GetCurrentHandle();
+  static NativeProcessHandle getCurrentHandle();
 
   // Returns the ID for the parent of the given process.
   static NativeProcessId GetParentId(NativeProcessHandle process);
 
   #if OS(LINUX) || OS(ANDROID)
   // Returns the path to the executable of the given process.
-  static FilePath GetExecutablePath(NativeProcessHandle process);
+  static FilePath getExecutablePath(NativeProcessHandle process);
   #endif
 };
 
