@@ -33,12 +33,6 @@ constexpr bool areObjectsOverlapping(const T* lhs, const T* rhs, int count) noex
 }
 
 template<typename T>
-inline void destroyObject(T* item) noexcept {
-  ASSERT(item != nullptr);
-  item->~T();
-}
-
-template<typename T>
 inline void destroyObjects(T* items, int count) noexcept {
   ASSERT(count >= 0);
   if constexpr (!TIsTriviallyDestructible<T>) {

@@ -8,8 +8,6 @@
 #include "Base/Memory/Allocate.h"
 #include "Base/Type/Variable.h"
 
-#include <stdlib.h>
-
 namespace stp {
 
 template<class T>

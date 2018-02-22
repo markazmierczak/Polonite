@@ -22,7 +22,7 @@ Weak pointers are useful when an object needs to be accessed safely by one or mo
   class Controller {
    public:
     Controller() : weak_factory_(this) {}
-    void SpawnWorker() { Worker::StartNew(weak_factory_.GetWeakPtr()); }
+    void SpawnWorker() { Worker::StartNew(weak_factory_.getWeakPtr()); }
     void WorkComplete(const Result& result) { ... }
    private:
     // Member variables should appear before the WeakPtrFactory, to ensure
@@ -71,7 +71,7 @@ SupportsWeakPtr
 
 A class may extend from ``SupportsWeakPtr`` to let others take weak pointers to it. This avoids the class itself implementing boilerplate to dispense weak  pointers. However, since ``SupportsWeakPtr``\ 's destructor won't invalidate weak pointers to the class until after the derived class' members have been destroyed, its use can lead to subtle use-after-destroy issues.
 
-AsWeakPtr()
+asWeakPtr()
 -----------
 
 Helper function that uses type deduction to safely return a ``WeakPtr<Derived>`` when Derived doesn't directly extend ``SupportsWeakPtr<Derived>``, instead it extends a Base that extends ``SupportsWeakPtr<Base>`` ::
@@ -80,8 +80,8 @@ Helper function that uses type deduction to safely return a ``WeakPtr<Derived>``
    class Derived : public Base {};
 
    Derived derived;
-   WeakPtr<Derived> ptr = AsWeakPtr(&derived);
+   WeakPtr<Derived> ptr = asWeakPtr(&derived);
 
-Note that the following doesn't work (invalid type conversion) since ``Derived::AsWeakPtr()`` is ``WeakPtr<Base> SupportsWeakPtr<Base>::AsWeakPtr()``,  and there's no way to safely cast WeakPtr<Base> to WeakPtr<Derived> at the caller::
+Note that the following doesn't work (invalid type conversion) since ``Derived::asWeakPtr()`` is ``WeakPtr<Base> SupportsWeakPtr<Base>::asWeakPtr()``,  and there's no way to safely cast WeakPtr<Base> to WeakPtr<Derived> at the caller::
 
-   WeakPtr<Derived> ptr = derived.AsWeakPtr(); // Fails.
+   WeakPtr<Derived> ptr = derived.asWeakPtr(); // Fails.

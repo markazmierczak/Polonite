@@ -118,11 +118,11 @@ struct TIsMoveAssignableHelper<T, true> : TIsAssignableHelper<T&, T&&>::Type {};
 template<typename T>
 using TDecay = typename detail::TDecayHelper<T>::Type;
 
-template<typename From, typename To>
-constexpr bool TIsConvertibleTo = detail::TIsConvertibleToHelper<From, To>::Value;
+template<typename TFrom, typename TTo>
+constexpr bool TIsConvertibleTo = detail::TIsConvertibleToHelper<TFrom, TTo>::Value;
 
-template<typename To, typename From>
-constexpr bool TIsAssignable = detail::TIsAssignableHelper<To, From>::Type::Value;
+template<typename TTo, typename TFrom>
+constexpr bool TIsAssignable = detail::TIsAssignableHelper<TTo, TFrom>::Type::Value;
 
 template<typename T>
 constexpr bool TIsCopyAssignable =
@@ -139,8 +139,8 @@ template<typename T>
 constexpr bool TIsTriviallyMoveAssignable =
     TIsMoveAssignable<T> && TIsTriviallyAssignable<T&, T&&>;
 
-template<typename T, typename... Args>
-constexpr bool TIsTriviallyConstructible = __is_trivially_constructible(T, Args...);
+template<typename T, typename... TArgs>
+constexpr bool TIsTriviallyConstructible = __is_trivially_constructible(T, TArgs...);
 
 template<typename T>
 constexpr bool TIsTriviallyDefaultConstructible = TIsTriviallyConstructible<T>;
@@ -217,30 +217,30 @@ constexpr bool TIsTriviallyDestructible = __has_trivial_destructor(T) && TIsDest
 
 namespace detail {
 
-template<typename T, typename... Args>
+template<typename T, typename... TArgs>
 struct TIsConstructibleHelper;
 
-template<typename To, typename From>
+template<typename TTo, typename TFrom>
 struct TIsInvalidBaseToDerivedCast {
-  static_assert(TIsReference<To>, "!");
-  using RawFrom = TRemoveCVRef<From>;
-  using RawTo = TRemoveCVRef<To>;
+  static_assert(TIsReference<TTo>, "!");
+  using RawFrom = TRemoveCVRef<TFrom>;
+  using RawTo = TRemoveCVRef<TTo>;
 
   static constexpr bool Value =
       !TsAreSame<RawFrom, RawTo> &&
       TIsBaseOf<RawFrom, RawTo> &&
-      !TIsConstructibleHelper<RawTo, From>::Vvalue;
+      !TIsConstructibleHelper<RawTo, TFrom>::Vvalue;
 };
 
-template<typename To, typename From>
+template<typename TTo, typename TFrom>
 struct TIsInvalidLvalueToRvalueCast : TFalse {
-  static_assert(TIsReference<To>, "!");
+  static_assert(TIsReference<TTo>, "!");
 };
 
-template<typename ToRef, typename FromRef>
-struct TIsInvalidLvalueToRvalueCast<ToRef&&, FromRef&> {
-  using RawFrom = TRemoveCVRef<FromRef>;
-  using RawTo = TRemoveCVRef<ToRef>;
+template<typename TToRef, typename TFromRef>
+struct TIsInvalidLvalueToRvalueCast<TToRef&&, TFromRef&> {
+  using RawFrom = TRemoveCVRef<TFromRef>;
+  using RawTo = TRemoveCVRef<TToRef>;
 
   static constexpr bool Value =
       !TIsFunction<RawTo> &&
@@ -294,10 +294,10 @@ template<typename T, int N>
 struct TIsDefaultConstructibleHelper<T[N], false>
     : TIsDefaultConstructibleHelper<TRemoveAllExtents<T>>  {};
 
-template<typename T, typename... Args>
+template<typename T, typename... TArgs>
 struct TIsConstructibleHelper {
-  static_assert(sizeof...(Args) > 1, "!");
-  typedef decltype(TIsConstructibleTests::TestNAry<T, Args...>(0)) Type;
+  static_assert(sizeof...(TArgs) > 1, "!");
+  typedef decltype(TIsConstructibleTests::TestNAry<T, TArgs...>(0)) Type;
 };
 
 template<typename T>
@@ -320,8 +320,8 @@ struct TIsConstructibleHelper<T&&, A0>
 
 } // namespace detail
 
-template<typename T, typename... Args>
-constexpr bool TIsConstructible = detail::TIsConstructibleHelper<T, Args...>::Value;
+template<typename T, typename... TArgs>
+constexpr bool TIsConstructible = detail::TIsConstructibleHelper<T, TArgs...>::Value;
 
 #else
 
@@ -350,11 +350,11 @@ struct TIsNoexceptConstructibleHelper2<true, false, T, TArgs...>
 };
 
 template<typename T>
-void CheckImplicitConversionTo(T) noexcept {}
+void checkImplicitConversionTo(T) noexcept {}
 
 template<typename T, typename TArg>
 struct TIsNoexceptConstructibleHelper2<true, true, T, TArg>
-    : public TBoolConstant<noexcept(CheckImplicitConversionTo<T>(declval<TArg>()))> {};
+    : public TBoolConstant<noexcept(checkImplicitConversionTo<T>(declval<TArg>()))> {};
 
 template<typename T, bool TIsReference, typename... TArgs>
 struct TIsNoexceptConstructibleHelper2<false, TIsReference, T, TArgs...> : public TFalse {};
@@ -502,13 +502,20 @@ struct TIsTriviallyRelocatableTmpl : TBoolConstant<TIsTriviallyCopyable<T>> {};
 template<typename T>
 constexpr bool TIsTriviallyRelocatable = TIsTriviallyRelocatableTmpl<T>::Value;
 
+
 template<typename T>
-constexpr void relocateAt(T* target, T& source) {
+inline void destroyObject(T* item) noexcept {
+  ASSERT(item != nullptr);
+  item->~T();
+}
+
+template<typename T>
+inline void relocateObject(T* target, T& source) {
   if constexpr (TIsTriviallyRelocatable<T>) {
     memcpy(target, &source, sizeof(T));
   } else {
     new (target) T(move(source));
-    source.~T();
+    detroyObject(&source);
   }
 }
 

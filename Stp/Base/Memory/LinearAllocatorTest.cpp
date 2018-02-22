@@ -10,7 +10,7 @@ namespace stp {
 
 static void checkAlloc(
     const LinearAllocator& allocator,
-    unsigned capacity, unsigned used, unsigned num_blocks) {
+    int capacity, int used, int num_blocks) {
   EXPECT_GE(allocator.getTotalCapacity(), capacity);
   EXPECT_EQ(allocator.getTotalUsed(), used);
   #if ASSERT_IS_ON
@@ -18,7 +18,7 @@ static void checkAlloc(
   #endif
 }
 
-static void* simpleAlloc(LinearAllocator* allocator, unsigned size) {
+static void* simpleAlloc(LinearAllocator* allocator, int size) {
   void* ptr = allocator->tryAllocate(size, 1);
   checkAlloc(*allocator, size, size, 1);
   EXPECT_TRUE(allocator->contains(ptr));
@@ -26,7 +26,7 @@ static void* simpleAlloc(LinearAllocator* allocator, unsigned size) {
 }
 
 TEST(ContiguousAllocatorTest, basic) {
-  constexpr size_t MinBlockSize = LinearAllocator::MinBlockSize;
+  constexpr int MinBlockSize = LinearAllocator::MinBlockSize;
 
   LinearAllocator allocator;
 
@@ -44,7 +44,7 @@ TEST(ContiguousAllocatorTest, basic) {
   checkAlloc(allocator, 0, 0, 0);
 
   // test reset when something is allocated
-  unsigned size = MinBlockSize >> 1;
+  int size = MinBlockSize >> 1;
   void* ptr = simpleAlloc(&allocator, size);
 
   allocator.reset();
@@ -70,7 +70,7 @@ TEST(ContiguousAllocatorTest, basic) {
   EXPECT_TRUE(allocator.contains(ptr));
 
   // test out unalloc
-  unsigned freed = allocator.freeRecent(ptr);
+  int freed = allocator.freeRecent(ptr);
   EXPECT_EQ(freed, MinBlockSize);
   checkAlloc(allocator, 2*MinBlockSize, size, 2);
   EXPECT_FALSE(allocator.contains(ptr));

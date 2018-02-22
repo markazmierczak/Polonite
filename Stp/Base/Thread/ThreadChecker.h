@@ -17,7 +17,7 @@
 // class MyClass {
 //  public:
 //   void Foo() {
-//     ASSERT(thread_checker_.CalledOnValidThread());
+//     ASSERT(thread_checker_.calledOnValidThread());
 //     ... (do stuff) ...
 //   }
 //
@@ -25,7 +25,7 @@
 //   ThreadChecker thread_checker_;
 // }
 //
-// In Release mode, CalledOnValidThread will always return true.
+// In Release mode, calledOnValidThread will always return true.
 
 namespace stp {
 
@@ -36,9 +36,9 @@ class BASE_EXPORT ThreadChecker {
   ThreadChecker();
   ~ThreadChecker();
 
-  bool CalledOnValidThread() const WARN_UNUSED_RESULT;
+  bool calledOnValidThread() const WARN_UNUSED_RESULT;
 
-  // Changes the thread that is checked for in CalledOnValidThread.  This may
+  // Changes the thread that is checked for in calledOnValidThread.  This may
   // be useful when an object may be created on one thread and then used
   // exclusively on another thread.
   void DetachFromThread();
@@ -47,7 +47,7 @@ class BASE_EXPORT ThreadChecker {
   void EnsureThreadIdAssigned() const;
 
   mutable Lock lock_;
-  // This is mutable so that CalledOnValidThread can set it.
+  // This is mutable so that calledOnValidThread can set it.
   // It's guarded by |lock_|.
   mutable NativeThreadHandle valid_thread_ = InvalidNativeThreadHandle;
 };
@@ -60,7 +60,7 @@ class BASE_EXPORT ThreadChecker {
 // right version for your build configuration.
 class ThreadChecker {
  public:
-  bool CalledOnValidThread() const WARN_UNUSED_RESULT {
+  bool calledOnValidThread() const WARN_UNUSED_RESULT {
     return true;
   }
 

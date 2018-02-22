@@ -22,7 +22,7 @@ class BASE_EXPORT WeakReference {
   // deleted from another via WeakPtr::~WeakPtr().
   class BASE_EXPORT Flag : public RefCountedThreadSafe<Flag> {
    public:
-    static RefPtr<Flag> Create() { return adoptRef(new Flag()); }
+    static RefPtr<Flag> create() { return adoptRef(new Flag()); }
 
     // A sentinel object used by WeakReference objects that don't point to
     // a valid Flag, either because they're default constructed or because
@@ -31,7 +31,7 @@ class BASE_EXPORT WeakReference {
     // reach zero.
     static Flag* Null;
 
-    void Invalidate() {
+    void invalidate() {
       #if ASSERT_IS_ON
       if (this == Null) {
         // The null flag does not participate in the sequence checks below.
@@ -42,19 +42,19 @@ class BASE_EXPORT WeakReference {
       #endif
       // The flag being invalidated with a single ref implies that there are no
       // weak pointers in existence. Allow deletion on other thread in this case.
-      ASSERT(thread_checker_.CalledOnValidThread() || hasOneRef(),
+      ASSERT(thread_checker_.calledOnValidThread() || hasOneRef(),
              "WeakPtrs must be invalidated on the same sequenced thread");
       valid_ = 0;
     }
 
-    uintptr_t GetValidMask() const {
+    uintptr_t getValidMask() const {
       #if ASSERT_IS_ON
       if (this == Null) {
         ASSERT(valid_ == 0);
         return 0;
       }
       #endif
-      ASSERT(thread_checker_.CalledOnValidThread(),
+      ASSERT(thread_checker_.calledOnValidThread(),
              "WeakPtrs must be checked on the same sequenced thread");
       return valid_;
     }
@@ -79,7 +79,7 @@ class BASE_EXPORT WeakReference {
     }
     ~Flag() {}
 
-    static void ClassInit();
+    static void classInit();
   };
 
   WeakReference() {}
@@ -100,7 +100,7 @@ class BASE_EXPORT WeakReference {
   WeakReference(const WeakReference& other) = default;
   WeakReference& operator=(const WeakReference& other) = default;
 
-  uintptr_t GetValidMask() const { return flag_->GetValidMask(); }
+  uintptr_t getValidMask() const { return flag_->getValidMask(); }
 
  private:
   RefPtr<const Flag> flag_;
@@ -113,19 +113,19 @@ class BASE_EXPORT WeakReferenceOwner {
 
   WeakReference GetRef() const {
     // If we hold the last reference to the Flag then create a new one.
-    if (!HasRefs())
-      flag_ = WeakReference::Flag::Create();
+    if (!hasRefs())
+      flag_ = WeakReference::Flag::create();
 
     return WeakReference(flag_);
   }
 
-  bool HasRefs() const {
+  bool hasRefs() const {
     return flag_ != WeakReference::Flag::Null && !flag_->hasOneRef();
   }
 
   void Invalidate() {
     if (flag_ != WeakReference::Flag::Null) {
-      flag_->Invalidate();
+      flag_->invalidate();
       flag_ = WeakReference::Flag::Null;
     }
   }
@@ -154,7 +154,7 @@ class BASE_EXPORT WeakPtrBase {
 
   WeakReference ref_;
 
-  // This pointer is only valid when ref_.GetValidMask() is not zero.
+  // This pointer is only valid when ref_.getValidMask() is not zero.
   // Otherwise, its value is undefined (as opposed to nullptr).
   uintptr_t ptr_;
 };
@@ -166,14 +166,14 @@ class SupportsWeakPtrBase {
  public:
   // A safe static downcast of a WeakPtr<Base> to WeakPtr<Derived>. This
   // conversion will only compile if there is exists a Base which inherits
-  // from SupportsWeakPtr<Base>. See AsWeakPtr() below for a helper
+  // from SupportsWeakPtr<Base>. See asWeakPtr() below for a helper
   // function that makes calling this easier.
   template<typename TDerived>
-  static WeakPtr<TDerived> StaticAsWeakPtr(TDerived* t) {
+  static WeakPtr<TDerived> staticAsWeakPtr(TDerived* t) {
     static_assert(
         TIsBaseOf<detail::SupportsWeakPtrBase, TDerived>,
-        "AsWeakPtr argument must inherit from SupportsWeakPtr");
-    return AsWeakPtrImpl<TDerived>(t, *t);
+        "asWeakPtr argument must inherit from SupportsWeakPtr");
+    return asWeakPtrImpl<TDerived>(t, *t);
   }
 
  private:
@@ -181,9 +181,9 @@ class SupportsWeakPtrBase {
   // which is an instance of SupportsWeakPtr<Base>. We can then safely
   // static_cast the Base* to a Derived*.
   template<typename TDerived, typename TBase>
-  static WeakPtr<TDerived> AsWeakPtrImpl(
+  static WeakPtr<TDerived> asWeakPtrImpl(
       TDerived* t, const SupportsWeakPtr<TBase>&) {
-    WeakPtr<TBase> ptr = t->TBase::AsWeakPtr();
+    WeakPtr<TBase> ptr = t->TBase::asWeakPtr();
     return WeakPtr<TDerived>(ptr.ref_, static_cast<TDerived*>(ptr.ptr_));
   }
 };
@@ -221,7 +221,7 @@ class WeakPtr : public detail::WeakPtrBase {
     // Intentionally bitwise and; see command on Flag::IsValid(). This provides
     // a fast way of conditionally retrieving the pointer, and conveniently sets
     // EFLAGS for any null-check performed by the caller.
-    return reinterpret_cast<T*>(ref_.GetValidMask() & ptr_);
+    return reinterpret_cast<T*>(ref_.getValidMask() & ptr_);
   }
 
   T& operator*() const {
@@ -233,7 +233,7 @@ class WeakPtr : public detail::WeakPtrBase {
     return get();
   }
 
-  void Reset() {
+  void reset() {
     ref_ = detail::WeakReference();
     ptr_ = 0;
   }
@@ -273,22 +273,22 @@ class WeakPtrFactory {
 
   ~WeakPtrFactory() { ptr_ = 0; }
 
-  WeakPtr<T> GetWeakPtr() {
+  WeakPtr<T> getWeakPtr() {
     ASSERT(ptr_);
     return WeakPtr<T>(
         weak_reference_owner_.GetRef(), reinterpret_cast<T*>(ptr_));
   }
 
   // Call this method to invalidate all existing weak pointers.
-  void InvalidateWeakPtrs() {
+  void invalidateWeakPtrs() {
     ASSERT(ptr_);
     weak_reference_owner_.Invalidate();
   }
 
   // Call this method to determine if any weak pointers exist.
-  bool HasWeakPtrs() const {
+  bool hasWeakPtrs() const {
     ASSERT(ptr_);
-    return weak_reference_owner_.HasRefs();
+    return weak_reference_owner_.hasRefs();
   }
 
  private:
@@ -302,7 +302,7 @@ class SupportsWeakPtr : public detail::SupportsWeakPtrBase {
  public:
   SupportsWeakPtr() {}
 
-  WeakPtr<T> AsWeakPtr() {
+  WeakPtr<T> asWeakPtr() {
     return WeakPtr<T>(weak_reference_owner_.GetRef(), static_cast<T*>(this));
   }
 
@@ -315,8 +315,8 @@ class SupportsWeakPtr : public detail::SupportsWeakPtrBase {
 };
 
 template<typename TDerived>
-WeakPtr<TDerived> AsWeakPtr(TDerived* t) {
-  return detail::SupportsWeakPtrBase::StaticAsWeakPtr<TDerived>(t);
+WeakPtr<TDerived> asWeakPtr(TDerived* t) {
+  return detail::SupportsWeakPtrBase::staticAsWeakPtr<TDerived>(t);
 }
 
 } // namespace stp

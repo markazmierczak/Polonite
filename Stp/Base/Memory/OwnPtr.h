@@ -19,23 +19,23 @@ class OwnPtr {
   typedef T ElementType;
 
   OwnPtr() = default;
-  ~OwnPtr() { if (ptr_) Destroy(ptr_); }
+  ~OwnPtr() { if (ptr_) destroy(ptr_); }
 
   template<class U, TEnableIf<!TIsArray<U> && TIsConvertibleTo<U*, T*>>* = nullptr>
   OwnPtr(OwnPtr<U>&& u) noexcept : ptr_(u.release()) {}
   template<class U, TEnableIf<!TIsArray<U> && TIsConvertibleTo<U*, T*>>* = nullptr>
-  OwnPtr& operator=(OwnPtr<U>&& u) noexcept { Reset(u.release()); return *this; }
+  OwnPtr& operator=(OwnPtr<U>&& u) noexcept { reset(u.release()); return *this; }
 
   OwnPtr(nullptr_t) noexcept {}
-  OwnPtr& operator=(nullptr_t) noexcept { Reset(); return *this; }
+  OwnPtr& operator=(nullptr_t) noexcept { reset(); return *this; }
 
   explicit OwnPtr(T* ptr) noexcept : ptr_(ptr) { ASSERT(ptr_ != nullptr); }
   [[nodiscard]] T* release() noexcept { return exchange(ptr_, nullptr); }
 
-  void Reset(T* new_ptr = nullptr) {
+  void reset(T* new_ptr = nullptr) {
     T* tmp = exchange(ptr_, new_ptr);
     if (tmp)
-      Destroy(tmp);
+      destroy(tmp);
   }
 
   T& operator*() const { ASSERT(ptr_); return *ptr_; }
@@ -64,8 +64,8 @@ class OwnPtr {
   friend bool operator!=(nullptr_t, const OwnPtr& r) { return nullptr != r.ptr_; }
 
  private:
-  void Destroy(T* ptr) {
-    ptr->~T();
+  void destroy(T* ptr) {
+    destroyObject(ptr);
     TAllocator::deallocate(ptr, isizeof(T));
   }
 

@@ -14,16 +14,16 @@ static_assert(TIsTriviallyEqualityComparable<OwnPtr<int>>, "!");
 
 TEST(OwnPtrTest, NewScalar) {
   auto s = OwnPtr<String>::create();
-  EXPECT_EQ(StringSpan(""), *s);
+  EXPECT_EQ("", *s);
 
   auto s2 = OwnPtr<String>::create("test");
-  EXPECT_EQ(StringSpan("test"), *s2);
+  EXPECT_EQ("test", *s2);
 }
 
 TEST(OwnPtrTest, NewScalarWithMoveOnlyType) {
   using MoveOnly = OwnPtr<String>;
   auto p = OwnPtr<MoveOnly>::create(OwnPtr<String>::create("test"));
-  EXPECT_EQ(StringSpan("test"), **p);
+  EXPECT_EQ("test", **p);
 }
 
 } // namespace stp

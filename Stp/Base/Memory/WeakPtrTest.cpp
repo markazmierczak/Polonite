@@ -138,7 +138,7 @@ class BackgroundThread : public TaskThread {
                                       Target* target,
                                       WaitableEvent* completion) {
     *arrow = new Arrow;
-    (*arrow)->target = target->AsWeakPtr();
+    (*arrow)->target = target->asWeakPtr();
     completion->Signal();
   }
 
@@ -184,14 +184,14 @@ class BackgroundThread : public TaskThread {
 TEST(WeakPtrFactoryTest, Basic) {
   int data;
   WeakPtrFactory<int> factory(&data);
-  WeakPtr<int> ptr = factory.GetWeakPtr();
+  WeakPtr<int> ptr = factory.getWeakPtr();
   EXPECT_EQ(&data, ptr.get());
 }
 
 TEST(WeakPtrFactoryTest, Comparison) {
   int data;
   WeakPtrFactory<int> factory(&data);
-  WeakPtr<int> ptr = factory.GetWeakPtr();
+  WeakPtr<int> ptr = factory.getWeakPtr();
   WeakPtr<int> ptr2 = ptr;
   EXPECT_EQ(ptr.get(), ptr2.get());
 }
@@ -199,8 +199,8 @@ TEST(WeakPtrFactoryTest, Comparison) {
 TEST(WeakPtrFactoryTest, Move) {
   int data;
   WeakPtrFactory<int> factory(&data);
-  WeakPtr<int> ptr = factory.GetWeakPtr();
-  WeakPtr<int> ptr2 = factory.GetWeakPtr();
+  WeakPtr<int> ptr = factory.getWeakPtr();
+  WeakPtr<int> ptr2 = factory.getWeakPtr();
   WeakPtr<int> ptr3 = std::move(ptr2);
   EXPECT_NE(ptr.get(), ptr2.get());
   EXPECT_EQ(ptr.get(), ptr3.get());
@@ -212,7 +212,7 @@ TEST(WeakPtrFactoryTest, OutOfScope) {
   {
     int data;
     WeakPtrFactory<int> factory(&data);
-    ptr = factory.GetWeakPtr();
+    ptr = factory.getWeakPtr();
   }
   EXPECT_EQ(nullptr, ptr.get());
 }
@@ -222,8 +222,8 @@ TEST(WeakPtrFactoryTest, Multiple) {
   {
     int data;
     WeakPtrFactory<int> factory(&data);
-    a = factory.GetWeakPtr();
-    b = factory.GetWeakPtr();
+    a = factory.getWeakPtr();
+    b = factory.getWeakPtr();
     EXPECT_EQ(&data, a.get());
     EXPECT_EQ(&data, b.get());
   }
@@ -236,9 +236,9 @@ TEST(WeakPtrFactoryTest, MultipleStaged) {
   {
     int data;
     WeakPtrFactory<int> factory(&data);
-    a = factory.GetWeakPtr();
+    a = factory.getWeakPtr();
     {
-      WeakPtr<int> b = factory.GetWeakPtr();
+      WeakPtr<int> b = factory.getWeakPtr();
     }
     EXPECT_NE(nullptr, a.get());
   }
@@ -249,7 +249,7 @@ TEST(WeakPtrFactoryTest, Dereference) {
   Base data;
   data.member = "123456";
   WeakPtrFactory<Base> factory(&data);
-  WeakPtr<Base> ptr = factory.GetWeakPtr();
+  WeakPtr<Base> ptr = factory.getWeakPtr();
   EXPECT_EQ(&data, ptr.get());
   EXPECT_EQ(data.member, (*ptr).member);
   EXPECT_EQ(data.member, ptr->member);
@@ -258,8 +258,8 @@ TEST(WeakPtrFactoryTest, Dereference) {
 TEST(WeakPtrFactoryTest, UpCast) {
   Derived data;
   WeakPtrFactory<Derived> factory(&data);
-  WeakPtr<Base> ptr = factory.GetWeakPtr();
-  ptr = factory.GetWeakPtr();
+  WeakPtr<Base> ptr = factory.getWeakPtr();
+  ptr = factory.getWeakPtr();
   EXPECT_EQ(ptr.get(), &data);
 }
 
@@ -270,13 +270,13 @@ TEST(WeakPtrTest, ConstructFromNullptr) {
 
 TEST(WeakPtrTest, SupportsWeakPtr) {
   Target target;
-  WeakPtr<Target> ptr = target.AsWeakPtr();
+  WeakPtr<Target> ptr = target.asWeakPtr();
   EXPECT_EQ(&target, ptr.get());
 }
 
 TEST(WeakPtrTest, DerivedTarget) {
   DerivedTarget target;
-  WeakPtr<DerivedTarget> ptr = AsWeakPtr(&target);
+  WeakPtr<DerivedTarget> ptr = asWeakPtr(&target);
   EXPECT_EQ(&target, ptr.get());
 }
 
@@ -284,7 +284,7 @@ TEST(WeakPtrFactoryTest, BooleanTesting) {
   int data;
   WeakPtrFactory<int> factory(&data);
 
-  WeakPtr<int> ptr_to_an_instance = factory.GetWeakPtr();
+  WeakPtr<int> ptr_to_an_instance = factory.getWeakPtr();
   EXPECT_TRUE(ptr_to_an_instance);
   EXPECT_FALSE(!ptr_to_an_instance);
 
@@ -315,7 +315,7 @@ TEST(WeakPtrFactoryTest, ComparisonToNull) {
   int data;
   WeakPtrFactory<int> factory(&data);
 
-  WeakPtr<int> ptr_to_an_instance = factory.GetWeakPtr();
+  WeakPtr<int> ptr_to_an_instance = factory.getWeakPtr();
   EXPECT_NE(nullptr, ptr_to_an_instance);
   EXPECT_NE(ptr_to_an_instance, nullptr);
 
@@ -324,35 +324,35 @@ TEST(WeakPtrFactoryTest, ComparisonToNull) {
   EXPECT_EQ(nullptr, null_ptr);
 }
 
-TEST(WeakPtrTest, InvalidateWeakPtrs) {
+TEST(WeakPtrTest, invalidateWeakPtrs) {
   int data;
   WeakPtrFactory<int> factory(&data);
-  WeakPtr<int> ptr = factory.GetWeakPtr();
+  WeakPtr<int> ptr = factory.getWeakPtr();
   EXPECT_EQ(&data, ptr.get());
-  EXPECT_TRUE(factory.HasWeakPtrs());
-  factory.InvalidateWeakPtrs();
+  EXPECT_TRUE(factory.hasWeakPtrs());
+  factory.invalidateWeakPtrs();
   EXPECT_EQ(nullptr, ptr.get());
-  EXPECT_FALSE(factory.HasWeakPtrs());
+  EXPECT_FALSE(factory.hasWeakPtrs());
 
   // Test that the factory can create new weak pointers after a
-  // InvalidateWeakPtrs call, and they remain valid until the next
-  // InvalidateWeakPtrs call.
-  WeakPtr<int> ptr2 = factory.GetWeakPtr();
+  // invalidateWeakPtrs call, and they remain valid until the next
+  // invalidateWeakPtrs call.
+  WeakPtr<int> ptr2 = factory.getWeakPtr();
   EXPECT_EQ(&data, ptr2.get());
-  EXPECT_TRUE(factory.HasWeakPtrs());
-  factory.InvalidateWeakPtrs();
+  EXPECT_TRUE(factory.hasWeakPtrs());
+  factory.invalidateWeakPtrs();
   EXPECT_EQ(nullptr, ptr2.get());
-  EXPECT_FALSE(factory.HasWeakPtrs());
+  EXPECT_FALSE(factory.hasWeakPtrs());
 }
 
-TEST(WeakPtrTest, HasWeakPtrs) {
+TEST(WeakPtrTest, hasWeakPtrs) {
   int data;
   WeakPtrFactory<int> factory(&data);
   {
-    WeakPtr<int> ptr = factory.GetWeakPtr();
-    EXPECT_TRUE(factory.HasWeakPtrs());
+    WeakPtr<int> ptr = factory.getWeakPtr();
+    EXPECT_TRUE(factory.hasWeakPtrs());
   }
-  EXPECT_FALSE(factory.HasWeakPtrs());
+  EXPECT_FALSE(factory.hasWeakPtrs());
 }
 
 TEST(WeakPtrTest, ObjectAndWeakPtrOnDifferentThreads) {
@@ -360,7 +360,7 @@ TEST(WeakPtrTest, ObjectAndWeakPtrOnDifferentThreads) {
   // but use it on another.  This tests that we do not trip runtime checks that
   // ensure that a WeakPtr is not used by multiple threads.
   OwnPtr<Target> target(OffThreadObjectCreator<Target>::NewObject());
-  WeakPtr<Target> weak_ptr = target->AsWeakPtr();
+  WeakPtr<Target> weak_ptr = target->asWeakPtr();
   EXPECT_EQ(target.get(), weak_ptr.get());
 }
 
@@ -370,7 +370,7 @@ TEST(WeakPtrTest, WeakPtrInitiateAndUseOnDifferentThreads) {
   // checks that ensure that a WeakPtr is not used by multiple threads.
   OwnPtr<Arrow> arrow(OffThreadObjectCreator<Arrow>::NewObject());
   Target target;
-  arrow->target = target.AsWeakPtr();
+  arrow->target = target.asWeakPtr();
   EXPECT_EQ(&target, arrow->target.get());
 }
 
@@ -383,7 +383,7 @@ TEST(WeakPtrTest, MoveOwnershipImplicitly) {
 
   Target* target = new Target();
   {
-    WeakPtr<Target> weak_ptr = target->AsWeakPtr();
+    WeakPtr<Target> weak_ptr = target->asWeakPtr();
     // Main thread deletes the WeakPtr, then the thread ownership of the
     // object can be implicitly moved.
   }
@@ -397,7 +397,7 @@ TEST(WeakPtrTest, MoveOwnershipImplicitly) {
     // Main thread creates another WeakPtr, but this does not trigger implicitly
     // thread ownership move.
     Arrow arrow;
-    arrow.target = target->AsWeakPtr();
+    arrow.target = target->asWeakPtr();
 
     // The new WeakPtr is owned by background thread.
     EXPECT_EQ(target, background.DeRef(&arrow));
@@ -425,7 +425,7 @@ TEST(WeakPtrTest, MoveOwnershipOfUnreferencedObject) {
     arrow->target.Reset();
 
     // Now we should be able to create a new reference from this thread.
-    arrow->target = target.AsWeakPtr();
+    arrow->target = target.asWeakPtr();
 
     // Re-bind to main thread.
     EXPECT_EQ(&target, arrow->target.get());
@@ -444,13 +444,13 @@ TEST(WeakPtrTest, MoveOwnershipAfterInvalidate) {
   OwnPtr<TargetWithFactory> target(new TargetWithFactory);
 
   // Bind to main thread.
-  arrow.target = target->factory.GetWeakPtr();
+  arrow.target = target->factory.getWeakPtr();
   EXPECT_EQ(target.get(), arrow.target.get());
 
-  target->factory.InvalidateWeakPtrs();
+  target->factory.invalidateWeakPtrs();
   EXPECT_EQ(nullptr, arrow.target.get());
 
-  arrow.target = target->factory.GetWeakPtr();
+  arrow.target = target->factory.getWeakPtr();
   // Re-bind to background thread.
   EXPECT_EQ(target.get(), background.DeRef(&arrow));
 
@@ -469,7 +469,7 @@ TEST(WeakPtrTest, MainThreadRefOutlivesBackgroundThreadRef) {
 
   Target target;
   Arrow arrow;
-  arrow.target = target.AsWeakPtr();
+  arrow.target = target.asWeakPtr();
 
   Arrow* arrow_copy;
   background.CreateArrowFromArrow(&arrow_copy, &arrow);
@@ -489,7 +489,7 @@ TEST(WeakPtrTest, BackgroundThreadRefOutlivesMainThreadRef) {
   Arrow* arrow_copy;
   {
     Arrow arrow;
-    arrow.target = target.AsWeakPtr();
+    arrow.target = target.asWeakPtr();
     background.CreateArrowFromArrow(&arrow_copy, &arrow);
   }
   EXPECT_EQ(arrow_copy->target.get(), &target);
@@ -508,7 +508,7 @@ TEST(WeakPtrTest, OwnerThreadDeletesObject) {
   {
     Target target;
     Arrow arrow;
-    arrow.target = target.AsWeakPtr();
+    arrow.target = target.asWeakPtr();
     background.CreateArrowFromArrow(&arrow_copy, &arrow);
   }
   EXPECT_EQ(nullptr, arrow_copy->target.get());
@@ -520,7 +520,7 @@ TEST(WeakPtrTest, NonOwnerThreadCanCopyAndAssignWeakPtr) {
   Target target;
   // Main thread creates an arrow referencing the Target.
   Arrow *arrow = new Arrow();
-  arrow->target = target.AsWeakPtr();
+  arrow->target = target.asWeakPtr();
 
   // Background can copy and assign arrow (as well as the WeakPtr inside).
   BackgroundThread background;
@@ -534,7 +534,7 @@ TEST(WeakPtrTest, NonOwnerThreadCanCopyAndAssignWeakPtrBase) {
   Target target;
   // Main thread creates an arrow referencing the Target.
   Arrow *arrow = new Arrow();
-  arrow->target = target.AsWeakPtr();
+  arrow->target = target.asWeakPtr();
 
   // Background can copy and assign arrow's WeakPtr to a base class WeakPtr.
   BackgroundThread background;
@@ -548,7 +548,7 @@ TEST(WeakPtrTest, NonOwnerThreadCanDeleteWeakPtr) {
   Target target;
   // Main thread creates an arrow referencing the Target.
   Arrow* arrow = new Arrow();
-  arrow->target = target.AsWeakPtr();
+  arrow->target = target.asWeakPtr();
 
   // Background can delete arrow (as well as the WeakPtr inside).
   BackgroundThread background;
@@ -568,7 +568,7 @@ TEST(WeakPtrDeathTest, WeakPtrCopyDoesNotChangeThreadBinding) {
   Target target;
   // Main thread creates an arrow referencing the Target.
   Arrow arrow;
-  arrow.target = target.AsWeakPtr();
+  arrow.target = target.asWeakPtr();
 
   // Background copies the WeakPtr.
   Arrow* arrow_copy;
@@ -595,7 +595,7 @@ TEST(WeakPtrDeathTest, NonOwnerThreadDereferencesWeakPtrAfterReference) {
   // Main thread creates an arrow referencing the Target (so target's
   // thread ownership can not be implicitly moved).
   Arrow arrow;
-  arrow.target = target.AsWeakPtr();
+  arrow.target = target.asWeakPtr();
   arrow.target.get();
 
   // Background thread tries to deref target, which violates thread ownership.
@@ -613,7 +613,7 @@ TEST(WeakPtrDeathTest, NonOwnerThreadDeletesWeakPtrAfterReference) {
 
   // Main thread creates an arrow referencing the Target.
   Arrow arrow;
-  arrow.target = target->AsWeakPtr();
+  arrow.target = target->asWeakPtr();
 
   // Background thread tries to deref target, binding it to the thread.
   BackgroundThread background;
@@ -638,7 +638,7 @@ TEST(WeakPtrDeathTest, NonOwnerThreadDeletesObjectAfterReference) {
   // Main thread creates an arrow referencing the Target, and references it, so
   // that it becomes bound to the thread.
   Arrow arrow;
-  arrow.target = target->AsWeakPtr();
+  arrow.target = target->asWeakPtr();
   arrow.target.get();
 
   // Background thread tries to delete target, volating thread binding.
@@ -656,7 +656,7 @@ TEST(WeakPtrDeathTest, NonOwnerThreadReferencesObjectAfterDeletion) {
 
   // Main thread creates an arrow referencing the Target.
   Arrow arrow;
-  arrow.target = target->AsWeakPtr();
+  arrow.target = target->asWeakPtr();
 
   // Background thread tries to delete target, binding the object to the thread.
   BackgroundThread background;

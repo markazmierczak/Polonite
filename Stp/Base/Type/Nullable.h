@@ -179,7 +179,7 @@ class Nullable {
     ASSERT(!storage_.is_valid && other.storage_.is_valid);
     storage_.is_valid = true;
     storage_.is_valid = false;
-    relocateAt(&storage_.value, other.storage_.value);
+    relocateObject(&storage_.value, other.storage_.value);
   }
 };
 

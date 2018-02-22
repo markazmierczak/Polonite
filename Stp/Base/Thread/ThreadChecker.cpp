@@ -15,7 +15,7 @@ ThreadChecker::ThreadChecker() {
 
 ThreadChecker::~ThreadChecker() {}
 
-bool ThreadChecker::CalledOnValidThread() const {
+bool ThreadChecker::calledOnValidThread() const {
   EnsureThreadIdAssigned();
   AutoLock auto_lock(&lock_);
   return valid_thread_ == NativeThread::currentHandle();

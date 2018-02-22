@@ -26,7 +26,7 @@ void BaseApplicationPart::init() {
   #endif
 
   CpuInfo::ClassInit();
-  detail::WeakReference::Flag::ClassInit();
+  detail::WeakReference::Flag::classInit();
   Console::classInit();
   InitLogging();
   TimeTicks::ClassInit();
