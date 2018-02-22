@@ -5,101 +5,58 @@
 #define STP_BASE_MEMORY_LINEARALLOCATOR_H_
 
 #include "Base/Debug/Assert.h"
-#include "Base/Error/BasicExceptions.h"
 #include "Base/Type/Limits.h"
 #include "Base/Type/Sign.h"
 
 namespace stp {
 
-// An allocator that internally allocates multi-kbyte buffers for placing
-// objects in. It avoids the overhead of malloc when many objects are allocated.
-// It is most useful when creating many small objects with a similar lifetime,
-// and doesn't add significant overhead for large allocations.
-//
-// * destructors will not be called
 class BASE_EXPORT LinearAllocator {
+  DISALLOW_COPY_AND_ASSIGN(LinearAllocator);
+ public:
+  static constexpr int MinBlockSize = 1 << 10;
+  static constexpr int MaxBlockSize = 1 << 30;
+
+  explicit LinearAllocator(int min_block_size = MinBlockSize);
+  ~LinearAllocator();
+
+  void* tryAllocate(int size, int alignment);
+  int freeRecent(void* ptr);
+  bool contains(const void* ptr) const;
+
+  void reset();
+  void clear();
+
+  int64_t getTotalCapacity() const { return total_capacity_; }
+  int64_t getTotalUsed() const { return total_used_; }
+
+  #if ASSERT_IS_ON
+  int getBlockCount() const { return block_count_; }
+  int64_t getTotalLost() const { return total_lost_; }
+  #endif
+
  private:
   struct Block;
 
- public:
-  static constexpr size_t MinBlockSize = 1024;
-  // Max block size must be decreased by size of Block structure.
-  // Minus one to fail if negative number is passed.
-  static constexpr size_t MaxBlockSize = Limits<size_t>::Max / 2 - 1;
-
-  explicit LinearAllocator(size_t min_block_size = MinBlockSize);
-
-  ~LinearAllocator();
-
-  // Call this to deallocate the most-recently allocated ptr by allocate().
-  // On success, the number of bytes freed is returned, or 0 if the block could
-  // not be unallocated. This is a hint to the underlying allocator that
-  // the previous allocation may be reused, but the implementation is free
-  // to ignore this call (and return 0).
-  size_t FreeRecent(void* ptr);
-
-  // Frees all blocks.
-  // All pointers allocated through allocate() are invalidated (cannot be dereferenced).
-  void Reset();
-  // Like Reset() but preserves largest block.
-  void clear();
-
-  void* TryAllocate(size_t size, size_t alignment);
-
-  // Returns true if the specified address is within one of the chunks, and
-  // has at least 1-byte following the address (i.e. if |ptr| points to the
-  // end of a chunk, then contains() will return false).
-  bool contains(const void* ptr) const;
-
-  ALWAYS_INLINE size_t GetTotalCapacity() const { return total_capacity_; }
-  ALWAYS_INLINE size_t GetTotalUsed() const { return total_used_; }
-
+  Block* block_list_ = nullptr;
+  int min_block_size_ = 0;
+  int chunk_size_ = 0;
+  int64_t total_capacity_ = 0;
+  int64_t total_used_ = 0;
   #if ASSERT_IS_ON
-  ALWAYS_INLINE size_t GetBlockCount() const { return block_count_; }
-  ALWAYS_INLINE size_t GetTotalLost() const { return total_lost_; }
+  int block_count_ = 0;
+  int64_t total_lost_ = 0;
   #endif
 
- private:
-  Block* NewBlock(size_t size);
-  void FreeChain(Block* block);
-  void* TryAllocateWithinBlock(Block* block, size_t size, size_t alignment);
+  Block* newBlock(int size);
+  void freeChain(Block* block);
+  void* tryAllocateWithinBlock(Block* block, int size, int alignment);
 
   #if ASSERT_IS_ON
-  void Validate() const;
+  void validate() const;
   #else
-  void Validate() const {}
+  void validate() const {}
   #endif
-
-  Block* block_list_;
-  size_t min_block_size_;
-  size_t chunk_size_;
-  size_t total_capacity_;
-  size_t total_used_;
-  #if ASSERT_IS_ON
-  size_t block_count_;
-  size_t total_lost_;
-  #endif
-
-  DISALLOW_COPY_AND_ASSIGN(LinearAllocator);
 };
-
-template<typename TValue, typename TSize>
-inline TValue* TryAllocate(LinearAllocator& allocator, TSize count) {
-  ASSERT(count > 0);
-  auto ucount = toUnsigned(count);
-  if (UNLIKELY(Limits<size_t>::Max / sizeof(TValue) < ucount))
-    return nullptr;
-  return static_cast<TValue*>(
-      allocator.TryAllocate(ucount * sizeof(TValue), alignof(TValue)));
-}
-
-template<typename TValue, typename TSize>
-inline TValue* allocate(LinearAllocator& allocator, TSize count) {
-  TValue* ptr = TryAllocate<TValue, TSize>(allocator, count);
-  if (!ptr)
-    throw OutOfMemoryException();
-  return ptr;
-}
 
 } // namespace stp
 

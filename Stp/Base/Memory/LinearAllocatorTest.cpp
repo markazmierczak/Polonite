@@ -7,92 +7,82 @@
 #include "Base/Test/GTest.h"
 
 namespace stp {
-namespace {
 
-void CheckAlloc(
+static void checkAlloc(
     const LinearAllocator& allocator,
     unsigned capacity, unsigned used, unsigned num_blocks) {
-  EXPECT_GE(allocator.GetTotalCapacity(), capacity);
-  EXPECT_EQ(allocator.GetTotalUsed(), used);
+  EXPECT_GE(allocator.getTotalCapacity(), capacity);
+  EXPECT_EQ(allocator.getTotalUsed(), used);
   #if ASSERT_IS_ON
-  EXPECT_EQ(allocator.GetBlockCount(), num_blocks);
+  EXPECT_EQ(allocator.getBlockCount(), num_blocks);
   #endif
 }
 
-void* SimpleAlloc(LinearAllocator* allocator, unsigned size) {
-  void* ptr = allocator->TryAllocate(size, 1);
-  CheckAlloc(*allocator, size, size, 1);
+static void* simpleAlloc(LinearAllocator* allocator, unsigned size) {
+  void* ptr = allocator->tryAllocate(size, 1);
+  checkAlloc(*allocator, size, size, 1);
   EXPECT_TRUE(allocator->contains(ptr));
   return ptr;
 }
 
-TEST(ContiguousAllocatorTest, Basic) {
+TEST(ContiguousAllocatorTest, basic) {
   constexpr size_t MinBlockSize = LinearAllocator::MinBlockSize;
 
   LinearAllocator allocator;
 
   // check empty
-  CheckAlloc(allocator, 0, 0, 0);
+  checkAlloc(allocator, 0, 0, 0);
   EXPECT_FALSE(allocator.contains(nullptr));
   EXPECT_FALSE(allocator.contains(this));
 
   // reset on empty allocator
-  allocator.Reset();
-  CheckAlloc(allocator, 0, 0, 0);
+  allocator.reset();
+  checkAlloc(allocator, 0, 0, 0);
 
   // rewind on empty allocator
   allocator.clear();
-  CheckAlloc(allocator, 0, 0, 0);
+  checkAlloc(allocator, 0, 0, 0);
 
   // test reset when something is allocated
   unsigned size = MinBlockSize >> 1;
-  void* ptr = SimpleAlloc(&allocator, size);
+  void* ptr = simpleAlloc(&allocator, size);
 
-  allocator.Reset();
-  CheckAlloc(allocator, 0, 0, 0);
+  allocator.reset();
+  checkAlloc(allocator, 0, 0, 0);
   EXPECT_FALSE(allocator.contains(ptr));
 
   // test rewind when something is allocated
-  ptr = SimpleAlloc(&allocator, size);
+  ptr = simpleAlloc(&allocator, size);
 
   allocator.clear();
-  CheckAlloc(allocator, size, 0, 1);
+  checkAlloc(allocator, size, 0, 1);
   EXPECT_FALSE(allocator.contains(ptr));
 
   // use the available block
-  ptr = SimpleAlloc(&allocator, size);
-  allocator.Reset();
+  ptr = simpleAlloc(&allocator, size);
+  allocator.reset();
 
   // test out allocating a second block
-  ptr = SimpleAlloc(&allocator, size);
+  ptr = simpleAlloc(&allocator, size);
 
-  ptr = allocator.TryAllocate(MinBlockSize, 1);
-  CheckAlloc(allocator, 2*MinBlockSize, size+MinBlockSize, 2);
+  ptr = allocator.tryAllocate(MinBlockSize, 1);
+  checkAlloc(allocator, 2*MinBlockSize, size+MinBlockSize, 2);
   EXPECT_TRUE(allocator.contains(ptr));
 
   // test out unalloc
-  unsigned freed = allocator.FreeRecent(ptr);
+  unsigned freed = allocator.freeRecent(ptr);
   EXPECT_EQ(freed, MinBlockSize);
-  CheckAlloc(allocator, 2*MinBlockSize, size, 2);
+  checkAlloc(allocator, 2*MinBlockSize, size, 2);
   EXPECT_FALSE(allocator.contains(ptr));
 }
 
-TEST(ContiguousAllocatorTest, Alignment) {
+TEST(ContiguousAllocatorTest, alignment) {
   LinearAllocator allocator;
-  ignoreResult(allocate<uint8_t>(allocator, 1));
-  ignoreResult(allocate<int>(allocator, 1));
-  ignoreResult(allocate<uint8_t>(allocator, 1));
+  ignoreResult(allocator.tryAllocate(1, 1));
+  ignoreResult(allocator.tryAllocate(4, 4));
+  ignoreResult(allocator.tryAllocate(1, 1));
 
-  EXPECT_EQ(allocator.GetTotalUsed(), 9u);
-
-  allocator.Reset();
-  double* double_ptr = allocate<double>(allocator, 1);
-  EXPECT_TRUE(isAlignedTo(double_ptr, alignof(double)));
-  uint8_t* byte_after_double_ptr = allocate<uint8_t>(allocator, 1);
-  EXPECT_TRUE(isAlignedTo(byte_after_double_ptr, alignof(double)));
-  double_ptr = allocate<double>(allocator, 1);
-  EXPECT_TRUE(isAlignedTo(double_ptr, alignof(double)));
+  EXPECT_EQ(allocator.getTotalUsed(), 9u);
 }
 
-} // namespace
 } // namespace stp

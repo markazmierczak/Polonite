@@ -3,39 +3,50 @@
 
 #include "Base/Memory/LinearAllocator.h"
 
+#include "Base/Error/BasicExceptions.h"
 #include "Base/Math/Alignment.h"
 #include "Base/Memory/Allocate.h"
-#include "Base/Type/Sign.h"
 
 #include <stdlib.h>
 
 namespace stp {
 
+/**
+ * @class LinearAllocator
+ * An allocator that internally allocates multi-kbyte buffers for placing
+ * objects in. It avoids the overhead of malloc when many objects are allocated.
+ * It is most useful when creating many small objects with a similar lifetime,
+ * and doesn't add significant overhead for large allocations.
+ *
+ * Note: no constructors are called by this class, and no destructors are
+ *       called also! The client must taske care of this if needed.
+ */
+
 struct LinearAllocator::Block {
   Block* next;
-  char* free_ptr;
-  size_t free_size;
+  byte_t* free_ptr;
+  int free_size;
   // data[] follows
 
-  size_t GetSize() { return free_size + (free_ptr - GetData()); }
+  int getSize() { return free_size + (free_ptr - getData()); }
 
-  void Reset() {
+  void reset() {
     next = nullptr;
-    free_size = GetSize();
-    free_ptr = GetData();
+    free_size = getSize();
+    free_ptr = getData();
   }
 
-  const char* GetData() const { return reinterpret_cast<const char*>(this + 1); }
-  char* GetData() { return reinterpret_cast<char*>(this + 1); }
+  const byte_t* getData() const { return reinterpret_cast<const byte_t*>(this + 1); }
+  byte_t* getData() { return reinterpret_cast<byte_t*>(this + 1); }
 
   bool contains(const void* addr) const {
-    auto* ptr = reinterpret_cast<const char*>(addr);
-    return GetData() <= ptr && ptr < free_ptr;
+    auto* ptr = reinterpret_cast<const byte_t*>(addr);
+    return getData() <= ptr && ptr < free_ptr;
   }
 };
 
-LinearAllocator::LinearAllocator(size_t min_block_size) {
-  ASSERT(min_block_size <= MaxBlockSize);
+LinearAllocator::LinearAllocator(int min_block_size) {
+  ASSERT(1 <= min_block_size && min_block_size <= MaxBlockSize);
 
   if (min_block_size < MinBlockSize)
     min_block_size = MinBlockSize;
@@ -43,19 +54,13 @@ LinearAllocator::LinearAllocator(size_t min_block_size) {
   block_list_ = nullptr;
   min_block_size_ = min_block_size;
   chunk_size_ = min_block_size_;
-  total_capacity_ = 0;
-  total_used_ = 0;
-  #if ASSERT_IS_ON
-  total_lost_ = 0;
-  block_count_ = 0;
-  #endif
 }
 
 LinearAllocator::~LinearAllocator() {
-  FreeChain(block_list_);
+  freeChain(block_list_);
 }
 
-void LinearAllocator::FreeChain(Block* block) {
+void LinearAllocator::freeChain(Block* block) {
   while (block) {
     Block* next = block->next;
     freeMemory(block);
@@ -63,8 +68,11 @@ void LinearAllocator::FreeChain(Block* block) {
   }
 };
 
+/**
+ * Like @ref reset() but preserves largest block.
+ */
 void LinearAllocator::clear() {
-  Validate();
+  validate();
 
   Block* largest = block_list_;
 
@@ -72,7 +80,7 @@ void LinearAllocator::clear() {
     Block* next;
     for (Block* cur = largest->next; cur; cur = next) {
       next = cur->next;
-      if (cur->GetSize() > largest->GetSize()) {
+      if (cur->getSize() > largest->getSize()) {
         freeMemory(largest);
         largest = cur;
       } else {
@@ -80,8 +88,8 @@ void LinearAllocator::clear() {
       }
     }
 
-    largest->Reset();
-    total_capacity_ = largest->GetSize();
+    largest->reset();
+    total_capacity_ = largest->getSize();
     #if ASSERT_IS_ON
     block_count_ = 1;
     #endif
@@ -98,11 +106,15 @@ void LinearAllocator::clear() {
   #if ASSERT_IS_ON
   total_lost_ = 0;
   #endif
-  Validate();
+  validate();
 }
 
-void LinearAllocator::Reset() {
-  FreeChain(block_list_);
+/**
+ * Frees all blocks.
+ * All pointers allocated through @ref allocate() are invalidated (cannot be dereferenced).
+ */
+void LinearAllocator::reset() {
+  freeChain(block_list_);
   block_list_ = nullptr;
   chunk_size_ = min_block_size_; // Reset to our initial min_block_size_.
   total_capacity_ = 0;
@@ -113,8 +125,8 @@ void LinearAllocator::Reset() {
   #endif
 }
 
-void* LinearAllocator::TryAllocateWithinBlock(Block* block, size_t size, size_t alignment) {
-  size_t padding;
+void* LinearAllocator::tryAllocateWithinBlock(Block* block, int size, int alignment) {
+  int padding;
   if (!alignForward(block->free_ptr, alignment, size, block->free_size, &padding))
     return nullptr;
 
@@ -123,20 +135,20 @@ void* LinearAllocator::TryAllocateWithinBlock(Block* block, size_t size, size_t 
   block->free_size -= size;
   total_used_ += padding + size;
 
-  Validate();
+  validate();
   return ptr;
 }
 
-void* LinearAllocator::TryAllocate(size_t size, size_t alignment) {
-  Validate();
+void* LinearAllocator::tryAllocate(int size, int alignment) {
+  validate();
 
   void* rv = nullptr;
   if (block_list_)
-    rv = TryAllocateWithinBlock(block_list_, size, alignment);
+    rv = tryAllocateWithinBlock(block_list_, size, alignment);
 
   if (rv == nullptr) {
     // Include alignment to guarantee further success.
-    Block* block = NewBlock(size + alignment);
+    Block* block = newBlock(size + alignment);
     #if ASSERT_IS_ON
     if (block_list_)
       total_lost_ += block_list_->free_size;
@@ -144,30 +156,39 @@ void* LinearAllocator::TryAllocate(size_t size, size_t alignment) {
     block->next = block_list_;
     block_list_ = block;
 
-    rv = TryAllocateWithinBlock(block_list_, size, alignment);
+    rv = tryAllocateWithinBlock(block_list_, size, alignment);
   }
   ASSERT(rv != nullptr);
   return rv;
 }
 
-size_t LinearAllocator::FreeRecent(void* ptr) {
-  Validate();
+/**
+ * Call this to deallocate the most-recently allocated @a ptr by @ref allocate().
+ *
+ * This is a hint to the underlying allocator that
+ * the previous allocation may be reused, but the implementation is free
+ * to ignore this call (and return 0).
+ *
+ * @return the number of bytes freed is returned on success. 0 otherwise.
+ */
+int LinearAllocator::freeRecent(void* ptr) {
+  validate();
 
-  size_t bytes = 0;
+  int bytes = 0;
   Block* block = block_list_;
   if (block) {
-    char* c_ptr = reinterpret_cast<char*>(ptr);
+    auto* c_ptr = reinterpret_cast<byte_t*>(ptr);
     ASSERT(block->contains(ptr));
     bytes = block->free_ptr - c_ptr;
     total_used_ -= bytes;
     block->free_size += bytes;
     block->free_ptr = c_ptr;
   }
-  Validate();
+  validate();
   return bytes;
 }
 
-LinearAllocator::Block* LinearAllocator::NewBlock(size_t size) {
+LinearAllocator::Block* LinearAllocator::newBlock(int size) {
   ASSERT(size > 0);
 
   if (size < chunk_size_) {
@@ -179,7 +200,7 @@ LinearAllocator::Block* LinearAllocator::NewBlock(size_t size) {
   auto* block = (Block*)allocateMemory(isizeof(Block) + size);
 
   block->free_size = size;
-  block->free_ptr = block->GetData();
+  block->free_ptr = block->getData();
 
   total_capacity_ += size;
   #if ASSERT_IS_ON
@@ -187,12 +208,18 @@ LinearAllocator::Block* LinearAllocator::NewBlock(size_t size) {
   #endif
 
   // Increase chunk size for next block.
-  if (chunk_size_ < MaxBlockSize)
-    chunk_size_ = alignForward(chunk_size_ + (chunk_size_ >> 1), alignof(max_align_t));
-
+  if (chunk_size_ < MaxBlockSize) {
+    int new_chunk_size = alignForward(chunk_size_ + (chunk_size_ >> 1), ialignof(max_align_t));
+    chunk_size_ = min(new_chunk_size, MaxBlockSize);
+  }
   return block;
 }
 
+/**
+ * Returns true if the specified address is within one of the chunks, and
+ * has at least 1-byte following the address (i.e. if @a ptr points to the
+ * end of a chunk, then @ref contains() will return false).
+ */
 bool LinearAllocator::contains(const void* ptr) const {
   for (const Block* block = block_list_; block; block = block->next) {
     if (block->contains(ptr))
@@ -202,21 +229,22 @@ bool LinearAllocator::contains(const void* ptr) const {
 }
 
 #if ASSERT_IS_ON
-void LinearAllocator::Validate() const {
-  size_t computed_block_count = 0;
-  size_t computed_total_capacity = 0;
-  size_t computed_total_used = 0;
-  size_t computed_total_lost = 0;
-  size_t computed_total_available = 0;
+void LinearAllocator::validate() const {
+  int computed_block_count = 0;
+  int computed_total_capacity = 0;
+  int computed_total_used = 0;
+  int computed_total_lost = 0;
+  int computed_total_available = 0;
 
   for (Block* block = block_list_; block; block = block->next) {
     ++computed_block_count;
-    computed_total_capacity += block->GetSize();
-    computed_total_used += block->free_ptr - block->GetData();
-    if (block == block_list_)
+    computed_total_capacity += block->getSize();
+    computed_total_used += block->free_ptr - block->getData();
+    if (block == block_list_) {
       computed_total_available += block->free_size;
-    else
+    } else {
       computed_total_lost += block->free_size;
+    }
   }
 
   ASSERT(block_count_ == computed_block_count);
@@ -224,7 +252,7 @@ void LinearAllocator::Validate() const {
   ASSERT(total_used_ == computed_total_used);
   ASSERT(total_lost_ == computed_total_lost);
 
-  size_t total_capacity = computed_total_used + computed_total_lost + computed_total_available;
+  int total_capacity = computed_total_used + computed_total_lost + computed_total_available;
   ASSERT(computed_total_capacity == total_capacity);
 }
 #endif // ASSERT_IS_ON
