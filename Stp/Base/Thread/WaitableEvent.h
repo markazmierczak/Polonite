@@ -159,7 +159,7 @@ class BASE_EXPORT WaitableEvent {
   struct WaitableEventKernel : public RefCountedThreadSafe<WaitableEventKernel> {
    public:
     static RefPtr<WaitableEventKernel> Create(ResetPolicy reset_policy, InitialState initial_state) {
-      return adoptRef(new WaitableEventKernel(reset_policy, initial_state));
+      return adoptRefPtr(new WaitableEventKernel(reset_policy, initial_state));
     }
 
     bool Dequeue(Waiter* waiter, void* tag);

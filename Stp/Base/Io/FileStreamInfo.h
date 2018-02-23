@@ -16,20 +16,21 @@
 namespace stp {
 
 class FileStreamInfo {
+  DISALLOW_COPY_AND_ASSIGN(FileStreamInfo);
  public:
   FileStreamInfo() = default;
 
-  uint64_t GetSize() const;
+  uint64_t getSize() const;
 
-  Time GetLastAccessTime() const;
-  Time GetLastModifiedTime() const;
+  Time getLastAccessTime() const;
+  Time getLastModifiedTime() const;
   #if OS(WIN)
-  Time GetCreationTime() const;
+  Time getCreationTime() const;
   #endif
 
-  bool IsDirectory() const;
+  bool isDirectory() const;
   #if OS(POSIX)
-  bool IsSymbolicLink() const;
+  bool isSymbolicLink() const;
   #endif
 
  private:
@@ -40,50 +41,48 @@ class FileStreamInfo {
   #elif OS(POSIX)
   stat_wrapper_t stat_;
   #endif
-
-  DISALLOW_COPY_AND_ASSIGN(FileStreamInfo);
 };
 
 #if OS(WIN)
-inline bool FileStreamInfo::IsRegularFile() const {
+inline bool FileStreamInfo::isRegularFile() const {
   // FIXME support for symlinks
-  return !IsDirectory();
+  return !isDirectory();
 }
-inline bool FileStreamInfo::IsDirectory() const {
+inline bool FileStreamInfo::isDirectory() const {
   return (by_handle_.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) != 0;
 }
 
-inline uint64_t FileStreamInfo::GetSize() const {
+inline uint64_t FileStreamInfo::getSize() const {
   ULARGE_INTEGER size;
   size.HighPart = by_handle_.nFileSizeHigh;
   size.LowPart  = by_handle_.nFileSizeLow;
   return size.QuadPart;
 }
 
-inline Time FileStreamInfo::GetLastAccessTime() const {
-  return Time::FromFileTime(by_handle_.ftLastAccessTime);
+inline Time FileStreamInfo::getLastAccessTime() const {
+  return Time::fromFileTime(by_handle_.ftLastAccessTime);
 }
-inline Time FileStreamInfo::GetLastModifiedTime() const {
-  return Time::FromFileTime(by_handle_.ftLastWriteTime);
+inline Time FileStreamInfo::getLastModifiedTime() const {
+  return Time::fromFileTime(by_handle_.ftLastWriteTime);
 }
-inline Time FileStreamInfo::GetCreationTime() const {
-  return Time::FromFileTime(by_handle_.ftCreationTime);
+inline Time FileStreamInfo::getCreationTime() const {
+  return Time::fromFileTime(by_handle_.ftCreationTime);
 }
 #elif OS(POSIX)
-inline uint64_t FileStreamInfo::GetSize() const {
+inline uint64_t FileStreamInfo::getSize() const {
   return stat_.st_size;
 }
-inline bool FileStreamInfo::IsDirectory() const {
+inline bool FileStreamInfo::isDirectory() const {
   return S_ISDIR(stat_.st_mode);
 }
-inline bool FileStreamInfo::IsSymbolicLink() const {
+inline bool FileStreamInfo::isSymbolicLink() const {
   return S_ISLNK(stat_.st_mode);
 }
 
-inline Time FileStreamInfo::GetLastAccessTime() const {
+inline Time FileStreamInfo::getLastAccessTime() const {
   return Time::FromTimeT(stat_.st_atime);
 }
-inline Time FileStreamInfo::GetLastModifiedTime() const {
+inline Time FileStreamInfo::getLastModifiedTime() const {
   return Time::FromTimeT(stat_.st_mtime);
 }
 #endif

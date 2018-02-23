@@ -97,15 +97,15 @@ uint64_t DirectoryEnumerator::getSize() const {
 }
 
 Time DirectoryEnumerator::getLastAccessTime() const {
-  return Time::FromFileTime(find_data_.ftLastAccessTime);
+  return Time::fromFileTime(find_data_.ftLastAccessTime);
 }
 
 Time DirectoryEnumerator::getLastModifiedTime() const {
-  return Time::FromFileTime(find_data_.ftLastWriteTime);
+  return Time::fromFileTime(find_data_.ftLastWriteTime);
 }
 
 Time DirectoryEnumerator::getCreationTime() const {
-  return Time::FromFileTime(find_data_.ftCreationTime);
+  return Time::fromFileTime(find_data_.ftCreationTime);
 }
 
 } // namespace stp

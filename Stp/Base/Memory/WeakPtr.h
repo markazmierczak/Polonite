@@ -22,7 +22,7 @@ class BASE_EXPORT WeakReference {
   // deleted from another via WeakPtr::~WeakPtr().
   class BASE_EXPORT Flag : public RefCountedThreadSafe<Flag> {
    public:
-    static RefPtr<Flag> create() { return adoptRef(new Flag()); }
+    static RefPtr<Flag> create() { return adoptRefPtr(new Flag()); }
 
     // A sentinel object used by WeakReference objects that don't point to
     // a valid Flag, either because they're default constructed or because

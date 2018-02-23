@@ -64,7 +64,7 @@ Time Time::Now() {
   return Time(CurrentWallclockMicroseconds() - WindowsEpochDeltaMicroseconds);
 }
 
-Time Time::FromFileTime(FILETIME ft) {
+Time Time::fromFileTime(FILETIME ft) {
   if (bitCast<int64_t, FILETIME>(ft) == 0)
     return Time();
 

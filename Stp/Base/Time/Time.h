@@ -145,7 +145,7 @@ class BASE_EXPORT Time : public TimeBase<Time> {
   #endif
 
   #if OS(WIN)
-  static Time FromFileTime(struct _FILETIME ft);
+  static Time fromFileTime(struct _FILETIME ft);
   struct _FILETIME ToFileTime() const;
 
   // The minimum time of a low resolution timer.  This is basically a windows

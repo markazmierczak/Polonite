@@ -13,9 +13,9 @@ template<typename T>
 class RefPtr;
 
 template<typename T>
-RefPtr<T> adoptRef(T* ptr);
+RefPtr<T> adoptRefPtr(T* ptr) noexcept;
 
-ALWAYS_INLINE void refAdopted(const void*) {}
+ALWAYS_INLINE void adoptedByRefPtr(const void*) noexcept {}
 
 template<typename T>
 class RefPtr {
@@ -23,79 +23,82 @@ class RefPtr {
   RefPtr() noexcept : ptr_(nullptr) {}
   ~RefPtr() { decRefIfNotNull(ptr_); }
 
-  RefPtr(T* ptr) noexcept : ptr_(ptr) { incRefIfNotNull(ptr); }
-
-  RefPtr(RefPtr&& o) noexcept : ptr_(exchange(o.ptr_, nullptr)) {}
-
-  RefPtr& operator=(RefPtr&& o) noexcept {
-    T* old_ptr = exchange(ptr_, exchange(o.ptr_, nullptr));
-    decRefIfNotNull(old_ptr);
-    return *this;
-  }
+  RefPtr(RefPtr&& o) noexcept : ptr_(o.leakPtr()) {}
+  RefPtr& operator=(RefPtr&& o) noexcept { reset(o.leakPtr()); return *this; }
 
   RefPtr(const RefPtr& o) noexcept : ptr_(o.ptr_) { incRefIfNotNull(ptr_); }
-  RefPtr& operator=(const RefPtr& o) noexcept { Reset(o.ptr_); return *this; }
+  RefPtr& operator=(const RefPtr& o) noexcept { reset(o.ptr_); return *this; }
 
-  template<typename U>
+  template<typename U, TEnableIf<TIsConvertibleTo<U*, T*>>* = nullptr>
+  RefPtr(RefPtr<U>&& o) noexcept : ptr_(o.leakPtr()) {}
+  template<typename U, TEnableIf<TIsConvertibleTo<U*, T*>>* = nullptr>
   RefPtr(const RefPtr<U>& o) noexcept : ptr_(o.get()) { incRefIfNotNull(ptr_); }
+
+  RefPtr(T* ptr) noexcept : ptr_(ptr) { incRefIfNotNull(ptr); }
+  RefPtr& operator=(T* ptr) noexcept { reset(ptr); return *this; }
 
   RefPtr(nullptr_t) noexcept : ptr_(nullptr) {}
   RefPtr& operator=(nullptr_t) noexcept { reset(); return *this; }
 
-  [[nodiscard]] T* release() { return exchange(ptr_, nullptr); }
+  [[nodiscard]] T* leakPtr() noexcept { return exchange(ptr_, nullptr); }
 
-  void reset(T* new_ptr = nullptr) {
+  void reset(T* new_ptr = nullptr) noexcept {
     incRefIfNotNull(new_ptr);
     decRefIfNotNull(exchange(ptr_, new_ptr));
   }
 
-  ALWAYS_INLINE T* get() const { return ptr_; }
+  ALWAYS_INLINE T* get() const noexcept { return ptr_; }
 
-  ALWAYS_INLINE T& operator*() const { return *ptr_; }
-  ALWAYS_INLINE T* operator->() const { return ptr_; }
+  ALWAYS_INLINE T& operator*() const noexcept { return *ptr_; }
+  ALWAYS_INLINE T* operator->() const noexcept { return ptr_; }
 
-  ALWAYS_INLINE bool operator!() const { return !ptr_; }
-  ALWAYS_INLINE explicit operator bool() const { return ptr_ != nullptr; }
+  ALWAYS_INLINE bool operator!() const noexcept { return !ptr_; }
+  ALWAYS_INLINE explicit operator bool() const noexcept { return ptr_ != nullptr; }
 
-  friend void swap(RefPtr& lhs, RefPtr& rhs) { swap(lhs.ptr_, rhs.ptr_); }
+  friend void swap(RefPtr& lhs, RefPtr& rhs) noexcept { swap(lhs.ptr_, rhs.ptr_); }
+
+  template<typename... TArgs>
+  static RefPtr create(TArgs... args) {
+    return adoptRefPtr(new T(forward<TArgs>(args)...));
+  }
 
  private:
-  friend RefPtr adoptRef<T>(T* ptr);
+  friend RefPtr adoptRefPtr<T>(T* ptr) noexcept;
 
-  enum adoptRefEnum { AdoptValue };
+  enum AdoptTag { Adopt };
 
   T* ptr_;
 
-  RefPtr(T* ptr, adoptRefEnum) : ptr_(ptr) {}
+  RefPtr(T* ptr, AdoptTag) noexcept : ptr_(ptr) {}
 
-  ALWAYS_INLINE void incRefIfNotNull(T* ptr) {
+  ALWAYS_INLINE void incRefIfNotNull(T* ptr) noexcept {
     if (ptr)
       ptr->incRef();
   }
 
-  ALWAYS_INLINE void decRefIfNotNull(T* ptr) {
+  ALWAYS_INLINE void decRefIfNotNull(T* ptr) noexcept {
     if (ptr)
       ptr->decRef();
   }
 
   template<typename U>
-  friend bool operator==(const RefPtr<T>& a, const RefPtr<U>& b) { return a.get() == b.get(); }
+  friend bool operator==(const RefPtr<T>& a, const RefPtr<U>& b) noexcept { return a.get() == b.get(); }
   template<typename U>
-  friend bool operator==(const RefPtr<T>& a, U* b) { return a.get() == b; }
+  friend bool operator==(const RefPtr<T>& a, U* b) noexcept { return a.get() == b; }
   template<typename U>
-  friend bool operator==(T* a, const RefPtr<U>& b) { return a == b.get(); }
+  friend bool operator==(T* a, const RefPtr<U>& b) noexcept { return a == b.get(); }
   template<typename U>
-  friend bool operator!=(const RefPtr<T>& a, const RefPtr<U>& b) { return a.get() != b.get(); }
+  friend bool operator!=(const RefPtr<T>& a, const RefPtr<U>& b) noexcept { return a.get() != b.get(); }
   template<typename U>
-  friend bool operator!=(const RefPtr<T>& a, U* b) { return a.get() != b; }
+  friend bool operator!=(const RefPtr<T>& a, U* b) noexcept { return a.get() != b; }
   template<typename U>
-  friend bool operator!=(T* a, const RefPtr<U>& b) { return a != b.get(); }
+  friend bool operator!=(T* a, const RefPtr<U>& b) noexcept { return a != b.get(); }
 
-  friend bool operator==(const RefPtr<T>& a, nullptr_t) { return !a; }
-  friend bool operator!=(const RefPtr<T>& a, nullptr_t) { return a.get(); }
+  friend bool operator==(const RefPtr<T>& a, nullptr_t) noexcept { return !a; }
+  friend bool operator!=(const RefPtr<T>& a, nullptr_t) noexcept { return !!a; }
 
-  friend bool operator==(nullptr_t, const RefPtr<T>& b) { return !b; }
-  friend bool operator!=(nullptr_t, const RefPtr<T>& b) { return b.get(); }
+  friend bool operator==(nullptr_t, const RefPtr<T>& b) noexcept { return !b; }
+  friend bool operator!=(nullptr_t, const RefPtr<T>& b) noexcept { return !!b; }
 };
 
 template<typename T>
@@ -106,9 +109,9 @@ template<typename T>
 struct TIsTriviallyEqualityComparableTmpl<RefPtr<T>> : TTrue {};
 
 template<typename T>
-RefPtr<T> adoptRef(T* ptr) {
-  refAdopted(ptr);
-  return RefPtr<T>(ptr, RefPtr<T>::AdoptValue);
+inline RefPtr<T> adoptRefPtr(T* ptr) noexcept {
+  adoptedByRefPtr(ptr);
+  return RefPtr<T>(ptr, RefPtr<T>::Adopt);
 }
 
 } // namespace stp

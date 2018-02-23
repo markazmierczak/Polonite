@@ -59,13 +59,13 @@ inline uint64_t FileInfo::getSize() const {
 }
 
 inline Time FileInfo::getLastAccessTime() const {
-  return Time::FromFileTime(attr_data_.ftLastAccessTime);
+  return Time::fromFileTime(attr_data_.ftLastAccessTime);
 }
 inline Time FileInfo::getLastModifiedTime() const {
-  return Time::FromFileTime(attr_data_.ftLastWriteTime);
+  return Time::fromFileTime(attr_data_.ftLastWriteTime);
 }
 inline Time FileInfo::getCreationTime() const {
-  return Time::FromFileTime(attr_data_.ftCreationTime);
+  return Time::fromFileTime(attr_data_.ftCreationTime);
 }
 #elif OS(POSIX)
 inline uint64_t FileInfo::getSize() const {
