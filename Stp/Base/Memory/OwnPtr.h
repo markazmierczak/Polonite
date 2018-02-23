@@ -22,15 +22,15 @@ class OwnPtr {
   ~OwnPtr() { if (ptr_) destroy(ptr_); }
 
   template<class U, TEnableIf<!TIsArray<U> && TIsConvertibleTo<U*, T*>>* = nullptr>
-  OwnPtr(OwnPtr<U>&& u) noexcept : ptr_(u.release()) {}
+  OwnPtr(OwnPtr<U>&& u) noexcept : ptr_(u.leakPtr()) {}
   template<class U, TEnableIf<!TIsArray<U> && TIsConvertibleTo<U*, T*>>* = nullptr>
-  OwnPtr& operator=(OwnPtr<U>&& u) noexcept { reset(u.release()); return *this; }
+  OwnPtr& operator=(OwnPtr<U>&& u) noexcept { reset(u.leakPtr()); return *this; }
 
   OwnPtr(nullptr_t) noexcept {}
   OwnPtr& operator=(nullptr_t) noexcept { reset(); return *this; }
 
   explicit OwnPtr(T* ptr) noexcept : ptr_(ptr) { ASSERT(ptr_ != nullptr); }
-  [[nodiscard]] T* release() noexcept { return exchange(ptr_, nullptr); }
+  [[nodiscard]] T* leakPtr() noexcept { return exchange(ptr_, nullptr); }
 
   void reset(T* new_ptr = nullptr) {
     T* tmp = exchange(ptr_, new_ptr);

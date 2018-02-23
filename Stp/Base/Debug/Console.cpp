@@ -85,7 +85,7 @@ static int determineDestinations(const CommandLine& command_line) {
   StringSpan InvertLoggingSwitch = "disable-logging";
   #endif
 
-  if (command_line.Has(InvertLoggingSwitch)) {
+  if (command_line.has(InvertLoggingSwitch)) {
     enable_logging = !enable_logging;
   }
 
@@ -99,17 +99,17 @@ static int determineDestinations(const CommandLine& command_line) {
   if (enable_logging) {
     destinations = DefaultDestinations;
 
-    if (command_line.Has(LogToStdSwitch))
+    if (command_line.has(LogToStdSwitch))
       destinations |= StandardOutputDestination;
 
-    if (command_line.Has(LogToFileSwitch))
+    if (command_line.has(LogToFileSwitch))
       destinations |= FileDestination;
   }
   return destinations;
 }
 
 void Console::classInit() {
-  auto& command_line = CommandLine::ForCurrentProcess();
+  auto& command_line = CommandLine::forCurrentProcess();
   int active_destinations = determineDestinations(command_line);
 
   // Initialize std streams first. One of them might be closed and

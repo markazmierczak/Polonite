@@ -29,7 +29,7 @@ void FilePathWriter::ensureSeparator() {
 }
 
 void FilePathWriter::onWriteChar(char c) {
-  path_.chars().add(char_cast<FilePathChar>(c));
+  path_.chars().add(charCast<FilePathChar>(c));
 }
 
 void FilePathWriter::onWriteRune(char32_t rune) {

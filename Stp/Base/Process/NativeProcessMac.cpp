@@ -9,7 +9,7 @@
 
 namespace stp {
 
-NativeProcessId NativeProcess::GetParentId(NativeProcessHandle process) {
+NativeProcessId NativeProcess::getParentId(NativeProcessHandle process) {
   struct kinfo_proc info;
   size_t length = sizeof(struct kinfo_proc);
   int mib[4] = { CTL_KERN, KERN_PROC, KERN_PROC_PID, process };

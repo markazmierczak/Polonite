@@ -8,12 +8,12 @@
 
 namespace stp {
 
-NativeProcessId NativeProcess::GetParentId(NativeProcessHandle process) {
+NativeProcessId NativeProcess::getParentId(NativeProcessHandle process) {
   return getppid();
 }
 
 FilePath NativeProcess::getExecutablePath(NativeProcessHandle process) {
-  FilePath exe_file = linux::ProcCommon::DirectoryForProcess(process);
+  FilePath exe_file = linux::ProcCommon::getDirectoryForProcess(process);
   exe_file.addComponentAscii("exe");
   return File::readSymbolicLink(exe_file);
 }

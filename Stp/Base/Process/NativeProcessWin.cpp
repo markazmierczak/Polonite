@@ -10,7 +10,7 @@
 
 namespace stp {
 
-NativeProcessId NativeProcess::GetCurrentId() {
+NativeProcessId NativeProcess::getCurrentId() {
   return ::GetCurrentProcessId();
 }
 
@@ -18,7 +18,7 @@ NativeProcessHandle NativeProcess::getCurrentHandle() {
   return ::GetCurrentProcess();
 }
 
-NativeProcessId NativeProcess::GetParentId(NativeProcessHandle process) {
+NativeProcessId NativeProcess::getParentId(NativeProcessHandle process) {
   NativeProcessId child_pid = ::GetProcessId(process);
   PROCESSENTRY32 process_entry;
   process_entry.dwSize = sizeof(PROCESSENTRY32);

@@ -120,7 +120,7 @@ FileStream* Console::openLogFile(const FilePath& path) {
   if (!isOk(stream->tryCreate(path, FileMode::Create, FileAccess::WriteOnly)))
     return nullptr;
 
-  return stream.release();
+  return stream.leakPtr();
 }
 
 } // namespace stp

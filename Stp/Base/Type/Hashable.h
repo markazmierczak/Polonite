@@ -29,7 +29,7 @@ inline HashCode partialHash(T x) {
     // Take lower bits only.
     return static_cast<HashCode>(reinterpret_cast<uintptr_t>(x));
   } else if constexpr (TIsCharacter<T>) {
-    return static_cast<HashCode>(char_cast<char32_t>(x));
+    return static_cast<HashCode>(charCast<char32_t>(x));
   } else if constexpr (TIsFloatingPoint<T>) {
     if constexpr (sizeof(T) == 4) {
       // Clear sign bit.

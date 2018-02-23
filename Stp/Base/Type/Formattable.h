@@ -74,7 +74,7 @@ inline void format(TextWriter& out, const T& x, const StringSpan& opts) {
   } else if constexpr (TIsFloatingPoint<T>) {
     detail::formatFloat(out, static_cast<double>(x), opts);
   } else if constexpr (TIsCharacter<T>) {
-    detail::formatChar(out, char_cast<char32_t>(x), opts);
+    detail::formatChar(out, charCast<char32_t>(x), opts);
   } else if constexpr (TIsEnum<T>) {
     if constexpr (TIsNamedEnum<T>) {
       out << getEnumName(x);
@@ -100,9 +100,9 @@ inline TextWriter& operator<<(TextWriter& out, const T& x) {
     detail::formatFloat(out, static_cast<double>(x));
   } else if constexpr (TIsCharacter<T>) {
     if constexpr (sizeof(T) == 1) {
-      out << char_cast<char>(x);
+      out << charCast<char>(x);
     } else {
-      out << char_cast<char32_t>(x);
+      out << charCast<char32_t>(x);
     }
   } else if constexpr (TIsEnum<T>) {
     if constexpr (TIsNamedEnum<T>) {

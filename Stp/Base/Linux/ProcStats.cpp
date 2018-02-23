@@ -9,7 +9,7 @@ namespace stp {
 namespace linux {
 
 bool ProcStats::Reader::Open(NativeProcessHandle pid) {
-  return OpenFile(DirectoryForProcess(pid));
+  return OpenFile(getDirectoryForProcess(pid));
 }
 
 bool ProcStats::Reader::OpenFile(const FilePath& path) {

@@ -187,7 +187,7 @@ bool FileStream::canSeekInternal() {
   ASSERT(isOpen());
 
   stat_wrapper_t file_info;
-  if (posix::CallFstat(native_.get(), &file_info) != 0)
+  if (posix::callFstat(native_.get(), &file_info) != 0)
     return false;
 
   switch (file_info.st_mode & S_IFMT) {
@@ -203,7 +203,7 @@ int64_t FileStream::getLength() {
   ASSERT(isOpen());
 
   stat_wrapper_t file_info;
-  if (posix::CallFstat(native_.get(), &file_info) != 0)
+  if (posix::callFstat(native_.get(), &file_info) != 0)
     throw SystemException(getLastPosixErrorCode());
 
   return file_info.st_size;
@@ -232,7 +232,7 @@ void FileStream::syncToDisk() {
 
 void FileStream::getInfo(FileStreamInfo& out) {
   ASSERT(isOpen());
-  if (posix::CallFstat(native_.get(), &out.stat_) != 0)
+  if (posix::callFstat(native_.get(), &out.stat_) != 0)
     throw SystemException(getLastPosixErrorCode());
 }
 

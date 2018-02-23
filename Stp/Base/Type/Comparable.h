@@ -15,7 +15,7 @@ constexpr int compare(T l, T r) noexcept {
 
 template<typename T, typename U, TEnableIf<TIsCharacter<T> && TIsCharacter<U>>* = nullptr>
 constexpr int compare(T lhs, U rhs) noexcept {
-  return static_cast<int>(char_cast<char32_t>(lhs) - char_cast<char32_t>(rhs));
+  return static_cast<int>(charCast<char32_t>(lhs) - charCast<char32_t>(rhs));
 }
 
 template<typename T, typename U, TEnableIf<TIsInteger<T> && TIsInteger<U>>* = nullptr>

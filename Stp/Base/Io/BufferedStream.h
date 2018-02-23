@@ -29,7 +29,7 @@ class BASE_EXPORT BufferedStream final : public Stream {
 
   void flushBuffers();
 
-  void open(OwnPtr<Stream> underlying) { openInternal(underlying.release(), true); }
+  void open(OwnPtr<Stream> underlying) { openInternal(underlying.leakPtr(), true); }
   void open(Stream* underlying) { openInternal(underlying, false); }
 
   void close() override;

@@ -88,7 +88,7 @@ class BASE_EXPORT FileStream final : public Stream {
 
   ALWAYS_INLINE NativeFile getNativeFile() const { return native_.get(); }
 
-  NativeFile releaseNativeFile() { return native_.release(); }
+  NativeFile releaseNativeFile() { return native_.leakDescriptor(); }
 
  private:
   #if OS(WIN)

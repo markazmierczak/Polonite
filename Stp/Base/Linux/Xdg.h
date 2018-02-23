@@ -41,7 +41,7 @@ class BASE_EXPORT Xdg {
 
   // Return an entry from the DesktopEnvironment enum with a best guess
   // of which desktop environment we're using.
-  static DesktopEnvironment GetDesktopEnvironment();
+  static DesktopEnvironment getDesktopEnvironment();
 };
 
 } // namespace linux

@@ -23,15 +23,15 @@ class MallocPtr {
   DISALLOW_COPY_AND_ASSIGN(MallocPtr);
 
   template<class U, TEnableIf<!TIsArray<U> && TIsConvertibleTo<U*, T*>>* = nullptr>
-  MallocPtr(MallocPtr<U>&& u) noexcept : ptr_(u.release()) {}
+  MallocPtr(MallocPtr<U>&& u) noexcept : ptr_(u.leakPtr()) {}
   template<class U, TEnableIf<!TIsArray<U> && TIsConvertibleTo<U*, T*>>* = nullptr>
-  MallocPtr& operator=(MallocPtr<U>&& u) noexcept { Reset(u.release()); return *this; }
+  MallocPtr& operator=(MallocPtr<U>&& u) noexcept { Reset(u.leakPtr()); return *this; }
 
   MallocPtr(nullptr_t) noexcept {}
   MallocPtr& operator=(nullptr_t) noexcept { reset(); return *this; }
 
   explicit MallocPtr(T* ptr) noexcept : ptr_(ptr) { ASSERT(ptr_ != nullptr); }
-  [[nodiscard]] T* release() noexcept { return exchange(ptr_, nullptr); }
+  [[nodiscard]] T* leakPtr() noexcept { return exchange(ptr_, nullptr); }
 
   void reset(T* new_ptr = nullptr) noexcept {
     T* tmp = exchange(ptr_, new_ptr);

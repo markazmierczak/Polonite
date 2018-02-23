@@ -7,12 +7,12 @@
 
 namespace stp {
 
-NativeProcessId NativeProcess::GetCurrentId() {
+NativeProcessId NativeProcess::getCurrentId() {
   return getpid();
 }
 
 NativeProcessHandle NativeProcess::getCurrentHandle() {
-  return NativeProcess::GetCurrentId();
+  return NativeProcess::getCurrentId();
 }
 
 } // namespace stp

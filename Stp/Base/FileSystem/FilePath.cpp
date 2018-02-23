@@ -128,7 +128,7 @@ void FilePath::addComponentAscii(StringSpan component) {
   if (need_separator)
     *dst++ = FilePathSeparator;
   for (int i = 0; i < length; ++i)
-    dst[i] = char_cast<CharType>(src[i]);
+    dst[i] = charCast<CharType>(src[i]);
 }
 
 namespace detail {

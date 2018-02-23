@@ -13,22 +13,22 @@
 namespace stp {
 namespace linux {
 
-FilePath ProcCommon::GetRootDirectory() {
+FilePath ProcCommon::getRootDirectory() {
   return FilePath(FILE_PATH_LITERAL("/proc"));
 }
 
-FilePath ProcCommon::DirectoryForProcess(NativeProcessHandle pid) {
+FilePath ProcCommon::getDirectoryForProcess(NativeProcessHandle pid) {
   if (pid == NativeProcess::getCurrentHandle())
     return FilePath(FILE_PATH_LITERAL("/proc/self"));
 
-  FilePath path = GetRootDirectory();
+  FilePath path = getRootDirectory();
   FilePathWriter writer(path);
   writer.ensureSeparator();
   writer << pid;
   return path;
 }
 
-NativeProcessHandle ProcCommon::ProcessForDirectoryName(const char* d_name) {
+NativeProcessHandle ProcCommon::getProcessForDirectoryName(const char* d_name) {
   int i;
   for (i = 0; i < NAME_MAX && d_name[i]; ++i) {
     if (!isDigitAscii(d_name[i]))

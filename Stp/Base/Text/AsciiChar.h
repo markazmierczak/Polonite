@@ -13,14 +13,14 @@ namespace detail {
 
 template<typename T, TEnableIf<TIsCharacter<T>>* = nullptr>
 constexpr bool isInRangeAscii(T c, char lo, char hi) {
-  return (char_cast<char32_t>(c) - lo) <= static_cast<char32_t>(hi - lo);
+  return (charCast<char32_t>(c) - lo) <= static_cast<char32_t>(hi - lo);
 }
 
 } // namespace detail
 
 template<typename T, TEnableIf<TIsCharacter<T>>* = nullptr>
 constexpr bool isAscii(T c) {
-  return char_cast<char32_t>(c) <= 0x7F;
+  return charCast<char32_t>(c) <= 0x7F;
 }
 
 template<typename T, TEnableIf<TIsCharacter<T>>* = nullptr>
@@ -35,7 +35,7 @@ constexpr bool isLowerAscii(T c) {
 
 template<typename T, TEnableIf<TIsCharacter<T>>* = nullptr>
 constexpr bool isSpaceAscii(T c) {
-  return char_cast<char32_t>(c) <= ' ' && (c == ' ' || c == '\r' || c == '\n' || c == '\t');
+  return charCast<char32_t>(c) <= ' ' && (c == ' ' || c == '\r' || c == '\n' || c == '\t');
 }
 
 template<typename T, TEnableIf<TIsCharacter<T>>* = nullptr>
@@ -60,12 +60,12 @@ constexpr bool isPrintAscii(T c) {
 
 template<typename T, TEnableIf<TIsCharacter<T>>* = nullptr>
 constexpr T toLowerAscii(T c) {
-  return isUpperAscii(c) ? char_cast<T>(c + ('a' - 'A')) : c;
+  return isUpperAscii(c) ? charCast<T>(c + ('a' - 'A')) : c;
 }
 
 template<typename T, TEnableIf<TIsCharacter<T>>* = nullptr>
 constexpr T toUpperAscii(T c) {
-  return isLowerAscii(c) ? char_cast<T>(c + ('A' - 'a')) : c;
+  return isLowerAscii(c) ? charCast<T>(c + ('A' - 'a')) : c;
 }
 
 template<typename T, TEnableIf<TIsCharacter<T>>* = nullptr>

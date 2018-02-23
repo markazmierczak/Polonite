@@ -40,13 +40,13 @@ typedef struct {
 
 // Casting chars is tricky since char and wchar_t may be signed.
 template<typename T, typename U>
-constexpr T char_cast(U x) noexcept { return static_cast<T>(x); }
+constexpr T charCast(U x) noexcept { return static_cast<T>(x); }
 
 template<typename T>
-constexpr T char_cast(char x) noexcept { return static_cast<T>(static_cast<unsigned char>(x)); }
+constexpr T charCast(char x) noexcept { return static_cast<T>(static_cast<unsigned char>(x)); }
 
 template<typename T>
-constexpr T char_cast(wchar_t x) noexcept {
+constexpr T charCast(wchar_t x) noexcept {
   #if SIZEOF_WCHAR_T == 2
   return static_cast<T>(static_cast<unsigned short>(x));
   #elif SIZEOF_WCHAR_T == 4

@@ -27,10 +27,10 @@ namespace posix {
 inline int callStat(const char* path, stat_wrapper_t* sb) {
   return WRAP_CALL(stat)(path, sb);
 }
-inline int CallLstat(const char* path, stat_wrapper_t* sb) {
+inline int callLstat(const char* path, stat_wrapper_t* sb) {
   return WRAP_CALL(lstat)(path, sb);
 }
-inline int CallFstat(int fd, stat_wrapper_t* file_info) {
+inline int callFstat(int fd, stat_wrapper_t* file_info) {
   return WRAP_CALL(fstat)(fd, file_info);
 }
 

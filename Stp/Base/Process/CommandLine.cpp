@@ -41,7 +41,7 @@ CommandLine::CommandLine() {
 }
 
 CommandLine::CommandLine(const Arguments& arguments) {
-  Parse(arguments);
+  parse(arguments);
 }
 
 CommandLine::~CommandLine() {}
@@ -52,7 +52,7 @@ void CommandLine::clear() {
   positionals_.clear();
 }
 
-bool CommandLine::Has(StringSpan name) const {
+bool CommandLine::has(StringSpan name) const {
   return tryGet(name) != nullptr;
 }
 
@@ -85,7 +85,7 @@ bool CommandLine::tryGet(StringSpan name, FilePath& out_value) const {
   return true;
 }
 
-bool CommandLine::Equals(StringSpan name, StringSpan value) const {
+bool CommandLine::equal(StringSpan name, StringSpan value) const {
   const String* real_value = tryGet(name);
   return real_value ? *real_value == value : false;
 }
@@ -94,15 +94,15 @@ void CommandLine::add(String positional) {
   positionals_.add(move(positional));
 }
 
-void CommandLine::Set(StringSpan switch_name, StringSpan value) {
-  Set(switch_name, String(value));
+void CommandLine::set(StringSpan switch_name, StringSpan value) {
+  set(switch_name, String(value));
 }
 
-void CommandLine::Set(StringSpan switch_name, String&& value) {
+void CommandLine::set(StringSpan switch_name, String&& value) {
   switches_.set(switch_name, move(value));
 }
 
-bool CommandLine::ParseSwitch(StringSpan argument, String& out_name, String& out_value) {
+bool CommandLine::parseSwitch(StringSpan argument, String& out_name, String& out_value) {
   // Detect prefix:
   int prefix_size = 0;
   for (int i = 0; i < g_switch_prefix_count; ++i) {
@@ -133,15 +133,15 @@ bool CommandLine::ParseSwitch(StringSpan argument, String& out_name, String& out
 }
 
 #if OS(WIN)
-void CommandLine::ParseFromArgv(int argc, wchar_t** argv) {
+void CommandLine::parseFromArgv(int argc, wchar_t** argv) {
   if (argc < 1)
     return;
 
-  SetProgramName(ToString(makeSpanFromNullTerminated(argv[0])));
+  setProgramName(toString(makeSpanFromNullTerminated(argv[0])));
 
   bool parse_switches = true;
   for (int i = 1; i < argc; ++i) {
-    String arg = ToString(makeSpanFromNullTerminated(argv[i]));
+    String arg = toString(makeSpanFromNullTerminated(argv[i]));
 
     if (parse_switches && arg == SwitchTerminator) {
       parse_switches = false;
@@ -149,39 +149,39 @@ void CommandLine::ParseFromArgv(int argc, wchar_t** argv) {
     }
 
     String switch_name, switch_value;
-    if (parse_switches && ParseSwitch(arg, switch_name, switch_value))
-      Set(switch_name, move(switch_value));
+    if (parse_switches && parseSwitch(arg, switch_name, switch_value))
+      set(switch_name, move(switch_value));
     else
       add(move(arg));
   }
 }
 
-void CommandLine::Parse(const Arguments& arguments) {
+void CommandLine::parse(const Arguments& arguments) {
   if (arguments.args)
-    ParseFromArgs(arguments.args);
+    parseFromArgs(arguments.args);
   else
-    ParseFromArgv(arguments.argc, arguments.argv);
+    parseFromArgv(arguments.argc, arguments.argv);
 }
 
-void CommandLine::ParseFromArgs(const wchar_t* args) {
+void CommandLine::parseFromArgs(const wchar_t* args) {
   ASSERT(args);
 
   int argc;
   wchar_t** argv = ::CommandLineToArgvW(args, &argc);
   ASSERT(argc, "CommandLineToArgvW failed");
 
-  ParseFromArgv(argc, argv);
+  parseFromArgv(argc, argv);
   ::LocalFree(argv);
 }
 
-void CommandLine::SetSlashIsNotASwitch() {
+void CommandLine::setSlashIsNotASwitch() {
   // The last switch prefix should be slash, so adjust the size to skip it.
   ASSERT(SwitchPrefixes[isizeofArray(SwitchPrefixes) - 1] == "/");
   g_switch_prefix_count = isizeofArray(SwitchPrefixes) - 1;
 }
 #else
 
-void CommandLine::ParseFromArgv(int argc, char** argv) {
+void CommandLine::parseFromArgv(int argc, char** argv) {
   clear();
 
   if (argc < 1)
@@ -204,30 +204,30 @@ void CommandLine::ParseFromArgv(int argc, char** argv) {
     }
 
     String switch_name, switch_value;
-    if (parse_switches && ParseSwitch(arg, switch_name, switch_value))
-      Set(switch_name, move(switch_value));
+    if (parse_switches && parseSwitch(arg, switch_name, switch_value))
+      set(switch_name, move(switch_value));
     else
       add(move(arg));
   }
 }
 
-void CommandLine::Parse(const Arguments& arguments) {
-  ParseFromArgv(arguments.argc, arguments.argv);
+void CommandLine::parse(const Arguments& arguments) {
+  parseFromArgv(arguments.argc, arguments.argv);
 }
 #endif // OS(*)
 
-void CommandLine::Init(const Arguments& arguments) {
+void CommandLine::init(const Arguments& arguments) {
   ASSERT(!g_for_current_process_);
   g_for_current_process_ = new CommandLine(arguments);
 }
 
-void CommandLine::Fini() {
+void CommandLine::fini() {
   ASSERT(g_for_current_process_);
   delete g_for_current_process_;
   g_for_current_process_ = nullptr;
 }
 
-static void FormatCommandLineArgument(TextWriter& out, StringSpan arg) {
+static void formatCommandLineArgument(TextWriter& out, StringSpan arg) {
   #if OS(WIN)
   // Quote a string as necessary for CommandLineToArgvW compatibility *on Windows*.
   // We follow the quoting rules of CommandLineToArgvW.
@@ -280,11 +280,11 @@ void CommandLine::formatImpl(TextWriter& out, const StringSpan& opts) const {
       with_program = false;
   }
   if (with_program)
-    FormatCommandLineArgument(out, program_name_);
+    formatCommandLineArgument(out, program_name_);
 
   for (const String& positional : positionals_) {
     out << ' ';
-    FormatCommandLineArgument(out, positional);
+    formatCommandLineArgument(out, positional);
   }
 
   for (const auto& pair : switches_) {
@@ -293,11 +293,11 @@ void CommandLine::formatImpl(TextWriter& out, const StringSpan& opts) const {
     out << pair.key();
     out << SwitchValueSeparator;
 
-    FormatCommandLineArgument(out, pair.value());
+    formatCommandLineArgument(out, pair.value());
   }
 }
 
-String CommandLine::ToArgvLine(bool with_program_name) const {
+String CommandLine::toArgvLine(bool with_program_name) const {
   return formattableToString(*this, with_program_name ? StringSpan() : StringSpan("L"));
 }
 

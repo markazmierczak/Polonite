@@ -16,12 +16,12 @@
 namespace stp {
 
 void BaseApplicationPart::init() {
-  auto& command_line = CommandLine::ForCurrentProcess();
+  auto& command_line = CommandLine::forCurrentProcess();
   ALLOW_UNUSED_LOCAL(command_line);
 
   #if !defined(NDEBUG) && !OS(IOS)
   // Will wait for 60 seconds for a debugger to come to attach to the process.
-  if (command_line.Has("wait-for-debugger"))
+  if (command_line.has("wait-for-debugger"))
     Debugger::waitFor(60, true);
   #endif
 

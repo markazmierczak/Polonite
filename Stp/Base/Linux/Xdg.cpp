@@ -51,7 +51,7 @@ static DesktopEnvironment GetKdeDesktopEnvironment() {
   return DesktopEnvironment::Kde3;
 } */
 
-DesktopEnvironment Xdg::GetDesktopEnvironment() {
+DesktopEnvironment Xdg::getDesktopEnvironment() {
   // XDG_CURRENT_DESKTOP is the newest standard circa 2012.
   /* FIXME String xdg_current_desktop;
   if (Environment::tryGet("XDG_CURRENT_DESKTOP", xdg_current_desktop)) {

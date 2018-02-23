@@ -107,7 +107,7 @@ void Application::init() {
 
   onCaptureArguments(native_arguments_);
 
-  CommandLine::Init(native_arguments_);
+  CommandLine::init(native_arguments_);
 
   for (auto* part = parts_head_; part; part = part->next_)
     part->init();
@@ -127,7 +127,7 @@ void Application::fini() {
   for (auto* part = parts_tail_; part; part = part->prev_)
     part->fini();
 
-  CommandLine::Fini();
+  CommandLine::fini();
 
   #if OS(MAC)
   NSAutoreleasePoolFini();

@@ -455,7 +455,7 @@ TEST(WeakPtrTest, MoveOwnershipAfterInvalidate) {
   EXPECT_EQ(target.get(), background.DeRef(&arrow));
 
   // And the background thread can now delete the target.
-  background.DeleteTarget(target.release());
+  background.DeleteTarget(target.leakPtr());
 }
 
 TEST(WeakPtrTest, MainThreadRefOutlivesBackgroundThreadRef) {
@@ -625,7 +625,7 @@ TEST(WeakPtrDeathTest, NonOwnerThreadDeletesWeakPtrAfterReference) {
 
   // |target.reset()| died so |target| still holds the object, so we
   // must pass it to the background thread to teardown.
-  background.DeleteTarget(target.release());
+  background.DeleteTarget(target.leakPtr());
 }
 
 TEST(WeakPtrDeathTest, NonOwnerThreadDeletesObjectAfterReference) {
@@ -644,7 +644,7 @@ TEST(WeakPtrDeathTest, NonOwnerThreadDeletesObjectAfterReference) {
   // Background thread tries to delete target, volating thread binding.
   BackgroundThread background;
   background.Start();
-  ASSERT_ASSERT_DEATH(background.DeleteTarget(target.release()));
+  ASSERT_ASSERT_DEATH(background.DeleteTarget(target.leakPtr()));
 }
 
 TEST(WeakPtrDeathTest, NonOwnerThreadReferencesObjectAfterDeletion) {
@@ -661,7 +661,7 @@ TEST(WeakPtrDeathTest, NonOwnerThreadReferencesObjectAfterDeletion) {
   // Background thread tries to delete target, binding the object to the thread.
   BackgroundThread background;
   background.Start();
-  background.DeleteTarget(target.release());
+  background.DeleteTarget(target.leakPtr());
 
   // Main thread attempts to dereference the target, violating thread binding.
   ASSERT_ASSERT_DEATH(arrow.target.get());

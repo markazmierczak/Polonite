@@ -16,7 +16,7 @@ FileDescriptor& FileDescriptor::operator=(FileDescriptor&& other) noexcept {
   return *this;
 }
 
-void FileDescriptor::Close() {
+void FileDescriptor::close() {
   ASSERT(isValid());
   // It's important to crash here.
   // There are security implications to not closing a file descriptor properly.
@@ -30,8 +30,8 @@ void FileDescriptor::Close() {
   fd_ = InvalidFd;
 }
 
-FileDescriptor FileDescriptor::Duplicate() {
-  FileDescriptor rv = TryDuplicate();
+FileDescriptor FileDescriptor::duplicate() {
+  FileDescriptor rv = tryDuplicate();
   if (!rv.isValid()) {
     throw Exception::withDebug(
         SystemException(getLastPosixErrorCode()), "failed to duplicate file descriptor");
@@ -39,8 +39,8 @@ FileDescriptor FileDescriptor::Duplicate() {
   return rv;
 }
 
-FileDescriptor FileDescriptor::DuplicateTo(int new_fd) {
-  FileDescriptor rv = TryDuplicateTo(new_fd);
+FileDescriptor FileDescriptor::duplicateTo(int new_fd) {
+  FileDescriptor rv = tryDuplicateTo(new_fd);
   if (!rv.isValid()) {
     throw Exception::withDebug(
         SystemException(getLastPosixErrorCode()), "failed to duplicate file descriptor");
@@ -48,7 +48,7 @@ FileDescriptor FileDescriptor::DuplicateTo(int new_fd) {
   return rv;
 }
 
-void FileDescriptor::SetNonBlocking() {
+void FileDescriptor::setNonBlocking() {
   int flags = ::fcntl(fd_, F_GETFL);
 
   if (flags == -1) {

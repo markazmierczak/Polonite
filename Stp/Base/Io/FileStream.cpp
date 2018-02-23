@@ -20,7 +20,7 @@ FileStream::~FileStream() {
     if (lifetime_ == AutoClose)
       native_.reset();
     else
-      ignoreResult(native_.release());
+      ignoreResult(native_.leakDescriptor());
   }
 }
 
@@ -62,7 +62,7 @@ void FileStream::openNative(NativeFile native_file, FileAccess access, NativeFil
 void FileStream::close() {
   ASSERT(isOpen());
 
-  auto nf = native_.release();
+  auto nf = native_.leakDescriptor();
   lifetime_ = AutoClose;
   seekable_ = -1;
 

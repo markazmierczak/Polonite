@@ -45,7 +45,7 @@ class BASE_EXPORT CommandLine {
 
   static constexpr char SwitchValueSeparator = '=';
 
-  static const CommandLine& ForCurrentProcess();
+  static const CommandLine& forCurrentProcess();
 
   CommandLine();
   CommandLine(const Arguments& arguments);
@@ -58,30 +58,30 @@ class BASE_EXPORT CommandLine {
   ALWAYS_INLINE FlatMap<String, String>& switches() { return switches_; }
 
   // Returns true if this command line contains the given switch.
-  bool Has(StringSpan name) const;
+  bool has(StringSpan name) const;
   const String* tryGet(StringSpan name) const;
   const String* tryGetAscii(StringSpan name) const;
   bool tryGetInt(StringSpan name, int& out_value) const;
   bool tryGetFloat(StringSpan name, double& out_value) const;
   bool tryGet(StringSpan name, FilePath& out_value) const;
-  bool Equals(StringSpan name, StringSpan value) const;
+  bool equal(StringSpan name, StringSpan value) const;
 
-  void SetProgramName(StringSpan name) { program_name_ = name; }
-  const String& GetProgramName() const { return program_name_; }
+  void setProgramName(StringSpan name) { program_name_ = name; }
+  const String& getProgramName() const { return program_name_; }
 
   void add(String positional);
 
-  void Set(StringSpan switch_name, StringSpan value);
-  void Set(StringSpan switch_name, String&& value);
+  void set(StringSpan switch_name, StringSpan value);
+  void set(StringSpan switch_name, String&& value);
 
   void clear();
 
-  String ToArgvLine(bool with_program_name = true) const;
+  String toArgvLine(bool with_program_name = true) const;
 
-  void Parse(const Arguments& arguments);
+  void parse(const Arguments& arguments);
 
-  static void Init(const Arguments& arguments);
-  static void Fini();
+  static void init(const Arguments& arguments);
+  static void fini();
 
   #if OS(WIN)
   // By default command-line arguments beginning with slashes are treated
@@ -91,7 +91,7 @@ class BASE_EXPORT CommandLine {
   // function BEFORE initializing the current process' global command line
   // object and the behavior will be the same as POSIX systems (only hyphens
   // begin switches, everything else will be a positional argument).
-  void SetSlashIsNotASwitch();
+  void setSlashIsNotASwitch();
   #endif
 
   friend TextWriter& operator<<(TextWriter& out, const CommandLine& x) {
@@ -107,22 +107,22 @@ class BASE_EXPORT CommandLine {
   List<String> positionals_;
 
   #if OS(WIN)
-  void ParseFromArgv(int argc, wchar_t** argv);
-  void ParseFromArgs(const wchar_t* args);
+  void parseFromArgv(int argc, wchar_t** argv);
+  void parseFromArgs(const wchar_t* args);
   #else
-  void ParseFromArgv(int argc, char** argv);
+  void parseFromArgv(int argc, char** argv);
   #endif
 
   void formatImpl(TextWriter& out, const StringSpan& opts) const;
 
   static CommandLine* g_for_current_process_;
 
-  static bool ParseSwitch(StringSpan argument, String& out_name, String& out_value);
+  static bool parseSwitch(StringSpan argument, String& out_name, String& out_value);
 
   DISALLOW_COPY_AND_ASSIGN(CommandLine);
 };
 
-inline const CommandLine& CommandLine::ForCurrentProcess() {
+inline const CommandLine& CommandLine::forCurrentProcess() {
   ASSERT(g_for_current_process_);
   return *g_for_current_process_;
 }

@@ -16,7 +16,7 @@ namespace stp {
 void PerfTestSuite::onDidInit() {
   TestSuite::onDidInit();
 
-  auto& command_line = CommandLine::ForCurrentProcess();
+  auto& command_line = CommandLine::forCurrentProcess();
 
   // Initialize the perf timer log
   FilePath log_path;

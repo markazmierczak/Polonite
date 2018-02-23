@@ -218,7 +218,7 @@ static void ParseMatchers(StringSpan input) {
 }
 
 void InitLogging() {
-  auto& command_line = CommandLine::ForCurrentProcess();
+  auto& command_line = CommandLine::forCurrentProcess();
 
   const String* v = command_line.tryGet("v");
   if (v) {
