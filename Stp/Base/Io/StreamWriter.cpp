@@ -27,7 +27,7 @@ StreamWriter::StreamWriter(Stream* stream, TextEncoding encoding, int buffer_cap
   ASSERT(encoding_.CanEncode());
 
   if (encoding_ != BuiltinTextEncodings::Utf8()) {
-    CreateEncoder();
+    createEncoder();
   }
 
   // Compute buffer capacity and align to maximum character size.
@@ -41,16 +41,16 @@ StreamWriter::StreamWriter(Stream* stream, TextEncoding encoding, int buffer_cap
 
 StreamWriter::~StreamWriter() {
   if (encoder_)
-    DestroyEncoder();
+    destroyEncoder();
 }
 
 TextEncoding StreamWriter::getEncoding() const {
   return encoding_;
 }
 
-void StreamWriter::ForceValidation() {
+void StreamWriter::forceValidation() {
   if (!encoder_)
-    CreateEncoder();
+    createEncoder();
 }
 
 namespace {
@@ -69,39 +69,39 @@ class SimpleBufferAllocator : public PolymorphicAllocator {
 
 } // namespace
 
-void StreamWriter::CreateEncoder() {
+void StreamWriter::createEncoder() {
   ASSERT(!encoder_);
   SimpleBufferAllocator allocator(encoder_memory_);
   encoder_ = encoding_.CreateEncoder(allocator);
 }
 
-void StreamWriter::DestroyEncoder() {
+void StreamWriter::destroyEncoder() {
   encoder_->~TextEncoder();
 }
 
 void StreamWriter::onFlush() {
   if (buffer_.isEmpty())
     return;
-  FlushBuffer();
+  flushBuffer();
   stream_.flush();
 }
 
-void StreamWriter::FlushBuffer() {
+void StreamWriter::flushBuffer() {
   if (buffer_.isEmpty())
     return;
   stream_.write(buffer_);
   buffer_.clear();
 }
 
-void StreamWriter::SetAutoFlush(bool auto_flush) {
+void StreamWriter::setAutoFlush(bool auto_flush) {
   if (auto_flush_ == auto_flush)
     return;
   auto_flush_ = auto_flush;
   if (auto_flush_)
-    FlushBuffer();
+    flushBuffer();
 }
 
-void StreamWriter::WriteToBuffer(BufferSpan input) {
+void StreamWriter::writeToBuffer(BufferSpan input) {
   if (UNLIKELY(auto_flush_)) {
     stream_.write(input);
     return;
@@ -114,7 +114,7 @@ void StreamWriter::WriteToBuffer(BufferSpan input) {
     return;
   }
   if (input.size() >= buffer_.capacity() + remaining_capacity) {
-    FlushBuffer();
+    flushBuffer();
     stream_.write(input);
     return;
   }
@@ -122,42 +122,42 @@ void StreamWriter::WriteToBuffer(BufferSpan input) {
   buffer_.append(input.getSlice(remaining_capacity));
   input.removePrefix(remaining_capacity);
 
-  FlushBuffer();
+  flushBuffer();
 
   ASSERT(input.size() < buffer_.capacity());
   buffer_.append(input);
 }
 
 void StreamWriter::onWriteChar(char c) {
-  if (IsDirect()) {
+  if (isDirect()) {
     if (buffer_.capacity() == buffer_.size()) {
-      FlushBuffer();
+      flushBuffer();
     }
     buffer_.add(static_cast<byte_t>(c));
     return;
   }
-  WriteIndirect(StringSpan(&c, 1));
+  writeIndirect(StringSpan(&c, 1));
 }
 
 void StreamWriter::onWriteRune(char32_t rune) {
   char units[Utf8::MaxEncodedRuneLength];
   int length = Utf8::Encode(units, rune);
-  if (IsDirect()) {
-    WriteToBuffer(BufferSpan(units, length));
+  if (isDirect()) {
+    writeToBuffer(BufferSpan(units, length));
   } else {
-    WriteIndirect(StringSpan(units, length));
+    writeIndirect(StringSpan(units, length));
   }
 }
 
 void StreamWriter::onWriteString(StringSpan input) {
-  if (IsDirect()) {
-    WriteToBuffer(BufferSpan(input));
+  if (isDirect()) {
+    writeToBuffer(BufferSpan(input));
   } else {
-    WriteIndirect(input);
+    writeIndirect(input);
   }
 }
 
-void StreamWriter::WriteIndirect(StringSpan input) {
+void StreamWriter::writeIndirect(StringSpan input) {
   while (!input.isEmpty()) {
     int remaining_capacity = buffer_.capacity() - buffer_.size();
     void* output = buffer_.appendUninitialized(remaining_capacity);
@@ -168,7 +168,7 @@ void StreamWriter::WriteIndirect(StringSpan input) {
     buffer_.removeSuffix(remaining_capacity - result.num_wrote);
 
     if (result.more_output) {
-      FlushBuffer();
+      flushBuffer();
     }
   }
 }

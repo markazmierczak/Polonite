@@ -13,26 +13,26 @@ class BASE_EXPORT TextReader {
   TextReader() {}
   virtual ~TextReader() {}
 
-  int PeekAscii();
-  int32_t Peek() { return OnPeek(); }
+  int peekAscii();
+  int32_t peek() { return onPeek(); }
 
   // Reads the next character and advances the position by one character.
   // Returns the next character from the text reader, or -1 if no more
   // characters are available (or character cannot be encoded in ASCII).
-  int ReadAscii();
-  int32_t Read() { return OnRead(); }
+  int readAscii();
+  int32_t read() { return onRead(); }
 
   // Reads a specified maximum number of characters and writes the data to a buffer.
   // Returns the number of characters that have been read.
-  int ReadAscii(char* data, int count);
-  int Read(char* data, int count) { return OnRead(data, count); }
+  int readAscii(char* data, int count);
+  int read(char* data, int count) { return OnRead(data, count); }
 
-  bool ReadLineAscii(String& output);
-  bool ReadLine(String& output);
+  bool readLineAscii(String& output);
+  bool readLine(String& output);
 
  protected:
-  virtual int32_t OnRead() = 0;
-  virtual int32_t OnPeek() = 0;
+  virtual int32_t onRead() = 0;
+  virtual int32_t onPeek() = 0;
 
   virtual int OnRead(char* dst, int count) = 0;
 };

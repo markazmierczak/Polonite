@@ -7,15 +7,15 @@
 
 namespace stp {
 
-int32_t StringReader::OnPeek() {
-  return OnReadInternal(false);
+int32_t StringReader::onPeek() {
+  return onReadInternal(false);
 }
 
-int32_t StringReader::OnRead() {
-  return OnReadInternal(true);
+int32_t StringReader::onRead() {
+  return onReadInternal(true);
 }
 
-inline int32_t StringReader::OnReadInternal(bool advance) {
+inline int32_t StringReader::onReadInternal(bool advance) {
   int size = string_.size();
   if (size == 0)
     return -1;

@@ -9,6 +9,7 @@
 namespace stp {
 
 class RefCountedBase {
+  DISALLOW_COPY_AND_ASSIGN(RefCountedBase);
  public:
   RefCountedBase() noexcept {
     #ifndef NDEBUG
@@ -44,8 +45,6 @@ class RefCountedBase {
 
  private:
   mutable int ref_count_;
-
-  DISALLOW_COPY_AND_ASSIGN(RefCountedBase);
 };
 
 inline void adoptedByRefPtr(RefCountedBase* refed) noexcept {

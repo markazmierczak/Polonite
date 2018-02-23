@@ -7,21 +7,21 @@
 
 namespace stp {
 
-int TextReader::PeekAscii() {
-  int32_t ch = Peek();
+int TextReader::peekAscii() {
+  int32_t ch = peek();
   if (0 <= ch && ch <= 0x7F)
     return ch;
   return -1;
 }
 
-int TextReader::ReadAscii() {
-  int32_t ch = Read();
+int TextReader::readAscii() {
+  int32_t ch = read();
   if (0 <= ch && ch <= 0x7F)
     return ch;
   return -1;
 }
 
-int TextReader::ReadAscii(char* data, int count) {
+int TextReader::readAscii(char* data, int count) {
   int n = OnRead(data, count);
   if (n > 0) {
     if (!StringSpan(data, n).isAscii())
@@ -30,17 +30,17 @@ int TextReader::ReadAscii(char* data, int count) {
   return n;
 }
 
-bool TextReader::ReadLineAscii(String& out) {
+bool TextReader::readLineAscii(String& out) {
   out.clear();
 
   while (true) {
-    int ch = ReadAscii();
+    int ch = readAscii();
     if (ch < 0)
       break;
 
     if (ch == '\n' || ch == '\r') {
-      if (ch == '\r' && PeekAscii() == '\n')
-        ReadAscii();
+      if (ch == '\r' && peekAscii() == '\n')
+        readAscii();
       return true;
     }
     out.append(static_cast<char>(ch));
@@ -48,17 +48,17 @@ bool TextReader::ReadLineAscii(String& out) {
   return !out.isEmpty();
 }
 
-bool TextReader::ReadLine(String& out) {
+bool TextReader::readLine(String& out) {
   out.clear();
 
   while (true) {
-    int32_t ch = Read();
+    int32_t ch = read();
     if (ch < 0)
       break;
 
     if (ch == '\n' || ch == '\r') {
-      if (ch == '\r' && Peek() == '\n')
-        Read();
+      if (ch == '\r' && peek() == '\n')
+        read();
       return true;
     }
     int encoded_length = Utf8::EncodedLength(ch);

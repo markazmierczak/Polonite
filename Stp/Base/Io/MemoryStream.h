@@ -18,12 +18,12 @@ class BASE_EXPORT MemoryStream final : public Stream {
   MemoryStream();
   ~MemoryStream() override;
 
-  void OpenNewBytes();
-  void AdoptAndOpen(Buffer&& bytes);
-  Buffer CloseAndrelease();
+  void openNewBytes();
+  void adoptAndOpen(Buffer&& bytes);
+  Buffer closeAndrelease();
 
-  void Open(BufferSpan memory) { OpenInternal(const_cast<void*>(memory.data()), memory.size(), false); }
-  void Open(MutableBufferSpan memory) { OpenInternal(memory.data(), memory.size(), true); }
+  void open(BufferSpan memory) { openInternal(const_cast<void*>(memory.data()), memory.size(), false); }
+  void open(MutableBufferSpan memory) { openInternal(memory.data(), memory.size(), true); }
 
   void ensureCapacity(int request);
 
@@ -62,7 +62,7 @@ class BASE_EXPORT MemoryStream final : public Stream {
   // If it would be greater, integer overflows.
   static constexpr int MaxCapacity_ = Limits<int>::Min / -2;
 
-  void OpenInternal(void* data, int length, bool writable);
+  void openInternal(void* data, int length, bool writable);
 };
 
 } // namespace stp

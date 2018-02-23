@@ -19,14 +19,14 @@ class BASE_EXPORT StreamWriter final : public TextWriter {
   explicit StreamWriter(Stream* stream, TextEncoding encoding, int buffer_capacity);
   ~StreamWriter();
 
-  void ForceValidation();
+  void forceValidation();
 
-  int GetBufferCapacity() const { return buffer_.capacity(); }
+  int getBufferCapacity() const { return buffer_.capacity(); }
 
-  void SetAutoFlush(bool auto_flush);
-  bool GetAutoFlush() const { return auto_flush_; }
+  void setAutoFlush(bool auto_flush);
+  bool getAutoFlush() const { return auto_flush_; }
 
-  Stream& GetStream() const { return stream_; }
+  Stream& getStream() const { return stream_; }
   TextEncoding getEncoding() const override;
 
  protected:
@@ -50,14 +50,14 @@ class BASE_EXPORT StreamWriter final : public TextWriter {
   static constexpr int MinBufferCapacity = 1024;
   static constexpr int MaxLengthForFastPath_ = 8;
 
-  bool IsDirect() const { return encoder_ == nullptr; }
-  void WriteIndirect(StringSpan input);
+  bool isDirect() const { return encoder_ == nullptr; }
+  void writeIndirect(StringSpan input);
 
-  void WriteToBuffer(BufferSpan input);
-  void FlushBuffer();
+  void writeToBuffer(BufferSpan input);
+  void flushBuffer();
 
-  void CreateEncoder();
-  void DestroyEncoder();
+  void createEncoder();
+  void destroyEncoder();
 };
 
 } // namespace stp

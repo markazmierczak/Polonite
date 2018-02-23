@@ -13,12 +13,12 @@ class BASE_EXPORT StringReader : public TextReader {
   explicit StringReader(StringSpan string) : string_(string) {}
 
  protected:
-  int32_t OnPeek() override;
-  int32_t OnRead() override;
+  int32_t onPeek() override;
+  int32_t onRead() override;
   int OnRead(char* dst, int count) override;
 
  private:
-  int32_t OnReadInternal(bool advance);
+  int32_t onReadInternal(bool advance);
 
   StringSpan string_;
 };

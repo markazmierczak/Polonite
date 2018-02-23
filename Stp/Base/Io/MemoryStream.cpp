@@ -19,14 +19,14 @@ MemoryStream::~MemoryStream() {
   }
 }
 
-void MemoryStream::OpenNewBytes() {
+void MemoryStream::openNewBytes() {
   ASSERT(!isOpen());
   open_ = true;
   writable_ = true;
   expandable_ = true;
 }
 
-void MemoryStream::AdoptAndOpen(Buffer&& bytes) {
+void MemoryStream::adoptAndOpen(Buffer&& bytes) {
   ASSERT(!isOpen());
   open_ = true;
   writable_ = true;
@@ -36,7 +36,7 @@ void MemoryStream::AdoptAndOpen(Buffer&& bytes) {
   memory_ = static_cast<byte_t*>(bytes.releaseMemory());
 }
 
-void MemoryStream::OpenInternal(void* data, int length, bool writable) {
+void MemoryStream::openInternal(void* data, int length, bool writable) {
   ASSERT(!isOpen());
   ASSERT(length >= 0);
   open_ = true;
@@ -45,7 +45,7 @@ void MemoryStream::OpenInternal(void* data, int length, bool writable) {
   length_ = length;
 }
 
-Buffer MemoryStream::CloseAndrelease() {
+Buffer MemoryStream::closeAndrelease() {
   ASSERT(expandable_);
   byte_t* ptr = exchange(memory_, nullptr);
   int size = exchange(length_, 0);
