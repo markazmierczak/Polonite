@@ -60,7 +60,6 @@
 #define STP_BASE_THREAD_CONDITIONVARIABLE_H_
 
 #include "Base/Compiler/Os.h"
-#include "Base/Export.h"
 #include "Base/Thread/Lock.h"
 
 #if OS(WIN)

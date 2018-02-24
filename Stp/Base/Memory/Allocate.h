@@ -4,7 +4,6 @@
 #ifndef STP_BASE_MEMORY_ALLOCATE_H_
 #define STP_BASE_MEMORY_ALLOCATE_H_
 
-#include "Base/Export.h"
 #include "Base/Type/Sign.h"
 
 #include <new>

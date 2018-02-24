@@ -4,7 +4,7 @@
 #ifndef STP_BASE_DEBUG_ALIAS_H_
 #define STP_BASE_DEBUG_ALIAS_H_
 
-#include "Base/Export.h"
+#include "Base/Compiler/Config.h"
 
 namespace stp {
 

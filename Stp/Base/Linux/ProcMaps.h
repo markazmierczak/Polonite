@@ -6,7 +6,6 @@
 #ifndef STP_BASE_LINUX_PROCMAPS_H_
 #define STP_BASE_LINUX_PROCMAPS_H_
 
-#include "Base/Export.h"
 #include "Base/Type/Basic.h"
 
 namespace stp {

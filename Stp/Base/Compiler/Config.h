@@ -33,4 +33,25 @@
 #define COMPILER_GCC_AT_LEAST(major, minor) 0
 #endif
 
+#ifdef COMPONENT_BUILD
+#if COMPILER(MSVC)
+
+#ifdef STP_BASE_IMPLEMENTATION
+#define BASE_EXPORT __declspec(dllexport)
+#else
+#define BASE_EXPORT __declspec(dllimport)
+#endif
+
+#else
+#ifdef STP_BASE_IMPLEMENTATION
+#define BASE_EXPORT __attribute__((visibility("default")))
+#else
+#define BASE_EXPORT
+#endif
+#endif
+
+#else
+#define BASE_EXPORT
+#endif // COMPONENT_BUILD
+
 #endif // STP_BASE_COMPILER_CONFIG_H_

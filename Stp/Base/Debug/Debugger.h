@@ -4,7 +4,6 @@
 #ifndef STP_BASE_DEBUG_DEBUGGER_H_
 #define STP_BASE_DEBUG_DEBUGGER_H_
 
-#include "Base/Export.h"
 #include "Base/Type/Attributes.h"
 
 namespace stp {

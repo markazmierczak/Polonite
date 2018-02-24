@@ -51,9 +51,9 @@ class StaticStringImpl : public StringImplShape {
   template<int N>
   constexpr StaticStringImpl(const char (&text)[N], Kind kind);
 
-  operator StringImpl&() { return reinterpret_cast<StringImpl*>(this); }
+  operator StringImpl&() { return *reinterpret_cast<StringImpl*>(this); }
 
-  static StringImpl* empty() { return &g_empty_; }
+  static StringImpl& empty() { return g_empty_; }
 
  private:
   static StaticStringImpl g_empty_;

@@ -31,7 +31,6 @@
 
 #include "Base/Compiler/Cpu.h"
 #include "Base/Compiler/Os.h"
-#include "Base/Export.h"
 #include "Base/Type/Basic.h"
 
 #if OS(WIN) && CPU(64BIT)

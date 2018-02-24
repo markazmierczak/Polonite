@@ -6,7 +6,6 @@
 #ifndef STP_BASE_THREAD_ATOMICFLAG_H_
 #define STP_BASE_THREAD_ATOMICFLAG_H_
 
-#include "Base/Export.h"
 #include "Base/Thread/AtomicOps.h"
 
 namespace stp {

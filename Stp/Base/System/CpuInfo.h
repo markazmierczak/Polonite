@@ -6,7 +6,6 @@
 
 #include "Base/Compiler/Cpu.h"
 #include "Base/Compiler/Simd.h"
-#include "Base/Export.h"
 #include "Base/Type/Basic.h"
 
 namespace stp {

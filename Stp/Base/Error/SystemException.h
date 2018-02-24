@@ -9,16 +9,16 @@
 
 namespace stp {
 
-class BASE_EXPORT SystemException : public Exception {
+class SystemException : public Exception {
  public:
   explicit SystemException(SystemErrorCode error_code) noexcept : error_code_(error_code) {}
 
   SystemErrorCode getErrorCode() const { return error_code_; }
 
-  StringSpan getName() const noexcept override;
+  BASE_EXPORT StringSpan getName() const noexcept override;
 
  protected:
-  void onFormat(TextWriter& out) const override;
+  BASE_EXPORT void onFormat(TextWriter& out) const override;
 
  private:
   SystemErrorCode error_code_;

@@ -4,8 +4,6 @@
 #ifndef STP_BASE_TYPE_LIMITS_H_
 #define STP_BASE_TYPE_LIMITS_H_
 
-#include "Base/Compiler/Config.h"
-#include "Base/Export.h"
 #include "Base/Type/Scalar.h"
 
 #include <float.h>

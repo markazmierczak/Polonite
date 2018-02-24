@@ -4,7 +4,6 @@
 #ifndef STP_BASE_TYPE_VARIABLE_H_
 #define STP_BASE_TYPE_VARIABLE_H_
 
-#include "Base/Export.h"
 #include "Base/Type/Array.h"
 
 namespace stp {

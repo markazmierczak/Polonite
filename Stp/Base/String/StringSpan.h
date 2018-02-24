@@ -42,16 +42,16 @@ class StringSpan {
 
   BASE_EXPORT int indexOf(char c) const noexcept;
   int indexOf(char32_t c) const = delete;
-  BASE_EXPORT int indexOf(StringSpan s) const noexcept;
+  BASE_EXPORT int indexOf(const StringSpan& needle) const noexcept;
   BASE_EXPORT int lastIndexOf(char c) const noexcept;
   int lastIndexOf(char32_t c) const = delete;
-  BASE_EXPORT int lastIndexOf(StringSpan s) const noexcept;
+  BASE_EXPORT int lastIndexOf(const StringSpan& needle) const noexcept;
   bool contains(char c) const noexcept { return indexOf(c) >= 0; }
   bool contains(char32_t c) const = delete;
-  bool contains(StringSpan s) const noexcept { return indexOf(s) >= 0; }
+  bool contains(const StringSpan& s) const noexcept { return indexOf(s) >= 0; }
 
-  bool startsWith(StringSpan s) const noexcept;
-  bool endsWith(StringSpan s) const noexcept;
+  bool startsWith(const StringSpan& s) const noexcept;
+  bool endsWith(const StringSpan& s) const noexcept;
 
   friend constexpr const char* begin(const StringSpan& x) noexcept { return x.data_; }
   friend constexpr const char* end(const StringSpan& x) noexcept { return x.data_ + x.length_; }
@@ -109,11 +109,11 @@ constexpr void StringSpan::removePrefix(int n) noexcept {
   length_ -= n;
 }
 
-inline bool StringSpan::startsWith(StringSpan s) const noexcept {
+inline bool StringSpan::startsWith(const StringSpan& s) const noexcept {
   return length_ >= s.length_ && left(s.length()) == s;
 }
 
-inline bool StringSpan::endsWith(StringSpan s) const noexcept {
+inline bool StringSpan::endsWith(const StringSpan& s) const noexcept {
   return length_ >= s.length_ && right(s.length()) == s;
 }
 

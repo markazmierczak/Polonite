@@ -4,9 +4,7 @@
 #ifndef STP_BASE_MATH_PRIME_H_
 #define STP_BASE_MATH_PRIME_H_
 
-#include "Base/Export.h"
 #include "Base/Math/SafeConversions.h"
-#include "Base/Type/Sign.h"
 
 namespace stp {
 

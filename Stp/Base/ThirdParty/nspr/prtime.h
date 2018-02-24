@@ -52,9 +52,7 @@
 #ifndef STP_BASE_THIRDPARTY_NSPR_PRTIME_H_
 #define STP_BASE_THIRDPARTY_NSPR_PRTIME_H_
 
-#include <stdint.h>
-
-#include "Base/Export.h"
+#include "Base/Type/Basic.h"
 
 typedef int8_t PRInt8;
 typedef int16_t PRInt16;

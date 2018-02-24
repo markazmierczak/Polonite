@@ -4,7 +4,6 @@
 #ifndef STP_BASE_MATH_NEAR_H_
 #define STP_BASE_MATH_NEAR_H_
 
-#include "Base/Export.h"
 #include "Base/Math/Math.h"
 
 namespace stp {

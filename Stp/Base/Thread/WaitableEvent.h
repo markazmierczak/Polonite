@@ -7,7 +7,6 @@
 #define STP_BASE_THREAD_WAITABLEEVENT_H_
 
 #include "Base/Compiler/Os.h"
-#include "Base/Export.h"
 
 #if OS(WIN)
 # include "Base/Win/ScopedHandle.h"

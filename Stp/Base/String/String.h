@@ -36,8 +36,6 @@ class String {
   const char* data() const noexcept { return impl_ ? impl_->data() : 0; }
   int length() const noexcept { return impl_ ? impl_->length() : 0; }
 
-  const char& operator[](int at) const noexcept;
-
   StringImpl* impl() const noexcept { return impl_.get(); }
   RefPtr<StringImpl> releaseImpl() noexcept { return move(impl_); }
 
@@ -71,6 +69,10 @@ class String {
  private:
   RefPtr<StringImpl> impl_;
 };
+
+// FIXME implement
+#define StringLiteral(text) \
+  []() noexcept -> String { static  }
 
 inline String toString(String s) noexcept { return s; }
 inline String toString(StringSpan s) { return String(s); }

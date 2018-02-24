@@ -6,11 +6,9 @@
 #ifndef STP_BASE_GEOMETRY_CUBICBEZIER_H_
 #define STP_BASE_GEOMETRY_CUBICBEZIER_H_
 
-#include "Base/Export.h"
-
 namespace stp {
 
-class BASE_EXPORT CubicBezier {
+class CubicBezier {
  public:
   CubicBezier(double x1, double y1, double x2, double y2)
       : x1_(x1), y1_(y1), x2_(x2), y2_(y2) {}

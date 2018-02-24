@@ -4,7 +4,7 @@
 #ifndef STP_BASE_DEBUG_LOG_H_
 #define STP_BASE_DEBUG_LOG_H_
 
-#include "Base/Containers/Span.h"
+#include "Base/String/StringSpan.h"
 
 namespace stp {
 

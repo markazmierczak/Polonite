@@ -43,6 +43,7 @@ component("Base") {
     "Compiler/Control.h",
     "Compiler/Cpu.h",
     "Compiler/Endianness.h",
+    "Compiler/ExportTemplate.h",
     "Compiler/Lsan.h",
     "Compiler/Msan.h",
     "Compiler/Os.h",
@@ -145,9 +146,6 @@ component("Base") {
     "Error/SystemErrorCode.h",
     "Error/SystemException.cpp",
     "Error/SystemException.h",
-
-    "Export.h",
-    "ExportTemplate.h",
 
     "FileSystem/Directory.cpp",
     "FileSystem/Directory.h",

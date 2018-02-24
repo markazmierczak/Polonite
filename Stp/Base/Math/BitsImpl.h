@@ -4,7 +4,6 @@
 #ifndef STP_BASE_MATH_BITSIMPL_H_
 #define STP_BASE_MATH_BITSIMPL_H_
 
-#include "Base/Export.h"
 #include "Base/Type/Sign.h"
 #include "Base/Compiler/Cpu.h"
 
