@@ -22,6 +22,7 @@ inline CharLookupTable BuildLookupTable(StringSpan s) {
 } // namespace
 
 int indexOfAny(StringSpan s, StringSpan a) {
+  ASSERT(isAscii(a));
   // Avoid the cost of BuildLookupTable() for a single-character search.
   if (a.size() <= 1)
     return !a.isEmpty() ? s.indexOf(a[0]) : -1;
@@ -35,6 +36,7 @@ int indexOfAny(StringSpan s, StringSpan a) {
 }
 
 int lastIndexOfAny(StringSpan s, StringSpan a) {
+  ASSERT(isAscii(a));
   // Avoid the cost of BuildLookupTable() for a single-character search.
   if (a.size() <= 1)
     return !a.isEmpty() ? s.lastIndexOf(a[0]) : -1;
@@ -48,6 +50,7 @@ int lastIndexOfAny(StringSpan s, StringSpan a) {
 }
 
 int indexOfAnyBut(StringSpan s, StringSpan a) {
+  ASSERT(isAscii(a));
   for (int i = 0; i < s.size(); ++i) {
     bool found = false;
     for (int j = 0; j < a.size(); ++j) {
@@ -63,6 +66,7 @@ int indexOfAnyBut(StringSpan s, StringSpan a) {
 }
 
 int lastIndexOfAnyBut(StringSpan s, StringSpan a) {
+  ASSERT(isAscii(a));
   for (int i = s.size() - 1; i >= 0; --i) {
     bool found = false;
     for (int j = 0; j < a.size(); ++j) {

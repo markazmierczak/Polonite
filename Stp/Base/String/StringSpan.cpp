@@ -3,11 +3,13 @@
 
 #include "Base/String/StringSpan.h"
 
+#include "Base/Text/AsciiChar.h"
+#include "Base/Text/Utf.h"
 #include "Base/Type/Comparable.h"
 
 namespace stp {
 
-int StringSpan::indexOf(char c) const noexcept {
+int StringSpan::indexOfUnit(char c) const noexcept {
   for (int i = 0; i < length_; ++i) {
     if (data_[i] == c)
       return i;
@@ -15,12 +17,28 @@ int StringSpan::indexOf(char c) const noexcept {
   return -1;
 }
 
-int StringSpan::lastIndexOf(char c) const noexcept {
+int StringSpan::lastIndexOfUnit(char c) const noexcept {
   for (int i = length_ - 1; i >= 0; --i) {
     if (data_[i] == c)
       return i;
   }
   return -1;
+}
+
+int StringSpan::indexOfRune(char32_t rune) const noexcept {
+  if (isAscii(rune))
+    return indexOfUnit(static_cast<char>(rune));
+  char encoded[Utf8::MaxEncodedRuneLength];
+  int n = EncodeUtf(encoded, rune);
+  return indexOf(StringSpan(encoded, n));
+}
+
+int StringSpan::lastIndexOfRune(char32_t rune) const noexcept {
+  if (isAscii(rune))
+    return lastIndexOfUnit(static_cast<char>(rune));
+  char encoded[Utf8::MaxEncodedRuneLength];
+  int n = EncodeUtf(encoded, rune);
+  return lastIndexOf(StringSpan(encoded, n));
 }
 
 int StringSpan::indexOf(const StringSpan& needle) const noexcept {

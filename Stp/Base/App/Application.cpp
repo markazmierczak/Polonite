@@ -155,7 +155,7 @@ void Application::fini() {
  * ASCII encoded string.
  * Must not contain any (back)slashes or colons and be non empty.
  */
-void Application::setName(StringSpan name) {
+void Application::setName(const String& name) {
   ASSERT(!name.isEmpty());
   // Many clients depends on short name being ASCII.
   ASSERT(isAscii(name));
@@ -166,7 +166,7 @@ void Application::setName(StringSpan name) {
   name_ = name;
 }
 
-static String ResolveNameFromExecutablePath() {
+static String resolveNameFromExecutablePath() {
   // FIXME
   return String("toReplace");
 }
@@ -174,7 +174,7 @@ static String ResolveNameFromExecutablePath() {
 const String& Application::getName() {
   AutoLock auto_lock(&g_data_lock);
   if (name_.isEmpty())
-    name_ = ResolveNameFromExecutablePath();
+    name_ = resolveNameFromExecutablePath();
   return name_;
 }
 
@@ -182,7 +182,7 @@ const String& Application::getName() {
  * @param display_name
  * UTF-8 encoded.
  */
-void Application::setDisplayName(StringSpan display_name) {
+void Application::setDisplayName(const String& display_name) {
   ASSERT(!display_name.isEmpty());
 
   ASSERT(phase_ == Phase::Born);

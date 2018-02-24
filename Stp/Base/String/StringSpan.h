@@ -19,7 +19,7 @@ class StringSpan {
   constexpr StringSpan(const char (&array)[N]) noexcept
       : data_(array), length_(N - 1) { ASSERT(array[N - 1] == '\0'); }
 
-  static StringSpan empty() noexcept { return ""; }
+  static constexpr StringSpan empty() noexcept { return ""; }
   static StringSpan fromCString(const char* cstr) noexcept;
 
   ALWAYS_INLINE constexpr const char* data() const noexcept { return data_; }
@@ -40,14 +40,16 @@ class StringSpan {
   constexpr void removePrefix(int n) noexcept;
   constexpr void removeSuffix(int n) noexcept { truncate(length_ - n); }
 
-  BASE_EXPORT int indexOf(char c) const noexcept;
-  int indexOf(char32_t c) const = delete;
+  BASE_EXPORT int indexOfUnit(char c) const noexcept;
+  BASE_EXPORT int lastIndexOfUnit(char c) const noexcept;
+  bool containsUnit(char c) const noexcept { return indexOfUnit(c) >= 0; }
+
+  BASE_EXPORT int indexOfRune(char32_t rune) const noexcept;
+  BASE_EXPORT int lastIndexOfRune(char32_t rune) const noexcept;
+  bool containsRune(char32_t rune) const noexcept { return indexOfRune(rune); }
+
   BASE_EXPORT int indexOf(const StringSpan& needle) const noexcept;
-  BASE_EXPORT int lastIndexOf(char c) const noexcept;
-  int lastIndexOf(char32_t c) const = delete;
   BASE_EXPORT int lastIndexOf(const StringSpan& needle) const noexcept;
-  bool contains(char c) const noexcept { return indexOf(c) >= 0; }
-  bool contains(char32_t c) const = delete;
   bool contains(const StringSpan& s) const noexcept { return indexOf(s) >= 0; }
 
   bool startsWith(const StringSpan& s) const noexcept;

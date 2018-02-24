@@ -3,6 +3,7 @@
 
 #include "Base/Containers/FlatSet.h"
 
+#include "Base/String/String.h"
 #include "Base/Test/GTest.h"
 
 namespace stp {

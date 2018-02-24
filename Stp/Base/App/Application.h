@@ -16,6 +16,7 @@ namespace stp {
 class ApplicationPart;
 class AtExitManager;
 
+// This class must be accessed on main thread only !
 class BASE_EXPORT Application {
  public:
   enum class Phase {
@@ -33,10 +34,10 @@ class BASE_EXPORT Application {
 
   void addPart(ApplicationPart* part);
 
-  void setName(StringSpan name);
+  void setName(const String& name);
   const String& getName();
 
-  void setDisplayName(StringSpan display_name);
+  void setDisplayName(const String& display_name);
   const String& getDisplayName();
 
   void setVersion(const Version& version);
