@@ -115,9 +115,6 @@ class List {
   SpanType toSpan() const { return SpanType(data_, size_); }
   MutableSpanType toSpan() { return MutableSpanType(data_, size_); }
 
-  friend SpanType makeSpan(const List& x) { return x.toSpan(); }
-  friend MutableSpanType makeSpan(List& x) { return x.toSpan(); }
-
  private:
   T* data_ = nullptr;
   int size_ = 0;
@@ -163,11 +160,11 @@ struct TIsTriviallyRelocatableTmpl<List<T>> : TIsTriviallyRelocatableTmpl<T> {};
 
 template<typename T, int N>
 inline bool operator==(const T (&lhs)[N], const List<T>& rhs) {
-  return operator==(makeSpan(lhs), makeSpan(rhs));
+  return operator==(lhs, rhs.toSpan());
 }
 template<typename T, int N>
 inline bool operator!=(const T (&lhs)[N], const List<T>& rhs) {
-  return operator!=(makeSpan(lhs), makeSpan(rhs));
+  return operator!=(lhs, rhs.toSpan());
 }
 
 template<typename T>

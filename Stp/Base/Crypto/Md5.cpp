@@ -25,7 +25,7 @@ namespace stp {
 static constexpr int NibbleCount = Md5Digest::Length * 2;
 
 bool tryParse(StringSpan input, Md5Digest& out_digest) noexcept {
-  if (input.size() != NibbleCount)
+  if (input.length() != NibbleCount)
     return false;
 
   byte_t* outd = &out_digest[0];
@@ -55,7 +55,7 @@ TextWriter& operator<<(TextWriter& out, const Md5Digest& digest) {
 
 void format(TextWriter& out, const Md5Digest& digest, const StringSpan& opts) {
   bool uppercase = false;
-  for (int i = 0; i < opts.size(); ++i) {
+  for (int i = 0; i < opts.length(); ++i) {
     char c = opts[i];
     switch (c) {
       case 'x':

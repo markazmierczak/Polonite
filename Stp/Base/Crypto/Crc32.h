@@ -18,12 +18,12 @@ BASE_EXPORT void format(TextWriter& out, Crc32Value checksum, const StringSpan& 
 
 BASE_EXPORT TextWriter& operator<<(TextWriter& out, Crc32Value checksum);
 
-class BASE_EXPORT Crc32Algorithm {
+class Crc32Algorithm {
  public:
   Crc32Algorithm() = default;
 
   void reset() { residue_ = InitialResidue; }
-  void update(BufferSpan input) noexcept;
+  BASE_EXPORT void update(BufferSpan input) noexcept;
   Crc32Value getChecksum() const { return static_cast<Crc32Value>(~residue_); }
 
  private:

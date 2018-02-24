@@ -56,8 +56,6 @@ struct Array {
 
   constexpr SpanType toSpan() const { return SpanType(data_, N); }
   constexpr MutableSpanType toSpan() { return MutableSpanType(data_, N); }
-  friend SpanType makeSpan(const Array& x) { return x.toSpan(); }
-  friend MutableSpanType makeSpan(Array& x) { return x.toSpan(); }
 };
 
 template<typename T, int N>

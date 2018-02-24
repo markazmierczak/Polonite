@@ -11,14 +11,8 @@ namespace stp {
 class String {
  public:
   String() = default;
-  ~String() = default;
 
-  String(String&&) = default;
-  String& operator=(String&&) = default;
-  String(const String&) = default;
-  String& operator=(const String&) = default;
-
-  explicit String(StringSpan text) : impl_(StringImpl::create(text)) {}
+  explicit String(const StringSpan& text) : impl_(StringImpl::create(text)) {}
 
   template<int N>
   explicit String(const char (&text)[N]) = delete; // Use StringLiteral instead.
@@ -27,7 +21,8 @@ class String {
 
   static String fromCString(const char* cstr);
 
-  operator StringSpan() const { return StringSpan(data(), length()); }
+  StringSpan toSpan() const noexcept { return StringSpan(data(), length()); }
+  operator StringSpan() const noexcept { return toSpan(); }
 
   bool isNull() const noexcept { return !impl_; }
   bool isEmpty() const noexcept { return !impl_ || impl_->isEmpty(); }
@@ -41,28 +36,30 @@ class String {
 
   const char& operator[](int at) const noexcept;
 
-  StringSpan substring(int at) const;
-  StringSpan substring(int at, int n) const;
-  StringSpan left(int n) const { return substring(0, n); }
-  StringSpan right(int n) const { return substring(length() - n, n); }
+  String substring(int at) const;
+  String substring(int at, int n) const;
+  String left(int n) const { return substring(0, n); }
+  String right(int n) const { return substring(length() - n, n); }
 
   void truncate(int at);
 
   void removePrefix(int n);
-  void removeSuffix(int n) noexcept { truncate(length() - n); }
+  void removeSuffix(int n) { truncate(length() - n); }
 
-  BASE_EXPORT int indexOf(char c) const noexcept;
-  int indexOf(char32_t c) const = delete;
-  BASE_EXPORT int indexOf(StringSpan s) const noexcept;
-  BASE_EXPORT int lastIndexOf(char c) const noexcept;
-  int lastIndexOf(char32_t c) const = delete;
-  BASE_EXPORT int lastIndexOf(StringSpan s) const noexcept;
-  bool contains(char c) const noexcept { return indexOf(c) >= 0; }
-  bool contains(char32_t c) const = delete;
-  bool contains(StringSpan s) const noexcept { return indexOf(s) >= 0; }
+  int indexOfUnit(char c) const noexcept { return impl_ ? toSpan().indexOfUnit(c) : -1; }
+  int lastIndexOfUnit(char c) const noexcept { return impl_ ? toSpan().lastIndexOfUnit(c) : -1; }
+  bool containsUnit(char c) const noexcept { return indexOfUnit(c) >= 0; }
 
-  bool startsWith(StringSpan s) const noexcept;
-  bool endsWith(StringSpan s) const noexcept;
+  int indexOfRune(char32_t rune) const noexcept { return impl_ ? toSpan().indexOfRune(rune) : -1; }
+  int lastIndexOfRune(char32_t rune) const noexcept { return impl_ ? toSpan().lastIndexOfRune(rune) : -1; }
+  bool containsRune(char32_t rune) const noexcept { return indexOfRune(rune) >= 0; }
+
+  int indexOf(const StringSpan& s) const noexcept { return impl_ ? toSpan().indexOf(s) : -1; }
+  int lastIndexOf(const StringSpan& s) const noexcept { return impl_ ? toSpan().lastIndexOf(s) : -1; }
+  bool contains(const StringSpan& s) const noexcept { return indexOf(s) >= 0; }
+
+  bool startsWith(const StringSpan& s) const noexcept { return toSpan().startsWith(s); }
+  bool endsWith(const StringSpan& s) const noexcept { return toSpan().endsWith(s); }
 
   friend void swap(String& x, String& y) noexcept { swap(x.impl_, y.impl_); }
 

@@ -100,9 +100,6 @@ class Buffer {
   SpanType toSpan() const { return SpanType(data_, size_); }
   MutableSpanType toSpan() { return MutableSpanType(data_, size_); }
 
-  friend SpanType makeSpan(const Buffer& x) { return x.toSpan(); }
-  friend MutableSpanType makeSpan(Buffer& x) { return x.toSpan(); }
-
  private:
   byte_t* data_ = nullptr;
   int size_ = 0;

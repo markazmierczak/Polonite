@@ -14,7 +14,7 @@ namespace stp {
 static constexpr int NibbleCount = Sha1Digest::Length * 2;
 
 bool tryParse(StringSpan input, Sha1Digest& out_digest) noexcept {
-  if (input.size() != NibbleCount)
+  if (input.length() != NibbleCount)
     return false;
 
   byte_t* outd = &out_digest[0];
@@ -44,7 +44,7 @@ TextWriter& operator<<(TextWriter& out, const Sha1Digest& digest) {
 
 void format(TextWriter& out, const Sha1Digest& digest, const StringSpan& opts) {
   bool uppercase = false;
-  for (int i = 0; i < opts.size(); ++i) {
+  for (int i = 0; i < opts.length(); ++i) {
     char c = opts[i];
     switch (c) {
       case 'x':

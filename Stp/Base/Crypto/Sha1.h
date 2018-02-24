@@ -46,13 +46,13 @@ BASE_EXPORT bool tryParse(StringSpan s, Sha1Digest& out_digest) noexcept;
 BASE_EXPORT void format(TextWriter& out, const Sha1Digest& digest, const StringSpan& opts);
 BASE_EXPORT TextWriter& operator<<(TextWriter& out, const Sha1Digest& digest);
 
-class BASE_EXPORT Sha1Hasher {
+class Sha1Hasher {
  public:
   Sha1Hasher() noexcept { reset(); }
 
-  void reset() noexcept;
-  void update(BufferSpan input) noexcept;
-  void finish(Sha1Digest& out_digest) noexcept;
+  BASE_EXPORT void reset() noexcept;
+  BASE_EXPORT void update(BufferSpan input) noexcept;
+  BASE_EXPORT void finish(Sha1Digest& out_digest) noexcept;
 
  private:
   void pad() noexcept;

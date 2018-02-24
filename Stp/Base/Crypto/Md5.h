@@ -46,13 +46,13 @@ BASE_EXPORT bool tryParse(StringSpan s, Md5Digest& out_digest) noexcept;
 BASE_EXPORT void format(TextWriter& out, const Md5Digest& digest, const StringSpan& opts);
 BASE_EXPORT TextWriter& operator<<(TextWriter& out, const Md5Digest& digest);
 
-class BASE_EXPORT Md5Hasher {
+class Md5Hasher {
  public:
   Md5Hasher() noexcept { reset(); }
 
-  void reset() noexcept;
-  void update(BufferSpan input) noexcept;
-  void finish(Md5Digest& out_digest) noexcept;
+  BASE_EXPORT void reset() noexcept;
+  BASE_EXPORT void update(BufferSpan input) noexcept;
+  BASE_EXPORT void finish(Md5Digest& out_digest) noexcept;
 
  private:
   void transform() noexcept;

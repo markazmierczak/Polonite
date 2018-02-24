@@ -12,7 +12,7 @@ namespace stp {
 
 bool tryParse(StringSpan input, Crc32Value& out) noexcept {
   constexpr int NibbleCount = 8;
-  if (input.size() < NibbleCount)
+  if (input.length() < NibbleCount)
     return false;
 
   uint32_t raw = 0;
@@ -44,7 +44,7 @@ TextWriter& operator<<(TextWriter& out, Crc32Value value) {
 
 void format(TextWriter& out, Crc32Value value, const StringSpan& opts) {
   bool uppercase = false;
-  for (int i = 0; i < opts.size(); ++i) {
+  for (int i = 0; i < opts.length(); ++i) {
     char c = opts[i];
     switch (c) {
       case 'x':

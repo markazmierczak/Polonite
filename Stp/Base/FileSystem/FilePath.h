@@ -115,7 +115,6 @@ class BASE_EXPORT FilePath {
   }
 
   SpanType toSpan() const { return SpanType(chars_); }
-  friend SpanType makeSpan(const FilePath& x) { return x.toSpan(); }
 
  private:
   List<CharType> chars_;

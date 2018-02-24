@@ -5,7 +5,6 @@
 #define STP_BASE_POSIX_FILEDESCRIPTOR_H_
 
 #include "Base/Containers/BufferSpan.h"
-#include "Base/Debug/Assert.h"
 #include "Base/Posix/EintrWrapper.h"
 
 #include <sys/types.h>

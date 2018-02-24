@@ -100,9 +100,6 @@ class InlineListBase {
   SpanType toSpan() const { return SpanType(data_, size_); }
   MutableSpanType toSpan() { return MutableSpanType(data_, size_); }
 
-  friend SpanType makeSpan(const InlineListBase& x) { return x.toSpan(); }
-  friend MutableSpanType makeSpan(InlineListBase& x) { return x.toSpan(); }
-
  protected:
   static constexpr int MaxCapacity_ = Limits<int>::Max / isizeof(T);
 
@@ -146,11 +143,11 @@ class InlineListBase {
 
 template<typename T, int N>
 inline bool operator==(const T (&lhs)[N], const InlineListBase<T>& rhs) {
-  return operator==(makeSpan(lhs), makeSpan(rhs));
+  return operator==(lhs, rhs.toSpan());
 }
 template<typename T, int N>
 inline bool operator!=(const T (&lhs)[N], const InlineListBase<T>& rhs) {
-  return operator!=(makeSpan(lhs), makeSpan(rhs));
+  return operator!=(lhs, rhs.toSpan());
 }
 
 template<typename T>

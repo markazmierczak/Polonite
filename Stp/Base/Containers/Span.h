@@ -4,7 +4,7 @@
 #ifndef STP_BASE_CONTAINERS_SPAN_H_
 #define STP_BASE_CONTAINERS_SPAN_H_
 
-#include "Base/Containers/ArrayOps.h"
+#include "Base/Containers/BufferSpan.h"
 
 #include <initializer_list>
 
@@ -32,6 +32,13 @@ class Span {
 
   constexpr Span(InitializerList<T> ilist) noexcept
       : data_(ilist.begin()), size_(static_cast<int>(ilist.size())) {}
+
+  explicit Span(BufferSpan buffer) noexcept
+      : data_(reinterpret_cast<const T*>(buffer.data())),
+        size_(static_cast<int>(toUnsigned(buffer.size()) / sizeof(T))) {
+    static_assert(TIsTrivial<T>, "!");
+    ASSERT(toUnsigned(buffer.size()) % sizeof(T) == 0);
+  }
 
   ALWAYS_INLINE constexpr const T* data() const { return data_; }
   ALWAYS_INLINE constexpr int size() const { return size_; }
@@ -104,6 +111,13 @@ class MutableSpan {
   template<int N>
   constexpr MutableSpan(T (&array)[N]) noexcept
       : data_(array), size_(N) {}
+
+  explicit MutableSpan(MutableBufferSpan buffer) noexcept
+      : data_(reinterpret_cast<T*>(buffer.data())),
+        size_(static_cast<int>(toUnsigned(buffer.size()) / sizeof(T))) {
+    static_assert(TIsTrivial<T>, "!");
+    ASSERT(toUnsigned(buffer.size()) % sizeof(T) == 0);
+  }
 
   constexpr operator Span<T>() const noexcept { return Span<T>(data_, size_); }
 
@@ -202,6 +216,15 @@ constexpr MutableSpan<T> makeSpan(T (&array)[N]) { return array; }
 
 template<typename T>
 constexpr Span<T> makeSpan(const InitializerList<T>& ilist) { return Span<T>(ilist); }
+
+template<typename T>
+constexpr BufferSpan makeBufferSpan(Span<T> span) {
+  return makeBufferSpan(span.data(), span.size());
+}
+template<typename T>
+constexpr BufferSpan makeBufferSpan(MutableSpan<T> span) {
+  return makeBufferSpan(span.data(), span.size());
+}
 
 template<typename T, int N>
 inline bool operator==(const T (&lhs)[N], const Span<T>& rhs) {

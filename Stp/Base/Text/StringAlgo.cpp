@@ -12,7 +12,7 @@ namespace {
 typedef BitArray<256> CharLookupTable;
 
 // The result table has one on `i`-th position set if |str| contains i-th character.
-inline CharLookupTable BuildLookupTable(StringSpan s) {
+inline CharLookupTable buildLookupTable(StringSpan s) {
   CharLookupTable table;
   for (int i = 0; i < s.size(); ++i)
     table.setBit(static_cast<unsigned char>(s[i]));
@@ -23,11 +23,11 @@ inline CharLookupTable BuildLookupTable(StringSpan s) {
 
 int indexOfAny(StringSpan s, StringSpan a) {
   ASSERT(isAscii(a));
-  // Avoid the cost of BuildLookupTable() for a single-character search.
+  // Avoid the cost of buildLookupTable() for a single-character search.
   if (a.size() <= 1)
     return !a.isEmpty() ? s.indexOf(a[0]) : -1;
 
-  CharLookupTable lookup = BuildLookupTable(a);
+  CharLookupTable lookup = buildLookupTable(a);
   for (int i = 0; i < s.size(); ++i) {
     if (lookup[static_cast<unsigned char>(s[i])])
       return i;
@@ -37,11 +37,11 @@ int indexOfAny(StringSpan s, StringSpan a) {
 
 int lastIndexOfAny(StringSpan s, StringSpan a) {
   ASSERT(isAscii(a));
-  // Avoid the cost of BuildLookupTable() for a single-character search.
+  // Avoid the cost of buildLookupTable() for a single-character search.
   if (a.size() <= 1)
     return !a.isEmpty() ? s.lastIndexOf(a[0]) : -1;
 
-  CharLookupTable lookup = BuildLookupTable(a);
+  CharLookupTable lookup = buildLookupTable(a);
   for (int i = s.size() - 1; i >= 0; --i) {
     if (lookup[static_cast<unsigned char>(s[i])])
       return i;

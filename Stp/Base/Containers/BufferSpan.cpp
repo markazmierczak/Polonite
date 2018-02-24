@@ -9,31 +9,21 @@
 
 namespace stp {
 
-bool tryParse(StringSpan input, MutableBufferSpan output) {
-  if (input.size() & 1)
-    return false;
-
-  int num_to_output = input.size() >> 1;
-  if (num_to_output != output.size())
-    return false;
-
-  auto* output_bytes = static_cast<byte_t*>(output.data());
-  for (int i = 0; i < num_to_output; ++i) {
-    char mc = input[i * 2 + 0];
-    char lc = input[i * 2 + 1];
-
-    int msb = tryParseHexDigit(mc);
-    int lsb = tryParseHexDigit(lc);
-    if (msb < 0 || lsb < 0)
-      return false;
-
-    output_bytes[i] = static_cast<byte_t>((msb << 4) | lsb);
-  }
-  return true;
-}
-
 static constexpr char UpperHexChars[] = "0123456789ABCDEF";
 static constexpr char LowerHexChars[] = "0123456789abcdef";
+
+static void formatBuffer(MutableSpan<char> out, const void* data, int size, bool uppercase) {
+  ASSERT(out.size() >= size * 2);
+
+  const char* hex_chars = uppercase ? UpperHexChars : LowerHexChars;
+
+  auto* bytes = static_cast<const byte_t*>(data);
+  for (int i = 0; i < size; ++i) {
+    byte_t b = bytes[i];
+    out[i * 2 + 0] = hex_chars[(b >> 4) & 0xF];
+    out[i * 2 + 1] = hex_chars[(b >> 0) & 0xF];
+  }
+}
 
 static void formatBufferSimple(TextWriter& out, const void* data, int size, bool uppercase) {
   char out_buffer[256];
@@ -42,7 +32,7 @@ static void formatBufferSimple(TextWriter& out, const void* data, int size, bool
     int bytes_to_print = min(size, isizeof(out_buffer) / 2);
     int chars_to_print = bytes_to_print * 2;
 
-    formatBuffer(MutableStringSpan(out_buffer, chars_to_print), bytes, bytes_to_print, uppercase);
+    formatBuffer(makeSpan(out_buffer, chars_to_print), bytes, bytes_to_print, uppercase);
     out << StringSpan(out_buffer, chars_to_print);
     bytes += bytes_to_print;
     size -= bytes_to_print;
@@ -67,7 +57,7 @@ void formatBuffer(TextWriter& out, const void* data, int size, const StringSpan&
   Mode mode = Mode::Simple;
   bool uppercase = true;
 
-  for (int i = 0; i < opts.size(); ++i) {
+  for (int i = 0; i < opts.length(); ++i) {
     char c = opts[i];
     switch (c) {
       case 'x':
@@ -114,19 +104,6 @@ void formatBuffer(TextWriter& out, const void* data, int size, const StringSpan&
 
     bytes += BytesPerLine;
     size -= BytesPerLine;
-  }
-}
-
-void formatBuffer(MutableStringSpan out, const void* data, int size, bool uppercase) {
-  ASSERT(out.size() >= size * 2);
-
-  const char* hex_chars = uppercase ? UpperHexChars : LowerHexChars;
-
-  auto* bytes = static_cast<const byte_t*>(data);
-  for (int i = 0; i < size; ++i) {
-    byte_t b = bytes[i];
-    out[i * 2 + 0] = hex_chars[(b >> 4) & 0xF];
-    out[i * 2 + 1] = hex_chars[(b >> 0) & 0xF];
   }
 }
 

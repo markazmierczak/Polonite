@@ -4,14 +4,12 @@
 #ifndef STP_BASE_CONTAINERS_BUFFERSPAN_H_
 #define STP_BASE_CONTAINERS_BUFFERSPAN_H_
 
-#include "Base/Containers/Span.h"
-#include "Base/Type/Variable.h"
+#include "Base/Containers/ArrayOps.h"
 
 namespace stp {
 
 BASE_EXPORT void formatBuffer(TextWriter& out, const void* data, int size, const StringSpan& opts);
 BASE_EXPORT void formatBuffer(TextWriter& out, const void* data, int size);
-BASE_EXPORT void formatBuffer(MutableStringSpan out, const void* data, int size, bool uppercase);
 
 class BufferSpan {
  public:
@@ -31,16 +29,6 @@ class BufferSpan {
       : BufferSpan(array, N - TIsCharacter<T>) {
     if constexpr (TIsCharacter<T>)
       ASSERT(array[N - 1] == '\0');
-  }
-
-  template<typename T>
-  explicit constexpr BufferSpan(const T& container) noexcept
-      : BufferSpan(container.data(), container.size()) {}
-
-  template<typename T, TEnableIf<TIsTrivial<T>>* = nullptr>
-  explicit constexpr operator Span<T>() const noexcept {
-    ASSERT(!(toUnsigned(size_) & (sizeof(T) - 1)));
-    return Span<T>(reinterpret_cast<const T*>(data_), static_cast<int>(toUnsigned(size_) / sizeof(T)));
   }
 
   ALWAYS_INLINE constexpr const void* data() const { return data_; }
@@ -121,22 +109,7 @@ class MutableBufferSpan {
       ASSERT(array[N - 1] == '\0');
   }
 
-  template<typename T>
-  explicit constexpr MutableBufferSpan(const T& container) noexcept
-      : MutableBufferSpan(container.data(), container.size()) {}
-
   constexpr operator BufferSpan() const noexcept { return BufferSpan(data_, size_); }
-
-  template<typename T, TEnableIf<TIsTrivial<T> && TIsConst<T>>* = nullptr>
-  explicit constexpr operator Span<T>() const noexcept {
-    ASSERT(!(toUnsigned(size_) & (sizeof(T) - 1)));
-    return Span<T>(reinterpret_cast<T*>(data_), static_cast<int>(toUnsigned(size_) / sizeof(T)));
-  }
-  template<typename T, TEnableIf<TIsTrivial<T> && !TIsConst<T>>* = nullptr>
-  explicit constexpr operator MutableSpan<T>() noexcept {
-    ASSERT(!(toUnsigned(size_) & (sizeof(T) - 1)));
-    return MutableSpan<T>(reinterpret_cast<T*>(data_), static_cast<int>(toUnsigned(size_) / sizeof(T)));
-  }
 
   ALWAYS_INLINE constexpr const void* data() const { return data_; }
   ALWAYS_INLINE constexpr void* data() { return data_; }
@@ -229,17 +202,10 @@ constexpr MutableBufferSpan makeBufferSpan(T (&array)[N]) {
   return MutableBufferSpan(array);
 }
 
-template<typename T>
-constexpr auto makeBufferSpan(T& container) {
-  return makeBufferSpan(container.data(), container.size());
-}
-
 inline void MutableBufferSpan::fill(byte_t byte) {
   if (!isEmpty())
     ::memset(data_, byte, toUnsigned(size_));
 }
-
-[[nodiscard]] BASE_EXPORT bool tryParse(StringSpan input, MutableBufferSpan output);
 
 } // namespace stp
 
