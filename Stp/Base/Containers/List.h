@@ -172,6 +172,15 @@ inline List<T> makeList(Span<T> list) {
   return List<T>(forward<T>(list));
 }
 
+template<typename T>
+inline BufferSpan makeBufferSpan(const List<T>& list) {
+  return makeBufferSpan(list.toSpan());
+}
+template<typename T>
+inline MutableBufferSpan makeBufferSpan(List<T>& list) {
+  return makeBufferSpan(list.toSpan());
+}
+
 BASE_EXPORT const char* toNullTerminated(const List<char>& string);
 
 template<typename T>

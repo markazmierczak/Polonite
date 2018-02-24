@@ -218,11 +218,11 @@ template<typename T>
 constexpr Span<T> makeSpan(const InitializerList<T>& ilist) { return Span<T>(ilist); }
 
 template<typename T>
-constexpr BufferSpan makeBufferSpan(Span<T> span) {
+inline BufferSpan makeBufferSpan(Span<T> span) {
   return makeBufferSpan(span.data(), span.size());
 }
 template<typename T>
-constexpr BufferSpan makeBufferSpan(MutableSpan<T> span) {
+inline MutableBufferSpan makeBufferSpan(MutableSpan<T> span) {
   return makeBufferSpan(span.data(), span.size());
 }
 

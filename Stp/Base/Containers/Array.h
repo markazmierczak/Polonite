@@ -70,6 +70,15 @@ constexpr auto makeArray(TElements&&... elements) {
 }
 
 template<typename T, int N>
+inline BufferSpan makeBufferSpan(const Array<T, N>& array) {
+  return makeBufferSpan(array.toSpan());
+}
+template<typename T, int N>
+inline MutableBufferSpan makeBufferSpan(Array<T, N>& array) {
+  return makeBufferSpan(array.toSpan());
+}
+
+template<typename T, int N>
 constexpr const T& Array<T, N>::operator[](int at) const {
   ASSERT(0 <= at && at < N);
   return *(data_ + at);

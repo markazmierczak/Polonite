@@ -151,6 +151,15 @@ inline bool operator!=(const T (&lhs)[N], const InlineListBase<T>& rhs) {
 }
 
 template<typename T>
+inline BufferSpan makeBufferSpan(const InlineListBase<T>& list) {
+  return makeBufferSpan(list.toSpan());
+}
+template<typename T>
+inline MutableBufferSpan makeBufferSpan(InlineListBase<T>& list) {
+  return makeBufferSpan(list.toSpan());
+}
+
+template<typename T>
 inline const T* toNullTerminated(const InlineListBase<T>& string) {
   auto* cstr = string.data();
   *(const_cast<T*>(cstr) + string.size()) = '\0';
