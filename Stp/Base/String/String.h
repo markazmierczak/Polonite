@@ -10,7 +10,6 @@ namespace stp {
 
 class String {
  public:
-  // Construct a null string (not an empty string).
   String() = default;
   ~String() = default;
 
@@ -19,16 +18,16 @@ class String {
   String(const String&) = default;
   String& operator=(const String&) = default;
 
-  BASE_EXPORT explicit String(StringSpan text);
+  explicit String(StringSpan text) : impl_(StringImpl::create(text)) {}
 
-  template<int N> String(const char (&text)[N]) = delete;
-
-  enum CtorFromLiteralTag { CtorFromLiteral };
-  // |text| must be null terminated.
-  String(CtorFromLiteralTag, const char* text, int length)
-      : impl_(StringImpl::createFromLiteral(text, length)) {}
+  template<int N>
+  explicit String(const char (&text)[N]) = delete; // Use StringLiteral instead.
 
   String(RefPtr<StringImpl> impl) noexcept : impl_(move(impl)) {}
+
+  static String fromCString(const char* cstr);
+
+  operator StringSpan() const { return StringSpan(data(), length()); }
 
   bool isNull() const noexcept { return !impl_; }
   bool isEmpty() const noexcept { return !impl_ || impl_->isEmpty(); }
@@ -41,6 +40,31 @@ class String {
 
   StringImpl* impl() const noexcept { return impl_.get(); }
   RefPtr<StringImpl> releaseImpl() noexcept { return move(impl_); }
+
+  const char& operator[](int at) const noexcept;
+
+  StringSpan substring(int at) const;
+  StringSpan substring(int at, int n) const;
+  StringSpan left(int n) const { return substring(0, n); }
+  StringSpan right(int n) const { return substring(length() - n, n); }
+
+  void truncate(int at);
+
+  void removePrefix(int n);
+  void removeSuffix(int n) noexcept { truncate(length() - n); }
+
+  BASE_EXPORT int indexOf(char c) const noexcept;
+  int indexOf(char32_t c) const = delete;
+  BASE_EXPORT int indexOf(StringSpan s) const noexcept;
+  BASE_EXPORT int lastIndexOf(char c) const noexcept;
+  int lastIndexOf(char32_t c) const = delete;
+  BASE_EXPORT int lastIndexOf(StringSpan s) const noexcept;
+  bool contains(char c) const noexcept { return indexOf(c) >= 0; }
+  bool contains(char32_t c) const = delete;
+  bool contains(StringSpan s) const noexcept { return indexOf(s) >= 0; }
+
+  bool startsWith(StringSpan s) const noexcept;
+  bool endsWith(StringSpan s) const noexcept;
 
   friend void swap(String& x, String& y) noexcept { swap(x.impl_, y.impl_); }
 

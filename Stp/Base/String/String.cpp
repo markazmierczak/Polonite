@@ -5,10 +5,15 @@
 
 namespace stp {
 
-// Construct a UTF-8 string.
-// A copy of given |text| is made for new string.
-String::String(StringSpan text)
-    : impl_(StringImpl::create(text)) {
-}
+/**
+ * @fn String::String()
+ * Construct a null string (not an empty string).
+ */
+
+/**
+ * @fn String::String(StringSpan text)
+ * Construct a UTF-8 string.
+ * A copy of given |text| is made for new string.
+ */
 
 } // namespace stp

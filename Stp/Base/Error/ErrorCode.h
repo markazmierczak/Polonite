@@ -4,9 +4,6 @@
 #ifndef STP_BASE_ERROR_ERRORCODE_H_
 #define STP_BASE_ERROR_ERRORCODE_H_
 
-#include "Base/Error/ExceptionFwd.h"
-#include "Base/Type/FormattableFwd.h"
-
 namespace stp {
 
 class ErrorCategory {

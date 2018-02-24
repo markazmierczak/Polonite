@@ -10,10 +10,10 @@
 namespace stp {
 namespace delegate_impl {
 
-void FormatDelegate(TextWriter& out, const StringSpan& opts, void* ptr) {
+void formatDelegate(TextWriter& out, const StringSpan& opts, void* ptr) {
   bool symbolize = true;
   if (!opts.isEmpty()) {
-    bool ok = opts.size() == 1;
+    bool ok = opts.length() == 1;
 
     char format_char = opts[0];
     if (format_char == 'X')

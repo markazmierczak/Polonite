@@ -6,7 +6,7 @@
 
 #include "Base/Debug/Assert.h"
 #include "Base/Type/Comparable.h"
-#include "Base/Type/FormattableFwd.h"
+#include "Base/Type/Formattable.h"
 #include "Base/Type/Hashable.h"
 #include "Base/Type/Variable.h"
 
@@ -240,7 +240,7 @@ inline TextWriter& operator<<(TextWriter& out, const Nullable<T>& x) {
     out << nullptr;
   return out;
 }
-template<typename T, TEnableIf<TIsFormattable<T>>* = nullptr>
+template<typename T, TEnableIf<TIsFormattableExtended<T>>* = nullptr>
 inline void format(TextWriter& out, const Nullable<T>& x, const StringSpan& opts) {
   if (x)
     format(out, *x, opts);

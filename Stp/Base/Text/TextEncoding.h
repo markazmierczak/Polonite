@@ -5,9 +5,7 @@
 #define STP_BASE_TEXT_CODEC_TEXTCODEC_H_
 
 #include "Base/Containers/BufferSpan.h"
-#include "Base/Containers/ListFwd.h"
 #include "Base/Containers/Span.h"
-#include "Base/Error/Exception.h"
 
 namespace stp {
 

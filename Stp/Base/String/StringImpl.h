@@ -4,9 +4,9 @@
 #ifndef STP_BASE_STRING_STRINGIMPL_H_
 #define STP_BASE_STRING_STRINGIMPL_H_
 
-#include "Base/Containers/Span.h"
 #include "Base/Memory/MallocPtr.h"
 #include "Base/Memory/RefPtr.h"
+#include "Base/String/StringSpan.h"
 
 namespace stp {
 

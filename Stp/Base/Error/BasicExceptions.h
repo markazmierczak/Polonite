@@ -4,8 +4,8 @@
 #ifndef STP_BASE_ERROR_BASICEXCEPTIONS_H_
 #define STP_BASE_ERROR_BASICEXCEPTIONS_H_
 
-#include "Base/Containers/Span.h"
 #include "Base/Error/Exception.h"
+#include "Base/String/StringSpan.h"
 
 namespace stp {
 

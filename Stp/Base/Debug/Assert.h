@@ -9,6 +9,7 @@
 
 namespace stp {
 
+class StringSpan;
 class TextWriter;
 
 #if defined(NDEBUG) && !defined(HAVE_ASSERT_ALWAYS_ON)

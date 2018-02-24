@@ -4,7 +4,6 @@
 #ifndef STP_BASE_CONTAINERS_LIST_H_
 #define STP_BASE_CONTAINERS_LIST_H_
 
-#include "Base/Containers/ListFwd.h"
 #include "Base/Containers/Span.h"
 #include "Base/Error/BasicExceptions.h"
 #include "Base/Memory/Allocate.h"
@@ -125,8 +124,6 @@ class List {
   int capacity_ = 0;
 
   static constexpr int MaxCapacity_ = Limits<int>::Max / isizeof(T);
-  // Needed by String -> null terminated conversion.
-  static constexpr int CapacityIncrement_ = TIsCharacter<T>;
 
   static void destroyAndFree(T* data, int size, int capacity) {
     if (data) {
@@ -224,10 +221,10 @@ inline void List<T>::resizeStorage(int new_capacity) {
   ASSERT(new_capacity >= 0 && new_capacity != capacity_);
 
   if (size_ && TIsTriviallyRelocatable<T>) {
-    data_ = (T*)reallocateMemory(data_, (new_capacity + CapacityIncrement_) * isizeof(T));
+    data_ = (T*)reallocateMemory(data_, new_capacity * isizeof(T));
     capacity_ = new_capacity;
   } else {
-    T* new_data = (T*)allocateMemory((new_capacity + CapacityIncrement_) * isizeof(T));
+    T* new_data = (T*)allocateMemory(new_capacity * isizeof(T));
     capacity_ = new_capacity;
     T* old_data = exchange(data_, new_data);
     if (old_data) {
@@ -383,7 +380,7 @@ inline void List<T>::insert(int at, T item) {
 
     int new_size = old_size + 1;
     int new_capacity = recommendCapacity(new_size);
-    T* new_d = (T*)allocateMemory((new_capacity + CapacityIncrement_) * isizeof(T));
+    T* new_d = (T*)allocateMemory(new_capacity * isizeof(T));
 
     new(new_d + at) T(move(item));
     data_ = new_d;
@@ -446,7 +443,7 @@ inline void List<T>::insertMany(int at, int n, TAction&& action) {
 
     int new_size = old_size + n;
     int new_capacity = recommendCapacity(new_size);
-    T* new_d = (T*)allocateMemory((new_capacity + CapacityIncrement_) * isizeof(T));
+    T* new_d = (T*)allocateMemory(new_capacity * isizeof(T));
 
     try {
       action(new_d + at);

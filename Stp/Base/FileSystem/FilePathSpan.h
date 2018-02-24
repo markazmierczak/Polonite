@@ -5,7 +5,6 @@
 #define STP_BASE_FS_FILEPATHSPAN_H_
 
 #include "Base/Compiler/Os.h"
-#include "Base/Containers/ListFwd.h"
 #include "Base/Containers/Span.h"
 
 namespace stp {

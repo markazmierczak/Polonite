@@ -6,7 +6,7 @@
 #include "Base/Debug/Log.h"
 #include "Base/Io/ClipTextWriter.h"
 #include "Base/Io/InlineStringWriter.h"
-#include "Base/Text/AsciiString.h"
+#include "Base/Text/AsciiChar.h"
 #include "Base/Type/ParseInteger.h"
 
 namespace stp {
@@ -115,8 +115,6 @@ bool FormatLayout::parse(StringSpan s) {
 }
 
 bool FormatReplacement::parse(StringSpan s) {
-  trimSpaceAscii(s);
-
   int comma = s.indexOf(',');
   int semicolon = s.indexOf(':');
 
@@ -140,7 +138,6 @@ bool FormatReplacement::parse(StringSpan s) {
   }
   if (semicolon != -1) {
     options = s.getSlice(semicolon + 1);
-    trimSpaceAscii(options);
   }
   return true;
 }

@@ -4,15 +4,14 @@
 #ifndef STP_BASE_MATH_HALF_H_
 #define STP_BASE_MATH_HALF_H_
 
-#include "Base/Export.h"
-#include "Base/Type/FormattableFwd.h"
+#include "Base/Debug/Assert.h"
 #include "Base/Type/Limits.h"
 
 namespace stp {
 
 // 16-bit floating point value
 // Format is 1 bit sign, 5 bits exponent, 10 bits mantissa.
-class BASE_EXPORT Half {
+class Half {
  public:
   typedef uint16_t BitsType;
 
@@ -40,10 +39,9 @@ class BASE_EXPORT Half {
 
   constexpr Half operator-() const { return fromBits(bits_ ^ SignBitMask); }
 
-  explicit Half(float f);
   explicit Half(int f) = delete;
-
-  explicit operator float() const;
+  BASE_EXPORT explicit Half(float f);
+  BASE_EXPORT explicit operator float() const;
 
   friend constexpr Half mathAbs(Half x) { return fromBits(x.bits_ & ~SignBitMask); }
 
@@ -75,11 +73,11 @@ class BASE_EXPORT Half {
  private:
   BitsType bits_;
 
-  static void formatImpl(TextWriter& out, float x, const StringSpan& opts);
+  BASE_EXPORT static void formatImpl(TextWriter& out, float x, const StringSpan& opts);
 };
 
 template<>
-struct BASE_EXPORT Limits<Half> {
+struct Limits<Half> {
   static constexpr int Digits = 11;
 
   static constexpr int MinExponent = -14;

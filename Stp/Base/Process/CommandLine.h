@@ -16,6 +16,7 @@
 
 #include "Base/Compiler/Os.h"
 #include "Base/Containers/FlatMap.h"
+#include "Base/String/String.h"
 
 namespace stp {
 
@@ -66,7 +67,7 @@ class BASE_EXPORT CommandLine {
   bool tryGet(StringSpan name, FilePath& out_value) const;
   bool equal(StringSpan name, StringSpan value) const;
 
-  void setProgramName(StringSpan name) { program_name_ = name; }
+  void setProgramName(const String& name) { program_name_ = name; }
   const String& getProgramName() const { return program_name_; }
 
   void add(String positional);

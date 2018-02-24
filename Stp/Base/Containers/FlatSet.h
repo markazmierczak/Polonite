@@ -6,11 +6,10 @@
 
 #include "Base/Containers/BinarySearch.h"
 #include "Base/Containers/List.h"
-#include "Base/Containers/MapFwd.h"
 
 namespace stp {
 
-template<typename T, class TList>
+template<typename T, class TList = List<T>>
 class FlatSet {
  public:
   using ValueType = T;

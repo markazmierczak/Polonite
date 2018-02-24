@@ -4,8 +4,8 @@
 #ifndef STP_BASE_IO_STRINGWRITER_H_
 #define STP_BASE_IO_STRINGWRITER_H_
 
-#include "Base/Containers/List.h"
 #include "Base/Io/TextWriter.h"
+#include "Base/String/String.h"
 
 namespace stp {
 

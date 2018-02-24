@@ -4,7 +4,6 @@
 #ifndef STP_BASE_FS_KNOWNPATHUTIL_H_
 #define STP_BASE_FS_KNOWNPATHUTIL_H_
 
-#include "Base/Containers/MapFwd.h"
 #include "Base/FileSystem/FilePath.h"
 
 namespace stp {

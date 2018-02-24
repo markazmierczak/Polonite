@@ -7,6 +7,7 @@
 #include "Base/Debug/Log.h"
 #include "Base/FileSystem/Directory.h"
 #include "Base/FileSystem/FilePathWriter.h"
+#include "Base/FileSystem/FileSystemException.h"
 #include "Base/FileSystem/KnownPaths.h"
 #include "Base/Io/StringWriter.h"
 #include "Base/Process/NativeProcess.h"

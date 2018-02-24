@@ -4,9 +4,8 @@
 #ifndef STP_BASE_UTIL_FINALLY_H_
 #define STP_BASE_UTIL_FINALLY_H_
 
-#include "Base/Error/ExceptionFwd.h"
+#include "Base/Error/Exception.h"
 #include "Base/Type/Limits.h"
-#include "Base/Type/Variable.h"
 
 namespace stp {
 

@@ -8,7 +8,6 @@
 
 #include "Base/Compiler/Os.h"
 #include "Base/Math/Safe.h"
-#include "Base/Type/FormattableFwd.h"
 
 #if OS(WIN)
 #include "Base/Win/WindowsHeader.h"

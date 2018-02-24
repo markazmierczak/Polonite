@@ -63,7 +63,7 @@ void formatBitArray(TextWriter& out, const StringSpan& opts, const uintptr_t* wo
   Format format = Format::Binary;
 
   if (!opts.isEmpty()) {
-    bool ok = opts.size() == 1;
+    bool ok = opts.length() == 1;
     if (toUpperAscii(opts[0]) == 'X') {
       format = Format::Hexadecimal;
     } else {

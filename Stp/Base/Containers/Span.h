@@ -5,7 +5,6 @@
 #define STP_BASE_CONTAINERS_SPAN_H_
 
 #include "Base/Containers/ArrayOps.h"
-#include "Base/Containers/SpanFwd.h"
 
 #include <initializer_list>
 
@@ -29,10 +28,7 @@ class Span {
 
   template<int N>
   constexpr Span(const T (&array)[N]) noexcept
-      : data_(array), size_(N - TIsCharacter<T>) {
-    if constexpr (TIsCharacter<T>)
-      ASSERT(array[N - 1] == '\0');
-  }
+      : data_(array), size_(N) {}
 
   constexpr Span(InitializerList<T> ilist) noexcept
       : data_(ilist.begin()), size_(static_cast<int>(ilist.size())) {}
@@ -107,10 +103,7 @@ class MutableSpan {
 
   template<int N>
   constexpr MutableSpan(T (&array)[N]) noexcept
-      : data_(array), size_(N - TIsCharacter<T>) {
-    if constexpr (TIsCharacter<T>)
-      ASSERT(array[N - 1] == '\0');
-  }
+      : data_(array), size_(N) {}
 
   constexpr operator Span<T>() const noexcept { return Span<T>(data_, size_); }
 
@@ -210,17 +203,6 @@ constexpr MutableSpan<T> makeSpan(T (&array)[N]) { return array; }
 template<typename T>
 constexpr Span<T> makeSpan(const InitializerList<T>& ilist) { return Span<T>(ilist); }
 
-inline StringSpan makeSpanFromNullTerminated(const char* cstr) {
-  ASSERT(cstr);
-  return makeSpan(cstr, static_cast<int>(::strlen(cstr)));
-}
-
-template<typename T, int N, TEnableIf<TIsCharacter<T>>* = nullptr>
-inline const T* toNullTerminated(const T (&array)[N]) {
-  ASSERT(array[N - 1] == '\0');
-  return array;
-}
-
 template<typename T, int N>
 inline bool operator==(const T (&lhs)[N], const Span<T>& rhs) {
   return operator==(makeSpan(lhs), rhs);
@@ -238,9 +220,6 @@ template<typename T, int N>
 inline bool operator!=(const T (&lhs)[N], const MutableSpan<T>& rhs) {
   return operator!=(makeSpan(lhs), rhs);
 }
-
-BASE_EXPORT int compare(const StringSpan& lhs, const StringSpan& rhs) noexcept;
-inline HashCode partialHash(const StringSpan& text) noexcept { return hashBuffer(text.data(), text.size()); }
 
 template<typename T>
 template<typename U>

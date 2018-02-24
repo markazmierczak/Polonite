@@ -5,7 +5,6 @@
 #define STP_BASE_FS_TEMPORARYDIRECTORY_H_
 
 #include "Base/FileSystem/FilePath.h"
-#include "Base/FileSystem/FileSystemException.h"
 
 namespace stp {
 

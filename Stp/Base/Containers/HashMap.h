@@ -4,7 +4,6 @@
 #ifndef STP_BASE_CONTAINERS_HASHMAP_H_
 #define STP_BASE_CONTAINERS_HASHMAP_H_
 
-#include "Base/Containers/MapFwd.h"
 #include "Base/Debug/Assert.h"
 #include "Base/Memory/Allocate.h"
 #include "Base/Type/Hashable.h"

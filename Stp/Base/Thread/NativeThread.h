@@ -5,7 +5,6 @@
 #define STP_BASE_THREAD_NATIVETHREAD_H_
 
 #include "Base/Compiler/Os.h"
-#include "Base/Containers/List.h"
 #include "Base/Time/TimeTicks.h"
 
 #if OS(WIN)
@@ -20,6 +19,8 @@
 #endif
 
 namespace stp {
+
+class String;
 
 enum class ThreadPriority : int {
   Idle,

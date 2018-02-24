@@ -6,7 +6,6 @@
 
 #include "Base/Compiler/Cpu.h"
 #include "Base/Debug/Assert.h"
-#include "Base/Type/FormattableFwd.h"
 #include "Base/Type/Variable.h"
 
 namespace stp {
@@ -192,7 +191,7 @@ struct SimplifyMethod<sizeof(MSVCUnknownMemberFunction)> {
 # error "compiler not supported"
 #endif // COMPILER(*)
 
-BASE_EXPORT void FormatDelegate(TextWriter& out, const StringSpan& opts, void* ptr);
+BASE_EXPORT void formatDelegate(TextWriter& out, const StringSpan& opts, void* ptr);
 
 } // namespace delegate_impl
 
@@ -232,7 +231,7 @@ class Delegate<TResult(TArgs...)> {
   bool isNull() const { return gmethod_ == nullptr; }
 
   friend void format(TextWriter& out, const Delegate& x, const StringSpan& opts) {
-    delegate_impl::FormatDelegate(out, opts, reinterpret_cast<void*>(x.gmethod_));
+    delegate_impl::formatDelegate(out, opts, reinterpret_cast<void*>(x.gmethod_));
   }
 
  private:

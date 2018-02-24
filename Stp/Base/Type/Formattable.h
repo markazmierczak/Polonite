@@ -5,7 +5,6 @@
 #define STP_BASE_TYPE_FORMATTABLE_H_
 
 #include "Base/Io/TextWriter.h"
-#include "Base/Type/FormattableFwd.h"
 
 namespace stp {
 
@@ -125,6 +124,23 @@ inline TextWriter& operator<<(TextWriter& out, const T& x) {
 inline void format(TextWriter& out, StringSpan text, const StringSpan& opts) {
   out << text;
 }
+
+namespace detail {
+
+template<typename T>
+using FormattableConcept = decltype(declval<TextWriter&>() << declval<const T&>());
+
+template<typename T>
+using FormattableExtendedConcept = decltype(
+    format(declval<TextWriter&>(), declval<const T&>(), declval<const StringSpan&>()));
+
+
+} // namespace detail
+
+template<typename T>
+constexpr bool TIsFormattable = THasDetected<detail::FormattableConcept, T>;
+template<typename T>
+constexpr bool TIsFormattableExtended = THasDetected<detail::FormattableExtendedConcept, T>;
 
 } // namespace stp
 

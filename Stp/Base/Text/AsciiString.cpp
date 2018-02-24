@@ -11,7 +11,7 @@ namespace stp {
 
 namespace detail {
 
-int compareIgnoreCaseAscii(const char* lhs, const char* rhs, int size) {
+int compareIgnoringAsciiCase(const char* lhs, const char* rhs, int size) {
   ASSERT(size >= 0);
 
   for (int i = 0; i < size; ++i) {
@@ -27,7 +27,13 @@ int compareIgnoreCaseAscii(const char* lhs, const char* rhs, int size) {
 
 } // namespace detail
 
-int indexOfIgnoreCaseAscii(StringSpan str, char c) {
+int compareIgnoringAsciiCase(StringSpan lhs, StringSpan rhs) noexcept {
+  int min_size = min(lhs.length(), rhs.length());
+  int rv = detail::compareIgnoringAsciiCase(lhs.data(), rhs.data(), min_size);
+  return rv != 0 ? rv : compare(lhs.length(), rhs.length());
+}
+
+int indexOfIgnoringAsciiCase(StringSpan str, char c) {
   c = toLowerAscii(c);
 
   for (int i = 0 ; i < str.size(); ++i) {
@@ -37,7 +43,7 @@ int indexOfIgnoreCaseAscii(StringSpan str, char c) {
   return -1;
 }
 
-int lastIndexOfIgnoreCaseAscii(StringSpan str, char c) {
+int lastIndexOfIgnoringAsciiCase(StringSpan str, char c) {
   c = toLowerAscii(c);
 
   for (int i = str.size() - 1; i >= 0; --i) {
@@ -47,7 +53,7 @@ int lastIndexOfIgnoreCaseAscii(StringSpan str, char c) {
   return -1;
 }
 
-int indexOfIgnoreCaseAscii(StringSpan haystack, StringSpan needle) {
+int indexOfIgnoringAsciiCase(StringSpan haystack, StringSpan needle) {
   if (needle.isEmpty())
     return 0;
 
@@ -57,18 +63,18 @@ int indexOfIgnoreCaseAscii(StringSpan haystack, StringSpan needle) {
   StringSpan needle_rest = needle.getSlice(1);
 
   while (haystack.size() >= needle.size()) {
-    int found = indexOfIgnoreCaseAscii(haystack, first_char);
+    int found = indexOfIgnoringAsciiCase(haystack, first_char);
     if (found < 0)
       return -1;
 
     haystack.removePrefix(found + 1);
-    if (startsWithIgnoreCaseAscii(haystack, needle_rest))
+    if (startsWithIgnoringAsciiCase(haystack, needle_rest))
       return static_cast<int>(haystack.data() - orig_data - 1);
   }
   return -1;
 }
 
-int lastIndexOfIgnoreCaseAscii(StringSpan haystack, StringSpan needle) {
+int lastIndexOfIgnoringAsciiCase(StringSpan haystack, StringSpan needle) {
   if (needle.isEmpty())
     return haystack.size();
 
@@ -76,46 +82,15 @@ int lastIndexOfIgnoreCaseAscii(StringSpan haystack, StringSpan needle) {
   StringSpan needle_rest = needle.getSlice(0, needle.size() - 1);
 
   while (haystack.size() >= needle.size()) {
-    int found = lastIndexOfIgnoreCaseAscii(haystack, last_char);
+    int found = lastIndexOfIgnoringAsciiCase(haystack, last_char);
     if (found < 0)
       return -1;
 
     haystack.truncate(found);
-    if (endsWithIgnoreCaseAscii(haystack, needle_rest))
+    if (endsWithIgnoringAsciiCase(haystack, needle_rest))
       return haystack.size() - needle_rest.size();
   }
   return -1;
-}
-
-static inline void toLowerAscii(char* output, const char* input, int length) {
-  for (int i = 0; i < length; ++i)
-    output[i] = toLowerAscii(input[i]);
-}
-
-static inline void toUpperAscii(char* output, const char* input, int length) {
-  for (int i = 0; i < length; ++i)
-    output[i] = toUpperAscii(input[i]);
-}
-
-void toLowerAsciiInplace(MutableStringSpan s) {
-  toLowerAscii(s.data(), s.data(), s.size());
-}
-void toUpperAsciiInplace(MutableStringSpan s) {
-  toUpperAscii(s.data(), s.data(), s.size());
-}
-
-String toLowerAscii(StringSpan src) {
-  String rv;
-  char* dst = rv.appendUninitialized(src.size());
-  toLowerAscii(dst, src.data(), src.size());
-  return rv;
-}
-
-String toUpperAscii(StringSpan src) {
-  String rv;
-  char* dst = rv.appendUninitialized(src.size());
-  toLowerAscii(dst, src.data(), src.size());
-  return rv;
 }
 
 bool isAscii(StringSpan text) {

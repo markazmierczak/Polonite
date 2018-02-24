@@ -6,7 +6,6 @@
 
 #include "Base/Debug/Assert.h"
 #include "Base/Math/Bits.h"
-#include "Base/Type/FormattableFwd.h"
 #include "Base/Type/Variable.h"
 
 #include <string.h>

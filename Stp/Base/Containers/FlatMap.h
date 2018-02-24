@@ -7,13 +7,12 @@
 #include "Base/Containers/BinarySearch.h"
 #include "Base/Containers/KeyValuePair.h"
 #include "Base/Containers/List.h"
-#include "Base/Containers/MapFwd.h"
 #include "Base/Containers/SortingBasic.h"
 #include "Base/Type/Comparable.h"
 
 namespace stp {
 
-template<typename K, typename T, class TList>
+template<typename K, typename T, class TList = List<KeyValuePair<K, T>>>
 class FlatMap {
  public:
   using KeyType = K;

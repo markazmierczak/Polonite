@@ -4,7 +4,6 @@
 #ifndef STP_BASE_TEXT_WTF_H_
 #define STP_BASE_TEXT_WTF_H_
 
-#include "Base/Containers/ListFwd.h"
 #include "Base/Text/Utf.h"
 
 namespace stp {

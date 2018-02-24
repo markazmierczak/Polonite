@@ -4,56 +4,63 @@
 #ifndef STP_BASE_TEXT_ASCIISTRING_H_
 #define STP_BASE_TEXT_ASCIISTRING_H_
 
-#include "Base/Containers/ListFwd.h"
-#include "Base/Containers/Span.h"
+#include "Base/String/StringSpan.h"
 #include "Base/Text/AsciiChar.h"
 
 namespace stp {
 
 namespace detail {
 
-BASE_EXPORT int compareIgnoreCaseAscii(const char* lhs, const char* rhs, int size);
+BASE_EXPORT int compareIgnoringAsciiCase(const char* lhs, const char* rhs, int size);
 
 } // namespace detail
 
-inline bool equalIgnoreCaseAscii(StringSpan lhs, StringSpan rhs) {
-  return lhs.size() == rhs.size() &&
-      detail::compareIgnoreCaseAscii(lhs.data(), rhs.data(), lhs.size()) == 0;
+inline bool equalIgnoringAsciiCase(StringSpan lhs, StringSpan rhs) noexcept {
+  return lhs.length() == rhs.length() &&
+      detail::compareIgnoringAsciiCase(lhs.data(), rhs.data(), lhs.length()) == 0;
 }
 
-inline int compareIgnoreCaseAscii(StringSpan lhs, StringSpan rhs) {
-  int min_size = min(lhs.size(), rhs.size());
-  int rv = detail::compareIgnoreCaseAscii(lhs.data(), rhs.data(), min_size);
-  return rv != 0 ? rv : (lhs.size() - rhs.size());
-}
+BASE_EXPORT int compareIgnoringAsciiCase(StringSpan lhs, StringSpan rhs) noexcept;
 
-struct IgnoreCaseAsciiComparer {
-  int operator()(StringSpan lhs, StringSpan rhs) const { return compareIgnoreCaseAscii(lhs, rhs); }
+struct IgnoringAsciiCaseComparer {
+  int operator()(StringSpan lhs, StringSpan rhs) const { return compareIgnoringAsciiCase(lhs, rhs); }
 };
 
-inline bool startsWithIgnoreCaseAscii(StringSpan str, StringSpan prefix) {
-  ASSERT(!prefix.isEmpty());
-  return str.size() >= prefix.size() &&
-      equalIgnoreCaseAscii(str.getSlice(0, prefix.size()), prefix);
+inline bool startsWithIgnoringAsciiCase(StringSpan str, StringSpan prefix) {
+  return str.length() >= prefix.length() &&
+      equalIgnoringAsciiCase(str.left(prefix.length()), prefix);
 }
 
-inline bool endsWithIgnoreCaseAscii(StringSpan str, StringSpan suffix) {
-  ASSERT(!suffix.isEmpty());
-  return str.size() >= suffix.size() &&
-      equalIgnoreCaseAscii(str.getSlice(str.size() - suffix.size()), suffix);
+inline bool endsWithIgnoringAsciiCase(StringSpan str, StringSpan suffix) {
+  return str.length() >= suffix.length() &&
+      equalIgnoringAsciiCase(str.right(suffix.length()), suffix);
 }
 
-BASE_EXPORT int indexOfIgnoreCaseAscii(StringSpan str, char c);
-BASE_EXPORT int lastIndexOfIgnoreCaseAscii(StringSpan str, char c);
+BASE_EXPORT int indexOfIgnoringAsciiCase(StringSpan str, char c);
+BASE_EXPORT int lastIndexOfIgnoringAsciiCase(StringSpan str, char c);
 
-BASE_EXPORT int indexOfIgnoreCaseAscii(StringSpan haystack, StringSpan needle);
-BASE_EXPORT int lastIndexOfIgnoreCaseAscii(StringSpan haystack, StringSpan needle);
+BASE_EXPORT int indexOfIgnoringAsciiCase(StringSpan haystack, StringSpan needle);
+BASE_EXPORT int lastIndexOfIgnoringAsciiCase(StringSpan haystack, StringSpan needle);
 
-BASE_EXPORT void toLowerAsciiInplace(MutableStringSpan s);
-BASE_EXPORT void toUpperAsciiInplace(MutableStringSpan s);
+constexpr int countLeadingSpaceAscii(StringSpan s) noexcept {
+  int i = 0;
+  for (; i < s.length(); ++i) {
+    if (!isSpaceAscii(s[i]))
+      break;
+  }
+  return i;
+}
 
-BASE_EXPORT String toLowerAscii(StringSpan src) WARN_UNUSED_RESULT;
-BASE_EXPORT String toUpperAscii(StringSpan src) WARN_UNUSED_RESULT;
+constexpr int countTrailingSpaceAscii(StringSpan s) noexcept {
+  int i = s.length();
+  while (i > 0) {
+    int next = i - 1;
+    if (!isSpaceAscii(s[next]))
+      break;
+    i = next;
+  }
+  return i;
+}
 
 template<typename TString>
 inline void trimLeadingSpaceAscii(TString& str) {

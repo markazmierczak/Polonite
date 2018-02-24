@@ -4,7 +4,6 @@
 #ifndef STP_BASE_MATH_FIXED_H_
 #define STP_BASE_MATH_FIXED_H_
 
-#include "Base/Containers/SpanFwd.h"
 #include "Base/Math/Safe.h"
 
 namespace stp {
