@@ -6,14 +6,17 @@
 
 #include "Base/Error/SystemErrorCode.h"
 #include "Base/Error/Exception.h"
+#include "Base/String/String.h"
 
 namespace stp {
 
 class SystemException : public Exception {
  public:
   explicit SystemException(SystemErrorCode error_code) noexcept : error_code_(error_code) {}
+  SystemException(SystemErrorCode error_code, String message) noexcept;
+  BASE_EXPORT ~SystemException() override;
 
-  SystemErrorCode getErrorCode() const { return error_code_; }
+  SystemErrorCode getErrorCode() const noexcept { return error_code_; }
 
   BASE_EXPORT StringSpan getName() const noexcept override;
 
@@ -22,7 +25,11 @@ class SystemException : public Exception {
 
  private:
   SystemErrorCode error_code_;
+  String message_;
 };
+
+inline SystemException::SystemException(SystemErrorCode error_code, String message) noexcept
+    : error_code_(error_code), message_(move(message)) {}
 
 } // namespace stp
 

@@ -11,6 +11,7 @@ namespace stp {
 class StringSpan {
  public:
   constexpr StringSpan() noexcept : data_(nullptr), length_(0) {}
+  constexpr StringSpan(nullptr_t) noexcept : data_(nullptr), length_(0) {}
 
   constexpr StringSpan(const char* data, int length) noexcept
       : data_(data), length_(length) { ASSERT(length >= 0); }
@@ -66,12 +67,16 @@ class StringSpan {
 template<>
 struct TIsZeroConstructibleTmpl<StringSpan> : TTrue {};
 
-inline bool operator==(const StringSpan& lhs, const StringSpan& rhs) noexcept {
-  return lhs.length() == rhs.length() && equalObjects(lhs.data(), rhs.data(), lhs.length());
-}
+BASE_EXPORT bool operator==(const StringSpan& lhs, const StringSpan& rhs) noexcept;
+
 inline bool operator!=(const StringSpan& lhs, const StringSpan& rhs) noexcept {
   return !operator==(lhs, rhs);
 }
+
+constexpr bool operator==(const StringSpan& s, nullptr_t) noexcept { return s.isNull(); }
+constexpr bool operator!=(const StringSpan& s, nullptr_t) noexcept { return !s.isNull(); }
+constexpr bool operator==(nullptr_t, const StringSpan& s) noexcept { return s.isNull(); }
+constexpr bool operator!=(nullptr_t, const StringSpan& s) noexcept { return !s.isNull(); }
 
 BASE_EXPORT int compare(const StringSpan& lhs, const StringSpan& rhs) noexcept;
 

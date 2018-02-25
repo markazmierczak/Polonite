@@ -7,6 +7,9 @@
 
 namespace stp {
 
+SystemException::~SystemException() {
+}
+
 StringSpan SystemException::getName() const noexcept {
   return "SystemException";
 }

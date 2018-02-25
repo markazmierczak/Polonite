@@ -10,13 +10,8 @@
 
 namespace stp {
 
-class StringImpl;
-
 class StringImplShape {
  public:
-  DISALLOW_COPY_AND_ASSIGN(StringImplShape);
-
- protected:
   enum class Ownership : uint8_t {
     Internal,
     Owned,
@@ -41,25 +36,13 @@ class StringImplShape {
   // *  1bit -> Hash
   uint8_t flags_;
 
-  Ownership getOwnership() const { return static_cast<Ownership>(flags_ & 0x3); }
-  Kind getKind() const { return static_cast<Kind>((flags_ >> 2) & 0x3); }
-  bool hasHashCode() const { return (flags_ >> 4) != 0; }
+  Ownership getOwnership() const noexcept { return static_cast<Ownership>(flags_ & 0x3); }
+  Kind getKind() const noexcept { return static_cast<Kind>((flags_ >> 2) & 0x3); }
+  bool hasHashCode() const noexcept { return (flags_ >> 4) != 0; }
 };
 
-class StaticStringImpl : public StringImplShape {
- public:
-  template<int N>
-  constexpr StaticStringImpl(const char (&text)[N], Kind kind);
-
-  operator StringImpl&() { return *reinterpret_cast<StringImpl*>(this); }
-
-  static StringImpl& empty() { return g_empty_; }
-
- private:
-  static StaticStringImpl g_empty_;
-};
-
-class BASE_EXPORT StringImpl : public StringImplShape {
+class BASE_EXPORT StringImpl : private StringImplShape {
+  DISALLOW_COPY_AND_ASSIGN(StringImpl);
  public:
   static RefPtr<StringImpl> create(StringSpan text);
   static RefPtr<StringImpl> createFromLiteral(const char* text, int length);

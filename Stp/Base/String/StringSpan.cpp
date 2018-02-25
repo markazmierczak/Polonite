@@ -92,12 +92,23 @@ int StringSpan::lastIndexOf(const StringSpan& needle) const noexcept {
   return delta;
 }
 
+bool operator==(const StringSpan& lhs, const StringSpan& rhs) noexcept {
+  if (lhs.length() != rhs.length())
+    return false;
+  if (lhs.length() != 0)
+    return ::memcmp(lhs.data(), rhs.data(), lhs.length()) == 0;
+  return lhs.isNull() == rhs.isNull();
+}
+
 int compare(const StringSpan& lhs, const StringSpan& rhs) noexcept {
   int common_length = min(lhs.length(), rhs.length());
   if (common_length) {
     int rv = ::memcmp(lhs.data(), rhs.data(), toUnsigned(common_length));
     if (rv)
       return rv;
+  } else {
+    if (lhs.isNull() || rhs.isNull())
+      return lhs.isNull() == rhs.isNull();
   }
   return compare(lhs.length(), rhs.length());
 }
