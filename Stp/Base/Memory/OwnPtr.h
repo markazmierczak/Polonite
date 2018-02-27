@@ -32,36 +32,36 @@ class OwnPtr {
   explicit OwnPtr(T* ptr) noexcept : ptr_(ptr) { ASSERT(ptr_ != nullptr); }
   [[nodiscard]] T* leakPtr() noexcept { return exchange(ptr_, nullptr); }
 
-  void reset(T* new_ptr = nullptr) {
+  void reset(T* new_ptr = nullptr) noexcept {
     T* tmp = exchange(ptr_, new_ptr);
     if (tmp)
       destroy(tmp);
   }
 
-  T& operator*() const { ASSERT(ptr_); return *ptr_; }
-  T* operator->() const { ASSERT(ptr_); return ptr_; }
+  T& operator*() const noexcept { ASSERT(ptr_); return *ptr_; }
+  T* operator->() const noexcept { ASSERT(ptr_); return ptr_; }
 
-  ALWAYS_INLINE T* get() const { return ptr_; }
+  ALWAYS_INLINE T* get() const noexcept { return ptr_; }
 
-  explicit operator bool() const { return ptr_ != nullptr; }
+  explicit operator bool() const noexcept { return ptr_ != nullptr; }
 
   template<typename... TArgs>
   static OwnPtr create(TArgs&&... args);
 
-  friend void swap(OwnPtr& l, OwnPtr& r) { swap(l.ptr_, r.ptr_); }
+  friend void swap(OwnPtr& l, OwnPtr& r) noexcept { swap(l.ptr_, r.ptr_); }
 
-  friend bool operator==(const OwnPtr& l, const OwnPtr& r) { return l.ptr_ == r.ptr_; }
-  friend bool operator!=(const OwnPtr& l, const OwnPtr& r) { return l.ptr_ != r.ptr_; }
+  friend bool operator==(const OwnPtr& l, const OwnPtr& r) noexcept { return l.ptr_ == r.ptr_; }
+  friend bool operator!=(const OwnPtr& l, const OwnPtr& r) noexcept { return l.ptr_ != r.ptr_; }
 
-  friend bool operator==(const OwnPtr& l, T* r) { return l.ptr_ == r; }
-  friend bool operator!=(const OwnPtr& l, T* r) { return l.ptr_ != r; }
-  friend bool operator==(T* l, const OwnPtr& r) { return l == r.ptr_; }
-  friend bool operator!=(T* l, const OwnPtr& r) { return l != r.ptr_; }
+  friend bool operator==(const OwnPtr& l, T* r) noexcept { return l.ptr_ == r; }
+  friend bool operator!=(const OwnPtr& l, T* r) noexcept { return l.ptr_ != r; }
+  friend bool operator==(T* l, const OwnPtr& r) noexcept { return l == r.ptr_; }
+  friend bool operator!=(T* l, const OwnPtr& r) noexcept { return l != r.ptr_; }
 
-  friend bool operator==(const OwnPtr& l, nullptr_t) { return l.ptr_ == nullptr; }
-  friend bool operator!=(const OwnPtr& l, nullptr_t) { return l.ptr_ != nullptr; }
-  friend bool operator==(nullptr_t, const OwnPtr& r) { return nullptr == r.ptr_; }
-  friend bool operator!=(nullptr_t, const OwnPtr& r) { return nullptr != r.ptr_; }
+  friend bool operator==(const OwnPtr& l, nullptr_t) noexcept { return l.ptr_ == nullptr; }
+  friend bool operator!=(const OwnPtr& l, nullptr_t) noexcept { return l.ptr_ != nullptr; }
+  friend bool operator==(nullptr_t, const OwnPtr& r) noexcept { return nullptr == r.ptr_; }
+  friend bool operator!=(nullptr_t, const OwnPtr& r) noexcept { return nullptr != r.ptr_; }
 
  private:
   void destroy(T* ptr) {

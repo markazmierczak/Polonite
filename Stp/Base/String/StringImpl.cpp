@@ -5,9 +5,26 @@
 
 namespace stp {
 
-StaticStringImpl StaticStringImpl::g_empty_("", Kind::Unique);
+namespace detail {
 
-StringImpl::~StringImpl() {
+static constexpr uint8_t EmptyStringFlags = StringImplShape::makeFlags(
+    StringImplShape::Ownership::Internal, StringImplShape::Kind::Unique);
+
+StringImplShape g_emptyString = {
+  StringImplShape::StaticRefCount,
+  0, "", 0, EmptyStringFlags
+};
+
+} // namespace detail
+
+inline void StringImpl::init(const char* data, int length, Ownership ownership, Kind kind) {
+  ref_count_ = RefCountIncrement;
+  length_ = length;
+  data_ = data;
+  flags_ = makeFlags(ownership, kind);
+}
+
+void StringImpl::destroy(StringImpl* that) noexcept {
   ASSERT(!isStatic());
 
   auto kind = getKind();
@@ -33,22 +50,62 @@ StringImpl::~StringImpl() {
       getSubstringImpl()->decRef();
     }
   }
-}
-
-void StringImpl::destroy(StringImpl* that) noexcept {
-  that->~StringImpl();
   ::free(that);
-}
-
-RefPtr<StringImpl> StringImpl::createFromLiteral(const char* text, int length) {
-  ASSERT(length > 0, "use StaticStringImpl::empty() to create an empty string");
-  return RefPtr<StringImpl>::create(CtorNoCopy, text);
 }
 
 RefPtr<StringImpl> StringImpl::createNoCopy(StringSpan text) {
   if (text.isEmpty())
-    return &StaticStringImpl::empty();
+    return staticEmpty();
   return RefPtr<StringImpl>::create(CtorNoCopy, text);
+}
+
+RefPtr<StringImpl> StringImpl::createFromCString(const char* text, int length) {
+  ASSERT(text[length] == '\0');
+  if (length == 0)
+    return staticEmpty();
+  auto* self = static_cast<StringImpl*>(allocateMemory(TailOffset + length + 1));
+  self->init(self->getTailPointer(), length, Ownership::Internal, Kind::Normal);
+  uninitializedCopy(self->getTailPointer(), text, length + 1);
+  return adoptRefPtr(self);
+}
+
+RefPtr<StringImpl> StringImpl::create(StringSpan text) {
+  if (text.isEmpty())
+    return staticEmpty();
+  auto* self = static_cast<StringImpl*>(allocateMemory(TailOffset + text.length() + 1));
+  self->init(self->getTailPointer(), text.length(), Ownership::Internal, Kind::Normal);
+  uninitializedCopy(self->getTailPointer(), text.data(), text.length());
+  *(self->getTailPointer() + text.length()) = '\0';
+  return adoptRefPtr(self);
+}
+
+RefPtr<StringImpl> StringImpl::createOwned(MallocPtr<const char> text, int length) {
+  return RefPtr<StringImpl>::create(move(text), length);
+}
+
+inline StringImpl::StringImpl(MallocPtr<char> data, int length) noexcept {
+  ASSERT(*(data.get() + length) == '\0');
+  init(data.leakPtr(), length, Ownership::Owned, Kind::Normal);
+}
+
+RefPtr<StringImpl> StringImpl::isolatedCopy() {
+  return requiresCopy() ? create(toSpan()) : StringImpl::createNoCopy(toSpan());
+}
+
+inline bool StringImpl::requiresCopy() noexcept {
+  if (getOwnership() != Ownership::Internal)
+    return true;
+  return data_ == getTailPointer();
+}
+
+RefPtr<StringImpl> StringImpl::substring(int at, int n) {
+  ASSERT(0 <= at && at <= length_);
+  ASSERT(0 <= n && n <= length_ - at);
+  if (n == length_)
+    return this;
+  if (n == 0)
+    return staticEmpty();
+  return create(StringSpan(data_ + at, n));
 }
 
 } // namespace stp

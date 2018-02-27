@@ -10,8 +10,7 @@
 
 namespace stp {
 
-class StringImplShape {
- public:
+struct StringImplShape {
   enum class Ownership : uint8_t {
     Internal,
     Owned,
@@ -39,18 +38,25 @@ class StringImplShape {
   Ownership getOwnership() const noexcept { return static_cast<Ownership>(flags_ & 0x3); }
   Kind getKind() const noexcept { return static_cast<Kind>((flags_ >> 2) & 0x3); }
   bool hasHashCode() const noexcept { return (flags_ >> 4) != 0; }
+
+  static constexpr uint8_t makeFlags(Ownership ownership, Kind kind, bool has_hash = false) {
+    return toUnderlying(ownership) | (toUnderlying(kind) << 2) | (uint8_t(has_hash) << 4);
+  }
 };
 
-class BASE_EXPORT StringImpl : private StringImplShape {
+namespace detail {
+BASE_EXPORT extern StringImplShape g_emptyString;
+}
+
+class StringImpl : private StringImplShape {
   DISALLOW_COPY_AND_ASSIGN(StringImpl);
  public:
-  static RefPtr<StringImpl> create(StringSpan text);
-  static RefPtr<StringImpl> createFromLiteral(const char* text, int length);
-  static RefPtr<StringImpl> createNoCopy(StringSpan text);
+  BASE_EXPORT static RefPtr<StringImpl> createNoCopy(StringSpan text);
+  BASE_EXPORT static RefPtr<StringImpl> createFromCString(const char* text, int length);
+  BASE_EXPORT static RefPtr<StringImpl> create(StringSpan text);
+  BASE_EXPORT static RefPtr<StringImpl> createOwned(MallocPtr<const char> text, int length);
   static RefPtr<StringImpl> createSubstring(StringImpl& string, int offset, int length);
-  static RefPtr<StringImpl> createUninitialized(int length, const char*& out_data);
-
-  ~StringImpl();
+  static RefPtr<StringImpl> createUninitialized(int length, char*& out_data);
 
   void incRef() noexcept;
   void decRef() noexcept;
@@ -66,20 +72,39 @@ class BASE_EXPORT StringImpl : private StringImplShape {
 
   const char* data() noexcept { return data_; }
   int length() noexcept { return length_; }
+  StringSpan toSpan() noexcept { return StringSpan(data_, length_); }
 
-  const char& operator[](int at) const noexcept;
+  const char& operator[](int at) noexcept;
+
+  BASE_EXPORT RefPtr<StringImpl> isolatedCopy();
+
+  static StringImpl* staticEmpty() noexcept {
+    return reinterpret_cast<StringImpl*>(&detail::g_emptyString);
+  }
+
+  BASE_EXPORT RefPtr<StringImpl> substring(int at, int n);
 
  private:
-  static void destroy(StringImpl* that) noexcept;
+  BASE_EXPORT static void destroy(StringImpl* that) noexcept;
 
   explicit StringImpl(int length) noexcept;
+  ~StringImpl() = delete;
 
   StringImpl(MallocPtr<char> data, int length) noexcept;
 
   enum CtorNoCopyTag { CtorNoCopy };
   StringImpl(CtorNoCopyTag, StringSpan text) noexcept;
 
+  void init(const char* data, int length, Ownership ownership, Kind kind);
+
   StringImpl* getSubstringImpl() noexcept;
+  bool requiresCopy() noexcept;
+
+  static constexpr int TailOffset = offsetof(StringImpl, flags_) + sizeof(StringImpl::flags_);
+
+  char* getTailPointer() noexcept {
+    return reinterpret_cast<char*>(this) + TailOffset;
+  }
 };
 
 inline void StringImpl::incRef() noexcept {
@@ -95,7 +120,7 @@ inline void StringImpl::decRef() noexcept {
   }
 }
 
-inline const char& StringImpl::operator[](int at) const noexcept {
+inline const char& StringImpl::operator[](int at) noexcept {
   ASSERT(at < length_);
   return data_[at];
 }

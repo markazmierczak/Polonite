@@ -26,6 +26,9 @@ class StringSpan {
   ALWAYS_INLINE constexpr const char* data() const noexcept { return data_; }
   ALWAYS_INLINE constexpr int length() const noexcept { return length_; }
 
+  explicit operator bool() const noexcept { return data_ != nullptr; }
+  bool operator!() const noexcept { return !data_; }
+
   constexpr bool isNull() const noexcept { return data_ == nullptr; }
   constexpr bool isEmpty() const noexcept { return length_ == 0; }
 
@@ -35,11 +38,6 @@ class StringSpan {
   constexpr StringSpan substring(int at, int n) const noexcept;
   constexpr StringSpan left(int n) const noexcept { return substring(0, n); }
   constexpr StringSpan right(int n) const noexcept { return substring(length_ - n, n); }
-
-  constexpr void truncate(int at) noexcept;
-
-  constexpr void removePrefix(int n) noexcept;
-  constexpr void removeSuffix(int n) noexcept { truncate(length_ - n); }
 
   BASE_EXPORT int indexOfUnit(char c) const noexcept;
   BASE_EXPORT int lastIndexOfUnit(char c) const noexcept;
@@ -103,17 +101,6 @@ constexpr StringSpan StringSpan::substring(int at, int n) const noexcept {
   ASSERT(0 <= at && at <= length_);
   ASSERT(0 <= n && n <= length_ - at);
   return StringSpan(data_ + at, n);
-}
-
-constexpr void StringSpan::truncate(int at) noexcept {
-  ASSERT(0 <= at && at <= length_);
-  length_ = at;
-}
-
-constexpr void StringSpan::removePrefix(int n) noexcept {
-  ASSERT(0 <= n && n <= length_);
-  data_ += n;
-  length_ -= n;
 }
 
 inline bool StringSpan::startsWith(const StringSpan& s) const noexcept {

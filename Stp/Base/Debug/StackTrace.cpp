@@ -31,7 +31,7 @@ void* const* StackTrace::GetAddresses(int* count) const {
 }
 
 void StackTrace::PrintToConsole() const {
-  format(Console::err(), StringSpan());
+  Console::err() << *this;
 }
 
 void StackTrace::formatImpl(TextWriter& out, const StringSpan& opts) const {
@@ -55,7 +55,7 @@ void StackTrace::formatImpl(TextWriter& out, const StringSpan& opts) const {
 
 void StackTrace::FormatAddresses(TextWriter& out) const {
   for (int i = 0; i < count_; ++i)
-    format(out, trace_[i], StringSpan());
+    out << trace_[i];
 }
 
 #if OS(WIN) || OS(LINUX) || OS(DARWIN)

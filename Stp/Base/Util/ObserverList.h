@@ -145,11 +145,11 @@ void ObserverList<TObserver>::compact() {
   needs_compact_ = false;
 }
 
-#define FOR_EACH_OBSERVER(TObserverType, observer_list, func) \
+#define FOR_EACH_OBSERVER(TObserver, observer_list, func) \
   do { \
     if ((observer_list).mightHaveObservers()) { \
-      typename ObserverList<TObserverType>::Iterator it_inside_observer_macro(&observer_list); \
-      TObserverType* obs; \
+      ObserverList<TObserver>::Iterator it_inside_observer_macro(&observer_list); \
+      TObserver* obs; \
       while ((obs = it_inside_observer_macro.tryGetNext()) != nullptr) \
         obs->func; \
     } \

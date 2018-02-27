@@ -21,7 +21,9 @@ class String {
 
   static String isolate(String s);
 
-  static String fromCString(const char* cstr);
+  BASE_EXPORT static String fromCString(const char* cstr);
+  BASE_EXPORT static String fromCString(MallocPtr<const char> cstr);
+  static String fromCString(MallocPtr<const char> cstr, int length);
 
   StringSpan toSpan() const noexcept { return StringSpan(data(), length()); }
   operator StringSpan() const noexcept { return toSpan(); }
@@ -29,8 +31,8 @@ class String {
   bool isNull() const noexcept { return !impl_; }
   bool isEmpty() const noexcept { return !impl_ || impl_->isEmpty(); }
 
-  explicit operator bool() const noexcept { return !!impl_; }
-  bool operator!() const noexcept { return !!impl_; }
+  explicit operator bool() const noexcept { return impl_ != nullptr; }
+  bool operator!() const noexcept { return !impl_; }
 
   const char* data() const noexcept { return impl_ ? impl_->data() : 0; }
   int length() const noexcept { return impl_ ? impl_->length() : 0; }
@@ -40,15 +42,10 @@ class String {
 
   const char& operator[](int at) const noexcept;
 
-  String substring(int at) const;
+  String substring(int at) const { return substring(at, length() - at); }
   String substring(int at, int n) const;
   String left(int n) const { return substring(0, n); }
   String right(int n) const { return substring(length() - n, n); }
-
-  void truncate(int at);
-
-  void removePrefix(int n);
-  void removeSuffix(int n) { truncate(length() - n); }
 
   int indexOfUnit(char c) const noexcept { return impl_ ? toSpan().indexOfUnit(c) : -1; }
   int lastIndexOfUnit(char c) const noexcept { return impl_ ? toSpan().lastIndexOfUnit(c) : -1; }
@@ -76,6 +73,11 @@ BASE_EXPORT bool operator==(const String& lhs, const String& rhs) noexcept;
 inline bool operator!=(const String& lhs, const String& rhs) noexcept { return !operator==(lhs, rhs); }
 BASE_EXPORT int compare(const String& lhs, String& rhs) noexcept;
 
+inline bool operator==(const String& s, nullptr_t) noexcept { return s.isNull(); }
+inline bool operator!=(const String& s, nullptr_t) noexcept { return !s.isNull(); }
+inline bool operator==(nullptr_t, const String& s) noexcept { return s.isNull(); }
+inline bool operator!=(nullptr_t, const String& s) noexcept { return !s.isNull(); }
+
 #define StringLiteral(text) \
   []() noexcept -> String { \
     static StringImplShape r = { \
@@ -88,9 +90,21 @@ BASE_EXPORT int compare(const String& lhs, String& rhs) noexcept;
 inline String toString(String s) noexcept { return s; }
 inline String toString(StringSpan s) { return String(s); }
 
+inline String emptyString() noexcept { return StringImpl::staticEmpty(); }
+
 inline const char& String::operator[](int at) const noexcept {
   ASSERT(impl_ != nullptr);
   return (*impl_)[at];
+}
+
+inline String String::substring(int at, int n) const {
+  ASSERT(0 <= at && at < length());
+  ASSERT(0 <= n && n <= length() - at);
+  return impl_ ? impl_->substring(at, n) : String();
+}
+
+inline String String::fromCString(MallocPtr<const char> cstr, int length) {
+  return StringImpl::createOwned(move(cstr), length);
 }
 
 } // namespace stp

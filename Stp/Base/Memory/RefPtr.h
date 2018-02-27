@@ -82,23 +82,23 @@ class RefPtr {
   }
 
   template<typename U>
-  friend bool operator==(const RefPtr<T>& a, const RefPtr<U>& b) noexcept { return a.get() == b.get(); }
+  friend bool operator==(const RefPtr& a, const RefPtr<U>& b) noexcept { return a.get() == b.get(); }
   template<typename U>
-  friend bool operator==(const RefPtr<T>& a, U* b) noexcept { return a.get() == b; }
+  friend bool operator==(const RefPtr& a, U* b) noexcept { return a.get() == b; }
   template<typename U>
   friend bool operator==(T* a, const RefPtr<U>& b) noexcept { return a == b.get(); }
   template<typename U>
-  friend bool operator!=(const RefPtr<T>& a, const RefPtr<U>& b) noexcept { return a.get() != b.get(); }
+  friend bool operator!=(const RefPtr& a, const RefPtr<U>& b) noexcept { return a.get() != b.get(); }
   template<typename U>
-  friend bool operator!=(const RefPtr<T>& a, U* b) noexcept { return a.get() != b; }
+  friend bool operator!=(const RefPtr& a, U* b) noexcept { return a.get() != b; }
   template<typename U>
   friend bool operator!=(T* a, const RefPtr<U>& b) noexcept { return a != b.get(); }
 
-  friend bool operator==(const RefPtr<T>& a, nullptr_t) noexcept { return !a; }
-  friend bool operator!=(const RefPtr<T>& a, nullptr_t) noexcept { return !!a; }
+  friend bool operator==(const RefPtr& a, nullptr_t) noexcept { return !a; }
+  friend bool operator!=(const RefPtr& a, nullptr_t) noexcept { return !!a; }
 
-  friend bool operator==(nullptr_t, const RefPtr<T>& b) noexcept { return !b; }
-  friend bool operator!=(nullptr_t, const RefPtr<T>& b) noexcept { return !!b; }
+  friend bool operator==(nullptr_t, const RefPtr& b) noexcept { return !b; }
+  friend bool operator!=(nullptr_t, const RefPtr& b) noexcept { return !!b; }
 };
 
 template<typename T>

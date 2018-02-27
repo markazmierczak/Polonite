@@ -12,7 +12,7 @@ namespace {
 
 class Foo {
  public:
-  virtual void Observe(int x) = 0;
+  virtual void observe(int x) = 0;
   virtual ~Foo() {}
 };
 using FooObserverList = ObserverList<Foo>;
@@ -20,8 +20,8 @@ using FooObserverList = ObserverList<Foo>;
 class Adder : public Foo {
  public:
   explicit Adder(int scaler) : total(0), scaler_(scaler) {}
-  void Observe(int x) override { total += x * scaler_; }
   ~Adder() override {}
+  void observe(int x) override { total += x * scaler_; }
   int total;
 
  private:
@@ -35,7 +35,7 @@ class Disrupter : public Foo {
         doomed_(doomed) {
   }
   ~Disrupter() override {}
-  void Observe(int x) override { list_->removeObserver(doomed_); }
+  void observe(int x) override { list_->removeObserver(doomed_); }
 
  private:
   FooObserverList* list_;
@@ -51,7 +51,7 @@ class AddInObserve : public Foo {
         adder(1) {
   }
 
-  void Observe(int x) override {
+  void observe(int x) override {
     if (!added) {
       added = true;
       observer_list->addObserver(&adder);
@@ -74,13 +74,13 @@ TEST(ObserverListTest, BasicTest) {
   EXPECT_TRUE(observer_list.hasObserver(&a));
   EXPECT_FALSE(observer_list.hasObserver(&c));
 
-  FOR_EACH_OBSERVER(Foo, observer_list, Observe(10));
+  FOR_EACH_OBSERVER(Foo, observer_list, observe(10));
 
   observer_list.addObserver(&evil);
   observer_list.addObserver(&c);
   observer_list.addObserver(&d);
 
-  FOR_EACH_OBSERVER(Foo, observer_list, Observe(10));
+  FOR_EACH_OBSERVER(Foo, observer_list, observe(10));
 
   EXPECT_EQ(20, a.total);
   EXPECT_EQ(-20, b.total);
@@ -97,7 +97,7 @@ TEST(ObserverListTest, Existing) {
   observer_list.addObserver(&a);
   observer_list.addObserver(&b);
 
-  FOR_EACH_OBSERVER(Foo, observer_list, Observe(1));
+  FOR_EACH_OBSERVER(Foo, observer_list, observe(1));
 
   EXPECT_TRUE(b.added);
   // B's adder should not have been notified because it was added during
@@ -105,7 +105,7 @@ TEST(ObserverListTest, Existing) {
   EXPECT_EQ(0, b.adder.total);
 
   // Notify again to make sure b's adder is notified.
-  FOR_EACH_OBSERVER(Foo, observer_list, Observe(1));
+  FOR_EACH_OBSERVER(Foo, observer_list, observe(1));
   EXPECT_EQ(1, b.adder.total);
 }
 
@@ -114,7 +114,7 @@ class AddInClearObserve : public Foo {
   explicit AddInClearObserve(FooObserverList* list)
       : list_(list), added_(false), adder_(1) {}
 
-  void Observe(int /* x */) override {
+  void observe(int /* x */) override {
     list_->clear();
     list_->addObserver(&adder_);
     added_ = true;
@@ -136,7 +136,7 @@ TEST(ObserverListTest, ClearNotifyExistingOnly) {
 
   observer_list.addObserver(&a);
 
-  FOR_EACH_OBSERVER(Foo, observer_list, Observe(1));
+  FOR_EACH_OBSERVER(Foo, observer_list, observe(1));
   EXPECT_TRUE(a.added());
   EXPECT_EQ(0, a.adder().total) << "Adder should not observe, so sum should still be 0.";
 }
@@ -146,7 +146,7 @@ class ListDestructor : public Foo {
   explicit ListDestructor(FooObserverList* list) : list_(list) {}
   ~ListDestructor() override {}
 
-  void Observe(int x) override { delete list_; }
+  void observe(int x) override { delete list_; }
 
  private:
   FooObserverList* list_;
@@ -158,7 +158,7 @@ TEST(ObserverListTest, IteratorOutlivesList) {
   ListDestructor a(observer_list);
   observer_list->addObserver(&a);
 
-  FOR_EACH_OBSERVER(Foo, *observer_list, Observe(0));
+  FOR_EACH_OBSERVER(Foo, *observer_list, observe(0));
   // If this test fails, there'll be Valgrind errors when this function goes out
   // of scope.
 }

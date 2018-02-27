@@ -95,7 +95,7 @@ int StringSpan::lastIndexOf(const StringSpan& needle) const noexcept {
 bool operator==(const StringSpan& lhs, const StringSpan& rhs) noexcept {
   if (lhs.length() != rhs.length())
     return false;
-  if (lhs.length() != 0)
+  if (!lhs.isEmpty())
     return ::memcmp(lhs.data(), rhs.data(), lhs.length()) == 0;
   return lhs.isNull() == rhs.isNull();
 }
@@ -108,7 +108,7 @@ int compare(const StringSpan& lhs, const StringSpan& rhs) noexcept {
       return rv;
   } else {
     if (lhs.isNull() || rhs.isNull())
-      return lhs.isNull() == rhs.isNull();
+      return compare(!lhs.isNull(), !rhs.isNull());
   }
   return compare(lhs.length(), rhs.length());
 }
