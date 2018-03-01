@@ -11,10 +11,8 @@ namespace stp {
 class StringSpan;
 class TextWriter;
 
-#if defined(NDEBUG) && !defined(HAVE_ASSERT_ALWAYS_ON)
-# define ASSERT_IS_ON 0
-#else
-# define ASSERT_IS_ON 1
+#if !defined(ASSERT_IS_ON)
+#define ASSERT_IS_ON !NDEBUG
 #endif
 
 BASE_EXPORT void assertFail(const char* file, int line, const char* expr);

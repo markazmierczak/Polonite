@@ -4,7 +4,7 @@
 #ifndef STP_BASE_MEMORY_REFCOUNTED_H_
 #define STP_BASE_MEMORY_REFCOUNTED_H_
 
-#include "Base/Memory/RefPtr.h"
+#include "Base/Memory/Rc.h"
 
 namespace stp {
 
@@ -12,7 +12,7 @@ class RefCountedBase {
   DISALLOW_COPY_AND_ASSIGN(RefCountedBase);
  public:
   RefCountedBase() noexcept {
-    #ifndef NDEBUG
+    #if ASSERT_IS_ON
     ref_count_ = -1;
     #else
     ref_count_ = 1;
@@ -30,7 +30,7 @@ class RefCountedBase {
     ref_count_++;
   }
 
-  #ifndef NDEBUG
+  #if ASSERT_IS_ON
   void verifyAdoption() noexcept {
     ASSERT(ref_count_ == -1);
     ref_count_ = 1;
@@ -47,8 +47,8 @@ class RefCountedBase {
   mutable int ref_count_;
 };
 
-inline void adoptedByRefPtr(RefCountedBase* refed) noexcept {
-  #ifndef NDEBUG
+inline void adoptedByRc(RefCountedBase* refed) noexcept {
+  #if ASSERT_IS_ON
   refed->verifyAdoption();
   #endif
 }

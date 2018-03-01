@@ -13,13 +13,13 @@ class BASE_EXPORT RefCountedThreadSafeBase {
  public:
   RefCountedThreadSafeBase() noexcept
       : ref_count_(1)
-      #ifndef NDEBUG
+      #if ASSERT_IS_ON
       , in_dtor_(false)
       #endif
       {}
 
   ~RefCountedThreadSafeBase() noexcept {
-    #ifndef NDEBUG
+    #if ASSERT_IS_ON
     ASSERT(in_dtor_, "RefCountedThreadSafeBase object deleted without calling decRef()");
     #endif
   }
@@ -29,7 +29,7 @@ class BASE_EXPORT RefCountedThreadSafeBase {
   }
 
   void incRef() const noexcept {
-    #ifndef NDEBUG
+    #if ASSERT_IS_ON
     ASSERT(!in_dtor_);
     #endif
     AtomicRefCountInc(&ref_count_);
@@ -37,12 +37,12 @@ class BASE_EXPORT RefCountedThreadSafeBase {
 
  protected:
   bool decRefBase() const noexcept {
-    #ifndef NDEBUG
+    #if ASSERT_IS_ON
     ASSERT(!in_dtor_);
     ASSERT(!AtomicRefCountIsZero(&ref_count_));
     #endif
     if (!AtomicRefCountDec(&ref_count_)) {
-      #ifndef NDEBUG
+      #if ASSERT_IS_ON
       in_dtor_ = true;
       #endif
       return true;
@@ -52,7 +52,7 @@ class BASE_EXPORT RefCountedThreadSafeBase {
 
  private:
   mutable AtomicRefCount ref_count_;
-  #ifndef NDEBUG
+  #if ASSERT_IS_ON
   mutable bool in_dtor_;
   #endif
 
