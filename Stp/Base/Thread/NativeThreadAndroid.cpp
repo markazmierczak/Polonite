@@ -4,7 +4,6 @@
 #include "Base/Thread/NativeThread.h"
 
 #include "Base/Android/JniAndroid.h"
-#include "Base/Compiler/Sanitizer.h"
 #include "jni/ThreadUtils_jni.h"
 
 namespace stp {

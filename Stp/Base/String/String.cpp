@@ -43,16 +43,12 @@ String String::fromCString(MallocPtr<const char> cstr) {
 }
 
 bool operator==(const String& lhs, const String& rhs) noexcept {
-  if (lhs.isNull() || rhs.isNull())
-    return lhs.isNull() == rhs.isNull();
   if (lhs.length() != rhs.length())
     return false;
   return ::memcmp(lhs.data(), rhs.data(), lhs.length()) == 0;
 }
 
 int compare(const String& lhs, String& rhs) noexcept {
-  if (lhs.isNull() || rhs.isNull())
-    return compare(!lhs.isNull(), !rhs.isNull());
   int common_length = min(lhs.length(), rhs.length());
   int rv = ::memcmp(lhs.data(), rhs.data(), toUnsigned(common_length));
   if (rv)

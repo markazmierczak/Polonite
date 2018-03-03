@@ -4,7 +4,7 @@
 #ifndef STP_BASE_CRYPTO_SHA1_H_
 #define STP_BASE_CRYPTO_SHA1_H_
 
-#include "Base/Containers/BufferSpan.h"
+#include "Base/Containers/Span.h"
 
 namespace stp {
 

@@ -33,6 +33,17 @@
 #define COMPILER_GCC_AT_LEAST(major, minor) 0
 #endif
 
+#define SANITIZER(x) (defined HAVE_##x##_SANITIZER)
+
+#if SANITIZER(ADDRESS) || \
+    SANITIZER(LEAK) || \
+    SANITIZER(THREAD) || \
+    SANITIZER(MEMORY) || \
+    SANITIZER(UNDEFINED) || \
+    SANITIZER(SYZYASAN)
+# define HAVE_ANY_SANITIZER
+#endif
+
 #ifdef COMPONENT_BUILD
 #if COMPILER(MSVC)
 

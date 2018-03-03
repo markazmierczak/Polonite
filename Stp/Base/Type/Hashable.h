@@ -5,7 +5,7 @@
 #define STP_BASE_TYPE_HASHABLE_H_
 
 #include "Base/Type/Sign.h"
-#include "Base/Type/Variable.h"
+#include "Base/Type/Nullable.h"
 
 namespace stp {
 
@@ -57,6 +57,11 @@ using THashableConcept = decltype(partialHash(declval<const T&>()));
 
 template<typename T>
 constexpr bool TIsHashable = TsAreSame<HashCode, TDetect<detail::THashableConcept, T>>;
+
+template<typename T, TEnableIf<TIsHashable<T>>* = nullptr>
+constexpr HashCode partialHash(const Nullable<T>& x) {
+  return x ? partialHash(*x) : HashCode::Zero;
+}
 
 inline HashCode partialHashMany() { return HashCode::Zero; }
 

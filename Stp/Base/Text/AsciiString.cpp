@@ -11,10 +11,10 @@ namespace stp {
 
 namespace detail {
 
-int compareIgnoringAsciiCase(const char* lhs, const char* rhs, int size) {
-  ASSERT(size >= 0);
+int compareIgnoringAsciiCase(const char* lhs, const char* rhs, int length) {
+  ASSERT(length >= 0);
 
-  for (int i = 0; i < size; ++i) {
+  for (int i = 0; i < length; ++i) {
     char lc = toLowerAscii(lhs[i]);
     char rc = toLowerAscii(rhs[i]);
 
@@ -33,20 +33,20 @@ int compareIgnoringAsciiCase(StringSpan lhs, StringSpan rhs) noexcept {
   return rv != 0 ? rv : compare(lhs.length(), rhs.length());
 }
 
-int indexOfIgnoringAsciiCase(StringSpan str, char c) {
+int indexOfIgnoringAsciiCase(const StringSpan& str, char c) {
   c = toLowerAscii(c);
 
-  for (int i = 0 ; i < str.size(); ++i) {
+  for (int i = 0 ; i < str.length(); ++i) {
     if (toLowerAscii(str[i]) == c)
       return i;
   }
   return -1;
 }
 
-int lastIndexOfIgnoringAsciiCase(StringSpan str, char c) {
+int lastIndexOfIgnoringAsciiCase(const StringSpan& str, char c) {
   c = toLowerAscii(c);
 
-  for (int i = str.size() - 1; i >= 0; --i) {
+  for (int i = str.length() - 1; i >= 0; --i) {
     if (toLowerAscii(str[i]) == c)
       return i;
   }
@@ -99,7 +99,7 @@ bool isAscii(StringSpan text) {
   MachineWord all_char_bits = 0;
 
   const char* str = text.data();
-  const char* end = str + text.size();
+  const char* end = str + text.length();
 
   // Prologue: align the input.
   while (!isAlignedTo(str, isizeof(MachineWord)) && str != end) {

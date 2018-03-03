@@ -6,7 +6,6 @@
 
 #include "Base/Simd/Vnx.h"
 
-#include "Base/Compiler/Sanitizer.h"
 #include "Base/Util/Random.h"
 #include "Base/Test/GTest.h"
 

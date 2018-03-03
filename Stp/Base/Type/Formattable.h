@@ -5,6 +5,7 @@
 #define STP_BASE_TYPE_FORMATTABLE_H_
 
 #include "Base/Io/TextWriter.h"
+#include "Base/Type/Nullable.h"
 
 namespace stp {
 
@@ -66,7 +67,7 @@ using CustomContiguousFormattableConcept = decltype(
 
 } // namespace detail
 
-template<typename T, TEnableIf<TIsScalar<T>>*>
+template<typename T, TEnableIf<TIsScalar<T>>* = nullptr>
 inline void format(TextWriter& out, const T& x, const StringSpan& opts) {
   if constexpr (TIsInteger<T>) {
     detail::formatInt(out, x, opts);
@@ -91,7 +92,7 @@ inline void format(TextWriter& out, const T& x, const StringSpan& opts) {
   }
 }
 
-template<typename T, TEnableIf<TIsScalar<T>>*>
+template<typename T, TEnableIf<TIsScalar<T>>* = nullptr>
 inline TextWriter& operator<<(TextWriter& out, const T& x) {
   if constexpr (TIsInteger<T>) {
     detail::formatInt(out, x);
@@ -141,6 +142,22 @@ template<typename T>
 constexpr bool TIsFormattable = THasDetected<detail::FormattableConcept, T>;
 template<typename T>
 constexpr bool TIsFormattableExtended = THasDetected<detail::FormattableExtendedConcept, T>;
+
+template<typename T, TEnableIf<TIsFormattable<T>>* = nullptr>
+inline TextWriter& operator<<(TextWriter& out, const Nullable<T>& x) {
+  if (x)
+    out << *x;
+  else
+    out << nullptr;
+  return out;
+}
+template<typename T, TEnableIf<TIsFormattableExtended<T>>* = nullptr>
+inline void format(TextWriter& out, const Nullable<T>& x, const StringSpan& opts) {
+  if (x)
+    format(out, *x, opts);
+  else
+    out << nullptr;
+}
 
 } // namespace stp
 

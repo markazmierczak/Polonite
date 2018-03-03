@@ -11,7 +11,7 @@ namespace stp {
 
 namespace detail {
 
-BASE_EXPORT int compareIgnoringAsciiCase(const char* lhs, const char* rhs, int size);
+BASE_EXPORT int compareIgnoringAsciiCase(const char* lhs, const char* rhs, int length);
 
 } // namespace detail
 
@@ -36,8 +36,8 @@ inline bool endsWithIgnoringAsciiCase(StringSpan str, StringSpan suffix) {
       equalIgnoringAsciiCase(str.right(suffix.length()), suffix);
 }
 
-BASE_EXPORT int indexOfIgnoringAsciiCase(StringSpan str, char c);
-BASE_EXPORT int lastIndexOfIgnoringAsciiCase(StringSpan str, char c);
+BASE_EXPORT int indexOfIgnoringAsciiCase(const StringSpan& str, char c);
+BASE_EXPORT int lastIndexOfIgnoringAsciiCase(const StringSpan& str, char c);
 
 BASE_EXPORT int indexOfIgnoringAsciiCase(StringSpan haystack, StringSpan needle);
 BASE_EXPORT int lastIndexOfIgnoringAsciiCase(StringSpan haystack, StringSpan needle);
@@ -59,26 +59,14 @@ constexpr int countTrailingSpaceAscii(StringSpan s) noexcept {
       break;
     i = next;
   }
-  return i;
+  return s.length() - i;
 }
 
 template<typename TString>
-inline void trimLeadingSpaceAscii(TString& str) {
-  while (!str.isEmpty() && isSpaceAscii(str.getFirst()))
-    str.removePrefix(1);
-}
-
-template<typename TString>
-inline void trimTrailingSpaceAscii(TString& str) {
-  while (!str.isEmpty() && isSpaceAscii(str.getLast()))
-    str.removeSuffix(1);
-}
-
-template<typename TString>
-inline void trimSpaceAscii(TString& str) {
-  // Keep this in this order to minimize copying.
-  trimTrailingSpaceAscii(str);
-  trimLeadingSpaceAscii(str);
+inline TString trimWhitespaceAscii(const TString& s) {
+  int l = countLeadingSpaceAscii(s);
+  int t = countTrailingSpaceAscii(s);
+  return s.substring(l, s.length() - l - t);
 }
 
 BASE_EXPORT bool isAscii(StringSpan text);

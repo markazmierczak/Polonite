@@ -4,18 +4,12 @@
 #ifndef STP_BASE_MEMORY_REFPTR_H_
 #define STP_BASE_MEMORY_REFPTR_H_
 
-#include "Base/Debug/Assert.h"
-#include "Base/Type/Variable.h"
+#include "Base/Memory/Rc.h"
 
 namespace stp {
 
 template<typename T>
 class RefPtr;
-
-template<typename T>
-RefPtr<T> adoptRefPtr(T* ptr) noexcept;
-
-ALWAYS_INLINE void adoptedByRefPtr(const void*) noexcept {}
 
 template<typename T>
 class RefPtr {
@@ -24,15 +18,24 @@ class RefPtr {
   ~RefPtr() { decRefIfNotNull(ptr_); }
 
   RefPtr(RefPtr&& o) noexcept : ptr_(o.leakPtr()) {}
-  RefPtr& operator=(RefPtr&& o) noexcept { reset(o.leakPtr()); return *this; }
-
-  RefPtr(const RefPtr& o) noexcept : ptr_(o.ptr_) { incRefIfNotNull(ptr_); }
-  RefPtr& operator=(const RefPtr& o) noexcept { reset(o.ptr_); return *this; }
-
   template<typename U, TEnableIf<TIsConvertibleTo<U*, T*>>* = nullptr>
   RefPtr(RefPtr<U>&& o) noexcept : ptr_(o.leakPtr()) {}
   template<typename U, TEnableIf<TIsConvertibleTo<U*, T*>>* = nullptr>
+  RefPtr(Rc<U>&& o) noexcept : ptr_(&o.leakRef()) {}
+
+  RefPtr& operator=(RefPtr&& o) noexcept { return assignMove(o.leakPtr()); }
+  template<typename U, TEnableIf<TIsConvertibleTo<U*, T*>>* = nullptr>
+  RefPtr& operator=(RefPtr<U>&& o) noexcept { return assignMove(o.leakPtr()); }
+  template<typename U, TEnableIf<TIsConvertibleTo<U*, T*>>* = nullptr>
+  RefPtr& operator=(Rc<U>&& o) noexcept { return assignMove(&o.leakRef()); }
+
+  RefPtr(const RefPtr& o) noexcept : ptr_(o.ptr_) { incRefIfNotNull(ptr_); }
+  template<typename U, TEnableIf<TIsConvertibleTo<U*, T*>>* = nullptr>
   RefPtr(const RefPtr<U>& o) noexcept : ptr_(o.get()) { incRefIfNotNull(ptr_); }
+
+  RefPtr& operator=(const RefPtr& o) noexcept { reset(o.ptr_); return *this; }
+  template<typename U, TEnableIf<TIsConvertibleTo<U*, T*>>* = nullptr>
+  RefPtr& operator=(const RefPtr<U>& o) noexcept { reset(o.ptr_); return *this; }
 
   RefPtr(T* ptr) noexcept : ptr_(ptr) { incRefIfNotNull(ptr); }
   RefPtr& operator=(T* ptr) noexcept { reset(ptr); return *this; }
@@ -49,21 +52,16 @@ class RefPtr {
 
   ALWAYS_INLINE T* get() const noexcept { return ptr_; }
 
-  ALWAYS_INLINE T& operator*() const noexcept { return *ptr_; }
-  ALWAYS_INLINE T* operator->() const noexcept { return ptr_; }
+  ALWAYS_INLINE T& operator*() const noexcept { ASSERT(ptr_); return *ptr_; }
+  ALWAYS_INLINE T* operator->() const noexcept { ASSERT(ptr_); return ptr_; }
 
   ALWAYS_INLINE bool operator!() const noexcept { return !ptr_; }
   ALWAYS_INLINE explicit operator bool() const noexcept { return ptr_ != nullptr; }
 
   friend void swap(RefPtr& lhs, RefPtr& rhs) noexcept { swap(lhs.ptr_, rhs.ptr_); }
 
-  template<typename... TArgs>
-  static RefPtr create(TArgs... args) {
-    return adoptRefPtr(new T(forward<TArgs>(args)...));
-  }
-
  private:
-  friend RefPtr adoptRefPtr<T>(T* ptr) noexcept;
+  friend RefPtr adoptRc<T>(T* ptr) noexcept;
 
   enum AdoptTag { Adopt };
 
@@ -79,6 +77,11 @@ class RefPtr {
   ALWAYS_INLINE void decRefIfNotNull(T* ptr) noexcept {
     if (ptr)
       ptr->decRef();
+  }
+
+  RefPtr& assignMove(T* new_ptr) {
+    decRefIfNotNull(exchange(ptr_, new_ptr));
+    return *this;
   }
 
   template<typename U>
@@ -109,8 +112,8 @@ template<typename T>
 struct TIsTriviallyEqualityComparableTmpl<RefPtr<T>> : TTrue {};
 
 template<typename T>
-inline RefPtr<T> adoptRefPtr(T* ptr) noexcept {
-  adoptedByRefPtr(ptr);
+inline RefPtr<T> adoptRc(T* ptr) noexcept {
+  adoptedByRc(ptr);
   return RefPtr<T>(ptr, RefPtr<T>::Adopt);
 }
 

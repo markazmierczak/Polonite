@@ -9,23 +9,23 @@ namespace stp {
 
 TEST(Crc32Test, Basic) {
   struct {
-    StringSpan bytes;
+    BufferSpan bytes;
     uint32_t output;
   } cases[] = {
-    {"", UINT32_C(0x00000000)},
-    {"a", UINT32_C(0xE8B7BE43)},
-    {"abc", UINT32_C(0x352441C2)},
-    {"message digest", UINT32_C(0x20159D7F)},
-    {"abcdefghijklmnopqrstuvwxyz", UINT32_C(0x4C2750BD)},
-    {"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789",
+    {BufferSpan(""), UINT32_C(0x00000000)},
+    {BufferSpan("a"), UINT32_C(0xE8B7BE43)},
+    {BufferSpan("abc"), UINT32_C(0x352441C2)},
+    {BufferSpan("message digest"), UINT32_C(0x20159D7F)},
+    {BufferSpan("abcdefghijklmnopqrstuvwxyz"), UINT32_C(0x4C2750BD)},
+    {BufferSpan("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"),
      UINT32_C(0x1FC2E6D2)},
-    {"12345678901234567890123456789012345678901234567890123456789012345678901234567890",
+    {BufferSpan("12345678901234567890123456789012345678901234567890123456789012345678901234567890"),
      UINT32_C(0x7CA94A72)},
-    {"123456789", UINT32_C(0xCBF43926)},
+    {BufferSpan("123456789"), UINT32_C(0xCBF43926)},
   };
 
   for (const auto& item : cases) {
-    EXPECT_EQ(item.output, toUnderlying(computeCrc32(BufferSpan(item.bytes))));
+    EXPECT_EQ(item.output, toUnderlying(computeCrc32(item.bytes)));
   }
 }
 

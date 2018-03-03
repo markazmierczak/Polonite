@@ -4,7 +4,7 @@
 #ifndef STP_BASE_COMPILER_LSAN_H_
 #define STP_BASE_COMPILER_LSAN_H_
 
-#include "Base/Compiler/Sanitizer.h"
+#include "Base/Compiler/Config.h"
 
 // This file defines macros which can be used to annotate intentional memory
 // leaks. Support for annotations is implemented in LeakSanitizer. Annotated

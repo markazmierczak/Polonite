@@ -3,7 +3,7 @@
 
 #include "Base/Text/FormatInteger.h"
 
-#include "Base/Containers/List.h"
+#include "Base/String/String.h"
 #include "Base/Test/GTest.h"
 #include "Base/Type/Limits.h"
 
@@ -18,7 +18,7 @@ struct FormatIntegerTest {
 };
 
 template<typename T>
-static inline String FormatInteger(T value) {
+static inline String formatInteger(T value) {
   FormatIntegerBuffer<T> buffer;
   return String(FormatInteger(value, buffer));
 }
@@ -38,12 +38,12 @@ TEST(FormatIntegerTest, Basic) {
   };
 
   for (const auto& test : IntTests) {
-    EXPECT_EQ(test.sexpected, FormatInteger(test.num));
-    EXPECT_EQ(test.uexpected, FormatInteger(static_cast<unsigned>(test.num)));
+    EXPECT_EQ(test.sexpected, formatInteger(test.num));
+    EXPECT_EQ(test.uexpected, formatInteger(static_cast<unsigned>(test.num)));
   }
   for (const auto& test : Int64Tests) {
-    EXPECT_EQ(test.sexpected, FormatInteger(test.num));
-    EXPECT_EQ(test.uexpected, FormatInteger(static_cast<uint64_t>(test.num)));
+    EXPECT_EQ(test.sexpected, formatInteger(test.num));
+    EXPECT_EQ(test.uexpected, formatInteger(static_cast<uint64_t>(test.num)));
   }
 }
 
@@ -59,7 +59,7 @@ TEST(FormatIntegerTest, UnsignedAtEdge) {
   };
 
   for (const auto& test : cases) {
-    EXPECT_EQ(test.expected, FormatInteger(test.input));
+    EXPECT_EQ(test.expected, formatInteger(test.input));
   }
 }
 

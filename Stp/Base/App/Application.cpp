@@ -5,7 +5,6 @@
 
 #include "Base/App/AtExit.h"
 #include "Base/App/BaseApplicationPart.h"
-#include "Base/Compiler/Sanitizer.h"
 #include "Base/Debug/Console.h"
 #include "Base/Debug/StackTrace.h"
 #include "Base/Error/ExceptionPtr.h"

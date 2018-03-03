@@ -4,7 +4,6 @@
 
 #include "Base/Thread/AtomicOps.h"
 
-#include "Base/Compiler/Sanitizer.h"
 #include "Base/Test/GTest.h"
 
 #include <string.h>

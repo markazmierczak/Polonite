@@ -525,7 +525,34 @@ struct TIsTriviallyEqualityComparableTmpl :
 template<typename T>
 constexpr bool TIsTriviallyEqualityComparable = TIsTriviallyEqualityComparableTmpl<T>::Value;
 
+namespace detail {
+
+template<typename T, typename U>
+using TEqualityComparableConcept = decltype(declval<const T&>() == declval<const U&>());
+
+} // namespace detail
+
+template<typename T, typename U>
+constexpr bool TIsEqualityComparableWith =
+    TsAreSame<bool, TDetect<detail::TEqualityComparableConcept, T, U>>;
+
+template<typename T>
+constexpr bool TIsEqualityComparable = TIsEqualityComparableWith<T, T>;
+
+struct DefaultEqualityComparer {
+  template<typename T, typename U>
+  constexpr bool operator()(const T& x, const U& y) const noexcept {
+    return x == y;
+  }
+};
+
 BASE_EXPORT HashCode hashBuffer(const void* data, int size) noexcept;
+
+#if SANITIZER(ADDRESS)
+extern "C" void __asan_poison_memory_region(void const volatile *addr, size_t size);
+extern "C" void __asan_unpoison_memory_region(void const volatile *addr, size_t size);
+extern "C" int __asan_address_is_poisoned(void const volatile *addr);
+#endif
 
 } // namespace stp
 

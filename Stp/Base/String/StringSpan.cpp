@@ -97,7 +97,7 @@ bool operator==(const StringSpan& lhs, const StringSpan& rhs) noexcept {
     return false;
   if (!lhs.isEmpty())
     return ::memcmp(lhs.data(), rhs.data(), lhs.length()) == 0;
-  return lhs.isNull() == rhs.isNull();
+  return true;
 }
 
 int compare(const StringSpan& lhs, const StringSpan& rhs) noexcept {
@@ -106,9 +106,6 @@ int compare(const StringSpan& lhs, const StringSpan& rhs) noexcept {
     int rv = ::memcmp(lhs.data(), rhs.data(), toUnsigned(common_length));
     if (rv)
       return rv;
-  } else {
-    if (lhs.isNull() || rhs.isNull())
-      return compare(!lhs.isNull(), !rhs.isNull());
   }
   return compare(lhs.length(), rhs.length());
 }

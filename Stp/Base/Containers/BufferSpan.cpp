@@ -3,6 +3,7 @@
 
 #include "Base/Containers/BufferSpan.h"
 
+#include "Base/Containers/Span.h"
 #include "Base/Error/BasicExceptions.h"
 #include "Base/Text/AsciiChar.h"
 #include "Base/Type/Formattable.h"

@@ -12,7 +12,7 @@ WeakReference::Flag* WeakReference::Flag::Null = nullptr;
 
 void WeakReference::Flag::classInit() {
   ANNOTATE_SCOPED_MEMORY_LEAK;
-  Null = adoptRefPtr(new Flag(0)).leakPtr();
+  Null = adoptRc(new Flag(0)).leakPtr();
 }
 
 } // namespace detail

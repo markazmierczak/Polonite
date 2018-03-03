@@ -7,12 +7,6 @@
 #include "Base/Debug/Assert.h"
 #include "Base/Type/Variable.h"
 
-#if SANITIZER(ADDRESS)
-extern "C" void __asan_poison_memory_region(void const volatile *addr, size_t size);
-extern "C" void __asan_unpoison_memory_region(void const volatile *addr, size_t size);
-extern "C" int __asan_address_is_poisoned(void const volatile *addr);
-#endif
-
 namespace stp {
 
 template<typename T>
@@ -88,11 +82,7 @@ class Rc {
 };
 
 template<typename T>
-struct TIsZeroConstructibleTmpl<Rc<T>> : TTrue {};
-template<typename T>
 struct TIsTriviallyRelocatableTmpl<Rc<T>> : TTrue {};
-template<typename T>
-struct TIsTriviallyEqualityComparableTmpl<Rc<T>> : TTrue {};
 
 template<typename T>
 inline Rc<T> adoptRc(T& object) noexcept {

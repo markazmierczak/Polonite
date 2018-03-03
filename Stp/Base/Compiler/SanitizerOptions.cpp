@@ -1,8 +1,8 @@
 // Copyright 2017 Polonite Authors. All rights reserved.
 // Distributed under MIT license that can be found in the LICENSE file.
 
+#include "Base/Compiler/Config.h"
 #include "Base/Compiler/Os.h"
-#include "Base/Compiler/Sanitizer.h"
 
 #if SANITIZER(ADDRESS) && OS(DARWIN)
 #include <crt_externs.h>  // for _NSGetArgc, _NSGetArgv

@@ -4,13 +4,14 @@
 #ifndef STP_BASE_IO_TEXTWRITER_H_
 #define STP_BASE_IO_TEXTWRITER_H_
 
-#include "Base/Containers/Span.h"
+#include "Base/String/StringSpan.h"
 
 namespace stp {
 
 class TextEncoding;
 
 class BASE_EXPORT TextWriter {
+  DISALLOW_COPY_AND_ASSIGN(TextWriter);
  public:
   static TextWriter& nullWriter();
 
@@ -57,8 +58,6 @@ class BASE_EXPORT TextWriter {
   #endif
 
   void writeRune(char32_t rune);
-
-  DISALLOW_COPY_AND_ASSIGN(TextWriter);
 };
 
 inline void TextWriter::indent(int count, char c) {

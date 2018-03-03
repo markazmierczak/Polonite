@@ -4,7 +4,7 @@
 #ifndef STP_BASE_COMPILER_TSAN_H_
 #define STP_BASE_COMPILER_TSAN_H_
 
-#include "Base/Compiler/Sanitizer.h"
+#include "Base/Compiler/Config.h"
 
 #if SANITIZER(TSAN)
 

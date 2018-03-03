@@ -78,7 +78,7 @@ static_library("options_sources") {
   ]
   sources = [
     "//Stp/Base/Compiler/Os.h",
-    "//Stp/Base/Compiler/Sanitizer.h",
+    "//Stp/Base/Compiler/Config.h",
     "//Stp/Base/Compiler/SanitizerOptions.cpp",
   ]
 

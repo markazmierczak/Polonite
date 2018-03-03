@@ -47,7 +47,6 @@ component("Base") {
     "Compiler/Lsan.h",
     "Compiler/Msan.h",
     "Compiler/Os.h",
-    "Compiler/Sanitizer.h",
     "Compiler/Simd.h",
     "Compiler/Stringize.h",
     "Compiler/Tsan.h",

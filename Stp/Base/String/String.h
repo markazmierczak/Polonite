@@ -10,14 +10,18 @@ namespace stp {
 
 class String {
  public:
-  String() = default;
+  String(String&& other) noexcept : impl_(move(other.impl_)) {}
+  String(const String& other) noexcept : impl_(other.impl_.copyRef()) {}
+
+  String& operator=(String&& other) noexcept { impl_ = move(other.impl_); return *this; }
+  String& operator=(const String& other) noexcept { impl_ = other.impl_.copyRef(); return *this; }
 
   explicit String(const StringSpan& text) : impl_(StringImpl::create(text)) {}
 
   template<int N>
   explicit String(const char (&text)[N]) = delete; // Use StringLiteral instead.
 
-  String(RefPtr<StringImpl> impl) noexcept : impl_(move(impl)) {}
+  String(Rc<StringImpl> impl) noexcept : impl_(move(impl)) {}
 
   static String isolate(String s);
 
@@ -25,38 +29,35 @@ class String {
   BASE_EXPORT static String fromCString(MallocPtr<const char> cstr);
   static String fromCString(MallocPtr<const char> cstr, int length);
 
+  static String createUninitialized(int length, char*& out_data);
+
   StringSpan toSpan() const noexcept { return StringSpan(data(), length()); }
   operator StringSpan() const noexcept { return toSpan(); }
 
-  bool isNull() const noexcept { return !impl_; }
-  bool isEmpty() const noexcept { return !impl_ || impl_->isEmpty(); }
+  bool isEmpty() const noexcept { return impl_->isEmpty(); }
 
-  explicit operator bool() const noexcept { return impl_ != nullptr; }
-  bool operator!() const noexcept { return !impl_; }
+  const char* data() const noexcept { return impl_->data(); }
+  int length() const noexcept { return impl_->length(); }
 
-  const char* data() const noexcept { return impl_ ? impl_->data() : 0; }
-  int length() const noexcept { return impl_ ? impl_->length() : 0; }
+  StringImpl& getImpl() const noexcept { return impl_; }
 
-  StringImpl* impl() const noexcept { return impl_.get(); }
-  RefPtr<StringImpl> releaseImpl() noexcept { return move(impl_); }
-
-  const char& operator[](int at) const noexcept;
+  const char& operator[](int at) const noexcept { return (*impl_)[at]; }
 
   String substring(int at) const { return substring(at, length() - at); }
-  String substring(int at, int n) const;
+  String substring(int at, int n) const { return impl_->substring(at, n); }
   String left(int n) const { return substring(0, n); }
   String right(int n) const { return substring(length() - n, n); }
 
-  int indexOfUnit(char c) const noexcept { return impl_ ? toSpan().indexOfUnit(c) : -1; }
-  int lastIndexOfUnit(char c) const noexcept { return impl_ ? toSpan().lastIndexOfUnit(c) : -1; }
+  int indexOfUnit(char c) const noexcept { return toSpan().indexOfUnit(c); }
+  int lastIndexOfUnit(char c) const noexcept { return toSpan().lastIndexOfUnit(c); }
   bool containsUnit(char c) const noexcept { return indexOfUnit(c) >= 0; }
 
-  int indexOfRune(char32_t rune) const noexcept { return impl_ ? toSpan().indexOfRune(rune) : -1; }
-  int lastIndexOfRune(char32_t rune) const noexcept { return impl_ ? toSpan().lastIndexOfRune(rune) : -1; }
+  int indexOfRune(char32_t rune) const noexcept { return toSpan().indexOfRune(rune); }
+  int lastIndexOfRune(char32_t rune) const noexcept { return toSpan().lastIndexOfRune(rune); }
   bool containsRune(char32_t rune) const noexcept { return indexOfRune(rune) >= 0; }
 
-  int indexOf(const StringSpan& s) const noexcept { return impl_ ? toSpan().indexOf(s) : -1; }
-  int lastIndexOf(const StringSpan& s) const noexcept { return impl_ ? toSpan().lastIndexOf(s) : -1; }
+  int indexOf(const StringSpan& s) const noexcept { return toSpan().indexOf(s); }
+  int lastIndexOf(const StringSpan& s) const noexcept { return toSpan().lastIndexOf(s); }
   bool contains(const StringSpan& s) const noexcept { return indexOf(s) >= 0; }
 
   bool startsWith(const StringSpan& s) const noexcept { return toSpan().startsWith(s); }
@@ -66,45 +67,33 @@ class String {
   friend HashCode partialHash(const String& s) noexcept;
 
  private:
-  RefPtr<StringImpl> impl_;
+  Rc<StringImpl> impl_;
 };
 
 BASE_EXPORT bool operator==(const String& lhs, const String& rhs) noexcept;
 inline bool operator!=(const String& lhs, const String& rhs) noexcept { return !operator==(lhs, rhs); }
 BASE_EXPORT int compare(const String& lhs, String& rhs) noexcept;
 
-inline bool operator==(const String& s, nullptr_t) noexcept { return s.isNull(); }
-inline bool operator!=(const String& s, nullptr_t) noexcept { return !s.isNull(); }
-inline bool operator==(nullptr_t, const String& s) noexcept { return s.isNull(); }
-inline bool operator!=(nullptr_t, const String& s) noexcept { return !s.isNull(); }
-
 #define StringLiteral(text) \
   []() noexcept -> String { \
     static StringImplShape r = { \
       StringImplShape::StaticRefCount, \
-      isizeof(text) - 1, text, 0, 0 \
+      isizeof(text) - 1, text, 0, StringImplShape::StaticFlags \
     }; \
     return reinterpret_cast<StaticImpl*>(&r); \
   }
 
 inline String toString(String s) noexcept { return s; }
-inline String toString(StringSpan s) { return String(s); }
+inline String toString(const StringSpan& s) { return String(s); }
 
-inline String emptyString() noexcept { return StringImpl::staticEmpty(); }
-
-inline const char& String::operator[](int at) const noexcept {
-  ASSERT(impl_ != nullptr);
-  return (*impl_)[at];
-}
-
-inline String String::substring(int at, int n) const {
-  ASSERT(0 <= at && at < length());
-  ASSERT(0 <= n && n <= length() - at);
-  return impl_ ? impl_->substring(at, n) : String();
-}
+inline String emptyString() noexcept { return makeRc(StringImpl::staticEmpty()); }
 
 inline String String::fromCString(MallocPtr<const char> cstr, int length) {
   return StringImpl::createOwned(move(cstr), length);
+}
+
+inline String String::createUninitialized(int length, char*& out_data) {
+  return StringImpl::createUninitialized(length, out_data);
 }
 
 } // namespace stp

@@ -5,9 +5,6 @@
 #define STP_BASE_TYPE_NULLABLE_H_
 
 #include "Base/Debug/Assert.h"
-#include "Base/Type/Comparable.h"
-#include "Base/Type/Formattable.h"
-#include "Base/Type/Hashable.h"
 #include "Base/Type/Variable.h"
 
 namespace stp {
@@ -69,22 +66,20 @@ class Nullable {
   // Union member must be initialized for constexpr.
   Nullable() = default;
 
-  template<typename U, TEnableIf<TIsConstructible<T, U&&>>* = nullptr>
-  constexpr Nullable(Nullable<U>&& other) noexcept {
+  constexpr Nullable(nullptr_t) noexcept {}
+  constexpr Nullable& operator=(nullptr_t) noexcept { reset(); return *this; }
+
+  constexpr Nullable(Nullable&& other) noexcept {
     if (other)
       relocate(other);
   }
 
-  template<typename U, TEnableIf<TIsAssignable<T&, U&&>>* = nullptr>
-  constexpr Nullable& operator=(Nullable<U>&& other) noexcept {
+  constexpr Nullable& operator=(Nullable&& other) noexcept {
     if (other) {
-      if (isValid()) {
+      if (*this) {
         storage_.value = move(*other);
       } else {
-        if constexpr (TsAreSame<T, U>)
-          relocate(other);
-        else
-          init(move(*other));
+        relocate(other);
       }
     } else {
       reset();
@@ -92,16 +87,14 @@ class Nullable {
     return *this;
   }
 
-  template<typename U, TEnableIf<TIsConstructible<T, const U&>>* = nullptr>
-  constexpr Nullable(const Nullable<U>& other) noexcept(noexcept(T(*other))) {
+  constexpr Nullable(const Nullable& other) noexcept(noexcept(T(*other))) {
     if (other)
       init(*other);
   }
 
-  template<typename U, TEnableIf<TIsAssignable<T&, const U&>>* = nullptr>
-  constexpr Nullable& operator=(const Nullable<U>& other) noexcept(noexcept(declval<T&>() = *other)) {
+  constexpr Nullable& operator=(const Nullable& other) noexcept(noexcept(declval<T&>() = *other)) {
     if (other) {
-      if (isValid())
+      if (*this)
         storage_.value = *other;
       else
         init(*other);
@@ -111,56 +104,65 @@ class Nullable {
     return *this;
   }
 
-  template<typename U, TEnableIf<TIsConstructible<T, U> && TIsConvertibleTo<U, T>>* = nullptr>
-  constexpr Nullable(U&& value) noexcept(noexcept(T(forward<U>(value))))
-      : storage_(forward<U>(value)) {}
+  constexpr Nullable(T&& value) noexcept
+      : storage_(move(value)) {}
 
-  template<typename U, TEnableIf<TIsConstructible<T, U> && !TIsConvertibleTo<U, T>>* = nullptr>
-  constexpr explicit Nullable(U&& value) noexcept(noexcept(T(forward<U>(value))))
-      : storage_(forward<U>(value)) {}
+  constexpr Nullable(const T& value) noexcept(noexcept(T(value)))
+      : storage_(value) {}
 
-  template<typename U, TEnableIf<TIsAssignable<T&, U>>* = nullptr>
-  constexpr Nullable& operator=(U&& other) noexcept(noexcept(declval<T&>() = forward<U>(other))) {
-    if (isValid())
-      storage_.value = forward<U>(other);
+  constexpr Nullable& operator=(T&& other) noexcept {
+    if (isNull())
+      init(move(other));
     else
-      init(other);
+      storage_.value = move(other);
     return *this;
   }
 
-  constexpr Nullable(nullptr_t) noexcept {}
-  constexpr Nullable& operator=(nullptr_t) noexcept { reset(); return *this; }
+  constexpr Nullable& operator=(const T& other) noexcept(noexcept(declval<T&>() = other)) {
+    if (isNull())
+      init(other);
+    else
+      storage_.value = other;
+    return *this;
+  }
 
   friend void swap(Nullable& l, Nullable& r) noexcept {
-    if (l.isValid() == r.isValid()) {
-      if (l.isValid())
+    if (l.isNull() == r.isNull()) {
+      if (l)
         swap(*l, *r);
     } else {
-      if (l.isValid())
+      if (l)
         r.relocate(l);
       else
         l.relocate(r);
     }
   }
 
-  constexpr explicit operator bool() const { return storage_.is_valid; }
+  constexpr const T* operator->() const noexcept { ASSERT(!isNull()); return get(); }
+  constexpr T* operator->() noexcept { ASSERT(!isNull()); return get(); }
 
-  constexpr const T* operator->() const { ASSERT(isValid()); return storage_.value; }
-  constexpr T* operator->() { ASSERT(isValid()); return storage_.value; }
+  constexpr const T& operator*() const noexcept { ASSERT(!isNull()); return *get(); }
+  constexpr T& operator*() noexcept { ASSERT(!isNull()); return *get(); }
 
-  constexpr const T& operator*() const { ASSERT(isValid()); return storage_.value; }
-  constexpr T& operator*() { ASSERT(isValid()); return storage_.value; }
+  constexpr bool isNull() const noexcept { return !storage_.is_valid; }
+  constexpr explicit operator bool() const noexcept { return !isNull(); }
+  constexpr bool operator!() const noexcept { return isNull(); }
 
-  friend constexpr bool operator==(const Nullable& opt, nullptr_t) { return !opt; }
-  friend constexpr bool operator==(nullptr_t, const Nullable& opt) { return !opt; }
-  friend constexpr bool operator!=(const Nullable& opt, nullptr_t) { return opt.isValid(); }
-  friend constexpr bool operator!=(nullptr_t, const Nullable& opt) { return opt.isValid(); }
+  constexpr const T* get() const noexcept {
+    return storage_.is_valid ? &storage_.value : nullptr;
+  }
+  constexpr T* get() noexcept {
+    return storage_.is_valid ? &storage_.value : nullptr;
+  }
 
-  friend constexpr int compare(const Nullable& l, nullptr_t r) { return l ? 1 : 0; }
-  friend constexpr int compare(nullptr_t l, const Nullable& r) { return r ? -1 : 0; }
+  constexpr void reset() noexcept { storage_.reset(); }
 
-  constexpr const T* tryGet(const Nullable& x) { return x.isValid() ? x.operator->() : nullptr; }
-  constexpr T* tryGet(Nullable& x) { return x.isValid() ? x.operator->() : nullptr; }
+  constexpr T take() noexcept {
+    ASSERT(!isNull());
+    T result = move(storage_.value);
+    destroyObject(&storage_.value);
+    return result;
+  }
 
  private:
   detail::NullableStorage<T> storage_;
@@ -172,9 +174,6 @@ class Nullable {
     storage_.is_valid = true;
   }
 
-  constexpr void reset() { storage_.reset(); }
-  constexpr bool isValid() const { return storage_.is_valid; }
-
   void relocate(Nullable& other) noexcept {
     ASSERT(!storage_.is_valid && other.storage_.is_valid);
     storage_.is_valid = true;
@@ -183,20 +182,32 @@ class Nullable {
   }
 };
 
-// For big objects it could be a pessimization.
 template<typename T>
 struct TIsTriviallyRelocatableTmpl<Nullable<T>>
-    : TBoolConstant<TIsTriviallyRelocatable<T> && sizeof(T) <= 16> {};
+    : TBoolConstant<TIsTriviallyRelocatable<T>> {};
 // Cannot be zero-constructible - may hold big uninitialized chunk.
 // Cannot be trivially equality-comparable due uninitialized data.
 
+template<typename T>
+constexpr bool operator==(const Nullable<T>& x, nullptr_t) { return !x; }
+template<typename T>
+constexpr bool operator==(nullptr_t, const Nullable<T>& x) { return !x; }
+template<typename T>
+constexpr bool operator!=(const Nullable<T>& x, nullptr_t) { return !!x; }
+template<typename T>
+constexpr bool operator!=(nullptr_t, const Nullable<T>& x) { return !!x; }
+template<typename T>
+constexpr int compare(const Nullable<T>& x, nullptr_t) { return x ? 1 : 0; }
+template<typename T>
+constexpr int compare(nullptr_t, const Nullable<T>& x) { return x ? -1 : 0; }
+
 template<typename T, typename U, TEnableIf<TIsEqualityComparableWith<T, U>>* = nullptr>
 constexpr bool operator==(const Nullable<T>& l, const Nullable<U>& r) {
-  return l.operator bool() == r.operator bool() ? (!l || *l == *r) : false;
+  return l.isNull() == r.isNull() ? (!l || *l == *r) : false;
 }
 template<typename T, typename U, TEnableIf<TIsEqualityComparableWith<T, U>>* = nullptr>
 constexpr bool operator!=(const Nullable<T>& l, const Nullable<U>& r) {
-  return l.operator bool() != r.operator bool() || (l && *l != *r);
+  return l.isNull() != r.isNull() || (l && *l != *r);
 }
 
 template<typename T, typename U, TEnableIf<TIsEqualityComparableWith<T, U>>* = nullptr>
@@ -213,51 +224,16 @@ constexpr bool operator==(const T& value, const Nullable<U>& opt) { return opt =
 template<typename T, typename U, TEnableIf<TIsEqualityComparableWith<T, U>>* = nullptr>
 constexpr bool operator!=(const T& value, const Nullable<U>& opt) { return opt != value; }
 
-template<typename T, typename U, TEnableIf<TIsComparableWith<T, U>>* = nullptr>
-constexpr int compare(const Nullable<T>& l, const Nullable<U>& r) {
-  return l.operator bool() == r.operator bool()
-      ? (l ? compare(*l, *r) : 0)
-      : (l ? 1 : -1);
-}
-
-template<typename T, typename U, TEnableIf<TIsComparableWith<T, U>>* = nullptr>
-constexpr int compare(const Nullable<T>& l, const U& r) {
-  return l ? compare(*l, r) : -1;
-}
-template<typename T, typename U, TEnableIf<TIsComparableWith<T, U>>* = nullptr>
-constexpr int compare(const T& l, const Nullable<U>& r) {
-  return l ? compare(l, *r) : 1;
-}
-
-template<typename T, TEnableIf<TIsHashable<T>>* = nullptr>
-constexpr HashCode partialHash(const Nullable<T>& x) { return x ? partialHash(*x) : HashCode::Zero; }
-
-template<typename T, TEnableIf<TIsFormattable<T>>* = nullptr>
-inline TextWriter& operator<<(TextWriter& out, const Nullable<T>& x) {
-  if (x)
-    out << *x;
-  else
-    out << nullptr;
-  return out;
-}
-template<typename T, TEnableIf<TIsFormattableExtended<T>>* = nullptr>
-inline void format(TextWriter& out, const Nullable<T>& x, const StringSpan& opts) {
-  if (x)
-    format(out, *x, opts);
-  else
-    out << nullptr;
-}
-
-template<typename T, typename U>
-constexpr T coalesce(const Nullable<U>& nullable, U&& default_value) {
+template<typename T, typename U, typename X>
+constexpr T coalesce(const Nullable<U>& nullable, X&& default_value) {
   static_assert(TIsConvertibleTo<U, T>, "!");
-  return nullable.operator bool() ? *nullable : static_cast<T>(forward<U>(default_value));
+  return nullable ? T(*nullable) : T(forward<X>(default_value));
 }
 
-template<typename T, typename U>
-constexpr T coalesce(Nullable<U>&& nullable, U&& default_value) {
+template<typename T, typename U, typename X>
+constexpr T coalesce(Nullable<U>&& nullable, X&& default_value) {
   static_assert(TIsConvertibleTo<U, T>, "!");
-  return nullable.operator bool() ? move(*nullable) : static_cast<T>(forward<U>(default_value));
+  return nullable ? T(move(*nullable)) : T(forward<X>(default_value));
 }
 
 } // namespace stp

@@ -5,6 +5,7 @@
 #define STP_BASE_TYPE_COMPARABLE_H_
 
 #include "Base/Containers/ArrayOps.h"
+#include "Base/Type/Nullable.h"
 
 namespace stp {
 
@@ -61,30 +62,14 @@ constexpr int compare(T l, T r) noexcept {
 namespace detail {
 
 template<typename T, typename U>
-using TEqualityComparableConcept = decltype(declval<const T&>() == declval<const U&>());
-template<typename T, typename U>
 using TComparableConcept = decltype(compare(declval<const T&>(), declval<const U&>()));
 
 } // namespace detail
 
 template<typename T, typename U>
-constexpr bool TIsEqualityComparableWith =
-    TsAreSame<bool, TDetect<detail::TEqualityComparableConcept, T, U>>;
-
-template<typename T>
-constexpr bool TIsEqualityComparable = TIsEqualityComparableWith<T, T>;
-
-template<typename T, typename U>
 constexpr bool TIsComparableWith = TsAreSame<int, TDetect<detail::TComparableConcept, T, U>>;
 template<typename T>
 constexpr bool TIsComparable = TIsComparableWith<T, T>;
-
-struct DefaultEqualityComparer {
-  template<typename T, typename U>
-  constexpr bool operator()(const T& x, const U& y) const noexcept {
-    return x == y;
-  }
-};
 
 struct DefaultComparer {
   template<typename T, typename U>
@@ -92,6 +77,22 @@ struct DefaultComparer {
     return compare(x, y);
   }
 };
+
+template<typename T, typename U, TEnableIf<TIsComparableWith<T, U>>* = nullptr>
+constexpr int compare(const Nullable<T>& l, const Nullable<U>& r) {
+  return l.operator bool() == r.operator bool()
+      ? (l ? compare(*l, *r) : 0)
+      : (l ? 1 : -1);
+}
+
+template<typename T, typename U, TEnableIf<TIsComparableWith<T, U>>* = nullptr>
+constexpr int compare(const Nullable<T>& l, const U& r) {
+  return l ? compare(*l, r) : -1;
+}
+template<typename T, typename U, TEnableIf<TIsComparableWith<T, U>>* = nullptr>
+constexpr int compare(const T& l, const Nullable<U>& r) {
+  return l ? compare(l, *r) : 1;
+}
 
 } // namespace stp
 

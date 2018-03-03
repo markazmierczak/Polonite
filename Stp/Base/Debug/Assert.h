@@ -12,7 +12,7 @@ class StringSpan;
 class TextWriter;
 
 #if !defined(ASSERT_IS_ON)
-#define ASSERT_IS_ON !NDEBUG
+#define ASSERT_IS_ON !defined(NDEBUG)
 #endif
 
 BASE_EXPORT void assertFail(const char* file, int line, const char* expr);

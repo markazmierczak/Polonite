@@ -11,7 +11,6 @@ namespace stp {
 class StringSpan {
  public:
   constexpr StringSpan() noexcept : data_(nullptr), length_(0) {}
-  constexpr StringSpan(nullptr_t) noexcept : data_(nullptr), length_(0) {}
 
   constexpr StringSpan(const char* data, int length) noexcept
       : data_(data), length_(length) { ASSERT(length >= 0); }
@@ -26,10 +25,6 @@ class StringSpan {
   ALWAYS_INLINE constexpr const char* data() const noexcept { return data_; }
   ALWAYS_INLINE constexpr int length() const noexcept { return length_; }
 
-  explicit operator bool() const noexcept { return data_ != nullptr; }
-  bool operator!() const noexcept { return !data_; }
-
-  constexpr bool isNull() const noexcept { return data_ == nullptr; }
   constexpr bool isEmpty() const noexcept { return length_ == 0; }
 
   constexpr const char& operator[](int at) const noexcept;
@@ -70,11 +65,6 @@ BASE_EXPORT bool operator==(const StringSpan& lhs, const StringSpan& rhs) noexce
 inline bool operator!=(const StringSpan& lhs, const StringSpan& rhs) noexcept {
   return !operator==(lhs, rhs);
 }
-
-constexpr bool operator==(const StringSpan& s, nullptr_t) noexcept { return s.isNull(); }
-constexpr bool operator!=(const StringSpan& s, nullptr_t) noexcept { return !s.isNull(); }
-constexpr bool operator==(nullptr_t, const StringSpan& s) noexcept { return s.isNull(); }
-constexpr bool operator!=(nullptr_t, const StringSpan& s) noexcept { return !s.isNull(); }
 
 BASE_EXPORT int compare(const StringSpan& lhs, const StringSpan& rhs) noexcept;
 
