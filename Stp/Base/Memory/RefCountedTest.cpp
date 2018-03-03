@@ -11,8 +11,8 @@ namespace {
 struct Object : RefCounted<Object> {};
 } // namespace
 
-static_assert(TIsZeroConstructible<RefPtr<Object>>, "!");
-static_assert(TIsTriviallyRelocatable<RefPtr<Object>>, "!");
-static_assert(TIsTriviallyEqualityComparable<RefPtr<Object>>, "!");
+static_assert(TIsZeroConstructible<RcPtr<Object>>, "!");
+static_assert(TIsTriviallyRelocatable<RcPtr<Object>>, "!");
+static_assert(TIsTriviallyEqualityComparable<RcPtr<Object>>, "!");
 
 } // namespace stp

@@ -120,7 +120,7 @@ Checked/overflow/saturated mathematics.
 ``Memory/``
 ========
 
-Smart pointers: ``OwnPtr<>``, ``RefPtr<>`` and :ref:`WeakPtr <stp-base-weak-ptr>`.
+Smart pointers: ``OwnPtr<>``, ``RcPtr<>`` and :ref:`WeakPtr <stp-base-weak-ptr>`.
 
 Allocators: basic, aligned, contiguous.
 

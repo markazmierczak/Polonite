@@ -157,7 +157,7 @@ class BASE_EXPORT WaitableEvent {
   // behaviour.
   struct WaitableEventKernel : public RefCountedThreadSafe<WaitableEventKernel> {
    public:
-    static RefPtr<WaitableEventKernel> Create(ResetPolicy reset_policy, InitialState initial_state) {
+    static RcPtr<WaitableEventKernel> Create(ResetPolicy reset_policy, InitialState initial_state) {
       return adoptRc(new WaitableEventKernel(reset_policy, initial_state));
     }
 
@@ -191,7 +191,7 @@ class BASE_EXPORT WaitableEvent {
 
   bool TimedWaitUntilInternal(const TimeTicks* end_time);
 
-  RefPtr<WaitableEventKernel> kernel_;
+  RcPtr<WaitableEventKernel> kernel_;
   #endif
 
   DISALLOW_COPY_AND_ASSIGN(WaitableEvent);

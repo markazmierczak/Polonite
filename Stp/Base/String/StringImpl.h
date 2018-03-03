@@ -45,7 +45,7 @@ class StringImpl : private StringImplShape {
 
   bool hasOneRef() noexcept { return ref_count_ == RefCountIncrement; }
 
-  bool isStatic() noexcept { return (ref_count_ & 1) != 0; }
+  bool isStatic() noexcept { return (ref_count_ & StaticRefCount) != 0; }
   bool isInterned() noexcept { return (flags_ & InternedFlag) != 0; }
   bool isEmpty() noexcept { return length_ == 0; }
 

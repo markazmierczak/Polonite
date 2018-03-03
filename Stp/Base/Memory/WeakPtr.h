@@ -22,7 +22,7 @@ class BASE_EXPORT WeakReference {
   // deleted from another via WeakPtr::~WeakPtr().
   class BASE_EXPORT Flag : public RefCountedThreadSafe<Flag> {
    public:
-    static RefPtr<Flag> create() { return adoptRc(new Flag()); }
+    static RcPtr<Flag> create() { return adoptRc(new Flag()); }
 
     // A sentinel object used by WeakReference objects that don't point to
     // a valid Flag, either because they're default constructed or because
@@ -83,7 +83,7 @@ class BASE_EXPORT WeakReference {
   };
 
   WeakReference() {}
-  WeakReference(RefPtr<Flag> flag) : flag_(move(flag)) {}
+  WeakReference(RcPtr<Flag> flag) : flag_(move(flag)) {}
   ~WeakReference() {}
 
   WeakReference(WeakReference&& other)
@@ -103,7 +103,7 @@ class BASE_EXPORT WeakReference {
   uintptr_t getValidMask() const { return flag_->getValidMask(); }
 
  private:
-  RefPtr<const Flag> flag_;
+  RcPtr<const Flag> flag_;
 };
 
 class BASE_EXPORT WeakReferenceOwner {
@@ -131,7 +131,7 @@ class BASE_EXPORT WeakReferenceOwner {
   }
 
  private:
-  mutable RefPtr<WeakReference::Flag> flag_;
+  mutable RcPtr<WeakReference::Flag> flag_;
 };
 
 // This class simplifies the implementation of WeakPtr's type conversion

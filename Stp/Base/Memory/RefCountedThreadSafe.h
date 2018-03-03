@@ -4,7 +4,7 @@
 #ifndef STP_BASE_MEMORY_REFCOUNTEDTHREADSAFE_H_
 #define STP_BASE_MEMORY_REFCOUNTEDTHREADSAFE_H_
 
-#include "Base/Memory/RefPtr.h"
+#include "Base/Memory/RcPtr.h"
 #include "Base/Thread/AtomicRefCount.h"
 
 namespace stp {
