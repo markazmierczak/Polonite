@@ -8,11 +8,6 @@
 namespace stp {
 
 /**
- * @fn String::String()
- * Construct a null string (not an empty string).
- */
-
-/**
  * @fn String::String(StringSpan text)
  * Construct a UTF-8 string.
  * A copy of given |text| is made for new string.
@@ -20,11 +15,11 @@ namespace stp {
 
 String String::isolate(String s) {
   // Whether impl is safe to be moved to another thread ?
-  if (s.isEmpty() ||
-      (s.impl_->hasOneRef() && !s.impl_->isUnique())) {
-    return stp::move(s);
+  if (s.impl_->isStatic() ||
+      (s.impl_->hasOneRef() && !s.impl_->isInterned())) {
+    return move(s);
   }
-  return s.impl_->isolatedCopy();
+  return String(StringSpan(s));
 }
 
 /**
@@ -35,11 +30,6 @@ String String::isolate(String s) {
 String String::fromCString(const char* cstr) {
   int length = static_cast<int>(::strlen(cstr));
   return StringImpl::createFromCString(cstr, length);
-}
-
-String String::fromCString(MallocPtr<const char> cstr) {
-  int length = static_cast<int>(::strlen(cstr.get()));
-  return fromCString(move(cstr), length);
 }
 
 bool operator==(const String& lhs, const String& rhs) noexcept {

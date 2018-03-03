@@ -26,13 +26,12 @@ class String {
   static String isolate(String s);
 
   BASE_EXPORT static String fromCString(const char* cstr);
-  BASE_EXPORT static String fromCString(MallocPtr<const char> cstr);
-  static String fromCString(MallocPtr<const char> cstr, int length);
+  static String empty() noexcept { return adoptRc(StringImpl::staticEmpty()); }
 
   static String createUninitialized(int length, char*& out_data);
 
-  StringSpan toSpan() const noexcept { return StringSpan(data(), length()); }
-  operator StringSpan() const noexcept { return toSpan(); }
+  StringSpan toSpan() const noexcept { return impl_->toSpan(); }
+  operator StringSpan() const noexcept { return impl_->toSpan(); }
 
   bool isEmpty() const noexcept { return impl_->isEmpty(); }
 
@@ -41,7 +40,10 @@ class String {
 
   StringImpl& getImpl() const noexcept { return impl_; }
 
-  const char& operator[](int at) const noexcept { return (*impl_)[at]; }
+  const char& operator[](int at) const noexcept {
+    ASSERT(0 <= at && at < length());
+    return *(data() + at);
+  }
 
   String substring(int at) const { return substring(at, length() - at); }
   String substring(int at, int n) const { return impl_->substring(at, n); }
@@ -76,21 +78,15 @@ BASE_EXPORT int compare(const String& lhs, String& rhs) noexcept;
 
 #define StringLiteral(text) \
   []() noexcept -> String { \
-    static StringImplShape r = { \
-      StringImplShape::StaticRefCount, \
-      isizeof(text) - 1, text, 0, StringImplShape::StaticFlags \
+    static StaticStringImpl<isizeof(text)> r = { \
+      { StringImplShape::StaticRefCount, isizeof(text) - 1, StringImplShape::NotInterned }, \
+      text \
     }; \
-    return reinterpret_cast<StaticImpl*>(&r); \
+    return reinterpret_cast<StringImpl&>(r.shape); \
   }
 
 inline String toString(String s) noexcept { return s; }
 inline String toString(const StringSpan& s) { return String(s); }
-
-inline String emptyString() noexcept { return makeRc(StringImpl::staticEmpty()); }
-
-inline String String::fromCString(MallocPtr<const char> cstr, int length) {
-  return StringImpl::createOwned(move(cstr), length);
-}
 
 inline String String::createUninitialized(int length, char*& out_data) {
   return StringImpl::createUninitialized(length, out_data);
