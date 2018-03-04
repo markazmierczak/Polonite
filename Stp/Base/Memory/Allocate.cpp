@@ -22,3 +22,41 @@ void* reallocateMemory(void* ptr, int size) {
 }
 
 } // namespace stp
+
+void* operator new(size_t size) {
+  void* ptr = malloc(size);
+  if (!ptr)
+    throw stp::OutOfMemoryException();
+  return ptr;
+}
+
+void* operator new[](size_t size) {
+  void* ptr = malloc(size);
+  if (!ptr)
+    throw stp::OutOfMemoryException();
+  return ptr;
+}
+
+void* operator new(size_t size, const std::nothrow_t&) {
+  return malloc(size);
+}
+
+void* operator new[](size_t size, const std::nothrow_t&) {
+  return malloc(size);
+}
+
+void operator delete(void* p) {
+  free(p);
+}
+
+void operator delete[](void* p) {
+  free(p);
+}
+
+void operator delete(void* p, const std::nothrow_t&) {
+  free(p);
+}
+
+void operator delete[](void* p, const std::nothrow_t&) {
+  free(p);
+}
