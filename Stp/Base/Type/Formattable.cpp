@@ -86,7 +86,7 @@ void formatChar(TextWriter& out, char32_t c, const StringSpan& opts) {
         break;
     }
 
-    if (opts.size() > 1) {
+    if (opts.length() > 1) {
       char fl = opts[1];
       if (fl == '4' || fl == '8')
         size = fl - '0';
@@ -104,8 +104,8 @@ void formatChar(TextWriter& out, char32_t c, const StringSpan& opts) {
     case Variant::Hex: {
       FormatHexIntegerBuffer<uint32_t> buffer;
       StringSpan hex = FormatHexInteger(static_cast<uint32_t>(c), buffer, uppercase);
-      if (hex.size() < size)
-        out.indent(size - hex.size(), '0');
+      if (hex.length() < size)
+        out.indent(size - hex.length(), '0');
       out << hex;
       break;
     }
@@ -180,7 +180,7 @@ static inline void formatIntTmpl(TextWriter& out, T x, const StringSpan& opts) {
 
   Array<char, MaxBufferSize> buffer;
 
-  StringSpan converted;
+  StringSpan converted = StringSpan::empty();
   switch (variant) {
     case Variant::Decimal:
       converted = FormatInteger(x, buffer);
@@ -200,7 +200,7 @@ static inline void formatIntTmpl(TextWriter& out, T x, const StringSpan& opts) {
     // This formatter must account for additional requirements, i.e. precision specifier.
     // Write the sign and remove from converter's output.
     ASSERT(converted[0] == '-');
-    converted.removePrefix(1);
+    converted = converted.substring(1);
     out << '-';
   } else {
     if (sign) {
@@ -208,8 +208,8 @@ static inline void formatIntTmpl(TextWriter& out, T x, const StringSpan& opts) {
     }
   }
 
-  if (converted.size() < precision)
-    out.indent(precision - converted.size(), '0');
+  if (converted.length() < precision)
+    out.indent(precision - converted.length(), '0');
 
   out << converted;
 }
@@ -220,7 +220,7 @@ void formatUint32(TextWriter& out, uint32_t x, const StringSpan& opts) { formatI
 void formatUint64(TextWriter& out, uint64_t x, const StringSpan& opts) { formatIntTmpl(out, x, opts); }
 
 void formatFloat(TextWriter& out, double x) {
-  formatFloat(out, x, StringSpan());
+  formatFloat(out, x, StringSpan::empty());
 }
 
 void formatFloat(TextWriter& out, double x, const StringSpan& opts) {
@@ -304,13 +304,13 @@ void formatFloat(TextWriter& out, double x, const StringSpan& opts) {
     ASSERT_UNUSED(ok, ok);
   }
 
-  StringSpan converted = builder.finalizeHash();
+  StringSpan converted = builder.finalize();
   if (isNegative(x)) {
     // The converter adds '-' sign when value is negative.
     // This formatter must account for additional requirements, i.e. precision specifier.
     // Write the sign and remove from converter's output.
     ASSERT(converted[0] == '-');
-    converted.removePrefix(1);
+    converted = converted.substring(1);
     out << '-';
   } else {
     if (sign) {
@@ -334,8 +334,8 @@ void formatRawPointer(TextWriter& out, const void* ptr) {
 
   FormatHexIntegerBuffer<uintptr_t> buffer;
   StringSpan hex = FormatHexInteger(reinterpret_cast<uintptr_t>(ptr), buffer);
-  if (hex.size() < AddressDigitCount)
-    out.indent(AddressDigitCount - hex.size(), '0');
+  if (hex.length() < AddressDigitCount)
+    out.indent(AddressDigitCount - hex.length(), '0');
 
   out << hex;
 }

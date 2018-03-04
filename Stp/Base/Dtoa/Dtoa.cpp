@@ -31,7 +31,7 @@ static inline StringSpan FormatStringTruncatingTrailingZerosIfNeeded(
   // If there is an exponent, stripping trailing zeros would be incorrect.
   // FIXME: Zeros should be stripped before the 'e'.
   if (memchr(buffer, 'e', length))
-    return builder.finalizeHash();
+    return builder.finalize();
 
   int decimal_point_position = 0;
   for (; decimal_point_position < length; ++decimal_point_position) {
@@ -41,7 +41,7 @@ static inline StringSpan FormatStringTruncatingTrailingZerosIfNeeded(
 
   // No decimal seperator found, early exit.
   if (decimal_point_position == length)
-    return builder.finalizeHash();
+    return builder.finalize();
 
   int truncated_size = length - 1;
   for (; truncated_size > decimal_point_position; --truncated_size) {
@@ -51,7 +51,7 @@ static inline StringSpan FormatStringTruncatingTrailingZerosIfNeeded(
 
   // No trailing zeros found to strip.
   if (truncated_size == length - 1)
-    return builder.finalizeHash();
+    return builder.finalize();
 
   // If we removed all trailing zeros, remove the decimal point as well.
   if (truncated_size == decimal_point_position) {
@@ -61,7 +61,7 @@ static inline StringSpan FormatStringTruncatingTrailingZerosIfNeeded(
 
   // Truncate the StringBuilder, and return the final result.
   builder.SetPosition(truncated_size + 1);
-  return builder.finalizeHash();
+  return builder.finalize();
 }
 
 StringSpan FloatToFixedPrecisionString(

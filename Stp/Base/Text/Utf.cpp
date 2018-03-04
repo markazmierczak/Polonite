@@ -104,7 +104,7 @@ int Utf8::EncodeSlow(char* out, char32_t c) {
   return i;
 }
 
-int TryEncodeUtf(char32_t c, MutableStringSpan out) {
+int TryEncodeUtf(char32_t c, MutableSpan<char> out) {
   ASSERT(unicode::IsValidRune(c));
   if (out.isEmpty())
     return 0;

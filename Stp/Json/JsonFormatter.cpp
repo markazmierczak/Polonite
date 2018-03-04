@@ -89,7 +89,7 @@ static StringSpan JSONFloatToString(double value, FloatToStringBuffer buffer) {
 
   dtoa::StringBuilder builder(buffer, FloatToStringBufferLength);
   converter.ToShortest(value, &builder);
-  return builder.finalizeHash();
+  return builder.finalize();
 }
 
 bool JsonFormatter::WriteDouble(const JsonValue& node) {

@@ -34,8 +34,8 @@ constexpr const TextEncodingData UndefinedTextEncodingData = BuildNull();
 } // namespace detail
 
 static inline StringSpan RemoveNonAlphaNumericPrefix(StringSpan s) {
-  while (!s.isEmpty() && !isAlphaNumericAscii(s.getFirst()))
-    s.removePrefix(1);
+  while (!s.isEmpty() && !isAlphaNumericAscii(s[0]))
+    s = s.substring(1);
   return s;
 }
 
@@ -49,11 +49,11 @@ bool TextEncoding::AreNamesMatching(StringSpan lhs, StringSpan rhs) noexcept {
     if (lhs.isEmpty() || rhs.isEmpty())
       break;
 
-    if (toUpperAscii(lhs.getFirst()) != toUpperAscii(rhs.getFirst()))
+    if (toUpperAscii(lhs[0]) != toUpperAscii(rhs[0]))
       return false;
 
-    lhs.removePrefix(1);
-    rhs.removePrefix(1);
+    lhs = lhs.substring(1);
+    rhs = rhs.substring(1);
   }
   return lhs.isEmpty() && rhs.isEmpty();
 }

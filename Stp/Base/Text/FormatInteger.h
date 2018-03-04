@@ -21,7 +21,7 @@ template<typename T>
 using FormatIntegerBuffer = Array<char, 3 * sizeof(T) + TIsSigned<T>>;
 
 template<typename T, TEnableIf<TIsInteger<T>>* = nullptr>
-constexpr StringSpan FormatInteger(T input, MutableStringSpan buffer) {
+constexpr StringSpan FormatInteger(T input, MutableSpan<char> buffer) {
   using UnsignedType = TMakeUnsigned<T>;
 
   char* end = buffer.data() + buffer.size();
@@ -49,7 +49,7 @@ using FormatHexIntegerBuffer = char[2 * sizeof(T) + TIsSigned<T>];
 
 template<typename T, TEnableIf<TIsInteger<T>>* = nullptr>
 constexpr StringSpan FormatHexInteger(
-    T input, MutableStringSpan buffer, bool uppercase = true) {
+    T input, MutableSpan<char> buffer, bool uppercase = true) {
   using UnsignedType = TMakeUnsigned<T>;
 
   char* end = buffer.data() + buffer.size();
@@ -75,7 +75,7 @@ template<typename T>
 using FormatOctalIntegerBuffer = char[(8 * sizeof(T) + 2) / 3 + TIsSigned<T>];
 
 template<typename T, TEnableIf<TIsInteger<T>>* = nullptr>
-constexpr StringSpan FormatOctalInteger(T input, MutableStringSpan buffer) {
+constexpr StringSpan FormatOctalInteger(T input, MutableSpan<char> buffer) {
   using UnsignedType = TMakeUnsigned<T>;
 
   char* end = buffer.data() + buffer.size();

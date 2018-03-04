@@ -5,10 +5,10 @@
 #define STP_BASE_TEXT_CODEC_TEXTCODEC_H_
 
 #include "Base/Containers/Span.h"
+#include "Base/String/StringSpan.h"
 
 namespace stp {
 
-class MutableStringSpan;
 class PolymorphicAllocator;
 class String;
 
@@ -32,7 +32,7 @@ class TextDecoder {
   using Result = detail::TextRecodeResult;
 
   virtual ~TextDecoder() {}
-  virtual Result Decode(BufferSpan input, MutableStringSpan output, bool flush) = 0;
+  virtual Result Decode(BufferSpan input, MutableSpan<char> output, bool flush) = 0;
 };
 
 class TextEncoder {
@@ -52,7 +52,7 @@ struct TextEncodingData {
   TextDecoderFactory create_decoder = nullptr;
   TextEncoderFactory create_encoder = nullptr;
 
-  StringSpan name;
+  StringSpan name = StringSpan::empty();
 
   const TextEncodingConfig* config = nullptr;
 };
@@ -61,7 +61,7 @@ namespace detail {
 BASE_EXPORT extern const TextEncodingData UndefinedTextEncodingData;
 }
 
-class BASE_EXPORT TextEncoding {
+class TextEncoding {
  public:
   constexpr TextEncoding() noexcept : codec_(detail::UndefinedTextEncodingData) {}
   constexpr TextEncoding(const TextEncodingData* codec) noexcept : codec_(*codec) {}
@@ -82,12 +82,12 @@ class BASE_EXPORT TextEncoding {
   friend bool operator!=(const TextEncoding& l, const TextEncoding& r) { return !operator==(l, r); }
   friend HashCode partialHash(const TextEncoding& codec) { return codec.HashImpl(); }
 
-  static bool AreNamesMatching(StringSpan lhs, StringSpan rhs) noexcept;
+  BASE_EXPORT static bool AreNamesMatching(StringSpan lhs, StringSpan rhs) noexcept;
 
  private:
   const TextEncodingData& codec_;
 
-  HashCode HashImpl() const noexcept;
+  BASE_EXPORT HashCode HashImpl() const noexcept;
 };
 
 BASE_EXPORT String ToString(BufferSpan buffer, TextEncoding codec);

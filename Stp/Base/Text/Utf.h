@@ -67,7 +67,7 @@ inline int EncodeUtf(char16_t* out, char32_t c) {
   return Utf16::Encode(out, c);
 }
 
-BASE_EXPORT int TryEncodeUtf(char32_t c, MutableStringSpan out);
+BASE_EXPORT int TryEncodeUtf(char32_t c, MutableSpan<char> out);
 
 inline int Utf8::EncodedLength(char32_t c) {
   ASSERT(unicode::IsValidRune(c));

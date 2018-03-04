@@ -21,7 +21,7 @@ inline StringSpan FloatToString(double value, FloatToStringBuffer buffer) {
   const dtoa::DoubleToStringConverter& converter =
       dtoa::DoubleToStringConverter::EcmaScriptConverter();
   converter.ToShortest(value, &builder);
-  return builder.finalizeHash();
+  return builder.finalize();
 }
 
 BASE_EXPORT StringSpan FloatToFixedPrecisionString(

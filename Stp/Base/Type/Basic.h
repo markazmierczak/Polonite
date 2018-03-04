@@ -38,7 +38,7 @@ typedef struct {
 # define SIZEOF_WCHAR_T 4
 #endif
 
-BASE_EXPORT extern char g_valid_char_object;
+BASE_EXPORT extern char g_valid_char_objects[16];
 
 // Casting chars is tricky since char and wchar_t may be signed.
 template<typename T, typename U>

@@ -31,7 +31,7 @@
 
 #include "Base/Compiler/Cpu.h"
 #include "Base/Compiler/Os.h"
-#include "Base/Containers/Span.h"
+#include "Base/String/StringSpan.h"
 
 #include <string.h>
 
@@ -133,7 +133,7 @@ class StringBuilder {
 
   ~StringBuilder() {
     if (!is_finalized())
-      finalizeHash();
+      finalize();
   }
 
   int size() const { return buffer_.length(); }
@@ -155,7 +155,7 @@ class StringBuilder {
   void Reset() { position_ = 0; }
 
   // Add a single character to the builder. It is not allowed to add
-  // 0-characters; use the finalizeHash() method to terminate the string
+  // 0-characters; use the finalize() method to terminate the string
   // instead.
   void AddCharacter(char c) {
     ASSERT(c != '\0');
@@ -187,7 +187,7 @@ class StringBuilder {
   }
 
   // Finalize the string by 0-terminating it and returning the buffer.
-  StringSpan finalizeHash() {
+  StringSpan finalize() {
     ASSERT(!is_finalized());
     ASSERT(position_ < buffer_.length());
     buffer_[position_] = '\0';

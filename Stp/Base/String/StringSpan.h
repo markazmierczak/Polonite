@@ -10,7 +10,7 @@ namespace stp {
 
 class StringSpan {
  public:
-  static constexpr StringSpan empty() noexcept { return StringSpan(&g_valid_char_object, 0); }
+  static constexpr StringSpan empty() noexcept { return StringSpan(g_valid_char_objects, 0); }
 
   constexpr StringSpan(const char* data, int length) noexcept
       : data_(data), length_(length) { ASSERT(data && length >= 0); }
