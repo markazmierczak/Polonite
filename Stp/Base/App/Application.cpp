@@ -7,7 +7,6 @@
 #include "Base/App/BaseApplicationPart.h"
 #include "Base/Debug/Console.h"
 #include "Base/Debug/StackTrace.h"
-#include "Base/Error/ExceptionPtr.h"
 #include "Base/FileSystem/KnownPaths.h"
 #include "Base/Text/AsciiString.h"
 #include "Base/Text/FormatMany.h"
@@ -17,8 +16,6 @@ namespace stp {
 static BasicLock g_data_lock = BASIC_LOCK_INITIALIZER;
 
 Application* Application::g_instance_ = nullptr;
-
-static void defaultTerminate();
 
 static inline void appendPartToList(ApplicationPart*& tail, ApplicationPart* part) {
   tail->next_ = part;
@@ -101,8 +98,6 @@ void Application::init() {
   ASSERT(phase_ == Phase::Born);
 
   phase_ = Phase::Initializing;
-
-  setTerminateHandler(defaultTerminate);
 
   onCaptureArguments(native_arguments_);
 
@@ -203,33 +198,5 @@ void Application::onWillFini() {}
  * Override to modify @a arguments before they are passed to @ref CommandLine constructor.
  */
 void Application::onCaptureArguments(CommandLine::Arguments& arguments) {}
-
-static void defaultTerminate() {
-  auto exception_ptr = ExceptionPtr::current();
-  if (exception_ptr) {
-    try {
-      exception_ptr.rethrow();
-    } catch(Exception& exception) {
-      RELEASE_LOG(FATAL, "unhandled exception {}", exception);
-    } catch(...) {
-      RELEASE_LOG(FATAL, "unhandled unknown exception");
-    }
-  } else {
-    RELEASE_LOG(FATAL, "terminated");
-  }
-}
-
-[[noreturn]] void Application::terminate() {
-  std::terminate();
-  abort();
-}
-
-Application::TerminateHandler Application::setTerminateHandler(TerminateHandler handler) {
-  return std::set_terminate(handler);
-}
-
-Application::TerminateHandler Application::getTerminateHandler() {
-  return std::get_terminate();
-}
 
 } // namespace stp

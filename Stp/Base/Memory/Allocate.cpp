@@ -3,21 +3,13 @@
 
 #include "Base/Memory/Allocate.h"
 
-#include "Base/Error/BasicExceptions.h"
+#include "Base/Debug/Assert.h"
 
 namespace stp {
 
-void* allocateMemory(int size) {
-  void* ptr = tryAllocateMemory(size);
-  if (!ptr)
-    throw OutOfMemoryException();
-  return ptr;
-}
-
 void* reallocateMemory(void* ptr, int size) {
   ptr = tryReallocateMemory(ptr, size);
-  if (!ptr)
-    throw OutOfMemoryException();
+  PANIC_IF(!ptr, "out of memory");
   return ptr;
 }
 
@@ -25,15 +17,13 @@ void* reallocateMemory(void* ptr, int size) {
 
 void* operator new(size_t size) {
   void* ptr = malloc(size);
-  if (!ptr)
-    throw stp::OutOfMemoryException();
+  PANIC_IF(!ptr, "out of memory");
   return ptr;
 }
 
 void* operator new[](size_t size) {
   void* ptr = malloc(size);
-  if (!ptr)
-    throw stp::OutOfMemoryException();
+  PANIC_IF(!ptr, "out of memory");
   return ptr;
 }
 

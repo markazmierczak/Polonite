@@ -4,8 +4,7 @@
 #include "Base/Thread/NativeThread.h"
 
 #include "Base/Debug/Log.h"
-#include "Base/Error/SystemException.h"
-#include "Base/Text/FormatMany.h"
+#include "Base/String/StringSpan.h"
 
 #if !OS(ANDROID)
 # include <sched.h>
@@ -17,16 +16,17 @@
 namespace stp {
 
 #if !OS(ANDROID)
-void NativeThread::SetPriority(NativeThreadObject thread, ThreadPriority priority) {
-  PosixErrorCode error;
-
+ErrorCode NativeThread::SetPriority(NativeThreadObject thread, ThreadPriority priority) {
   #ifdef SCHED_IDLE
   if (priority == ThreadPriority::Idle) {
     sched_param param = { 0 };
-    error = static_cast<PosixErrorCode>(pthread_setschedparam(thread, SCHED_IDLE, &param));
-    if (!isOk(error))
-      throw Exception::withDebug(SystemException(error), "unable to set idle policy for thread");
-    return;
+    ErrorCode error = static_cast<PosixErrorCode>(
+        pthread_setschedparam(thread, SCHED_IDLE, &param));
+    if (!isOk(error)) {
+      LOG(WARN, "unable to set idle policy for thread");
+      return error;
+    }
+    return ErrorCode();
   }
   #endif
 
@@ -44,29 +44,46 @@ void NativeThread::SetPriority(NativeThreadObject thread, ThreadPriority priorit
   int p = min + (max - min) * static_cast<int>(priority) / MaxPriority;
 
   sched_param param = { p };
-  error = static_cast<PosixErrorCode>(pthread_setschedparam(thread, policy, &param));
-  if (!isOk(error))
-    throw Exception::withDebug(SystemException(error), "unable to set idle policy for thread");
+  return static_cast<PosixErrorCode>(pthread_setschedparam(thread, policy, &param));
 }
 #endif // OS(*)
 
 #if !OS(FREEBSD)
-void NativeThread::SetName(const String& name) {
+ErrorCode NativeThread::SetName(const char* name_cstr) {
   // On linux we can get the thread names to show up in the debugger by setting
   // the process name for the LWP. We don't want to do this for the main
   // thread because that would rename the process, causing tools like killall
   // to stop working.
-  if (NativeThread::CurrentId() == getpid()) {
-    LOG(ERROR, "cannot change main thread name");
-    return;
+  if (NativeThread::CurrentId() == getpid())
+    LOG(WARN, "changing main thread name");
+
+  // From spec:
+  //  The name can be up to 16 bytes long, including the terminating null byte.
+  //  (If the length of the string, including the terminating null byte,
+  //  exceeds 16 bytes, the string is silently truncated.)
+  //
+  // Sometimes the name of thread begins with organization prefix, like:
+  //   org.polonite.MyThread
+  //
+  constexpr int MaxNameLength = 16 - 1; // 1 for null character
+  auto name = StringSpan::fromCString(name_cstr);
+  if (name.length() > MaxNameLength) {
+    int dot_index = name.lastIndexOfUnit('.');
+    if (dot_index >= 0)
+      name = name.substring(dot_index + 1);
   }
+  ASSERT(*(name.data() + name.length()) == '\0');
 
-  // Set the name for the LWP (which gets truncated to 15 characters).
-  int err = prctl(PR_SET_NAME, toNullTerminated(name));
+  int rv = prctl(PR_SET_NAME, name.data());
 
-  auto error_code = getLastPosixErrorCode();
-  if (err < 0 && error_code != PosixErrorCode::OperationNotPermitted)
-    LOG(ERROR, "prctl(PR_SET_NAME) failed : {}", error_code);
+  if (rv != 0) {
+    auto error = getLastPosixErrorCode();
+    if (error != PosixErrorCode::OperationNotPermitted) {
+      LOG(ERROR, "prctl(PR_SET_NAME) failed ");
+      return error;
+    }
+  }
+  return ErrorCode();
 }
 #endif // OS(*)
 

@@ -5,6 +5,7 @@
 #define STP_BASE_THREAD_NATIVETHREAD_H_
 
 #include "Base/Compiler/Os.h"
+#include "Base/Error/SystemErrorCode.h"
 #include "Base/Time/TimeTicks.h"
 
 #if OS(WIN)
@@ -131,10 +132,10 @@ class BASE_EXPORT NativeThread {
 
   // It is advised to use "try" variant. The "throw" variant may fail
   // for many reasons and it should be non-fatal in majority of cases.
-  static void SetPriority(NativeThreadObject thread, ThreadPriority priority);
+  static ErrorCode SetPriority(NativeThreadObject thread, ThreadPriority priority);
 
   // Sets the thread name visible to debuggers/tools.
-  static void SetName(const String& name);
+  static ErrorCode SetName(const char* name);
 
   // Not all platforms support NativeThreadObject -> NativeThreadId conversion.
   #if !OS(LINUX)

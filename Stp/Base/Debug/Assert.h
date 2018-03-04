@@ -9,28 +9,34 @@
 namespace stp {
 
 class StringSpan;
-class TextWriter;
 
 #if !defined(ASSERT_IS_ON)
 #define ASSERT_IS_ON !defined(NDEBUG)
 #endif
+#if !defined(STP_ENABLE_DEBUG_MESSAGES)
+#define STP_ENABLE_DEBUG_MESSAGES !defined(NDEBUG)
+#endif
 
-BASE_EXPORT void assertFail(const char* file, int line, const char* expr);
-BASE_EXPORT void assertFail(const char* file, int line, const char* expr, const char* msg);
-BASE_EXPORT void assertCrash();
-
-BASE_EXPORT TextWriter& assertPrint(const char* file, int line, const char* expr);
-BASE_EXPORT void assertWrapUp(TextWriter& out);
+#if ASSERT_IS_ON
+BASE_EXPORT void panic(const char* file, int line, const char* expr, const char* msg);
+#define PANIC(...) stp::panic(__FILE__, __LINE__, nullptr, ##__VA_ARGS__)
+#define PANIC_IF(expr, ...) if (UNLIKELY(expr)) { stp::panic(__FILE__, __LINE__, #expr, ##__VA_ARGS__); }
+#else
+BASE_EXPORT void panic();
+BASE_EXPORT void panic(const char* msg);
+#if STP_ENABLE_DEBUG_MESSAGES
+#define PANIC stp::panic
+#define PANIC_IF(expr, ...) if (UNLIKELY(expr)) { PANIC(##__VA_ARGS__); }
+#else
+#define PANIC(...) panic()
+#define PANIC_IF(expr, ...) if (UNLIKELY(expr)) { stp::panic(); }
+#endif
+#endif
 
 } // namespace stp
 
 #if ASSERT_IS_ON
-
-# define ASSERT(expr, ...) \
-  ((expr) \
-   ? static_cast<void>(0) \
-   : stp::assertFail(__FILE__, __LINE__, #expr, ##__VA_ARGS__))
-
+# define ASSERT(expr, ...) PANIC_IF(!(expr), "assertion failed: " __VA_ARGS__)
 # define ASSERT_UNUSED(expr, var) ASSERT(expr)
 # define ASSUME(cond, ...) ASSERT(cond, ##__VA_ARGS__)
 # define UNREACHABLE(...) ASSERT(false); __VA_ARGS__

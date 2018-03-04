@@ -554,6 +554,8 @@ extern "C" void __asan_unpoison_memory_region(void const volatile *addr, size_t 
 extern "C" int __asan_address_is_poisoned(void const volatile *addr);
 #endif
 
+class TextWriter;
+
 } // namespace stp
 
 #endif // STP_BASE_TYPE_VARIABLE_H_

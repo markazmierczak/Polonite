@@ -39,15 +39,6 @@ enum class ParseIntegerErrorCode {
   OverflowError,
 };
 
-inline void maybeThrow(ParseIntegerErrorCode code) {
-  if (code == ParseIntegerErrorCode::Ok)
-    return;
-  if (code == ParseIntegerErrorCode::OverflowError)
-    throw OverflowException();
-  else
-    throw FormatException();
-}
-
 namespace detail {
 
 template<typename TInteger, int TBase>
@@ -160,14 +151,6 @@ template<typename T, TEnableIf<TIsInteger<T>>* = nullptr>
 constexpr ParseIntegerErrorCode tryParseOctal(StringSpan input, T& output) {
   return detail::IntegerParser<T, 8>::invoke(input, output);
 }
-
-template<typename T>
-struct ParseTmpl<T, TEnableIf<TIsInteger<T>>> {
-  constexpr void operator()(StringSpan text, T& rv) {
-    ParseIntegerErrorCode code = tryParse(text, rv);
-    maybeThrow(code);
-  }
-};
 
 } // namespace stp
 

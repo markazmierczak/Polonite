@@ -7,32 +7,42 @@
 // FIXME #include "Base/Debug/Console.h"
 #include "Base/Debug/Debugger.h"
 #include "Base/Debug/StackTrace.h"
-#include "Base/Text/FormatMany.h"
 
+// FIXME use console for write
 #include <stdio.h>
 #include <stdlib.h>
 
 namespace stp {
 
-void assertWrapUp(TextWriter& out_base) {
-  /* FIXME ConsoleWriter& out = static_cast<ConsoleWriter&>(out_base);
-  out << '\n';
-  out.resetColors();*/
-  assertCrash();
+static void crash() {
+  static int Dummy;
+  debugAlias(&Dummy);
+
+  // Crash the process to generate a dump.
+  Debugger::breakpoint();
 }
 
-void assertFail(const char* file, int line, const char* expr) {
-  TextWriter& out = assertPrint(file, line, expr);
-  assertWrapUp(out);
+#if ASSERT_IS_ON
+void panic(const char* file, int line, const char* expr, const char* msg) {
+  fprintf(stderr, "panic! %s:%d: %s\n", file, line, msg);
+  if (expr) {
+    fprintf(stderr, "  expression: %s\n", expr);
+  }
+  crash();
+}
+#else
+void panic() {
+  fprintf(stderr, "panic!\n");
+  crash();
 }
 
-void assertFail(const char* file, int line, const char* expr, const char* msg) {
-  TextWriter& out = assertPrint(file, line, expr);
-  out << StringSpan::fromCString(msg);
-  assertWrapUp(out);
+void panic(const char* msg) {
+  fprintf(stderr, "panic! %s\n", msg);
+  crash();
 }
+#endif // ASSERT_IS_ON
 
-TextWriter& assertPrint(const char* file, int line, const char* expr) {
+void assertPrint(const char* file, int line, const char* expr) {
   fprintf(stderr, "%s:%d: %s\n", file, line, expr);
   /* FIXME ConsoleWriter& out = Console::err();
 
@@ -57,16 +67,8 @@ TextWriter& assertPrint(const char* file, int line, const char* expr) {
   out << StringSpan::fromCString(file) << ':'  << line << '\n';
 
   out.setForegroundColor(ConsoleColor::Red);
-  return out*/;
-  return TextWriter::nullWriter();
-}
-
-void assertCrash() {
-  static int Dummy;
-  debugAlias(&Dummy);
-
-  // Crash the process to generate a dump.
-  Debugger::breakpoint();
+  out << '\n';
+  out.resetColors();*/
 }
 
 } // namespace stp

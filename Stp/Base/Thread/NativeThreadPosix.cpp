@@ -3,7 +3,6 @@
 
 #include "Base/Thread/NativeThread.h"
 
-#include "Base/Error/SystemException.h"
 #include "Base/Time/TimeTicks.h"
 
 #include <sched.h>
@@ -71,8 +70,7 @@ static void* ThreadFunc(void* opaque) {
   return reinterpret_cast<void*>(exit_code);
 }
 
-NativeThread::ObjectHandlePair NativeThread::Create(
-    Delegate* delegate, int64_t stack_size) {
+NativeThread::ObjectHandlePair NativeThread::Create(Delegate* delegate, int64_t stack_size) {
   ASSERT(stack_size >= 0);
 
   PthreadAttributes attributes;
@@ -83,7 +81,7 @@ NativeThread::ObjectHandlePair NativeThread::Create(
   auto error = static_cast<PosixErrorCode>(
       pthread_create(&thread, attributes.get(), ThreadFunc, static_cast<void*>(delegate)));
   if (!isOk(error))
-    throw Exception::withDebug(SystemException(error), "unable to create new thread");
+    throw SystemException(error, String("unable to create new thread"));
   return ObjectHandlePair { thread, thread };
 }
 
@@ -91,14 +89,14 @@ int NativeThread::Join(NativeThreadObject thread) {
   void* exit_code;
   auto error = static_cast<PosixErrorCode>(pthread_join(thread, &exit_code));
   if (!isOk(error))
-    throw Exception::withDebug(SystemException(error), "unable to join thread");
+    throw SystemException(error, String("unable to join thread"));
   return static_cast<int>(reinterpret_cast<intptr_t>(exit_code));
 }
 
 void NativeThread::Detach(NativeThreadObject thread) {
   auto error = static_cast<PosixErrorCode>(pthread_detach(thread));
   if (!isOk(error))
-    throw Exception::withDebug(SystemException(error), "unable to detach thread");
+    throw SystemException(error, String("unable to detach thread"));
 }
 
 void NativeThread::Yield() {

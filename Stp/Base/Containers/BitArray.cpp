@@ -69,8 +69,7 @@ void formatBitArray(TextWriter& out, const StringSpan& opts, const uintptr_t* wo
     } else {
       ok = toUpperAscii(opts[0]) == 'B';
     }
-    if (!ok)
-      throw FormatException("BitArray");
+    PANIC_IF(!ok, "invalid format for BitArray");
   }
 
   switch (format) {

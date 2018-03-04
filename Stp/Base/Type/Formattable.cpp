@@ -4,7 +4,6 @@
 #include "Base/Type/Formattable.h"
 
 #include "Base/Dtoa/Dtoa.h"
-#include "Base/Error/BasicExceptions.h"
 #include "Base/Io/TextWriter.h"
 #include "Base/Math/Math.h"
 #include "Base/Type/ParseInteger.h"
@@ -54,11 +53,11 @@ void formatBool(TextWriter& out, bool b, const StringSpan& opts) {
       break;
 
     default:
-      throw FormatException("bool");
+      ASSERT(false, "invalid format for bool");
   }
 }
 
-void formatChar(TextWriter& out, char32_t c, const StringSpan& opts) {
+void formatRune(TextWriter& out, char32_t c, const StringSpan& opts) {
   enum class Variant { Print, Hex, Unicode };
 
   auto variant = Variant::Print;
@@ -94,7 +93,7 @@ void formatChar(TextWriter& out, char32_t c, const StringSpan& opts) {
         ok = false;
     }
     if (!ok)
-      throw FormatException("char");
+      ASSERT(false, "invalid format for rune");
   }
 
   switch (variant) {
@@ -172,8 +171,7 @@ static inline void formatIntTmpl(TextWriter& out, T x, const StringSpan& opts) {
     if (tryParse(StringSpan(o_begin, o_end - o_begin), precision) != ParseIntegerErrorCode::Ok)
       ok = false;
   }
-  if (!ok)
-    throw FormatException("int");
+  ASSERT(ok, "invalid format for int");
 
   constexpr int MaxBufferSize = static_cast<int>(
       max(sizeof(FormatIntegerBuffer<T>), sizeof(FormatOctalIntegerBuffer<T>)));
@@ -258,8 +256,7 @@ void formatFloat(TextWriter& out, double x, const StringSpan& opts) {
       if (tryParse(StringSpan(o_begin, o_end - o_begin), precision) != ParseIntegerErrorCode::Ok)
         ok = false;
     }
-    if (!ok)
-      throw FormatException("float");
+    ASSERT(ok, "invalid format for float");
   }
 
   using dtoa::DoubleToStringConverter;

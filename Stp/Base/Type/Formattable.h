@@ -14,7 +14,7 @@ namespace detail {
 BASE_EXPORT void formatNull(TextWriter& out);
 BASE_EXPORT void formatBool(TextWriter& out, bool b);
 BASE_EXPORT void formatBool(TextWriter& out, bool b, const StringSpan& opts);
-BASE_EXPORT void formatChar(TextWriter& out, char32_t c, const StringSpan& opts);
+BASE_EXPORT void formatRune(TextWriter& out, char32_t c, const StringSpan& opts);
 
 BASE_EXPORT void formatSint32(TextWriter& out,  int32_t x);
 BASE_EXPORT void formatSint64(TextWriter& out,  int64_t x);
@@ -74,7 +74,7 @@ inline void format(TextWriter& out, const T& x, const StringSpan& opts) {
   } else if constexpr (TIsFloatingPoint<T>) {
     detail::formatFloat(out, static_cast<double>(x), opts);
   } else if constexpr (TIsCharacter<T>) {
-    detail::formatChar(out, charCast<char32_t>(x), opts);
+    detail::formatRune(out, charCast<char32_t>(x), opts);
   } else if constexpr (TIsEnum<T>) {
     if constexpr (TIsNamedEnum<T>) {
       out << getEnumName(x);

@@ -92,7 +92,7 @@ bool ReadProcMaps(std::string* proc_maps) {
 
 bool ParseProcMaps(const std::string& input,
                    std::vector<MappedMemoryRegion>* regions_out) {
-  RELEASE_ASSERT(regions_out);
+  PANIC(regions_out);
   std::vector<MappedMemoryRegion> regions;
 
   // This isn't async safe nor terribly efficient, but it doesn't need to be at

@@ -19,7 +19,9 @@ inline void* tryReallocateMemory(void* ptr, int size) noexcept {
 }
 inline void freeMemory(void* ptr) noexcept { ::free(ptr); }
 
-BASE_EXPORT void* allocateMemory(int size);
+inline void* allocateMemory(int size) {
+  return operator new(toUnsigned(size));
+}
 BASE_EXPORT void* reallocateMemory(void* ptr, int size);
 
 class DefaultAllocator {
