@@ -24,15 +24,4 @@ namespace stp {
  * The given slice must be enclosed by [0..size).
  */
 
-const char* toNullTerminated(const List<char>& string) {
-  ASSERT(!string.contains('\0'));
-  if (string.capacity() != 0) {
-    auto* cstr = string.data();
-    *(const_cast<char*>(cstr) + string.size()) = '\0';
-    return cstr;
-  }
-  static char NullCharacter = '\0';
-  return &NullCharacter;
-}
-
 } // namespace stp

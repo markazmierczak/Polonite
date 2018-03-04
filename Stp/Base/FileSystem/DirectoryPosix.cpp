@@ -32,7 +32,7 @@ bool Directory::exists(const FilePath& path) {
 SystemErrorCode Directory::tryCreate(const FilePath& path) {
   if (::mkdir(toNullTerminated(path), 0775) == 0)
     return PosixErrorCode::Ok;
-  auto error_code = getLastSystemErrorCode();
+  auto error_code = getLastPosixErrorCode();
   if (exists(path))
     return PosixErrorCode::Ok;
   return error_code;

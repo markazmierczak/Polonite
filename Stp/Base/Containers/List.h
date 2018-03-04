@@ -181,8 +181,6 @@ inline MutableBufferSpan makeBufferSpan(List<T>& list) {
   return makeBufferSpan(list.toSpan());
 }
 
-BASE_EXPORT const char* toNullTerminated(const List<char>& string);
-
 template<typename T>
 inline List<T>::List(List&& other) noexcept
     : data_(exchange(other.data_, nullptr)),

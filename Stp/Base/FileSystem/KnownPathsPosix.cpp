@@ -65,7 +65,7 @@ FilePath getCurrentDirPath() {
       return path;
     }
   }
-  throw SystemException(getLastSystemErrorCode());
+  throw SystemException(getLastPosixErrorCode());
 }
 
 bool setCurrentDirPath(const FilePath& path) {

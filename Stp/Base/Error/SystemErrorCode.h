@@ -20,14 +20,6 @@ using SystemErrorCode = WinErrorCode;
 using SystemErrorCode = PosixErrorCode;
 #endif
 
-inline SystemErrorCode getLastSystemErrorCode() {
-  #if OS(WIN)
-  return getLastWinErrorCode();
-  #elif OS(POSIX)
-  return getLastPosixErrorCode();
-  #endif
-}
-
 } // namespace stp
 
 #endif // STP_BASE_ERROR_SYSTEMERRORCODE_H_

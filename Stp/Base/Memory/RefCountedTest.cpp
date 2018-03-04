@@ -3,6 +3,7 @@
 
 #include "Base/Memory/RefCounted.h"
 
+#include "Base/Memory/RcPtr.h"
 #include "Base/Test/GTest.h"
 
 namespace stp {

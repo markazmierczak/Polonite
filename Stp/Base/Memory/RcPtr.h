@@ -50,13 +50,13 @@ class RcPtr {
     decRefIfNotNull(exchange(ptr_, new_ptr));
   }
 
-  ALWAYS_INLINE T* get() const noexcept { return ptr_; }
+  T* get() const noexcept { return ptr_; }
 
-  ALWAYS_INLINE T& operator*() const noexcept { ASSERT(ptr_); return *ptr_; }
-  ALWAYS_INLINE T* operator->() const noexcept { ASSERT(ptr_); return ptr_; }
+  T& operator*() const noexcept { ASSERT(ptr_); return *ptr_; }
+  T* operator->() const noexcept { ASSERT(ptr_); return ptr_; }
 
-  ALWAYS_INLINE bool operator!() const noexcept { return !ptr_; }
-  ALWAYS_INLINE explicit operator bool() const noexcept { return ptr_ != nullptr; }
+  explicit operator bool() const noexcept { return ptr_ != nullptr; }
+  bool operator!() const noexcept { return !ptr_; }
 
   friend void swap(RcPtr& lhs, RcPtr& rhs) noexcept { swap(lhs.ptr_, rhs.ptr_); }
 
@@ -83,19 +83,6 @@ class RcPtr {
     decRefIfNotNull(exchange(ptr_, new_ptr));
     return *this;
   }
-
-  template<typename U>
-  friend bool operator==(const RcPtr& a, const RcPtr<U>& b) noexcept { return a.get() == b.get(); }
-  template<typename U>
-  friend bool operator==(const RcPtr& a, U* b) noexcept { return a.get() == b; }
-  template<typename U>
-  friend bool operator==(T* a, const RcPtr<U>& b) noexcept { return a == b.get(); }
-  template<typename U>
-  friend bool operator!=(const RcPtr& a, const RcPtr<U>& b) noexcept { return a.get() != b.get(); }
-  template<typename U>
-  friend bool operator!=(const RcPtr& a, U* b) noexcept { return a.get() != b; }
-  template<typename U>
-  friend bool operator!=(T* a, const RcPtr<U>& b) noexcept { return a != b.get(); }
 
   friend bool operator==(const RcPtr& a, nullptr_t) noexcept { return !a; }
   friend bool operator!=(const RcPtr& a, nullptr_t) noexcept { return !!a; }

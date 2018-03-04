@@ -41,22 +41,15 @@ class OwnPtr {
   T& operator*() const noexcept { ASSERT(ptr_); return *ptr_; }
   T* operator->() const noexcept { ASSERT(ptr_); return ptr_; }
 
-  ALWAYS_INLINE T* get() const noexcept { return ptr_; }
+  T* get() const noexcept { return ptr_; }
 
   explicit operator bool() const noexcept { return ptr_ != nullptr; }
+  bool operator!() const noexcept { return !ptr_; }
 
   template<typename... TArgs>
   static OwnPtr create(TArgs&&... args);
 
   friend void swap(OwnPtr& l, OwnPtr& r) noexcept { swap(l.ptr_, r.ptr_); }
-
-  friend bool operator==(const OwnPtr& l, const OwnPtr& r) noexcept { return l.ptr_ == r.ptr_; }
-  friend bool operator!=(const OwnPtr& l, const OwnPtr& r) noexcept { return l.ptr_ != r.ptr_; }
-
-  friend bool operator==(const OwnPtr& l, T* r) noexcept { return l.ptr_ == r; }
-  friend bool operator!=(const OwnPtr& l, T* r) noexcept { return l.ptr_ != r; }
-  friend bool operator==(T* l, const OwnPtr& r) noexcept { return l == r.ptr_; }
-  friend bool operator!=(T* l, const OwnPtr& r) noexcept { return l != r.ptr_; }
 
   friend bool operator==(const OwnPtr& l, nullptr_t) noexcept { return l.ptr_ == nullptr; }
   friend bool operator!=(const OwnPtr& l, nullptr_t) noexcept { return l.ptr_ != nullptr; }
@@ -97,8 +90,6 @@ template<typename T, class TAllocator>
 struct TIsZeroConstructibleTmpl<OwnPtr<T, TAllocator>> : TTrue {};
 template<typename T, class TAllocator>
 struct TIsTriviallyRelocatableTmpl<OwnPtr<T, TAllocator>> : TTrue {};
-template<typename T, class TAllocator>
-struct TIsTriviallyEqualityComparableTmpl<OwnPtr<T, TAllocator>> : TTrue {};
 
 // Helper to transfer ownership of a raw pointer to a OwnPtr<T>.
 template<typename T>

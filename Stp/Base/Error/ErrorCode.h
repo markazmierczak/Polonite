@@ -39,7 +39,7 @@ enum class PosixErrorCode : int;
 class ErrorCode;
 inline ErrorCode makeErrorCode(PosixErrorCode code) noexcept;
 
-class ErrorCode final {
+class [[nodiscard]] ErrorCode final {
  public:
   using CategoryType = const ErrorCategory*;
 

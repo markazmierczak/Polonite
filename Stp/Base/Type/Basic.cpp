@@ -5,6 +5,6 @@
 
 namespace stp {
 
-char g_valid_char_objects[16] = { '\0' };
+alignas(16) char g_valid_char_objects[16] = { '\0' };
 
 } // namespace stp

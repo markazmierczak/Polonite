@@ -96,7 +96,7 @@ int FileStream::readAtMost(MutableBufferSpan output) {
       if (rv == 0)
         break;
       if (errno != EINTR)
-        throw SystemException(getLastSystemErrorCode());
+        throw SystemException(getLastPosixErrorCode());
     }
   } while (!output.isEmpty());
   return bytes_read;
@@ -115,7 +115,7 @@ void FileStream::write(BufferSpan input) {
       input.removePrefix(rv);
     } else {
       if (errno != EINTR)
-        throw SystemException(getLastSystemErrorCode());
+        throw SystemException(getLastPosixErrorCode());
     }
   } while (!input.isEmpty());
 }

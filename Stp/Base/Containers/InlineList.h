@@ -17,9 +17,6 @@ class InlineListBase;
 template<typename T, int N>
 class InlineList;
 
-template<int N>
-using InlineString = InlineList<char, N>;
-
 template<typename T>
 class InlineListBase {
  public:

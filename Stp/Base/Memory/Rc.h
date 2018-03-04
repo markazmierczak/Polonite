@@ -63,7 +63,7 @@ class Rc {
     return result;
   }
 
-  T& get() const noexcept { ASSERT(ptr_); return ptr_; }
+  T& get() const noexcept { ASSERT(ptr_); return *ptr_; }
   operator T&() const noexcept { ASSERT(ptr_); return *ptr_; }
 
   T& operator*() const noexcept { ASSERT(ptr_); return *ptr_; }
