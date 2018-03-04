@@ -9,7 +9,7 @@
 
 namespace stp {
 
-class BASE_EXPORT ArgumentException : public Exception {
+class ArgumentException : public Exception {
  public:
   template<int N>
   explicit ArgumentException(const char (&argument_name)[N]) noexcept
@@ -17,40 +17,40 @@ class BASE_EXPORT ArgumentException : public Exception {
 
   StringSpan getArgumentName() const { return argument_name_; }
 
-  StringSpan getName() const noexcept override;
+  BASE_EXPORT StringSpan getName() const noexcept override;
 
  protected:
-  void onFormat(TextWriter& out) const override;
+  BASE_EXPORT void onFormat(TextWriter& out) const override;
 
  private:
   StringSpan argument_name_;
 };
 
-class BASE_EXPORT FormatException : public Exception {
+class FormatException : public Exception {
  public:
   FormatException() = default;
 
   template<int N>
   explicit FormatException(const char (&type_name)[N]) noexcept : type_name_(type_name) {}
 
-  StringSpan getName() const noexcept override;
+  BASE_EXPORT StringSpan getName() const noexcept override;
 
  protected:
-  void onFormat(TextWriter& out) const override;
+  BASE_EXPORT void onFormat(TextWriter& out) const override;
 
  private:
-  StringSpan type_name_;
+  StringSpan type_name_ = StringSpan::empty();
   int argument_index_ = -1;
 };
 
-class BASE_EXPORT OutOfMemoryException : public Exception {
+class OutOfMemoryException : public Exception {
  public:
   OutOfMemoryException() = default;
 
-  StringSpan getName() const noexcept override;
+  BASE_EXPORT StringSpan getName() const noexcept override;
 
  protected:
-  void onFormat(TextWriter& out) const override;
+  BASE_EXPORT void onFormat(TextWriter& out) const override;
 
  private:
   size_t allocation_size_ = 0;
@@ -61,24 +61,24 @@ class BASE_EXPORT OutOfMemoryException : public Exception {
   }
 };
 
-class BASE_EXPORT NotImplementedException : public Exception {
+class NotImplementedException : public Exception {
  public:
-  StringSpan getName() const noexcept override;
+  BASE_EXPORT StringSpan getName() const noexcept override;
 };
 
-class BASE_EXPORT NotSupportedException : public Exception {
+class NotSupportedException : public Exception {
  public:
-  StringSpan getName() const noexcept override;
+  BASE_EXPORT StringSpan getName() const noexcept override;
 };
 
-class BASE_EXPORT LengthException : public Exception {
+class LengthException : public Exception {
  public:
-  StringSpan getName() const noexcept override;
+  BASE_EXPORT StringSpan getName() const noexcept override;
 };
 
-class BASE_EXPORT OverflowException : public Exception {
+class OverflowException : public Exception {
  public:
-  StringSpan getName() const noexcept override;
+  BASE_EXPORT StringSpan getName() const noexcept override;
 };
 
 } // namespace stp

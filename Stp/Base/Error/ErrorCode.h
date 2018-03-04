@@ -4,6 +4,8 @@
 #ifndef STP_BASE_ERROR_ERRORCODE_H_
 #define STP_BASE_ERROR_ERRORCODE_H_
 
+#include "Base/String/StringSpan.h"
+
 namespace stp {
 
 class ErrorCategory {

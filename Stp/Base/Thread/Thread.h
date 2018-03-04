@@ -47,10 +47,6 @@ class BASE_EXPORT Thread : private NativeThread::Delegate {
   Thread();
   ~Thread() override;
 
-  // The name can be only assigned before thread is started.
-  void SetName(String name);
-  const String& GetName() const { return name_; }
-
   void SetStackSize(int64_t size);
   int64_t GetStackSize() const { return stack_size_; }
 
@@ -79,7 +75,6 @@ class BASE_EXPORT Thread : private NativeThread::Delegate {
   NativeThreadHandle native_handle_ = InvalidNativeThreadHandle;
   NativeThreadObject native_object_ = InvalidNativeThreadObject;
 
-  String name_;
   int64_t stack_size_ = 0;
   ThreadPriority priority_ = ThreadPriority::Normal;
   detail::ThreadData data_;

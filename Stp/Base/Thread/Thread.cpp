@@ -80,11 +80,6 @@ Thread::~Thread() {
   ASSERT(!IsAlive());
 }
 
-void Thread::SetName(String name) {
-  ASSERT(!IsAlive());
-  name_ = move(name);
-}
-
 void Thread::SetStackSize(int64_t size) {
   ASSERT(!IsAlive());
   stack_size_ = size;

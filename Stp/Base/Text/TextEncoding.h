@@ -8,7 +8,9 @@
 
 namespace stp {
 
+class MutableStringSpan;
 class PolymorphicAllocator;
+class String;
 
 namespace detail {
 

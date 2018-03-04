@@ -5,9 +5,9 @@
 
 #include "Base/Compiler/Cpu.h"
 #include "Base/Compiler/Os.h"
-#include "Base/Containers/Span.h"
 #include "Base/Debug/Alias.h"
 #include "Base/Posix/EintrWrapper.h"
+#include "Base/String/StringSpan.h"
 
 #include <errno.h>
 #include <fcntl.h>
@@ -126,8 +126,8 @@ bool Debugger::isPresent() {
     return false;
 
   // Our pid is 0 without a debugger, assume this for any pid starting with 0.
-  pid_index += tracer.size();
-  return pid_index < status.size() && status[pid_index] != '0';
+  pid_index += tracer.length();
+  return pid_index < status.length() && status[pid_index] != '0';
 }
 
 #else

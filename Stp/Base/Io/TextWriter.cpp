@@ -3,7 +3,6 @@
 
 #include "Base/Io/TextWriter.h"
 
-#include "Base/Dtoa/Dtoa.h"
 #include "Base/Text/AsciiChar.h"
 #include "Base/Text/TextEncoding.h"
 #include "Base/Text/Utf.h"
@@ -39,7 +38,7 @@ void TextWriter::writeRune(char32_t rune) {
 
 void TextWriter::onIndent(int count, char c) {
   constexpr StringSpan SpacePadding = "                    ";
-  constexpr int ChunkSize = SpacePadding.size();
+  constexpr int ChunkSize = SpacePadding.length();
   char custom_padding[ChunkSize];
 
   if (count <= 1) {

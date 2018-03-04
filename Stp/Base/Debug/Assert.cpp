@@ -4,19 +4,20 @@
 #include "Base/Debug/Assert.h"
 
 #include "Base/Debug/Alias.h"
-#include "Base/Debug/Console.h"
+// FIXME #include "Base/Debug/Console.h"
 #include "Base/Debug/Debugger.h"
 #include "Base/Debug/StackTrace.h"
 #include "Base/Text/FormatMany.h"
 
+#include <stdio.h>
 #include <stdlib.h>
 
 namespace stp {
 
 void assertWrapUp(TextWriter& out_base) {
-  ConsoleWriter& out = static_cast<ConsoleWriter&>(out_base);
+  /* FIXME ConsoleWriter& out = static_cast<ConsoleWriter&>(out_base);
   out << '\n';
-  out.resetColors();
+  out.resetColors();*/
   assertCrash();
 }
 
@@ -27,12 +28,13 @@ void assertFail(const char* file, int line, const char* expr) {
 
 void assertFail(const char* file, int line, const char* expr, const char* msg) {
   TextWriter& out = assertPrint(file, line, expr);
-  out << makeSpanFromNullTerminated(msg);
+  out << StringSpan::fromCString(msg);
   assertWrapUp(out);
 }
 
 TextWriter& assertPrint(const char* file, int line, const char* expr) {
-  ConsoleWriter& out = Console::err();
+  fprintf(stderr, "%s:%d: %s\n", file, line, expr);
+  /* FIXME ConsoleWriter& out = Console::err();
 
   out.setLogLevel(LogLevelFATAL);
 
@@ -50,12 +52,13 @@ TextWriter& assertPrint(const char* file, int line, const char* expr) {
   out.resetColors();
 
   out << '"';
-  out << makeSpanFromNullTerminated(expr);
+  out << StringSpan::fromCString(expr);
   out << "\" at ";
-  out << makeSpanFromNullTerminated(file) << ':'  << line << '\n';
+  out << StringSpan::fromCString(file) << ':'  << line << '\n';
 
   out.setForegroundColor(ConsoleColor::Red);
-  return out;
+  return out*/;
+  return TextWriter::nullWriter();
 }
 
 void assertCrash() {

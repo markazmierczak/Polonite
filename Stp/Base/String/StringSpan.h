@@ -10,16 +10,15 @@ namespace stp {
 
 class StringSpan {
  public:
-  constexpr StringSpan() noexcept : data_(nullptr), length_(0) {}
+  static constexpr StringSpan empty() noexcept { return StringSpan(&g_valid_char_object, 0); }
 
   constexpr StringSpan(const char* data, int length) noexcept
-      : data_(data), length_(length) { ASSERT(length >= 0); }
+      : data_(data), length_(length) { ASSERT(data && length >= 0); }
 
   template<int N>
   constexpr StringSpan(const char (&array)[N]) noexcept
       : data_(array), length_(N - 1) { ASSERT(array[N - 1] == '\0'); }
 
-  static constexpr StringSpan empty() noexcept { return ""; }
   static StringSpan fromCString(const char* cstr) noexcept;
 
   ALWAYS_INLINE constexpr const char* data() const noexcept { return data_; }
@@ -57,9 +56,6 @@ class StringSpan {
   int length_;
 };
 
-template<>
-struct TIsZeroConstructibleTmpl<StringSpan> : TTrue {};
-
 BASE_EXPORT bool operator==(const StringSpan& lhs, const StringSpan& rhs) noexcept;
 
 inline bool operator!=(const StringSpan& lhs, const StringSpan& rhs) noexcept {
@@ -73,8 +69,7 @@ inline HashCode partialHash(const StringSpan& text) noexcept {
 }
 
 inline StringSpan StringSpan::fromCString(const char* cstr) noexcept {
-  ASSERT(cstr);
-  return StringSpan(cstr, cstr ? static_cast<int>(::strlen(cstr)) : 0);
+  return cstr ? StringSpan(cstr, static_cast<int>(::strlen(cstr))) : empty();
 }
 
 constexpr const char& StringSpan::operator[](int at) const noexcept {
