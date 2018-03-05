@@ -58,7 +58,7 @@ class OwnPtr {
 
  private:
   void destroy(T* ptr) {
-    destroyObject(ptr);
+    destroyObject(*ptr);
     TAllocator::deallocate(ptr, isizeof(T));
   }
 

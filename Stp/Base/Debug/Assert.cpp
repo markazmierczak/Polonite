@@ -14,12 +14,13 @@
 
 namespace stp {
 
-static void crash() {
+[[noreturn]] static void crash() {
   static int Dummy;
   debugAlias(&Dummy);
 
   // Crash the process to generate a dump.
   Debugger::breakpoint();
+  abort();
 }
 
 #if ASSERT_IS_ON

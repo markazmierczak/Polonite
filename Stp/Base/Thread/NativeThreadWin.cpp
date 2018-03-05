@@ -15,7 +15,7 @@ NativeThreadId NativeThread::CurrentId() {
 NativeThreadId NativeThread::ObjectToId(NativeThreadObject object) {
   DWORD id = ::GetThreadId(object);
   if (id == 0)
-    throw SystemException(getLastPosixErrorCode());
+    throw SystemException(getLastWinErrorCode());
   return id;
 }
 
@@ -41,7 +41,7 @@ NativeThread::ObjectHandlePair NativeThread::Create(
       nullptr, stack_size, ThreadFunc, delegate, flags, &handle);
 
   if (thread == InvalidNativeThreadObject)
-    throw SystemException(getLastPosixErrorCode());
+    throw SystemException(getLastWinErrorCode());
 
   if (start_detached) {
     if (!::CloseHandle(thread))
@@ -57,13 +57,13 @@ int NativeThread::Join(NativeThreadObject thread) {
   if (rv != WAIT_OBJECT_0) {
     ASSERT(rv == WAIT_FAILED);
     throw Exception::withDebug(SystemException(
-        getLastPosixErrorCode()), "unable to join thread");
+        getLastWinErrorCode()), "unable to join thread");
   }
 
   DWORD exit_code;
   if (!::GetExitCodeThread(thread, &exit_code)) {
     throw Exception::withDebug(SystemException(
-        getLastPosixErrorCode()), "unable to get thread's exit code");
+        getLastWinErrorCode()), "unable to get thread's exit code");
   }
 
   Detach(thread);
@@ -74,7 +74,7 @@ int NativeThread::Join(NativeThreadObject thread) {
 void NativeThread::Detach(NativeThreadObject thread) {
   if (!::CloseHandle(thread)) {
     throw Exception::withDebug(SystemException(
-        getLastPosixErrorCode()), "unable to close thread handle");
+        getLastWinErrorCode()), "unable to close thread handle");
   }
 }
 
@@ -123,7 +123,7 @@ void NativeThread::SetPriority(NativeThreadObject thread, ThreadPriority priorit
   int native_priority = ThreadPriorityToNative(priority);
   if (!::SetThreadPriority(thread, native_priority)) {
     throw Exception::withDebug(SystemException(
-        getLastPosixErrorCode()), "unable to change thread priority");
+        getLastWinErrorCode()), "unable to change thread priority");
   }
 }
 

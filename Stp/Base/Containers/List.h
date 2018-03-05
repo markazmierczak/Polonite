@@ -345,7 +345,7 @@ template<typename T>
 inline void List<T>::removeLast() {
   ASSERT(!isEmpty());
   int new_size = size_ - 1;
-  destroyObject(data_ + new_size);
+  destroyObject(data_[new_size]);
   setSizeNoGrow(new_size);
 }
 

@@ -18,12 +18,12 @@ class StringSpan;
 #endif
 
 #if ASSERT_IS_ON
-BASE_EXPORT void panic(const char* file, int line, const char* expr, const char* msg);
+BASE_EXPORT [[noreturn]] void panic(const char* file, int line, const char* expr, const char* msg);
 #define PANIC(...) stp::panic(__FILE__, __LINE__, nullptr, ##__VA_ARGS__)
 #define PANIC_IF(expr, ...) if (UNLIKELY(expr)) { stp::panic(__FILE__, __LINE__, #expr, ##__VA_ARGS__); }
 #else
-BASE_EXPORT void panic();
-BASE_EXPORT void panic(const char* msg);
+BASE_EXPORT [[noreturn]] void panic();
+BASE_EXPORT [[noreturn]] void panic(const char* msg);
 #if STP_ENABLE_DEBUG_MESSAGES
 #define PANIC stp::panic
 #define PANIC_IF(expr, ...) if (UNLIKELY(expr)) { PANIC(##__VA_ARGS__); }

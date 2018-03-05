@@ -503,9 +503,8 @@ constexpr bool TIsTriviallyRelocatable = TIsTriviallyRelocatableTmpl<T>::Value;
 
 
 template<typename T>
-inline void destroyObject(T* item) noexcept {
-  ASSERT(item != nullptr);
-  item->~T();
+inline void destroyObject(T& item) noexcept {
+  item.~T();
 }
 
 template<typename T>

@@ -48,7 +48,7 @@ class [[nodiscard]] ErrorCode final {
   ErrorCode(int code, CategoryType category) noexcept : code_(code), category_(category) {}
 
   template<typename TErrorCodeEnum, TEnableIf<TIsErrorCodeEnum<TErrorCodeEnum>>* = nullptr>
-  ErrorCode(TErrorCodeEnum e) noexcept { *this = MakeErrorCode(e); }
+  ErrorCode(TErrorCodeEnum e) noexcept { *this = makeErrorCode(e); }
 
   template<typename TErrorCodeEnum, TEnableIf<TIsErrorCodeEnum<TErrorCodeEnum>>* = nullptr>
   ErrorCode& operator=(TErrorCodeEnum e) noexcept { return *this = MakeErrorCode(e); }

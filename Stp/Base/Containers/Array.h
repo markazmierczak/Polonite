@@ -44,7 +44,7 @@ struct Array {
   template<typename U>
   bool contains(const U& item) const { return toSpan().contains(item); }
 
-  friend constexpr void swap(Array& lhs, Array& rhs) noexcept { swap(lhs.data_, rhs.data_); }
+  friend constexpr void swap(Array& lhs, Array& rhs) { swap(lhs.data_, rhs.data_); }
   friend constexpr bool operator==(const Array& lhs, SpanType rhs) { return operator==(lhs.toSpan(), rhs); }
   friend constexpr bool operator!=(const Array& lhs, SpanType rhs) { return operator==(lhs.toSpan(), rhs); }
   friend int compare(const Array& lhs, SpanType rhs) { return compare(lhs.toSpan(), rhs); }

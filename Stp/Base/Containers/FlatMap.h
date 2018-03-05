@@ -196,9 +196,9 @@ template<typename U>
 inline void FlatMap<K, T, TList>::set(U&& key, T new_value) {
   int pos = indexOf(key);
   if (pos >= 0) {
-    auto& value = list_[pos].value();
-    destroyObject(&value);
-    new (&value) T(move(new_value));
+    auto* value = &list_[pos].value();
+    destroyObject(*value);
+    new (value) T(move(new_value));
   } else {
     insertAt(~pos, forward<U>(key), move(new_value));
   }

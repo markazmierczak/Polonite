@@ -160,7 +160,8 @@ class Nullable {
   constexpr T take() noexcept {
     ASSERT(!isNull());
     T result = move(storage_.value);
-    destroyObject(&storage_.value);
+    storage_.is_valid = false;
+    destroyObject(storage_.value);
     return result;
   }
 
