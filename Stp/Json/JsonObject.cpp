@@ -23,13 +23,13 @@ void JsonObject::Shrink() {
 
 const JsonValue& JsonObject::operator[](StringSpan key) const {
   const JsonValue* value = tryGetWithPath(key);
-  ASSUME(value);
+  ASSERT(value);
   return *value;
 }
 
 JsonValue& JsonObject::operator[](StringSpan key) {
   JsonValue* value = tryGetWithPath(key);
-  ASSUME(value);
+  ASSERT(value);
   return *value;
 }
 
@@ -170,14 +170,14 @@ bool JsonObject::tryRemoveWithPath(StringSpan path, EmptyHandling empty_handling
   bool removed = object->tryRemoveWithPath(nested_path, empty_handling);
   if (removed && object->isEmpty() && empty_handling == EraseEmpty) {
     bool empty_removed = tryRemove(object_path);
-    ASSERT_UNUSED(empty_removed, empty_removed);
+    ASSERT(empty_removed);
   }
   return true;
 }
 
 void JsonObject::RemoveWithPath(StringSpan path, EmptyHandling empty_handling) {
   bool removed = tryRemoveWithPath(path, empty_handling);
-  ASSUME(removed);
+  ASSERT(removed);
 }
 
 bool JsonObject::tryParse(StringSpan input, JsonObject& output, const JsonOptions& options) {

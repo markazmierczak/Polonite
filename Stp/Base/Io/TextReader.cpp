@@ -64,7 +64,7 @@ bool TextReader::readLine(String& out) {
     int encoded_length = Utf8::EncodedLength(ch);
     char* encoded_ch = out.appendUninitialized(encoded_length);
     int result = Utf8::Encode(encoded_ch, ch);
-    ASSERT_UNUSED(result == encoded_length, result);
+    ASSERT(result == encoded_length);
   }
   return !out.isEmpty();
 }

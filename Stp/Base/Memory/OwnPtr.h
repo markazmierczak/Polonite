@@ -70,20 +70,8 @@ class OwnPtr {
 template<typename T, class TAllocator>
 template<typename... TArgs>
 inline OwnPtr<T, TAllocator> OwnPtr<T, TAllocator>::create(TArgs&&... args) {
-  if constexpr (TIsNoexceptConstructible<T, TArgs...>) {
-    void* raw_ptr = TAllocator::allocate(isizeof(T));
-    return OwnPtr(new(raw_ptr) T(forward<TArgs>(args)...));
-  } else {
-    void* raw_ptr = TAllocator::allocate(isizeof(T));
-    T* ptr;
-    try {
-      ptr = new(raw_ptr) T(forward<TArgs>(args)...);
-    } catch (...) {
-      TAllocator::deallocate(ptr, isizeof(T));
-      throw;
-    }
-    return OwnPtr(ptr);
-  }
+  void* raw_ptr = TAllocator::allocate(isizeof(T));
+  return OwnPtr(new(raw_ptr) T(forward<TArgs>(args)...));
 }
 
 template<typename T, class TAllocator>

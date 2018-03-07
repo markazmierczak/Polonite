@@ -19,7 +19,7 @@ enum class PosixErrorCode : int {
 
 template<> struct TIsErrorCodeEnumTmpl<PosixErrorCode> : TTrue {};
 
-inline bool isOk(PosixErrorCode code) { return code == PosixErrorCode::Ok; }
+inline bool isOk(PosixErrorCode code) { return LIKELY(code == PosixErrorCode::Ok); }
 
 inline PosixErrorCode getLastPosixErrorCode() { return static_cast<PosixErrorCode>(errno); }
 

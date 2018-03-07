@@ -39,7 +39,7 @@ int Base64::encode(MutableStringSpan output, BufferSpan input) {
     }
   }
 
-  ASSUME(input_size - i < 3);
+  ASSERT(input_size - i < 3);
   switch (input_size - i) {
     case 0:
       break;

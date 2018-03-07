@@ -6,7 +6,6 @@
 #include "Base/Time/Time.h"
 
 #include "Base/Debug/Log.h"
-#include "Base/Text/FormatMany.h"
 #include "Base/Time/ThreadTicks.h"
 #include "Base/Time/TimeTicks.h"
 
@@ -98,7 +97,7 @@ int64_t ConvertTimespecToMicros(const struct timespec& ts) {
 int64_t ClockNow(clockid_t clk_id) {
   struct timespec ts;
   if (clock_gettime(clk_id, &ts) != 0) {
-    ASSERT(false, "clock_gettime({}) failed", clk_id);
+    ASSERT(false, "clock_gettime() failed");
     return 0;
   }
   return ConvertTimespecToMicros(ts);
@@ -110,12 +109,12 @@ int64_t ClockNow(clockid_t clk_id) {
 
 } // namespace
 
-TimeDelta TimeDelta::FromTimeSpec(const timespec& ts) {
+TimeDelta TimeDelta::fromTimespec(const timespec& ts) {
   return TimeDelta(ts.tv_sec * TimeDelta::MicrosecondsPerSecond +
                    ts.tv_nsec / TimeDelta::NanosecondsPerMicrosecond);
 }
 
-struct timespec TimeDelta::ToTimeSpec() const {
+struct timespec TimeDelta::toTimespec() const {
   int64_t microseconds = InMicroseconds();
   time_t seconds = 0;
   if (microseconds >= TimeDelta::MicrosecondsPerSecond) {
@@ -134,12 +133,12 @@ struct timespec TimeDelta::ToTimeSpec() const {
 
 // Time -----------------------------------------------------------------------
 
-Time Time::FromTimeSpec(timespec ts) {
-  return Time() + TimeDelta::FromTimeSpec(ts);
+Time Time::fromTimespec(timespec ts) {
+  return Time() + TimeDelta::fromTimespec(ts);
 }
 
-timespec Time::ToTimeSpec() const {
-  return (*this - Time()).ToTimeSpec();
+timespec Time::toTimespec() const {
+  return (*this - Time()).toTimespec();
 }
 
 Time Time::Now() {

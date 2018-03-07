@@ -34,7 +34,7 @@ ConditionVariable::ConditionVariable(BasicLock* user_lock)
   #else
   rv = pthread_cond_init(&condition_, NULL);
   #endif
-  ASSERT_UNUSED(rv == 0, rv);
+  ASSERT(rv == 0);
 }
 
 ConditionVariable::~ConditionVariable() {
@@ -52,7 +52,7 @@ ConditionVariable::~ConditionVariable() {
   #endif
 
   int rv = pthread_cond_destroy(&condition_);
-  ASSERT_UNUSED(rv == 0, rv);
+  ASSERT(rv == 0);
 }
 
 void ConditionVariable::Wait() {
@@ -60,14 +60,14 @@ void ConditionVariable::Wait() {
   user_lock_->checkHeldAndUnmark();
   #endif
   int rv = pthread_cond_wait(&condition_, user_mutex_);
-  ASSERT_UNUSED(rv == 0, rv);
+  ASSERT(rv == 0);
   #if ASSERT_IS_ON
   user_lock_->checkUnheldAndMark();
   #endif
 }
 
 void ConditionVariable::TimedWait(TimeDelta max_time) {
-  struct timespec relative_time = max_time.ToTimeSpec();
+  struct timespec relative_time = max_time.toTimespec();
 
   #if ASSERT_IS_ON
   user_lock_->checkHeldAndUnmark();
@@ -99,7 +99,7 @@ void ConditionVariable::TimedWait(TimeDelta max_time) {
 
   // On failure, we only expect the CV to timeout. Any other error value means
   // that we've unexpectedly woken up.
-  ASSERT_UNUSED(rv == 0 || rv == ETIMEDOUT, rv);
+  ASSERT(rv == 0 || rv == ETIMEDOUT);
   #if ASSERT_IS_ON
   user_lock_->checkUnheldAndMark();
   #endif
@@ -107,12 +107,12 @@ void ConditionVariable::TimedWait(TimeDelta max_time) {
 
 void ConditionVariable::Broadcast() {
   int rv = pthread_cond_broadcast(&condition_);
-  ASSERT_UNUSED(rv == 0, rv);
+  ASSERT(rv == 0);
 }
 
 void ConditionVariable::Signal() {
   int rv = pthread_cond_signal(&condition_);
-  ASSERT_UNUSED(rv == 0, rv);
+  ASSERT(rv == 0);
 }
 
 } // namespace stp

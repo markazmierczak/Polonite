@@ -67,12 +67,12 @@ constexpr bool isHexDigit(char32_t c) {
 }
 
 constexpr char nibbleToHexDigitUpper(int n) {
-  ASSUME(0 <= n && n < 16);
+  ASSERT(0 <= n && n < 16);
   return n < 10 ? (n + '0') : ((n - 10) + 'A');
 }
 
 constexpr char nibbleToHexDigitLower(int n) {
-  ASSUME(0 <= n && n < 16);
+  ASSERT(0 <= n && n < 16);
   return n < 10 ? (n + '0') : ((n - 10) + 'a');
 }
 

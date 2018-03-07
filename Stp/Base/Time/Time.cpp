@@ -61,7 +61,7 @@ Time Time::LocalMidnight() const {
 
   Time result;
   bool ok = FromLocalExploded(exploded, &result);
-  ASSERT_UNUSED(ok, ok);
+  ASSERT(ok);
   return result;
 }
 

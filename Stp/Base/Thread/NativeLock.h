@@ -64,13 +64,13 @@ inline void NativeLock::init(NativeLockObject* object) {
   // In debug, setup attributes for lock error checking.
   pthread_mutexattr_t mta;
   int rv = pthread_mutexattr_init(&mta);
-  ASSERT_UNUSED(rv == 0, rv);
+  ASSERT(rv == 0);
   rv = pthread_mutexattr_settype(&mta, PTHREAD_MUTEX_ERRORCHECK);
-  ASSERT_UNUSED(rv == 0, rv);
+  ASSERT(rv == 0);
   rv = pthread_mutex_init(object, &mta);
-  ASSERT_UNUSED(rv == 0, rv);
+  ASSERT(rv == 0);
   rv = pthread_mutexattr_destroy(&mta);
-  ASSERT_UNUSED(rv == 0, rv);
+  ASSERT(rv == 0);
   #else
   // In release, go with the default lock attributes.
   pthread_mutex_init(object, NULL);
@@ -79,7 +79,7 @@ inline void NativeLock::init(NativeLockObject* object) {
 
 inline void NativeLock::fini(NativeLockObject* object) {
   int rv = pthread_mutex_destroy(object);
-  ASSERT_UNUSED(rv == 0, rv);
+  ASSERT(rv == 0);
 }
 
 inline bool NativeLock::tryAcquire(NativeLockObject* object) {
@@ -90,12 +90,12 @@ inline bool NativeLock::tryAcquire(NativeLockObject* object) {
 
 inline void NativeLock::acquire(NativeLockObject* object) {
   int rv = pthread_mutex_lock(object);
-  ASSERT_UNUSED(rv == 0, rv);
+  ASSERT(rv == 0);
 }
 
 inline void NativeLock::release(NativeLockObject* object) {
   int rv = pthread_mutex_unlock(object);
-  ASSERT_UNUSED(rv == 0, rv);
+  ASSERT(rv == 0);
 }
 #endif // OS(*)
 

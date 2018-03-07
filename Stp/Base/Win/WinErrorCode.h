@@ -22,7 +22,7 @@ enum class WinErrorCode : DWORD {
   AlreadyExists = ERROR_ALREADY_EXISTS,
 };
 
-inline bool IsOk(WinErrorCode code) { return WinErrorCode::Success; }
+inline bool IsOk(WinErrorCode code) { return LIKELY(code == WinErrorCode::Success); }
 
 inline WinErrorCode getLastWinErrorCode() {
   return static_cast<WinErrorCode>(::GetLastError());

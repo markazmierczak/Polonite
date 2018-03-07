@@ -298,7 +298,7 @@ void formatFloat(TextWriter& out, double x, const StringSpan& opts) {
   if (!ok) {
     builder.Reset();
     ok = converter.ToShortest(x, &builder);
-    ASSERT_UNUSED(ok, ok);
+    ASSERT(ok);
   }
 
   StringSpan converted = builder.finalize();

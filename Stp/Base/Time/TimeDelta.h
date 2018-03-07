@@ -49,8 +49,8 @@ class BASE_EXPORT TimeDelta {
   static constexpr TimeDelta FromMicroseconds(int64_t us) { return TimeDelta(us); }
 
   #if OS(POSIX)
-  static TimeDelta FromTimeSpec(const struct timespec& ts);
-  struct timespec ToTimeSpec() const;
+  static TimeDelta fromTimespec(const struct timespec& ts);
+  struct timespec toTimespec() const;
   #endif
 
   // Converts an integer value representing TimeDelta to a class. This is used

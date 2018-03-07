@@ -55,7 +55,6 @@ inline void NativeThreadLocal::setValue(Slot slot, void* value) {
   bool ok = pthread_setspecific(slot, value) == 0;
   #endif // OS(*)
   ASSERT(ok, "failed to set TLS value");
-  ALLOW_UNUSED_LOCAL(ok);
 }
 
 } // namespace stp

@@ -323,7 +323,7 @@ inline unsigned Affine::GetTypeMask() const {
     mask = GetTypeMaskSlow();
   else
     mask = type_mask_;
-  ASSUME((type_mask_ & TypeMaskUnknown) == 0);
+  ASSERT((type_mask_ & TypeMaskUnknown) == 0);
   return mask;
 }
 

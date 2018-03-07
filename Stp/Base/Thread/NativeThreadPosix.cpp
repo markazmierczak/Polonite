@@ -22,25 +22,23 @@ class PthreadAttributes {
  public:
   PthreadAttributes() {
     auto error = static_cast<PosixErrorCode>(pthread_attr_init(&attr_));
-    if (!isOk(error))
-      throw SystemException(error);
+    ASSERT(isOk(error));
   }
 
   ~PthreadAttributes() {
     int error = pthread_attr_destroy(&attr_);
-    ASSERT_UNUSED(error == 0, error);
+    ASSERT(error == 0);
   }
 
   void SetDetachState(bool start_detached) {
     int state = start_detached ? PTHREAD_CREATE_JOINABLE : PTHREAD_CREATE_DETACHED;
     int error = pthread_attr_setdetachstate(&attr_, state);
-    ASSERT_UNUSED(error == 0, error);
+    ASSERT(error == 0);
   }
 
   void SetStackSize(int64_t size) {
     int error = pthread_attr_setstacksize(&attr_, toUnsigned(size));
     ASSERT(error == 0, "invalid stack size for created thread");
-    ALLOW_UNUSED_LOCAL(error);
   }
 
   pthread_attr_t* get() { return &attr_; }
@@ -70,7 +68,8 @@ static void* ThreadFunc(void* opaque) {
   return reinterpret_cast<void*>(exit_code);
 }
 
-NativeThread::ObjectHandlePair NativeThread::Create(Delegate* delegate, int64_t stack_size) {
+Expected<NativeThread::ObjectHandlePair, ErrorCode> NativeThread::Create(
+    Delegate* delegate, int64_t stack_size) {
   ASSERT(stack_size >= 0);
 
   PthreadAttributes attributes;
@@ -81,32 +80,32 @@ NativeThread::ObjectHandlePair NativeThread::Create(Delegate* delegate, int64_t 
   auto error = static_cast<PosixErrorCode>(
       pthread_create(&thread, attributes.get(), ThreadFunc, static_cast<void*>(delegate)));
   if (!isOk(error))
-    throw SystemException(error, String("unable to create new thread"));
+    return makeErrorCode(error);
   return ObjectHandlePair { thread, thread };
 }
 
-int NativeThread::Join(NativeThreadObject thread) {
+Expected<int, ErrorCode> NativeThread::Join(NativeThreadObject thread) {
   void* exit_code;
   auto error = static_cast<PosixErrorCode>(pthread_join(thread, &exit_code));
   if (!isOk(error))
-    throw SystemException(error, String("unable to join thread"));
+    return makeErrorCode(error);
   return static_cast<int>(reinterpret_cast<intptr_t>(exit_code));
 }
 
-void NativeThread::Detach(NativeThreadObject thread) {
+Expected<void, ErrorCode> NativeThread::Detach(NativeThreadObject thread) {
   auto error = static_cast<PosixErrorCode>(pthread_detach(thread));
   if (!isOk(error))
-    throw SystemException(error, String("unable to detach thread"));
+    return makeErrorCode(error);
+  return Expected<void, ErrorCode>();
 }
 
 void NativeThread::Yield() {
   int rv = sched_yield();
   ASSERT(rv == 0, "sched_yield failed");
-  ALLOW_UNUSED_LOCAL(rv);
 }
 
 void NativeThread::SleepFor(TimeDelta duration) {
-  struct timespec sleep_time = duration.ToTimeSpec();
+  struct timespec sleep_time = duration.toTimespec();
   struct timespec remaining;
 
   while (nanosleep(&sleep_time, &remaining) == -1 && errno == EINTR)

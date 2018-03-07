@@ -22,18 +22,18 @@ constexpr bool TIsCopyInitializableWithMemset =
 } // namespace detail
 
 template<typename T, typename U>
-constexpr bool areObjectsOverlapping(const T* lhs, int lhs_count, const U* rhs, int rhs_count) noexcept {
+constexpr bool areObjectsOverlapping(const T* lhs, int lhs_count, const U* rhs, int rhs_count) {
   return (rhs <= lhs && lhs < rhs + rhs_count) ||
          (lhs <= rhs && rhs < lhs + lhs_count);
 }
 
 template<typename T>
-constexpr bool areObjectsOverlapping(const T* lhs, const T* rhs, int count) noexcept {
+constexpr bool areObjectsOverlapping(const T* lhs, const T* rhs, int count) {
   return areObjectsOverlapping(lhs, count, rhs, count);
 }
 
 template<typename T>
-inline void destroyObjects(T* items, int count) noexcept {
+inline void destroyObjects(T* items, int count) {
   ASSERT(count >= 0);
   if constexpr (!TIsTriviallyDestructible<T>) {
     for (int i = 0; i < count; ++i)
@@ -42,54 +42,32 @@ inline void destroyObjects(T* items, int count) noexcept {
 }
 
 template<typename T>
-inline void uninitializedInit(T* items, int count) noexcept(TIsNoexceptConstructible<T>) {
+inline void uninitializedInit(T* items, int count) {
   ASSERT(count >= 0);
-  if constexpr (TIsNoexceptConstructible<T>) {
-    if constexpr (TIsZeroConstructible<T>) {
-      if (count)
-        ::memset(items, 0, toUnsigned(count) * sizeof(T));
-    } else {
-      for (int i = 0; i < count; ++i)
-        new (items + i) T();
-    }
+  if constexpr (TIsZeroConstructible<T>) {
+    if (count)
+      ::memset(items, 0, toUnsigned(count) * sizeof(T));
   } else {
-    int i = 0;
-    try {
-      for (; i < count; ++i)
-        new (items + i) T();
-    } catch (...) {
-      destroyObjects(items, i);
-      throw;
-    }
+    for (int i = 0; i < count; ++i)
+      new (items + i) T();
   }
 }
 
 template<typename T>
-inline void uninitializedCopy(T* dst, const T* src, int count) noexcept(TIsNoexceptCopyConstructible<T>) {
+inline void uninitializedCopy(T* dst, const T* src, int count) {
   ASSERT(count >= 0);
   ASSERT(!areObjectsOverlapping(dst, src, count));
-  if constexpr (TIsNoexceptCopyConstructible<T>) {
-    if constexpr (TIsTriviallyCopyConstructible<T>) {
-      if (count)
-        ::memcpy(dst, src, toUnsigned(count) * sizeof(T));
-    } else {
-      for (int i = 0; i < count; ++i)
-        new (dst + i) T(src[i]);
-    }
+  if constexpr (TIsTriviallyCopyConstructible<T>) {
+    if (count)
+      ::memcpy(dst, src, toUnsigned(count) * sizeof(T));
   } else {
-    int i = 0;
-    try {
-      for (; i < count; ++i)
-        new (dst + i) T(src[i]);
-    } catch(...) {
-      destroyObjects(dst, i);
-      throw;
-    }
+    for (int i = 0; i < count; ++i)
+      new (dst + i) T(src[i]);
   }
 }
 
 template<typename T>
-inline void uninitializedMove(T* dst, T* src, int count) noexcept {
+inline void uninitializedMove(T* dst, T* src, int count) {
   ASSERT(count >= 0);
   ASSERT(!areObjectsOverlapping(dst, src, count));
   if constexpr (TIsTriviallyMoveConstructible<T>) {
@@ -108,7 +86,7 @@ inline void uninitializedMove(T* dst, T* src, int count) noexcept {
 }
 
 template<typename T>
-inline void uninitializedRelocate(T* dst, T* src, int count) noexcept {
+inline void uninitializedRelocate(T* dst, T* src, int count) {
   ASSERT(count >= 0);
   // Destination and source may overlap.
   if constexpr (TIsTriviallyRelocatable<T>) {
@@ -130,40 +108,23 @@ inline void uninitializedRelocate(T* dst, T* src, int count) noexcept {
 }
 
 template<typename T, typename U>
-inline void uninitializedFill(T* items, int count, U&& value) noexcept(TIsNoexceptCopyConstructible<T>) {
+inline void uninitializedFill(T* items, int count, U&& value) {
   ASSERT(count >= 0);
-  if constexpr (TIsNoexceptCopyConstructible<T>) {
-    if constexpr (detail::TIsCopyInitializableWithMemset<T>) {
-      if (count)
-        ::memset(items, bitCast<uint8_t>(value), toUnsigned(count));
-    } else {
-      for (int i = 0; i < count; ++i)
-        new (items + i) T(value);
-    }
+  if constexpr (detail::TIsCopyInitializableWithMemset<T>) {
+    if (count)
+      ::memset(items, bitCast<uint8_t>(value), toUnsigned(count));
   } else {
-    ASSERT(items && count >= 0);
-    int i = 0;
-    try {
-      for (; i < count; ++i)
-        new (items + i) T(value);
-    } catch(...) {
-      destroyObjects(items, i);
-      throw;
-    }
+    for (int i = 0; i < count; ++i)
+      new (items + i) T(value);
   }
 }
 
 template<typename T, typename U>
-inline void fillObjects(T* items, int count, const U& value) noexcept(TIsNoexceptCopyAssignable<T>) {
+inline void fillObjects(T* items, int count, const U& value) {
   ASSERT(count >= 0);
-  if constexpr (TIsNoexceptCopyAssignable<T>) {
-    if constexpr (detail::TIsCopyInitializableWithMemset<T>) {
-      if (count)
-        ::memset(items, bitCast<uint8_t>(value), toUnsigned(count));
-    } else {
-      for (int i = 0; i < count; ++i)
-        items[i] = value;
-    }
+  if constexpr (detail::TIsCopyInitializableWithMemset<T>) {
+    if (count)
+      ::memset(items, bitCast<uint8_t>(value), toUnsigned(count));
   } else {
     for (int i = 0; i < count; ++i)
       items[i] = value;
@@ -171,7 +132,7 @@ inline void fillObjects(T* items, int count, const U& value) noexcept(TIsNoexcep
 }
 
 template<typename T>
-inline bool equalObjects(const T* lhs, const T* rhs, int count) noexcept {
+inline bool equalObjects(const T* lhs, const T* rhs, int count) {
   ASSERT(count >= 0);
   if constexpr (TIsTriviallyEqualityComparable<T>) {
     return count ? ::memcmp(lhs, rhs, toUnsigned(count) * sizeof(T)) == 0 : true;
@@ -185,7 +146,7 @@ inline bool equalObjects(const T* lhs, const T* rhs, int count) noexcept {
 }
 
 template<typename T>
-inline void copyObjects(T* dst, const T* src, int count) noexcept(TIsNoexceptCopyAssignable<T>) {
+inline void copyObjects(T* dst, const T* src, int count) {
   ASSERT(count >= 0);
   // Destination and source may overlap.
   if constexpr (TIsTriviallyCopyAssignable<T>) {
@@ -203,7 +164,7 @@ inline void copyObjects(T* dst, const T* src, int count) noexcept(TIsNoexceptCop
 }
 
 template<typename T>
-inline void copyObjectsNonOverlapping(T* dst, const T* src, int count) noexcept(TIsNoexceptCopyAssignable<T>) {
+inline void copyObjectsNonOverlapping(T* dst, const T* src, int count) {
   ASSERT(count >= 0);
   ASSERT(!areObjectsOverlapping(dst, src, count));
   if constexpr (TIsTriviallyCopyAssignable<T>) {

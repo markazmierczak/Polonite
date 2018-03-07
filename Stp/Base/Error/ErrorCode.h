@@ -61,7 +61,7 @@ class [[nodiscard]] ErrorCode final {
   }
   friend bool operator!=(const ErrorCode& l, const ErrorCode& r) { return !operator==(l, r); }
 
-  friend bool isOk(const ErrorCode& x) { return x.code_ == 0; }
+  friend bool isOk(const ErrorCode& x) { return LIKELY(x.code_ == 0); }
 
  private:
   int code_;

@@ -66,15 +66,15 @@ class Nullable {
   // Union member must be initialized for constexpr.
   Nullable() = default;
 
-  constexpr Nullable(nullptr_t) noexcept {}
-  constexpr Nullable& operator=(nullptr_t) noexcept { reset(); return *this; }
+  constexpr Nullable(nullptr_t) {}
+  constexpr Nullable& operator=(nullptr_t) { reset(); return *this; }
 
-  constexpr Nullable(Nullable&& other) noexcept {
+  constexpr Nullable(Nullable&& other) {
     if (other)
       relocate(other);
   }
 
-  constexpr Nullable& operator=(Nullable&& other) noexcept {
+  constexpr Nullable& operator=(Nullable&& other) {
     if (other) {
       if (*this) {
         storage_.value = move(*other);
@@ -87,12 +87,12 @@ class Nullable {
     return *this;
   }
 
-  constexpr Nullable(const Nullable& other) noexcept(noexcept(T(*other))) {
+  constexpr Nullable(const Nullable& other) {
     if (other)
       init(*other);
   }
 
-  constexpr Nullable& operator=(const Nullable& other) noexcept(noexcept(declval<T&>() = *other)) {
+  constexpr Nullable& operator=(const Nullable& other) {
     if (other) {
       if (*this)
         storage_.value = *other;
@@ -104,13 +104,13 @@ class Nullable {
     return *this;
   }
 
-  constexpr Nullable(T&& value) noexcept
+  constexpr Nullable(T&& value)
       : storage_(move(value)) {}
 
-  constexpr Nullable(const T& value) noexcept(noexcept(T(value)))
+  constexpr Nullable(const T& value)
       : storage_(value) {}
 
-  constexpr Nullable& operator=(T&& other) noexcept {
+  constexpr Nullable& operator=(T&& other) {
     if (isNull())
       init(move(other));
     else
@@ -138,26 +138,26 @@ class Nullable {
     }
   }
 
-  constexpr const T* operator->() const noexcept { ASSERT(!isNull()); return get(); }
-  constexpr T* operator->() noexcept { ASSERT(!isNull()); return get(); }
+  constexpr const T* operator->() const { ASSERT(!isNull()); return get(); }
+  constexpr T* operator->() { ASSERT(!isNull()); return get(); }
 
-  constexpr const T& operator*() const noexcept { ASSERT(!isNull()); return *get(); }
-  constexpr T& operator*() noexcept { ASSERT(!isNull()); return *get(); }
+  constexpr const T& operator*() const { ASSERT(!isNull()); return *get(); }
+  constexpr T& operator*() { ASSERT(!isNull()); return *get(); }
 
-  constexpr bool isNull() const noexcept { return !storage_.is_valid; }
-  constexpr explicit operator bool() const noexcept { return !isNull(); }
-  constexpr bool operator!() const noexcept { return isNull(); }
+  constexpr bool isNull() const { return !storage_.is_valid; }
+  constexpr explicit operator bool() const { return !isNull(); }
+  constexpr bool operator!() const { return isNull(); }
 
-  constexpr const T* get() const noexcept {
+  constexpr const T* get() const {
     return storage_.is_valid ? &storage_.value : nullptr;
   }
-  constexpr T* get() noexcept {
+  constexpr T* get() {
     return storage_.is_valid ? &storage_.value : nullptr;
   }
 
-  constexpr void reset() noexcept { storage_.reset(); }
+  constexpr void reset() { storage_.reset(); }
 
-  constexpr T take() noexcept {
+  constexpr T take() {
     ASSERT(!isNull());
     T result = move(storage_.value);
     storage_.is_valid = false;

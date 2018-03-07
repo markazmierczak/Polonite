@@ -6,7 +6,6 @@
 #include "Base/Containers/InlineList.h"
 #include "Base/FileSystem/File.h"
 #include "Base/FileSystem/FileInfo.h"
-#include "Base/FileSystem/FileSystemException.h"
 #include "Base/FileSystem/RecursiveDirectoryEnumerator.h"
 
 namespace stp {

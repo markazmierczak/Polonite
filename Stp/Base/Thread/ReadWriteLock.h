@@ -105,32 +105,32 @@ inline void BasicReadWriteLock::writeRelease() {
 
 inline void BasicReadWriteLock::init() {
   int result = pthread_rwlock_init(&native_handle_, nullptr);
-  ASSERT_UNUSED(result == 0, result);
+  ASSERT(result == 0);
 }
 
 inline void BasicReadWriteLock::fini() {
   int result = pthread_rwlock_destroy(&native_handle_);
-  ASSERT_UNUSED(result == 0, result);
+  ASSERT(result == 0);
 }
 
 inline void BasicReadWriteLock::readAcquire() {
   int result = pthread_rwlock_rdlock(&native_handle_);
-  ASSERT_UNUSED(result == 0, result);
+  ASSERT(result == 0);
 }
 
 inline void BasicReadWriteLock::readRelease() {
   int result = pthread_rwlock_unlock(&native_handle_);
-  ASSERT_UNUSED(result == 0, result);
+  ASSERT(result == 0);
 }
 
 inline void BasicReadWriteLock::writeAcquire() {
   int result = pthread_rwlock_wrlock(&native_handle_);
-  ASSERT_UNUSED(result == 0, result);
+  ASSERT(result == 0);
 }
 
 inline void BasicReadWriteLock::writeRelease() {
   int result = pthread_rwlock_unlock(&native_handle_);
-  ASSERT_UNUSED(result == 0, result);
+  ASSERT(result == 0);
 }
 #endif
 

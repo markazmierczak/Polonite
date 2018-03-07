@@ -37,7 +37,7 @@ constexpr bool isPowerOfTwo(T x) {
 // |x| must be a power of 2.
 template<typename T, TEnableIf<TIsInteger<T>>* = nullptr>
 inline int whichPowerOfTwo(T x) {
-  ASSUME(x > 0);
+  ASSERT(x > 0);
   ASSERT(isPowerOfTwo(x));
   return findFirstOneBit(x);
 }
@@ -60,7 +60,7 @@ inline T roundUpToPowerOfTwo(T x) {
 // If you pass in a number that is already a power of two, it is returned as is.
 template<typename T, TEnableIf<TIsInteger<T>>* = nullptr>
 inline T roundDownToPowerOfTwo(T x) {
-  ASSUME(x > 0);
+  ASSERT(x > 0);
   return T(1) << findLastOneBit(x);
 }
 

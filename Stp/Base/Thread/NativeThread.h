@@ -7,6 +7,7 @@
 #include "Base/Compiler/Os.h"
 #include "Base/Error/SystemErrorCode.h"
 #include "Base/Time/TimeTicks.h"
+#include "Base/Util/Expected.h"
 
 #if OS(WIN)
 #include "Base/Win/WindowsHeader.h"
@@ -112,16 +113,16 @@ class BASE_EXPORT NativeThread {
     NativeThreadObject object;
     NativeThreadHandle handle;
   };
-  static ObjectHandlePair Create(Delegate* delegate, int64_t stack_size = 0);
+  static Expected<ObjectHandlePair, ErrorCode> Create(Delegate* delegate, int64_t stack_size = 0);
 
   // Joins with a thread created via the Create function.
   // This function blocks the caller until the designated thread exits.
   // This will invalidate |thread|.
-  static int Join(NativeThreadObject thread);
+  static Expected<int, ErrorCode> Join(NativeThreadObject thread);
 
   // Detaches and releases the thread reference.
   // The thread is no longer joinable and |thread| is invalidated after this call.
-  static void Detach(NativeThreadObject thread);
+  static Expected<void, ErrorCode> Detach(NativeThreadObject thread);
 
   // Yield the current thread so another thread can be scheduled.
   static void Yield();

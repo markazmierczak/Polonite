@@ -45,7 +45,7 @@ static FilePath getSourceTreePathImpl() {
   // For example:  Out/{Debug|Release}/BaseUnitTests
   path = getExecutableDirPath();
   bool ok = path.cdUp() && path.cdUp();
-  ASSERT_UNUSED(ok, ok);
+  ASSERT(ok);
   return path;
   #endif // OS(*)
 }

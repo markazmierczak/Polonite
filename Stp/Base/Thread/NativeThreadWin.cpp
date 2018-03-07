@@ -3,7 +3,6 @@
 
 #include "Base/Thread/NativeThread.h"
 
-#include "Base/Error/SystemException.h"
 #include "Base/Time/TimeTicks.h"
 
 namespace stp {

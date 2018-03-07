@@ -107,13 +107,6 @@ ALWAYS_INLINE constexpr T&& forward(TRemoveReference<T>&& t) noexcept {
   return static_cast<T&&>(t);
 }
 
-template<typename T, typename U = T>
-constexpr T exchange(T& obj, U&& new_val) noexcept {
-  T old_val = move(obj);
-  obj = forward<U>(new_val);
-  return old_val;
-}
-
 namespace detail {
 
 template<typename T>

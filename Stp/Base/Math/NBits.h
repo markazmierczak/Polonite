@@ -22,7 +22,7 @@ constexpr bool fitsNBits(T x, int n) {
 template<typename T, TEnableIf<TIsInteger<T> && TIsSigned<T>>* = nullptr>
 constexpr bool fitsNBits(T x, int n) {
   constexpr int BitCount = 8 * sizeof(T);
-  ASSERT_UNUSED(0 < n && n <= BitCount, BitCount);
+  ASSERT(0 < n && n <= BitCount);
   return -(static_cast<T>(1) << (n-1)) <= x && x < (static_cast<T>(1) << (n-1));
 }
 
@@ -48,14 +48,14 @@ constexpr T signExtendNBits(T x, int n) {
 template<typename T>
 constexpr T zeroExtendNBitsExtract(T x, int lsb, int n) {
   constexpr int BitCount = 8 * sizeof(T);
-  ASSERT_UNUSED(0 < n && lsb <= 0 && lsb + n <= BitCount, BitCount);
+  ASSERT(0 < n && lsb <= 0 && lsb + n <= BitCount);
   return zeroExtendNBits(x >> lsb, n);
 }
 
 template<typename T>
 constexpr T signExtendNBitsExtract(T x, int lsb, int n) {
   constexpr int BitCount = 8 * sizeof(T);
-  ASSERT_UNUSED(0 < n && lsb <= 0 && lsb + n <= BitCount, BitCount);
+  ASSERT(0 < n && lsb <= 0 && lsb + n <= BitCount);
   return signExtendNBits(x >> lsb, n);
 }
 
@@ -80,7 +80,7 @@ constexpr TMakeUnsigned<T> saturateToUnsignedNBits(T x, int n) {
 template<typename T>
 constexpr TMakeSigned<T> saturateToSignedNBits(T x, int n) {
   constexpr int BitCount = 8 * sizeof(T);
-  ASSERT_UNUSED(0 < n && n <= BitCount, BitCount);
+  ASSERT(0 < n && n <= BitCount);
 
   using SignedType = TMakeSigned<T>;
   using UnsignedType = TMakeUnsigned<T>;

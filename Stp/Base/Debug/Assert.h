@@ -17,34 +17,28 @@ class StringSpan;
 #define STP_ENABLE_DEBUG_MESSAGES !defined(NDEBUG)
 #endif
 
-#if ASSERT_IS_ON
-BASE_EXPORT [[noreturn]] void panic(const char* file, int line, const char* expr, const char* msg);
-#define PANIC(...) stp::panic(__FILE__, __LINE__, nullptr, ##__VA_ARGS__)
-#define PANIC_IF(expr, ...) if (UNLIKELY(expr)) { stp::panic(__FILE__, __LINE__, #expr, ##__VA_ARGS__); }
+#define _STP_PANIC_GET_3TH_ARG(a, b, c, ...) c
+
+#if STP_ENABLE_DEBUG_MESSAGES
+BASE_EXPORT [[noreturn]] void panic(const char* file, int line, const char* msg = "", const char* msg2 = "");
+#define PANIC(...) stp::panic(__FILE__, __LINE__, ##__VA_ARGS__)
 #else
 BASE_EXPORT [[noreturn]] void panic();
-BASE_EXPORT [[noreturn]] void panic(const char* msg);
-#if STP_ENABLE_DEBUG_MESSAGES
-#define PANIC stp::panic
-#define PANIC_IF(expr, ...) if (UNLIKELY(expr)) { PANIC(##__VA_ARGS__); }
-#else
-#define PANIC(...) panic()
-#define PANIC_IF(expr, ...) if (UNLIKELY(expr)) { stp::panic(); }
+#define PANIC(...) stp::panic()
 #endif
-#endif
+
+#define _STP_PANIC_IF2(expr, msg) if (UNLIKELY(expr)) { PANIC(#expr, msg); }
+#define _STP_PANIC_IF1(expr) _STP_PANIC_IF2(expr, "explicit")
+#define _STP_PANIC_IF_SELECT(...) _STP_PANIC_GET_3TH_ARG(__VA_ARGS__, _STP_PANIC_IF2, _STP_PANIC_IF1)
+#define PANIC_IF(...) _STP_PANIC_IF_SELECT(__VA_ARGS__)(__VA_ARGS__)
 
 } // namespace stp
 
 #if ASSERT_IS_ON
-# define ASSERT(expr, ...) PANIC_IF(!(expr), "assertion failed: " __VA_ARGS__)
-# define ASSERT_UNUSED(expr, var) ASSERT(expr)
-# define ASSUME(cond, ...) ASSERT(cond, ##__VA_ARGS__)
+# define _STP_ASSERT2(expr, msg) if (UNLIKELY(!(expr))) { PANIC("assertion failed: " #expr, msg); }
 # define UNREACHABLE(...) ASSERT(false); __VA_ARGS__
 #else
-# define ASSERT(expr, ...) static_cast<void>(0)
-# define ASSERT_UNUSED(expr, var) ALLOW_UNUSED_LOCAL(var)
-# define ASSUME(cond, ...) BUILTIN_ASSUME(cond)
-
+# define _STP_ASSERT2(expr, msg) do { (void)sizeof(expr); } while(0)
 # if COMPILER(MSVC) && !COMPILER(CLANG)
 # define UNREACHABLE(...) BUILTIN_UNREACHABLE()
 # else
@@ -52,5 +46,9 @@ BASE_EXPORT [[noreturn]] void panic(const char* msg);
 #endif
 
 #endif // !ASSERT_IS_ON
+
+#define _STP_ASSERT1(expr) _STP_ASSERT2(expr, "explicit")
+#define _STP_ASSERT_SELECT(...) _STP_PANIC_GET_3TH_ARG(__VA_ARGS__, _STP_ASSERT2, _STP_ASSERT1)
+#define ASSERT(...) _STP_ASSERT_SELECT(__VA_ARGS__)(__VA_ARGS__)
 
 #endif // STP_BASE_DEBUG_ASSERT_H_

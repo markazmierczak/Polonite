@@ -338,101 +338,6 @@ constexpr bool TIsCopyConstructible = TIsConstructible<T, TAddLvalueReference<co
 template<typename T>
 constexpr bool TIsMoveConstructible = TIsConstructible<T, TAddRvalueReference<T>>;
 
-namespace detail {
-
-template<bool TIsConstructible, bool TIsReference, typename T, typename... TArgs>
-struct TIsNoexceptConstructibleHelper2;
-
-template<typename T, typename... TArgs>
-struct TIsNoexceptConstructibleHelper2<true, false, T, TArgs...>
-    : public TBoolConstant<noexcept(T(declval<TArgs>()...))> {
-};
-
-template<typename T>
-void checkImplicitConversionTo(T) noexcept {}
-
-template<typename T, typename TArg>
-struct TIsNoexceptConstructibleHelper2<true, true, T, TArg>
-    : public TBoolConstant<noexcept(checkImplicitConversionTo<T>(declval<TArg>()))> {};
-
-template<typename T, bool TIsReference, typename... TArgs>
-struct TIsNoexceptConstructibleHelper2<false, TIsReference, T, TArgs...> : public TFalse {};
-
-template<typename T, typename... TArgs>
-struct TIsNoexceptConstructibleHelper : TIsNoexceptConstructibleHelper2<
-    TIsConstructible<T, TArgs...>, TIsReference<T>, T, TArgs...> {};
-
-template<typename T, int N>
-struct TIsNoexceptConstructibleHelper<T[N]> : TIsNoexceptConstructibleHelper2<
-    TIsConstructible<T>, TIsReference<T>, T> {};
-
-template<bool TIsAssignable, typename T, typename TArg>
-struct TIsNoexceptAssignableHelper;
-
-template<typename T, typename TArg>
-struct TIsNoexceptAssignableHelper<false, T, TArg> : public TFalse {};
-
-template<typename T, typename TArg>
-struct TIsNoexceptAssignableHelper<true, T, TArg>
-    : public TBoolConstant<noexcept(declval<T>() = declval<TArg>())> {};
-
-template<bool, typename T>
-struct TIsNoexceptDestructibleHelper2;
-
-template<typename T>
-struct TIsNoexceptDestructibleHelper2<false, T> : public TFalse {};
-
-template<typename T>
-struct TIsNoexceptDestructibleHelper2<true, T>
-    : public TBoolConstant<noexcept(declval<T>().~T())> {};
-
-template<typename T>
-struct TIsNoexceptDestructibleHelper
-    : public TIsNoexceptDestructibleHelper2<TIsDestructible<T>, T> {};
-
-template<typename T, int N>
-struct TIsNoexceptDestructibleHelper<T[N]>
-    : public TIsNoexceptDestructibleHelper<T> {};
-
-template<typename T>
-struct TIsNoexceptDestructibleHelper<T&> : public TTrue {};
-
-template<typename T>
-struct TIsNoexceptDestructibleHelper<T&&> : public TTrue {};
-
-} // namespace detail
-
-template<typename T, typename... TArgs>
-constexpr bool TIsNoexceptConstructible =
-    detail::TIsNoexceptConstructibleHelper<T, TArgs...>::Value;
-
-template<typename T>
-constexpr bool TIsNoexceptDefaultConstructible = TIsNoexceptConstructible<T>;
-
-template<typename T>
-constexpr bool TIsNoexceptCopyConstructible =
-    TIsNoexceptConstructible<T, TAddLvalueReference<const T>>;
-
-template<typename T>
-constexpr bool TIsNoexceptMoveConstructible =
-    TIsNoexceptConstructible<T, TAddRvalueReference<T>>;
-
-template<typename T, typename TArg>
-constexpr bool TIsNoexceptAssignable =
-    detail::TIsNoexceptAssignableHelper<TIsAssignable<T, TArg>, T, TArg>::Value;
-
-template<typename T>
-constexpr bool TIsNoexceptCopyAssignable =
-    TIsNoexceptAssignable<T, TAddLvalueReference<const T>>;
-
-template<typename T>
-constexpr bool TIsNoexceptMoveAssignable =
-    TIsNoexceptAssignable<T, TAddRvalueReference<T>>;
-
-template<typename T>
-constexpr bool TIsNoexceptDestructible =
-    detail::TIsNoexceptDestructibleHelper<T>::Value;
-
 template<typename T, typename = void>
 struct TIsZeroConstructibleTmpl : TFalse {};
 
@@ -480,6 +385,13 @@ template<typename T, int N, TEnableIf<detail::TIsSwappableTmpl<T>::Value>* = nul
 constexpr void swap(T (&a)[N], T (&b)[N]) noexcept {
   for (int i = 0; i < N; ++i)
     swap(a[i], b[i]);
+}
+
+template<typename T, typename U = T>
+constexpr T exchange(T& obj, U&& new_val) noexcept {
+  T val = forward<U>(new_val);
+  swap(val, obj);
+  return val;
 }
 
 namespace detail {

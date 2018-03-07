@@ -28,28 +28,28 @@ TEST(TimeDelta, FromAndIn) {
 #if OS(POSIX)
 TEST(TimeDelta, TimeSpecConversion) {
   TimeDelta delta = TimeDelta::FromSeconds(0);
-  struct timespec result = delta.ToTimeSpec();
+  struct timespec result = delta.toTimespec();
   EXPECT_EQ(result.tv_sec, 0);
   EXPECT_EQ(result.tv_nsec, 0);
-  EXPECT_EQ(delta, TimeDelta::FromTimeSpec(result));
+  EXPECT_EQ(delta, TimeDelta::fromTimespec(result));
 
   delta = TimeDelta::FromSeconds(1);
-  result = delta.ToTimeSpec();
+  result = delta.toTimespec();
   EXPECT_EQ(result.tv_sec, 1);
   EXPECT_EQ(result.tv_nsec, 0);
-  EXPECT_EQ(delta, TimeDelta::FromTimeSpec(result));
+  EXPECT_EQ(delta, TimeDelta::fromTimespec(result));
 
   delta = TimeDelta::FromMicroseconds(1);
-  result = delta.ToTimeSpec();
+  result = delta.toTimespec();
   EXPECT_EQ(result.tv_sec, 0);
   EXPECT_EQ(result.tv_nsec, 1000);
-  EXPECT_EQ(delta, TimeDelta::FromTimeSpec(result));
+  EXPECT_EQ(delta, TimeDelta::fromTimespec(result));
 
   delta = TimeDelta::FromMicroseconds(TimeDelta::MicrosecondsPerSecond + 1);
-  result = delta.ToTimeSpec();
+  result = delta.toTimespec();
   EXPECT_EQ(result.tv_sec, 1);
   EXPECT_EQ(result.tv_nsec, 1000);
-  EXPECT_EQ(delta, TimeDelta::FromTimeSpec(result));
+  EXPECT_EQ(delta, TimeDelta::fromTimespec(result));
 }
 #endif // OS(POSIX)
 

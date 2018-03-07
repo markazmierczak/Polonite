@@ -183,7 +183,7 @@ void TimeTicks::ClassInit() {
   LARGE_INTEGER ticks_per_sec;
   BOOL qpf_ok = QueryPerformanceFrequency(&ticks_per_sec);
 
-  ASSERT_UNUSED(qpf_ok, qpf_ok);
+  ASSERT(qpf_ok);
   ASSERT(ticks_per_sec.QuadPart > 0);
 
   QPCTicksPerSecond_ = ticks_per_sec.QuadPart;

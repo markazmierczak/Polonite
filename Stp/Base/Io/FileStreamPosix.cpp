@@ -247,8 +247,8 @@ void FileStream::setTimes(Time last_accessed, Time last_modified, Time creation_
   // futimens should be available, but futimes might not be
   // http://pubs.opengroup.org/onlinepubs/9699919799/
   timespec times[2];
-  times[0] = last_accessed.ToTimeSpec();
-  times[1] = last_modified.ToTimeSpec();
+  times[0] = last_accessed.toTimespec();
+  times[1] = last_modified.toTimespec();
   int rv = ::futimens(native_.get(), times);
   #else
   timeval times[2];

@@ -45,7 +45,7 @@ FilePath GetExecutableFilePath() {
     char* data = executable_path.value.appendCharactersUninitialized(
       static_cast<int>(executable_length - 1));
     int rv = _NSGetExecutablePath(writer.data(), &executable_length);
-    ASSERT_UNUSED(rv == 0, rv)
+    ASSERT(rv == 0)
 
     // _NSGetExecutablePath may return paths containing ./ or ../ which makes
     // FilePath::GetDirectoryName() work incorrectly, convert it to absolute path so that

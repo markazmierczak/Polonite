@@ -127,7 +127,6 @@ class SyncWaiter : public WaitableEvent::Waiter {
 void WaitableEvent::Wait() {
   bool result = TimedWaitUntilInternal(nullptr);
   ASSERT(result, "TimedWait() should never fail with infinite timeout");
-  ALLOW_UNUSED_LOCAL(result);
 }
 
 bool WaitableEvent::TimedWait(TimeDelta wait_delta) {

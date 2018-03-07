@@ -68,6 +68,8 @@ struct _FILETIME;
 
 namespace stp {
 
+class TextWriter;
+
 // Represents a wall clock time in UTC. Values are not guaranteed to be
 // monotonically non-decreasing and are subject to large amounts of skew.
 class BASE_EXPORT Time : public TimeBase<Time> {
@@ -120,8 +122,8 @@ class BASE_EXPORT Time : public TimeBase<Time> {
   // earlier versions) will have the |ts|'s tv_nsec component zeroed out,
   // having a 1 second resolution, which agrees with
   // https://developer.apple.com/legacy/library/#technotes/tn/tn1150.html#HFSPlusDates.
-  static Time FromTimeSpec(timespec ts);
-  timespec ToTimeSpec() const;
+  static Time fromTimespec(timespec ts);
+  timespec toTimespec() const;
   #endif
 
   // Converts to/from the Javascript convention for times, a number of

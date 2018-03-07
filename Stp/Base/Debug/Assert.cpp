@@ -23,12 +23,9 @@ namespace stp {
   abort();
 }
 
-#if ASSERT_IS_ON
-void panic(const char* file, int line, const char* expr, const char* msg) {
-  fprintf(stderr, "panic! %s:%d: %s\n", file, line, msg);
-  if (expr) {
-    fprintf(stderr, "  expression: %s\n", expr);
-  }
+#if STP_ENABLE_DEBUG_MESSAGES
+void panic(const char* file, int line, const char* msg, const char* msg2) {
+  fprintf(stderr, "panic! %s:%d: %s, %s\n", file, line, msg, msg2);
   crash();
 }
 #else
@@ -36,15 +33,10 @@ void panic() {
   fprintf(stderr, "panic!\n");
   crash();
 }
+#endif // STP_ENABLE_DEBUG_MESSAGES
 
-void panic(const char* msg) {
-  fprintf(stderr, "panic! %s\n", msg);
-  crash();
-}
-#endif // ASSERT_IS_ON
-
-void assertPrint(const char* file, int line, const char* expr) {
-  fprintf(stderr, "%s:%d: %s\n", file, line, expr);
+void assertPrint(const char* file, int line, const char* msg) {
+  fprintf(stderr, "%s:%d: %s\n", file, line, msg);
   /* FIXME ConsoleWriter& out = Console::err();
 
   out.setLogLevel(LogLevelFATAL);

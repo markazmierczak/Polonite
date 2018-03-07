@@ -51,7 +51,7 @@ void WaitableEvent::Wait() {
   DWORD result = WaitForSingleObject(handle_.get(), INFINITE);
   // It is most unexpected that this should ever fail.  Help consumers learn
   // about it if it should ever fail.
-  ASSERT_UNUSED(result == WAIT_OBJECT_0, result);
+  ASSERT(result == WAIT_OBJECT_0);
 }
 
 // Helper function called from TimedWait and TimedWaitUntil.

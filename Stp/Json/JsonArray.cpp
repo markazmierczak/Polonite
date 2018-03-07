@@ -22,8 +22,6 @@ void JsonArray::shrinkToFit() {
 }
 
 void JsonArray::ensureCapacity(int request) {
-  JsonValue a("abc");
-  ALLOW_UNUSED_LOCAL(a);
   impl().ensureCapacity(request);
 }
 

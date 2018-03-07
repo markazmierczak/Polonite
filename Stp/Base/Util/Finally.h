@@ -4,93 +4,42 @@
 #ifndef STP_BASE_UTIL_FINALLY_H_
 #define STP_BASE_UTIL_FINALLY_H_
 
-#include "Base/Error/Exception.h"
 #include "Base/Type/Limits.h"
+#include "Base/Type/Variable.h"
 
 namespace stp {
 
-namespace detail {
-
-struct ScopeFinallyCondition {
-  static constexpr bool MayThrow = false;
-
-  bool cancelled = false;
-
-  void cancel() { cancelled = true; }
-  bool shouldExecute() const { return !cancelled; }
-};
-
-struct ScopeCatchCondition {
-  static constexpr bool MayThrow = false;
-
-  int exception_count = countUncaughtExceptions();
-
-  void cancel() { exception_count = Limits<int>::Max; }
-  bool shouldExecute() const { return exception_count < countUncaughtExceptions(); }
-};
-
-struct ScopeContinueCondition {
-  static constexpr bool MayThrow = true;
-
-  int exception_count = countUncaughtExceptions();
-
-  void cancel() { exception_count = -1; }
-  bool shouldExecute() const { return exception_count >= countUncaughtExceptions(); }
-};
-
-template<typename TAction, typename TCondition>
-class ScopeGuard {
- private:
-  TAction action_;
-  TCondition condition_;
-
+template<typename TAction>
+class ScopeFinally {
+  DISALLOW_COPY_AND_ASSIGN(ScopeFinally);
  public:
-  typedef TCondition ConditionType;
+  explicit ScopeFinally(TAction action) : action_(stp::move(action)) {}
 
-  explicit ScopeGuard(TAction action) noexcept(noexcept(TAction(move(action))))
-      : action_(move(action)) {}
-
-  ~ScopeGuard() noexcept(!TCondition::MayThrow || noexcept(action_())) {
-    if (condition_.shouldExecute())
+  ~ScopeFinally() {
+    if (!cancelled_)
       action_();
   }
 
-  ScopeGuard(ScopeGuard&& other)
-      : action_(move(other.action_)),
-        condition_(other.condition_) {
+  ScopeFinally(ScopeFinally&& other)
+      : action_(stp::move(other.action_)),
+        cancelled_(stp::exchange(other.cancelled_, true)) {
     other.cancel();
   }
 
-  void cancel() { condition_.cancel(); }
+  void cancel() { cancelled_ = true; }
 
   template<typename T>
   T cancelWithResult(T x) { cancel(); return x; }
 
-  DISALLOW_COPY_AND_ASSIGN(ScopeGuard);
+ private:
+  TAction action_;
+
+  bool cancelled_ = false;
 };
 
-} // namespace detail
-
-template<typename TAction>
-using ScopeFinally = detail::ScopeGuard<TAction, detail::ScopeFinallyCondition>;
-template<typename TAction>
-using ScopeCatch = detail::ScopeGuard<TAction, detail::ScopeCatchCondition>;
-template<typename TAction>
-using ScopeContinue = detail::ScopeGuard<TAction, detail::ScopeContinueCondition>;
-
 template<typename TAction, typename TDecayed = TDecay<TAction>>
-inline auto makeScopeFinally(TAction&& f) noexcept(noexcept(TDecayed(forward<TAction>(f)))) {
+inline auto makeScopeFinally(TAction&& f) {
   return ScopeFinally<TDecayed>(forward<TAction>(f));
-}
-
-template<typename TAction, typename TDecayed = TDecay<TAction>>
-inline auto makeScopeCatch(TAction&& f) noexcept(noexcept(TDecayed(forward<TAction>(f)))) {
-  return ScopeCatch<TDecayed>(forward<TAction>(f));
-}
-
-template<typename TAction, typename TDecayed = TDecay<TAction>>
-inline auto makeScopeContinue(TAction&& f) noexcept(noexcept(TDecayed(forward<TAction>(f)))) {
-  return ScopeContinue<TDecayed>(forward<TAction>(f));
 }
 
 } // namespace stp

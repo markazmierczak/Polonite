@@ -222,7 +222,7 @@ bool JsonFormatter::EscapeReplaceUnicode(TextWriter& out, StringSpan str) {
     } else {
       char16_t surrogate_pair[2];
       int pair_count = Utf16::Encode(surrogate_pair, rune);
-      ASSERT_UNUSED(pair_count == 2, pair_count);
+      ASSERT(pair_count == 2);
 
       WriteEscapedRune(out, surrogate_pair[0]);
       WriteEscapedRune(out, surrogate_pair[1]);
