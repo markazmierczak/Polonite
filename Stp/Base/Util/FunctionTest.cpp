@@ -192,21 +192,19 @@ TEST(Function, SelfMove) {
 TEST(Function, CtorWithCopy) {
   struct X {
     X() {}
-    X(X const&) noexcept(true) {}
+    X(X const&) {}
     X& operator=(X const&) = default;
   };
   struct Y {
     Y() {}
-    Y(Y const&) noexcept(false) {}
-    Y(Y&&) noexcept(true) {}
+    Y(Y const&) {}
+    Y(Y&&) {}
     Y& operator=(Y&&) = default;
     Y& operator=(Y const&) = default;
   };
   auto lx = [x = X()]{};
   auto ly = [y = Y()]{};
   EXPECT_TRUE(Function<void()>(lx).isLocalAllocated());
-  EXPECT_TRUE(noexcept(Function<void()>(lx)));
-  EXPECT_FALSE(noexcept(Function<void()>(ly)));
 }
 
 } // namespace stp

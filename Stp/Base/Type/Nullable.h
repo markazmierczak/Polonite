@@ -237,6 +237,18 @@ constexpr T coalesce(Nullable<U>&& nullable, X&& default_value) {
   return nullable ? T(move(*nullable)) : T(forward<X>(default_value));
 }
 
+template<class T>
+constexpr T expect(Nullable<T>&& x, const char* msg = "") {
+  PANIC_IF(!x, msg);
+  return stp::move(x.getValue());
+}
+
+template<class T>
+constexpr T expectOrAssert(Nullable<T>&& x, const char* msg = "") {
+  ASSERT(x, msg);
+  return stp::move(x.getValue());
+}
+
 } // namespace stp
 
 #endif // STP_BASE_TYPE_NULLABLE_H_

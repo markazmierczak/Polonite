@@ -12,6 +12,7 @@ namespace stp {
 
 template<class T>
 class Own {
+  DISALLOW_COPY_AND_ASSIGN(Own);
  public:
   static_assert(!TIsVoid<T>, "void type");
   static_assert(!TIsArray<T>, "C arrays disallowed, use List class instead");
@@ -56,34 +57,37 @@ class Own {
   T& get() const { ASSERT(ptr_); return *ptr_; }
   operator T&() const { ASSERT(ptr_); return *ptr_; }
 
-  template<typename... TArgs>
+  template<class... TArgs>
   static Own create(TArgs&&... args);
 
   friend void swap(Own& l, Own& r) { swap(l.ptr_, r.ptr_); }
 
  private:
   T* ptr_;
-
-  DISALLOW_COPY_AND_ASSIGN(Own);
 };
 
-template<typename T>
-template<typename... TArgs>
+template<class T>
+template<class... TArgs>
 inline Own<T> Own<T>::create(TArgs&&... args) {
   return Own(*new T(forward<TArgs>(args)...));
 }
 
-template<typename T>
+template<class T>
 struct TIsZeroConstructibleTmpl<Own<T>> : TTrue {};
-template<typename T>
+template<class T>
 struct TIsTriviallyRelocatableTmpl<Own<T>> : TTrue {};
-template<typename T>
+template<class T>
 struct TIsTriviallyEqualityComparableTmpl<Own<T>> : TTrue {};
 
 // Helper to transfer ownership of a raw pointer to a Own<T>.
-template<typename T>
+template<class T>
 inline Own<T> makeOwn(T& object) {
   return Own<T>(object);
+}
+
+template<class T>
+inline Borrow<T> borrow(const Own<T>& x) {
+  return Borrow<T>(x.get());
 }
 
 } // namespace stp

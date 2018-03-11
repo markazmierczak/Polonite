@@ -43,7 +43,7 @@ ConditionVariable::~ConditionVariable() {
   // Darwin kernel.
   {
     Lock lock;
-    AutoLock l(&lock);
+    AutoLock l(borrow(lock));
     struct timespec ts;
     ts.tv_sec = 0;
     ts.tv_nsec = 1;

@@ -198,7 +198,7 @@ static inline void formatIntTmpl(TextWriter& out, T x, const StringSpan& opts) {
     // This formatter must account for additional requirements, i.e. precision specifier.
     // Write the sign and remove from converter's output.
     ASSERT(converted[0] == '-');
-    converted = converted.substring(1);
+    converted.removePrefix(1);
     out << '-';
   } else {
     if (sign) {
@@ -307,7 +307,7 @@ void formatFloat(TextWriter& out, double x, const StringSpan& opts) {
     // This formatter must account for additional requirements, i.e. precision specifier.
     // Write the sign and remove from converter's output.
     ASSERT(converted[0] == '-');
-    converted = converted.substring(1);
+    converted.removePrefix(1);
     out << '-';
   } else {
     if (sign) {

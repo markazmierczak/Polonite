@@ -14,10 +14,10 @@
 
 namespace stp {
 
-BASE_EXPORT void* tryAllocateAlignedMemory(int size, int alignment) noexcept;
+BASE_EXPORT void* tryAllocateAlignedMemory(int size, int alignment);
 
 template<typename T>
-inline void freeAlignedMemory(T* ptr) noexcept {
+inline void freeAlignedMemory(T* ptr) {
   #if COMPILER(MSVC)
   _aligned_free(ptr);
   #else
@@ -29,7 +29,7 @@ template<int TAlignment>
 class AlignedAllocator {
  public:
   static void* allocate(int size) { return tryAllocateAlignedMemory(size, TAlignment); }
-  static void deallocate(void* ptr, int size) noexcept { freeAlignedMemory(ptr); }
+  static void deallocate(void* ptr, int size) { freeAlignedMemory(ptr); }
 };
 
 } // namespace stp

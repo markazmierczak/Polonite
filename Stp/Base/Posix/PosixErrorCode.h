@@ -10,6 +10,18 @@
 
 namespace stp {
 
+namespace detail {
+
+class BASE_EXPORT PosixErrorCategory final : public ErrorCategory {
+ public:
+  StringSpan getName() const override;
+  void formatMessage(TextWriter& out, int code) const override;
+};
+
+BASE_EXPORT extern const PosixErrorCategory g_posixErrorCategory;;
+
+} // namespace detail
+
 enum class PosixErrorCode : int {
   Ok = 0,
   OperationNotPermitted = EPERM,
@@ -23,10 +35,12 @@ inline bool isOk(PosixErrorCode code) { return LIKELY(code == PosixErrorCode::Ok
 
 inline PosixErrorCode getLastPosixErrorCode() { return static_cast<PosixErrorCode>(errno); }
 
-BASE_EXPORT const ErrorCategory* GetPosixErrorCategory() noexcept;
+inline const ErrorCategory* getPosixErrorCategory() {
+  return &detail::g_posixErrorCategory;
+}
 
-inline ErrorCode makeErrorCode(PosixErrorCode code) noexcept {
-  return ErrorCode(static_cast<int>(code), GetPosixErrorCategory());
+inline ErrorCode makeErrorCode(PosixErrorCode code) {
+  return ErrorCode(static_cast<int>(code), getPosixErrorCategory());
 }
 
 namespace detail {

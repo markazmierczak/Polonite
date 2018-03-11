@@ -105,28 +105,19 @@ static void safe_strerror_r(int err, char* buf, size_t len) {
 void format(TextWriter& out, PosixErrorCode code) {
   char buf[256];
   safe_strerror_r(toUnderlying(code), buf, sizeof(buf));
-  out << makeSpanFromNullTerminated(buf);
-  out << ", code=" << code;
+  out << StringSpan::fromCString(buf) << ", code=" << code;
 }
+
+StringSpan PosixErrorCategory::getName() const {
+  return "posix";
+}
+
+void PosixErrorCategory::formatMessage(TextWriter& out, int code) const {
+  detail::format(out, static_cast<PosixErrorCode>(code));
+}
+
+const PosixErrorCategory g_posixErrorCategory;
 
 } // namespace detail
-
-namespace {
-
-class PosixErrorCategory final : public ErrorCategory {
- public:
-  StringSpan getName() const noexcept override { return "posix"; }
-
-  void formatMessage(TextWriter& out, int code) const override {
-    detail::format(out, static_cast<PosixErrorCode>(code));
-  }
-};
-
-} // namespace
-
-const ErrorCategory* GetPosixErrorCategory() noexcept {
-  static const PosixErrorCategory instance;
-  return &instance;
-}
 
 } // namespace stp

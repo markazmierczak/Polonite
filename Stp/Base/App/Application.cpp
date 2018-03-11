@@ -166,7 +166,7 @@ static String resolveNameFromExecutablePath() {
 }
 
 const String& Application::getName() {
-  AutoLock auto_lock(&g_data_lock);
+  AutoLock auto_lock(borrow(g_data_lock));
   if (name_.isEmpty())
     name_ = resolveNameFromExecutablePath();
   return name_;

@@ -42,13 +42,13 @@ BASE_EXPORT extern char g_valid_char_objects[16];
 
 // Casting chars is tricky since char and wchar_t may be signed.
 template<typename T, typename U>
-constexpr T charCast(U x) noexcept { return static_cast<T>(x); }
+constexpr T charCast(U x) { return static_cast<T>(x); }
 
 template<typename T>
-constexpr T charCast(char x) noexcept { return static_cast<T>(static_cast<unsigned char>(x)); }
+constexpr T charCast(char x) { return static_cast<T>(static_cast<unsigned char>(x)); }
 
 template<typename T>
-constexpr T charCast(wchar_t x) noexcept {
+constexpr T charCast(wchar_t x) {
   #if SIZEOF_WCHAR_T == 2
   return static_cast<T>(static_cast<unsigned short>(x));
   #elif SIZEOF_WCHAR_T == 4
@@ -70,7 +70,7 @@ struct TIntegerConstant {
   typedef T ValueType;
   typedef TIntegerConstant<T, V> Type;
 
-  constexpr operator ValueType() const noexcept { return Value; }
+  constexpr operator ValueType() const { return Value; }
 };
 
 template<typename T, T V>
@@ -202,13 +202,13 @@ template<typename... Tx>
 constexpr bool TsAreSame = detail::TsAreSameHelper<Tx...>::Value;
 
 template<typename T>
-decltype(detail::declareHelper<T>(0)) declval() noexcept;
+decltype(detail::declareHelper<T>(0)) declval();
 
 template<typename T>
 using TUnderlying = typename detail::TUnderlyingHelper<T>::Type;
 
 template<typename T, TEnableIf<TIsEnum<T>>* = nullptr>
-constexpr TUnderlying<T> toUnderlying(T x) noexcept {
+constexpr TUnderlying<T> toUnderlying(T x) {
   return static_cast<TUnderlying<T>>(x);
 }
 
@@ -217,6 +217,40 @@ constexpr bool THasDetected = detail::TDetectorHelper<TUnspecified, void, TOp, T
 
 template <template<class...> class TOp, class... TArgs>
 using TDetect = typename detail::TDetectorHelper<TUnspecified, void, TOp, TArgs...>::Type;
+
+template<class T>
+class Borrow {
+ public:
+  constexpr explicit Borrow(T& ref) : ref_(ref) {}
+  template<class U> constexpr Borrow(Borrow<U> o) : ref_(o.get()) {}
+  constexpr T& get() const { return ref_; }
+  operator T&() const { return ref_; }
+
+ private:
+  T& ref_;
+};
+
+template<class T>
+class BorrowPtr {
+ public:
+  constexpr explicit BorrowPtr(T* ptr) : ptr_(ptr) {}
+  template<class U> constexpr BorrowPtr(BorrowPtr<U> o) : ptr_(o.get()) {}
+  constexpr T* get() const { return ptr_; }
+  operator T*() const { return ptr_; }
+
+ private:
+  T* ptr_;
+};
+
+template<class T>
+constexpr Borrow<T> borrow(T& x) {
+  return Borrow<T>(x);
+}
+
+template<class T>
+constexpr BorrowPtr<T> borrow(T* x) {
+  return BorrowPtr<T>(x);
+}
 
 } // namespace stp
 

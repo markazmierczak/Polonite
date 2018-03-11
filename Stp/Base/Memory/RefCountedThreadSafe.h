@@ -11,24 +11,24 @@ namespace stp {
 
 class BASE_EXPORT RefCountedThreadSafeBase {
  public:
-  RefCountedThreadSafeBase() noexcept
+  RefCountedThreadSafeBase()
       : ref_count_(1)
       #if ASSERT_IS_ON
       , in_dtor_(false)
       #endif
       {}
 
-  ~RefCountedThreadSafeBase() noexcept {
+  ~RefCountedThreadSafeBase() {
     #if ASSERT_IS_ON
     ASSERT(in_dtor_, "RefCountedThreadSafeBase object deleted without calling decRef()");
     #endif
   }
 
-  bool hasOneRef() const noexcept {
+  bool hasOneRef() const {
     return AtomicRefCountIsOne(&const_cast<RefCountedThreadSafeBase*>(this)->ref_count_);
   }
 
-  void incRef() const noexcept {
+  void incRef() const {
     #if ASSERT_IS_ON
     ASSERT(!in_dtor_);
     #endif
@@ -36,7 +36,7 @@ class BASE_EXPORT RefCountedThreadSafeBase {
   }
 
  protected:
-  bool decRefBase() const noexcept {
+  bool decRefBase() const {
     #if ASSERT_IS_ON
     ASSERT(!in_dtor_);
     ASSERT(!AtomicRefCountIsZero(&ref_count_));
@@ -62,7 +62,7 @@ class BASE_EXPORT RefCountedThreadSafeBase {
 template<typename T>
 class RefCountedThreadSafe : public RefCountedThreadSafeBase {
  public:
-  void decRef() const noexcept {
+  void decRef() const {
     if (decRefBase())
       delete static_cast<const T*>(this);
   }

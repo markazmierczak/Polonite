@@ -37,12 +37,12 @@ class FormatArgId {
       return true;
 
     // First character is digit - treat as index.
-    if (isDigitAscii(s.getFirst()))
+    if (isDigitAscii(s[0]))
       return tryParse(s, size_or_index_) == ParseIntegerErrorCode::Ok;
 
     // Otherwise treat as name.
     name_ = s.data();
-    size_or_index_ = s.size();
+    size_or_index_ = s.length();
     return true;
   }
 
@@ -97,7 +97,7 @@ bool FormatLayout::parse(StringSpan s) {
   // If s[1] is a fill char, s[0] is a pad char and s[2:...] contains the width.
   // Otherwise, if s[0] is a align char, then s[1:...] contains the width.
   // Otherwise, s[0:...] contains the width.
-  if (s.size() >= 2) {
+  if (s.length() >= 2) {
     align = parseAlign(s[1]);
     if (align != FormatAlign::None) {
       fill = s[0];
@@ -115,29 +115,29 @@ bool FormatLayout::parse(StringSpan s) {
 }
 
 bool FormatReplacement::parse(StringSpan s) {
-  int comma = s.indexOf(',');
-  int semicolon = s.indexOf(':');
+  int comma = s.indexOfUnit(',');
+  int semicolon = s.indexOfUnit(':');
 
   // options specification can also use comma.
   // Detect the case when comma is specified after semicolon only.
   if (semicolon >= 0 && comma > semicolon)
     comma = -1;
 
-  int id_count = comma >= 0 ? comma : (semicolon >= 0 ? semicolon : s.size());
+  int id_count = comma >= 0 ? comma : (semicolon >= 0 ? semicolon : s.length());
 
-  StringSpan id_spec = s.getSlice(0, id_count);
+  StringSpan id_spec = s.substring(0, id_count);
   if (!arg_id.parse(id_spec))
     return false;
 
   if (comma != -1) {
     int layout_start = comma + 1;
-    int layout_end = semicolon >= 0 ? semicolon : s.size();
-    StringSpan layout_spec = s.getSlice(layout_start, layout_end - layout_start);
+    int layout_end = semicolon >= 0 ? semicolon : s.length();
+    StringSpan layout_spec = s.substring(layout_start, layout_end - layout_start);
     if (!layout.parse(layout_spec))
       return false;
   }
   if (semicolon != -1) {
-    options = s.getSlice(semicolon + 1);
+    options = s.substring(semicolon + 1);
   }
   return true;
 }
@@ -210,23 +210,23 @@ void formatManyImpl(TextWriter& out, StringSpan fmt, Span<Formatter*> args) {
   // TODO handle double }} correctly
   int implicit_index = -1;
   while (!fmt.isEmpty()) {
-    int brace = fmt.indexOf('{');
+    int brace = fmt.indexOfUnit('{');
     if (brace < 0) {
       out << fmt;
       break;
     }
     if (fmt[brace + 1] == '{') {
       // handle double braces
-      out << fmt.getSlice(0, brace + 1);
+      out << fmt.substring(0, brace + 1);
       fmt.removePrefix(brace + 2);
     } else { // handle replacement
-      out << fmt.getSlice(0, brace);
+      out << fmt.substring(0, brace);
       fmt.removePrefix(brace + 1);
 
       // Find replacement boundaries.
-      int closing_brace = fmt.indexOf('}');
+      int closing_brace = fmt.indexOfUnit('}');
       ASSERT(closing_brace >= 0);
-      StringSpan rep_string = fmt.getSlice(0, closing_brace);
+      StringSpan rep_string = fmt.substring(0, closing_brace);
       fmt.removePrefix(closing_brace + 1);
 
       FormatReplacement replacement;

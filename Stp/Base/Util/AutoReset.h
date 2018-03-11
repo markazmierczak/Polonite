@@ -21,9 +21,9 @@ template<typename T>
 class AutoReset {
  public:
   template<typename U>
-  AutoReset(T* var, U&& new_value)
+  AutoReset(Borrow<T> var, U&& new_value)
       : scoped_variable_(var),
-        original_value_(exchange(*var, forward<U>(new_value))) {
+        original_value_(exchange(var, forward<U>(new_value))) {
   }
 
   ~AutoReset() {
@@ -35,7 +35,7 @@ class AutoReset {
   void persist() { scoped_variable_ = nullptr; }
 
  private:
-  T* scoped_variable_;
+  T& scoped_variable_;
   T original_value_;
 
   DISALLOW_COPY_AND_ASSIGN(AutoReset);

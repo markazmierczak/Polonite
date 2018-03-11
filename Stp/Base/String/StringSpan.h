@@ -33,6 +33,10 @@ class StringSpan {
   constexpr StringSpan left(int n) const { return substring(0, n); }
   constexpr StringSpan right(int n) const { return substring(length_ - n, n); }
 
+  constexpr void truncate(int at);
+  constexpr void removePrefix(int n);
+  constexpr void removeSuffix(int n) { truncate(length_ - n); }
+
   BASE_EXPORT int indexOfUnit(char c) const;
   BASE_EXPORT int lastIndexOfUnit(char c) const;
   bool containsUnit(char c) const { return indexOfUnit(c) >= 0; }
@@ -88,6 +92,17 @@ constexpr StringSpan StringSpan::substring(int at, int n) const {
   ASSERT(0 <= at && at <= length_);
   ASSERT(0 <= n && n <= length_ - at);
   return StringSpan(data_ + at, n);
+}
+
+constexpr void StringSpan::truncate(int at) {
+  ASSERT(0 <= at && at <= length_);
+  length_ = at;
+}
+
+constexpr void StringSpan::removePrefix(int n) {
+  ASSERT(0 <= n && n <= length_);
+  length_ += n;
+  length_ -= n;
 }
 
 inline bool StringSpan::startsWith(const StringSpan& s) const {

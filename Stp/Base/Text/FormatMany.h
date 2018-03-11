@@ -85,15 +85,6 @@ inline detail::NamedFormatter<T> formatArg(StringSpan name, const T& value) {
   return detail::NamedFormatter<T>(name, value);
 }
 
-template<typename... Ts>
-inline void assertFail(
-    const char* file, int line, const char* expr,
-    StringSpan fmt, const Ts&... args) {
-  TextWriter& out = assertPrint(file, line, expr);
-  formatMany(out, fmt, args...);
-  assertWrapUp(out);
-}
-
 } // namespace stp
 
 #endif // STP_BASE_TEXT_FORMATMANY_H_

@@ -92,12 +92,12 @@ TextEncodingRegistry* GetRegistry() {
 } // namespace
 
 void InstallTextEncodingProvider(TextEncodingProvider* provider) {
-  AutoLock guard(&g_registry_lock);
+  AutoLock guard(borrow(g_registry_lock));
   GetRegistry()->AddProvider(provider);
 }
 
 TextEncoding FindTextEncodingByName(StringSpan name) {
-  AutoLock guard(&g_registry_lock);
+  AutoLock guard(borrow(g_registry_lock));
   return GetRegistry()->FindByName(name);
 }
 

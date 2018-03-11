@@ -35,7 +35,7 @@ constexpr const TextEncodingData UndefinedTextEncodingData = BuildNull();
 
 static inline StringSpan RemoveNonAlphaNumericPrefix(StringSpan s) {
   while (!s.isEmpty() && !isAlphaNumericAscii(s[0]))
-    s = s.substring(1);
+    s.removePrefix(1);
   return s;
 }
 
@@ -52,8 +52,8 @@ bool TextEncoding::AreNamesMatching(StringSpan lhs, StringSpan rhs) noexcept {
     if (toUpperAscii(lhs[0]) != toUpperAscii(rhs[0]))
       return false;
 
-    lhs = lhs.substring(1);
-    rhs = rhs.substring(1);
+    lhs.removePrefix(1);
+    rhs.removePrefix(1);
   }
   return lhs.isEmpty() && rhs.isEmpty();
 }

@@ -8,73 +8,73 @@
 
 namespace stp {
 
-template<typename T>
+template<class T>
 class RcPtr;
 
-template<typename T>
+template<class T>
 class RcPtr {
  public:
-  RcPtr() noexcept : ptr_(nullptr) {}
+  RcPtr() : ptr_(nullptr) {}
   ~RcPtr() { decRefIfNotNull(ptr_); }
 
-  RcPtr(RcPtr&& o) noexcept : ptr_(o.leakPtr()) {}
-  template<typename U, TEnableIf<TIsConvertibleTo<U*, T*>>* = nullptr>
-  RcPtr(RcPtr<U>&& o) noexcept : ptr_(o.leakPtr()) {}
-  template<typename U, TEnableIf<TIsConvertibleTo<U*, T*>>* = nullptr>
-  RcPtr(Rc<U>&& o) noexcept : ptr_(&o.leakRef()) {}
+  RcPtr(RcPtr&& o) : ptr_(o.leakPtr()) {}
+  template<class U, TEnableIf<TIsConvertibleTo<U*, T*>>* = nullptr>
+  RcPtr(RcPtr<U>&& o) : ptr_(o.leakPtr()) {}
+  template<class U, TEnableIf<TIsConvertibleTo<U*, T*>>* = nullptr>
+  RcPtr(Rc<U>&& o) : ptr_(&o.leakRef()) {}
 
-  RcPtr& operator=(RcPtr&& o) noexcept { return assignMove(o.leakPtr()); }
-  template<typename U, TEnableIf<TIsConvertibleTo<U*, T*>>* = nullptr>
-  RcPtr& operator=(RcPtr<U>&& o) noexcept { return assignMove(o.leakPtr()); }
-  template<typename U, TEnableIf<TIsConvertibleTo<U*, T*>>* = nullptr>
-  RcPtr& operator=(Rc<U>&& o) noexcept { return assignMove(&o.leakRef()); }
+  RcPtr& operator=(RcPtr&& o) { return assignMove(o.leakPtr()); }
+  template<class U, TEnableIf<TIsConvertibleTo<U*, T*>>* = nullptr>
+  RcPtr& operator=(RcPtr<U>&& o) { return assignMove(o.leakPtr()); }
+  template<class U, TEnableIf<TIsConvertibleTo<U*, T*>>* = nullptr>
+  RcPtr& operator=(Rc<U>&& o) { return assignMove(&o.leakRef()); }
 
-  RcPtr(const RcPtr& o) noexcept : ptr_(o.ptr_) { incRefIfNotNull(ptr_); }
-  template<typename U, TEnableIf<TIsConvertibleTo<U*, T*>>* = nullptr>
-  RcPtr(const RcPtr<U>& o) noexcept : ptr_(o.get()) { incRefIfNotNull(ptr_); }
+  RcPtr(const RcPtr& o) : ptr_(o.ptr_) { incRefIfNotNull(ptr_); }
+  template<class U, TEnableIf<TIsConvertibleTo<U*, T*>>* = nullptr>
+  RcPtr(const RcPtr<U>& o) : ptr_(o.get()) { incRefIfNotNull(ptr_); }
 
-  RcPtr& operator=(const RcPtr& o) noexcept { reset(o.ptr_); return *this; }
-  template<typename U, TEnableIf<TIsConvertibleTo<U*, T*>>* = nullptr>
-  RcPtr& operator=(const RcPtr<U>& o) noexcept { reset(o.ptr_); return *this; }
+  RcPtr& operator=(const RcPtr& o) { reset(o.ptr_); return *this; }
+  template<class U, TEnableIf<TIsConvertibleTo<U*, T*>>* = nullptr>
+  RcPtr& operator=(const RcPtr<U>& o) { reset(o.ptr_); return *this; }
 
-  RcPtr(T* ptr) noexcept : ptr_(ptr) { incRefIfNotNull(ptr); }
-  RcPtr& operator=(T* ptr) noexcept { reset(ptr); return *this; }
+  RcPtr(T* ptr) : ptr_(ptr) { incRefIfNotNull(ptr); }
+  RcPtr& operator=(T* ptr) { reset(ptr); return *this; }
 
-  RcPtr(nullptr_t) noexcept : ptr_(nullptr) {}
-  RcPtr& operator=(nullptr_t) noexcept { reset(); return *this; }
+  RcPtr(nullptr_t) : ptr_(nullptr) {}
+  RcPtr& operator=(nullptr_t) { reset(); return *this; }
 
-  [[nodiscard]] T* leakPtr() noexcept { return exchange(ptr_, nullptr); }
+  [[nodiscard]] T* leakPtr() { return exchange(ptr_, nullptr); }
 
-  void reset(T* new_ptr = nullptr) noexcept {
+  void reset(T* new_ptr = nullptr) {
     incRefIfNotNull(new_ptr);
     decRefIfNotNull(exchange(ptr_, new_ptr));
   }
 
-  T* get() const noexcept { return ptr_; }
+  T* get() const { return ptr_; }
 
-  T& operator*() const noexcept { ASSERT(ptr_); return *ptr_; }
-  T* operator->() const noexcept { ASSERT(ptr_); return ptr_; }
+  T& operator*() const { ASSERT(ptr_); return *ptr_; }
+  T* operator->() const { ASSERT(ptr_); return ptr_; }
 
-  explicit operator bool() const noexcept { return ptr_ != nullptr; }
-  bool operator!() const noexcept { return !ptr_; }
+  explicit operator bool() const { return ptr_ != nullptr; }
+  bool operator!() const { return !ptr_; }
 
-  friend void swap(RcPtr& lhs, RcPtr& rhs) noexcept { swap(lhs.ptr_, rhs.ptr_); }
+  friend void swap(RcPtr& lhs, RcPtr& rhs) { swap(lhs.ptr_, rhs.ptr_); }
 
  private:
-  friend RcPtr adoptRc<T>(T* ptr) noexcept;
+  friend RcPtr adoptRc<T>(T* ptr);
 
   enum AdoptTag { Adopt };
 
   T* ptr_;
 
-  RcPtr(T* ptr, AdoptTag) noexcept : ptr_(ptr) {}
+  RcPtr(T* ptr, AdoptTag) : ptr_(ptr) {}
 
-  ALWAYS_INLINE void incRefIfNotNull(T* ptr) noexcept {
+  ALWAYS_INLINE void incRefIfNotNull(T* ptr) {
     if (ptr)
       ptr->incRef();
   }
 
-  ALWAYS_INLINE void decRefIfNotNull(T* ptr) noexcept {
+  ALWAYS_INLINE void decRefIfNotNull(T* ptr) {
     if (ptr)
       ptr->decRef();
   }
@@ -84,24 +84,29 @@ class RcPtr {
     return *this;
   }
 
-  friend bool operator==(const RcPtr& a, nullptr_t) noexcept { return !a; }
-  friend bool operator!=(const RcPtr& a, nullptr_t) noexcept { return !!a; }
+  friend bool operator==(const RcPtr& a, nullptr_t) { return !a; }
+  friend bool operator!=(const RcPtr& a, nullptr_t) { return !!a; }
 
-  friend bool operator==(nullptr_t, const RcPtr& b) noexcept { return !b; }
-  friend bool operator!=(nullptr_t, const RcPtr& b) noexcept { return !!b; }
+  friend bool operator==(nullptr_t, const RcPtr& b) { return !b; }
+  friend bool operator!=(nullptr_t, const RcPtr& b) { return !!b; }
 };
 
-template<typename T>
+template<class T>
 struct TIsZeroConstructibleTmpl<RcPtr<T>> : TTrue {};
-template<typename T>
+template<class T>
 struct TIsTriviallyRelocatableTmpl<RcPtr<T>> : TTrue {};
-template<typename T>
+template<class T>
 struct TIsTriviallyEqualityComparableTmpl<RcPtr<T>> : TTrue {};
 
-template<typename T>
-inline RcPtr<T> adoptRc(T* ptr) noexcept {
+template<class T>
+inline RcPtr<T> adoptRc(T* ptr) {
   adoptedByRc(ptr);
   return RcPtr<T>(ptr, RcPtr<T>::Adopt);
+}
+
+template<class T>
+inline BorrowPtr<T> borrow(const RcPtr<T>& x) {
+  return BorrowPtr<T>(x.get());
 }
 
 } // namespace stp

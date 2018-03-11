@@ -7,19 +7,19 @@
 
 namespace stp {
 
-TEST(AutoResetTest, Basic) {
+TEST(AutoResetTest, basic) {
   int var = 3;
   {
-    AutoReset<int> change(&var, 5);
+    AutoReset<int> change(borrow(var), 5);
     EXPECT_EQ(5, var);
   }
   EXPECT_EQ(3, var);
 }
 
-TEST(AutoResetTest, Persist) {
+TEST(AutoResetTest, persist) {
   int var = 3;
   {
-    AutoReset<int> change(&var, 5);
+    AutoReset<int> change(borrow(var), 5);
     EXPECT_EQ(5, var);
     change.persist();
   }

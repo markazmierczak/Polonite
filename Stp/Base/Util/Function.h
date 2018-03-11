@@ -16,7 +16,7 @@ class Function;
 namespace detail_function {
 
 union Storage {
-  Storage() noexcept : none(nullptr) {}
+  Storage() : none(nullptr) {}
 
   template<typename TFunction>
   TFunction& asLocal() { return *reinterpret_cast<TFunction*>(local); }
@@ -113,8 +113,8 @@ class Function<TResult(TArgs...)> {
   Function(const Function&) = delete;
   Function& operator=(const Function& other) = delete;
 
-  Function(Function&& other) noexcept { init(move(other)); }
-  Function& operator=(Function&& other) noexcept;
+  Function(Function&& other) { init(move(other)); }
+  Function& operator=(Function&& other);
 
   Function(nullptr_t) {}
   Function& operator=(nullptr_t) { destroy(false); return *this; }
@@ -122,9 +122,7 @@ class Function<TResult(TArgs...)> {
   template<typename TFunction,
            typename TDecayed = detail_function::TDecayIfConstructible<TFunction>,
            typename = TResultOf<TFunction>>
-  Function(TFunction&& fn) noexcept(
-      !detail_function::TRequiresHeap<TFunction> &&
-      noexcept(TDecayed(declval<TFunction>()))) {
+  Function(TFunction&& fn) {
     if constexpr (detail_function::TRequiresHeap<TFunction>) {
       storage_.heap = new TDecayed(forward<TFunction>(fn));
       invoker_ = &invokeHeap<TDecayed>;
@@ -139,14 +137,9 @@ class Function<TResult(TArgs...)> {
   }
 
   template<typename TFunction, typename = decltype(Function(declval<TFunction>()))>
-  Function& operator=(TFunction&& fn) noexcept(noexcept(Function(declval<TFunction>()))) {
-    if constexpr (noexcept(Function(declval<TFunction>()))) {
-      this->~Function();
-      ::new (this) Function(forward<TFunction>(fn));
-    } else {
-      Function tmp(forward<TFunction>(fn));
-      swap(tmp, *this);
-    }
+  Function& operator=(TFunction&& fn) {
+    this->~Function();
+    ::new (this) Function(forward<TFunction>(fn));
     return *this;
   }
 
@@ -211,7 +204,7 @@ inline bool operator!=(nullptr_t, const Function<TFunction>& fn) { return !fn.is
 
 template<typename TResult, typename ... TArgs>
 inline Function<TResult(TArgs...)>& Function<TResult(TArgs...)>::operator=(
-    Function&& other) noexcept {
+    Function&& other) {
   if (this != &other) {
     destroy(false);
     init(move(other));

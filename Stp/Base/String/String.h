@@ -45,7 +45,7 @@ class String {
 
   const char* data() const { return data_; }
   int length() const { return length_; }
-  const char* c_str() const { return data_; }
+  const char* asCString() const { return data_; }
 
   const char& operator[](int at) const {
     ASSERT(0 <= at && at < length());

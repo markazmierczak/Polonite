@@ -62,7 +62,7 @@ class AutoLock {
  public:
   enum AlreadyAcquiredTag { AlreadyAcquired };
 
-  explicit AutoLock(BasicLock* lock) : lock_(*lock) {
+  explicit AutoLock(Borrow<BasicLock> lock) : lock_(lock) {
     lock_.acquire();
   }
 

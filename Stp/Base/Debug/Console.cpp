@@ -44,7 +44,7 @@ ConsoleWriter::~ConsoleWriter() {
 
 void ConsoleWriter::onFlush() {
   // ConsoleWriter buffers output until newline is written.
-  AutoLock auto_lock(&lock_);
+  AutoLock auto_lock(borrow(lock_));
   if (!buffer_.isEmpty())
     printBuffer(buffer_.size());
 }

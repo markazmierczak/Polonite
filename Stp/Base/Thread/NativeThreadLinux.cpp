@@ -70,7 +70,7 @@ ErrorCode NativeThread::SetName(const char* name_cstr) {
   if (name.length() > MaxNameLength) {
     int dot_index = name.lastIndexOfUnit('.');
     if (dot_index >= 0)
-      name = name.substring(dot_index + 1);
+      name.removePrefix(dot_index + 1);
   }
   ASSERT(*(name.data() + name.length()) == '\0');
 
