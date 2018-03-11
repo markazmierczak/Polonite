@@ -46,7 +46,7 @@ static bool splitsCharacterAt(StringSpan text, int at) {
 static void trimLastCharacter(StringSpan& text) {
   bool lead = false;
   while (!lead && !text.isEmpty()) {
-    lead = Utf8::IsEncodedLead(text.getLast());
+    lead = Utf8::IsEncodedLead(text.last());
     text.removeSuffix(1);
   }
 }

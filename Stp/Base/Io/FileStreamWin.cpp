@@ -64,7 +64,7 @@ SystemErrorCode FileStream::tryOpenInternal(const FilePath& path, FileMode mode,
       toNullTerminated(path), desired_access, sharing, NULL, disposition, create_flags, NULL);
 
   if (handle == INVALID_HANDLE_VALUE)
-    return getLastWinErrorCode();
+    return lastWinErrorCode();
 
   native_.reset(handle);
   access_ = access;
@@ -76,14 +76,14 @@ SystemErrorCode FileStream::tryOpenInternal(const FilePath& path, FileMode mode,
 
 void FileStream::closeInternal(NativeFile handle) {
   if (!::CloseHandle(handle))
-    throw SystemException(getLastWinErrorCode());
+    throw SystemException(lastWinErrorCode());
 }
 
 int FileStream::readAtMost(MutableBufferSpan output) {
   ASSERT(canRead());
   DWORD bytes_read;
   if (!::ReadFile(native_.get(), output.data(), output.size(), &bytes_read, NULL))
-    throw SystemException(getLastWinErrorCode());
+    throw SystemException(lastWinErrorCode());
   return bytes_read;
 }
 
@@ -91,7 +91,7 @@ void FileStream::write(BufferSpan input) {
   ASSERT(canWrite());
   DWORD bytes_written;
   if (!::WriteFile(native_.get(), input.data(), input.size(), &bytes_written, NULL))
-    throw SystemException(getLastWinErrorCode());
+    throw SystemException(lastWinErrorCode());
 }
 
 void FileStream::positionalRead(int64_t offset, MutableBufferSpan output) {
@@ -106,7 +106,7 @@ void FileStream::positionalRead(int64_t offset, MutableBufferSpan output) {
   overlapped.OffsetHigh = offset_li.HighPart;
 
   if (!::ReadFile(native_.get(), output.data(), output.size(), NULL, &overlapped))
-    throw SystemException(getLastWinErrorCode());
+    throw SystemException(lastWinErrorCode());
 }
 
 void FileStream::positionalWrite(int64_t offset, BufferSpan input) {
@@ -122,7 +122,7 @@ void FileStream::positionalWrite(int64_t offset, BufferSpan input) {
   overlapped.OffsetHigh = offset_li.HighPart;
 
   if (!::WriteFile(native_.get(), input.data(), input.size(), NULL, &overlapped))
-    throw SystemException(getLastWinErrorCode());
+    throw SystemException(lastWinErrorCode());
 }
 
 int64_t FileStream::seek(int64_t offset, SeekOrigin origin) {
@@ -131,7 +131,7 @@ int64_t FileStream::seek(int64_t offset, SeekOrigin origin) {
   distance.QuadPart = offset;
   DWORD move_method = static_cast<DWORD>(origin);
   if (!::SetFilePointerEx(native_.get(), distance, &res, move_method))
-    throw SystemException(getLastWinErrorCode());
+    throw SystemException(lastWinErrorCode());
   return res.QuadPart;
 }
 
@@ -145,7 +145,7 @@ int64_t FileStream::getLength() {
   ASSERT(isOpen());
   LARGE_INTEGER size;
   if (!::GetFileSizeEx(native_.get(), &size))
-    throw SystemException(getLastWinErrorCode());
+    throw SystemException(lastWinErrorCode());
   return size.QuadPart;
 }
 
@@ -154,13 +154,13 @@ void FileStream::setLength(int64_t length) {
   ASSERT(isOpen());
   setPosition(length);
   if (!::SetEndOfFile(native_.get()))
-    throw SystemException(getLastWinErrorCode());
+    throw SystemException(lastWinErrorCode());
 }
 
 void FileStream::getInfo(FileStreamInfo& out) {
   ASSERT(isOpen());
   if (!::GetFileInformationByHandle(native_.get(), &out.by_handle_))
-    throw SystemException(getLastWinErrorCode());
+    throw SystemException(lastWinErrorCode());
 }
 
 static FILETIME* TimeToNullableFiletime(Time time, FILETIME& storage) {
@@ -178,13 +178,13 @@ void FileStream::setTimes(Time last_accessed, Time last_modified, Time creation_
   auto* creation_time_ft = TimeToNullableFiletime(creation_time, storage[2]);
 
   if (!::SetFileTime(native_.get(), creation_time_ft, last_accessed_ft, last_modified_ft))
-    throw SystemException(getLastWinErrorCode());
+    throw SystemException(lastWinErrorCode());
 }
 
 void FileStream::syncToDisk() {
   ASSERT(isOpen());
   if (!::FlushFileBuffers(native_.get()))
-    throw SystemException(getLastWinErrorCode());
+    throw SystemException(lastWinErrorCode());
 }
 
 } // namespace stp

@@ -82,7 +82,7 @@ TextWriter* LogPrintCommon(LogLevel level, const char* file, unsigned line) {
   out << "] ";
 
   if (g_location_is_printed) {
-    out << makeSpanFromNullTerminated(file) << ':' << line << ' ';
+    out << StringSpan::fromCString(file) << ':' << line << ' ';
   }
 
   // Level is restored on exit from LOG() call.
@@ -96,7 +96,7 @@ void LogPrint(LogLevel level, const char* file, unsigned line, const char* msg) 
   if (!out)
     return;
 
-  *out << makeSpanFromNullTerminated(msg);
+  *out << StringSpan::fromCString(msg);
 
   LogWrapUp(*out);
 }
@@ -110,7 +110,7 @@ static StringSpan GetModule(StringSpan file) {
   if (last_slash_pos >= 0)
     module.removePrefix(last_slash_pos + 1);
 
-  int extension_start = module.lastIndexOf('.');
+  int extension_start = module.lastIndexOfUnit('.');
   if (extension_start >= 0)
     module.truncate(extension_start);
 
@@ -169,7 +169,7 @@ static bool MatchVlogPattern(StringSpan string, StringSpan pattern) {
 }
 
 int VerboseLogGetLevel(const char* file_cstr) {
-  auto file = makeSpanFromNullTerminated(file_cstr);
+  auto file = StringSpan::fromCString(file_cstr);
   if (!g_verbose_matchers->isEmpty()) {
     for (const auto& matcher : *g_verbose_matchers) {
       bool match_file = matcher.match_target == VmoduleMatcher::MatchFile;
@@ -194,15 +194,15 @@ static void ParseMatchers(StringSpan input) {
   List<VmoduleMatcher>* matchers = g_verbose_matchers.Pointer();
 
   while (!input.isEmpty()) {
-    int comma = input.indexOf(',');
-    StringSpan pair = input.getSlice(0, comma);
+    int comma = input.indexOfUnit(',');
+    StringSpan pair = input.left(comma);
 
     bool parsed = false;
 
-    int pos = pair.lastIndexOf('=');
+    int pos = pair.lastIndexOfUnit('=');
     if (pos >= 0) {
-      VmoduleMatcher matcher(String(pair.getSlice(0, pos)));
-      if (tryParse(pair.getSlice(pos + 1), matcher.level) == ParseIntegerErrorCode::Ok) {
+      VmoduleMatcher matcher(String(pair.left(pos)));
+      if (tryParse(pair.slice(pos + 1), matcher.level) == ParseIntegerErrorCode::Ok) {
         matchers->add(move(matcher));
         parsed = true;
       }

@@ -5,13 +5,13 @@
 
 #include "Base/Time/Time.h"
 
-#include <inttypes.h>
-
 #include "Base/Math/Math.h"
 #include "Base/Text/FormatMany.h"
 #include "Base/ThirdParty/nspr/prtime.h"
 #include "Base/Time/ThreadTicks.h"
 #include "Base/Type/Limits.h"
+
+#include <inttypes.h>
 
 namespace stp {
 
@@ -90,6 +90,7 @@ bool Time::ExplodedMostlyEquals(const Exploded& lhs, const Exploded& rhs) {
          lhs.millisecond == rhs.millisecond;
 }
 
+/* FIXME
 void Time::formatImpl(TextWriter& out, Time x) {
   Exploded exploded;
   x.UTCExplode(&exploded);
@@ -98,7 +99,7 @@ void Time::formatImpl(TextWriter& out, Time x) {
       "{:02}:{:02}:{:02}.{:03} UTC",
       exploded.year, exploded.month, exploded.day_of_month,
       exploded.hour, exploded.minute, exploded.second, exploded.millisecond);
-}
+}*/
 
 void ThreadTicks::formatImpl(TextWriter& out, ThreadTicks x) {
   out << x.us_ << " bogo-thread-microseconds";

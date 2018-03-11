@@ -27,15 +27,15 @@ struct Array {
   constexpr const T& operator[](int at) const;
   constexpr T& operator[](int at);
 
-  constexpr const T& getFirst() const { return toSpan().getFirst(); }
-  constexpr const T& getLast() const { return toSpan().getLast(); }
-  constexpr T& getFirst() { return toSpan().getFirst(); }
-  constexpr T& getLast() { return toSpan().getLast(); }
+  constexpr const T& first() const { return toSpan().first(); }
+  constexpr const T& last() const { return toSpan().last(); }
+  constexpr T& first() { return toSpan().first(); }
+  constexpr T& last() { return toSpan().last(); }
 
-  constexpr SpanType getSlice(int at) const { return toSpan().getSlice(at); }
-  constexpr SpanType getSlice(int at, int n) const { return toSpan().getSlice(at, n); }
-  constexpr MutableSpanType getSlice(int at) { return toSpan().getSlice(at); }
-  constexpr MutableSpanType getSlice(int at, int n) { return toSpan().getSlice(at, n); }
+  constexpr SpanType slice(int at) const { return toSpan().slice(at); }
+  constexpr SpanType slice(int at, int n) const { return toSpan().slice(at, n); }
+  constexpr MutableSpanType slice(int at) { return toSpan().slice(at); }
+  constexpr MutableSpanType slice(int at, int n) { return toSpan().slice(at, n); }
 
   template<typename U>
   int indexOf(const U& item) const { return toSpan().indexOf(item); }

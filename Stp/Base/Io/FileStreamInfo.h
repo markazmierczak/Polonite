@@ -22,8 +22,8 @@ class FileStreamInfo {
 
   uint64_t getSize() const;
 
-  Time getLastAccessTime() const;
-  Time getLastModifiedTime() const;
+  Time lastAccessTime() const;
+  Time lastModifiedTime() const;
   #if OS(WIN)
   Time getCreationTime() const;
   #endif
@@ -59,10 +59,10 @@ inline uint64_t FileStreamInfo::getSize() const {
   return size.QuadPart;
 }
 
-inline Time FileStreamInfo::getLastAccessTime() const {
+inline Time FileStreamInfo::lastAccessTime() const {
   return Time::fromFileTime(by_handle_.ftLastAccessTime);
 }
-inline Time FileStreamInfo::getLastModifiedTime() const {
+inline Time FileStreamInfo::lastModifiedTime() const {
   return Time::fromFileTime(by_handle_.ftLastWriteTime);
 }
 inline Time FileStreamInfo::getCreationTime() const {
@@ -79,10 +79,10 @@ inline bool FileStreamInfo::isSymbolicLink() const {
   return S_ISLNK(stat_.st_mode);
 }
 
-inline Time FileStreamInfo::getLastAccessTime() const {
+inline Time FileStreamInfo::lastAccessTime() const {
   return Time::FromTimeT(stat_.st_atime);
 }
-inline Time FileStreamInfo::getLastModifiedTime() const {
+inline Time FileStreamInfo::lastModifiedTime() const {
   return Time::FromTimeT(stat_.st_mtime);
 }
 #endif

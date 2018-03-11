@@ -48,8 +48,8 @@ class DirectoryEnumerator {
   bool isReadOnly() const { return (find_data_.dwFileAttributes & FILE_ATTRIBUTE_READONLY) != 0; }
   bool isReparsePoint() const { return (find_data_.dwFileAttributes & FILE_ATTRIBUTE_REPARSE_POINT) != 0; }
   uint64_t getSize() const;
-  Time getLastAccessTime() const;
-  Time getLastModifiedTime() const;
+  Time lastAccessTime() const;
+  Time lastModifiedTime() const;
   Time getCreationTime() const;
   #elif OS(POSIX)
   bool isRegularFile() const { return dirent_->d_type == DT_REG; }

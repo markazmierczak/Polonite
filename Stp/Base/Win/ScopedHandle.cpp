@@ -10,7 +10,7 @@ namespace win {
 
 void ScopedHandle::CloseHandle(HANDLE handle) {
   if (!::CloseHandle(handle))
-    throw Exception::with(SystemException(getLastWinErrorCode()), "closing a handle failed");
+    throw Exception::with(SystemException(lastWinErrorCode()), "closing a handle failed");
 }
 
 } // namespace win

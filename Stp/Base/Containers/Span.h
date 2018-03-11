@@ -50,18 +50,21 @@ class Span {
     return data_[at];
   }
 
-  constexpr const T& getFirst() const { return operator[](0); }
-  constexpr const T& getLast() const { return operator[](size_ - 1); }
+  constexpr const T& first() const { return operator[](0); }
+  constexpr const T& last() const { return operator[](size_ - 1); }
 
-  constexpr Span getSlice(int at) const {
+  constexpr Span slice(int at) const {
     ASSERT(0 <= at && at <= size_);
     return Span(data_ + at, size_ - at);
   }
-  constexpr Span getSlice(int at, int n) const {
+  constexpr Span slice(int at, int n) const {
     ASSERT(0 <= at && at <= size_);
     ASSERT(0 <= n && n <= size_ - at);
     return Span(data_ + at, n);
   }
+
+  constexpr Span left(int n) const { return slice(0, n); }
+  constexpr Span right(int n) const { return slice(size_ - n, n); }
 
   constexpr void truncate(int at) {
     ASSERT(0 <= at && at <= size_);
@@ -136,26 +139,31 @@ class MutableSpan {
     return data_[at];
   }
 
-  constexpr const T& getFirst() const { return operator[](0); }
-  constexpr const T& getLast() const { return operator[](size_ - 1); }
-  constexpr T& getFirst() { return operator[](0); }
-  constexpr T& getLast() { return operator[](size_ - 1); }
+  constexpr const T& first() const { return operator[](0); }
+  constexpr const T& last() const { return operator[](size_ - 1); }
+  constexpr T& first() { return operator[](0); }
+  constexpr T& last() { return operator[](size_ - 1); }
 
-  constexpr Span<T> getSlice(int at) const {
+  constexpr Span<T> slice(int at) const {
     ASSERT(0 <= at && at <= size_);
     return Span<T>(data_ + at, size_ - at);
   }
-  constexpr MutableSpan getSlice(int at) {
+  constexpr MutableSpan slice(int at) {
     ASSERT(0 <= at && at <= size_);
     return MutableSpan(data_ + at, size_ - at);
   }
 
-  constexpr Span<T> getSlice(int at, int n) const {
+  constexpr Span<T> left(int n) const { return slice(0, n); }
+  constexpr Span<T> right(int n) const { return slice(size_ - n, n); }
+  constexpr MutableSpan left(int n) { return slice(0, n); }
+  constexpr MutableSpan right(int n) { return slice(size_ - n, n); }
+
+  constexpr Span<T> slice(int at, int n) const {
     ASSERT(0 <= at && at <= size_);
     ASSERT(0 <= n && n <= size_ - at);
     return Span<T>(data_ + at, n);
   }
-  constexpr MutableSpan getSlice(int at, int n) {
+  constexpr MutableSpan slice(int at, int n) {
     ASSERT(0 <= at && at <= size_);
     ASSERT(0 <= n && n <= size_ - at);
     return MutableSpan(data_ + at, n);

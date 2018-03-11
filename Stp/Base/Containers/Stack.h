@@ -24,8 +24,8 @@ class Stack {
   template<typename U>
   bool contains(const U& item) const { return list_.contains(item); }
 
-  const T& peek() const { return list_.getLast(); }
-  T& peek() { return list_.getLast(); }
+  const T& peek() const { return list_.last(); }
+  T& peek() { return list_.last(); }
 
   void push(T item) { list_.add(move(item)); }
   T pop();
@@ -54,7 +54,7 @@ class Stack {
 
 template<typename T, class TList>
 inline T Stack<T, TList>::pop() {
-  T value = move(list_.getLast());
+  T value = move(list_.last());
   list_.removeLast();
   return value;
 }

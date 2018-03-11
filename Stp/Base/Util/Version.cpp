@@ -51,7 +51,7 @@ bool tryParse(StringSpan str, Version& out) {
     if (dot_pos < 0) {
       swap(part_str, str);
     } else {
-      part_str = str.getSlice(0, dot_pos);
+      part_str = str.slice(0, dot_pos);
       str.removePrefix(dot_pos + 1);
       // Dot at end ?
       if (str.isEmpty())

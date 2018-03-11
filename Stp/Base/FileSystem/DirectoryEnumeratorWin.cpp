@@ -38,7 +38,7 @@ SystemErrorCode DirectoryEnumerator::tryOpen(const FilePath& path) {
     status_ = Status::AtFirst;
     return WinErrorCode::Success;
   }
-  auto error = getLastWinErrorCode();
+  auto error = lastWinErrorCode();
   // An empty root directory has no entries (even dot entries).
   if (error == WinErrorCode::FileNotFound ||
       error == WinErrorCode::NoMoreFiles) {
@@ -81,7 +81,7 @@ bool DirectoryEnumerator::tryMoveNext(SystemErrorCode& out_error_code) {
       continue;
     return true;
   }
-  auto error = getLastWinErrorCode();
+  auto error = lastWinErrorCode();
   if (error == WinErrorCode::NoMoreFiles)
     out_error_code = WinErrorCode::Sucess;
   else
@@ -96,11 +96,11 @@ uint64_t DirectoryEnumerator::getSize() const {
   return size.QuadPart;
 }
 
-Time DirectoryEnumerator::getLastAccessTime() const {
+Time DirectoryEnumerator::lastAccessTime() const {
   return Time::fromFileTime(find_data_.ftLastAccessTime);
 }
 
-Time DirectoryEnumerator::getLastModifiedTime() const {
+Time DirectoryEnumerator::lastModifiedTime() const {
   return Time::fromFileTime(find_data_.ftLastWriteTime);
 }
 

@@ -23,7 +23,7 @@ TextEncoding FilePathWriter::getEncoding() const {
 void FilePathWriter::ensureSeparator() {
   if (path_.isEmpty())
     return;
-  if (isFilePathSeparator(path_.chars().getLast()))
+  if (isFilePathSeparator(path_.chars().last()))
     return;
   path_.chars().add(FilePathSeparator);
 }

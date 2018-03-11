@@ -43,15 +43,15 @@ class InlineListBase {
   const T& operator[](int at) const;
   T& operator[](int at);
 
-  const T& getFirst() const { return toSpan().getFirst(); }
-  const T& getLast() const { return toSpan().getLast(); }
-  T& getFirst() { return toSpan().getFirst(); }
-  T& getLast() { return toSpan().getLast(); }
+  const T& first() const { return toSpan().first(); }
+  const T& last() const { return toSpan().last(); }
+  T& first() { return toSpan().first(); }
+  T& last() { return toSpan().last(); }
 
-  SpanType getSlice(int at) const { return toSpan().getSlice(at); }
-  SpanType getSlice(int at, int n) const { return toSpan().getSlice(at, n); }
-  MutableSpanType getSlice(int at) { return toSpan().getSlice(at); }
-  MutableSpanType getSlice(int at, int n) { return toSpan().getSlice(at, n); }
+  SpanType slice(int at) const { return toSpan().slice(at); }
+  SpanType slice(int at, int n) const { return toSpan().slice(at, n); }
+  MutableSpanType slice(int at) { return toSpan().slice(at); }
+  MutableSpanType slice(int at, int n) { return toSpan().slice(at, n); }
 
   int add(T item);
   T* appendUninitialized(int n = 1);

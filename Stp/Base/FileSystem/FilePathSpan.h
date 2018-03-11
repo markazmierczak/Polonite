@@ -61,8 +61,8 @@ class BASE_EXPORT FilePathSpan {
 
   constexpr bool isEmpty() const { return chars_.isEmpty(); }
 
-  FilePathSpan getSlice(int at) const { return FilePathSpan(chars_.getSlice(at)); }
-  FilePathSpan getSlice(int at, int n) const { return FilePathSpan(chars_.getSlice(at, n)); }
+  FilePathSpan slice(int at) const { return FilePathSpan(chars_.slice(at)); }
+  FilePathSpan slice(int at, int n) const { return FilePathSpan(chars_.slice(at, n)); }
 
   void truncate(int at) { chars_.truncate(at); }
 
@@ -132,7 +132,7 @@ class BASE_EXPORT FilePathEnumerator {
  public:
   explicit FilePathEnumerator(FilePathSpan path);
 
-  FilePathSpan getCurrent() const { return path_.getSlice(now_pos_, now_len_); }
+  FilePathSpan getCurrent() const { return path_.slice(now_pos_, now_len_); }
 
   FilePathEnumerator* next();
 

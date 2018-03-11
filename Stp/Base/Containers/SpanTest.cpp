@@ -37,8 +37,8 @@ TEST(Span, Basic) {
     EXPECT_EQ(3, span[1]);
     EXPECT_EQ(4, span[2]);
 
-    EXPECT_EQ(2, span.getFirst());
-    EXPECT_EQ(4, span.getLast());
+    EXPECT_EQ(2, span.first());
+    EXPECT_EQ(4, span.last());
 
     int tmp = 2;
     for (int x : span) {
@@ -139,8 +139,8 @@ TEST(Span, MuatbleBasic) {
     EXPECT_EQ(3, span[1]);
     EXPECT_EQ(4, span[2]);
 
-    EXPECT_EQ(2, span.getFirst());
-    EXPECT_EQ(4, span.getLast());
+    EXPECT_EQ(2, span.first());
+    EXPECT_EQ(4, span.last());
 
     int tmp = 2;
     for (int x : span) {

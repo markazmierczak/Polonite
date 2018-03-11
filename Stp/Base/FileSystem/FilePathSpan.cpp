@@ -102,7 +102,7 @@ FilePathSpan FilePathSpan::getFileName() const {
   if (last_separator < 0)
     return *this;
 
-  return FilePathSpan(chars_.getSlice(last_separator + 1));
+  return FilePathSpan(chars_.slice(last_separator + 1));
 }
 
 FilePathSpan FilePathSpan::getFileNameWithoutExtension() const {
@@ -153,13 +153,13 @@ int FilePathSpan::lastIndexOfSeparator() const {
 }
 
 int FilePathSpan::indexOfSeparator(int start) const {
-  auto slice = getSlice(start);
+  auto slice = slice(start);
   int found = slice.indexOfSeparator();
   return found >= 0 ? (found + start) : found;
 }
 
 int FilePathSpan::lastIndexOfSeparator(int start) const {
-  auto slice = getSlice(0, start + 1);
+  auto slice = slice(0, start + 1);
   return slice.lastIndexOfSeparator();
 }
 
@@ -234,7 +234,7 @@ bool FilePathSpan::matchesExtension(StringSpan extension) const {
 
   // skip dot
   ++pos;
-  if (extension.getFirst() == '.')
+  if (extension.first() == '.')
     extension.removePrefix(1);
 
   // compare lengths

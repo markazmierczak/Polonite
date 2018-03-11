@@ -50,7 +50,7 @@ void JsonObject::SetWithPath(StringSpan input_path, JsonValue value) {
   JsonObject* object = this;
   for (; delimiter >= 0; delimiter = path.indexOf('.')) {
     // Assume that we're indexing into a dictionary.
-    StringSpan key = path.getSlice(0, delimiter);
+    StringSpan key = path.slice(0, delimiter);
     int pos = object->impl().indexOf(key);
 
     if (pos < 0) {
@@ -64,7 +64,7 @@ void JsonObject::SetWithPath(StringSpan input_path, JsonValue value) {
       }
       object = &value->AsObject();
     }
-    path = path.getSlice(delimiter + 1);
+    path = path.slice(delimiter + 1);
   }
 
   object->Set(path, move(value));
@@ -83,13 +83,13 @@ JsonValue* JsonObject::tryGetWithPath(StringSpan input_path) {
   StringSpan path = input_path;
   JsonObject* object = this;
   for (int delimiter = path.indexOf('.'); delimiter >= 0; delimiter = path.indexOf('.')) {
-    StringSpan key = path.getSlice(0, delimiter);
+    StringSpan key = path.slice(0, delimiter);
 
     object = object->tryGetObject(key);
     if (!object)
       return nullptr;
 
-    path = path.getSlice(delimiter + 1);
+    path = path.slice(delimiter + 1);
   }
   return object->tryGet(path);
 }
@@ -161,12 +161,12 @@ bool JsonObject::tryRemoveWithPath(StringSpan path, EmptyHandling empty_handling
   if (delimiter_pos < 0)
     return tryRemove(path);
 
-  StringSpan object_path = path.getSlice(0, delimiter_pos);
+  StringSpan object_path = path.slice(0, delimiter_pos);
   JsonObject* object = tryGetObjectWithPath(object_path);
   if (!object)
     return false;
 
-  StringSpan nested_path = path.getSlice(delimiter_pos + 1);
+  StringSpan nested_path = path.slice(delimiter_pos + 1);
   bool removed = object->tryRemoveWithPath(nested_path, empty_handling);
   if (removed && object->isEmpty() && empty_handling == EraseEmpty) {
     bool empty_removed = tryRemove(object_path);

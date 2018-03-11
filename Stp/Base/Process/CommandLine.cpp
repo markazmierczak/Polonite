@@ -127,8 +127,8 @@ bool CommandLine::parseSwitch(StringSpan argument, String& out_name, String& out
     out_name = argument;
     return true;
   }
-  out_name = argument.getSlice(0, separator_pos);
-  out_value = argument.getSlice(separator_pos);
+  out_name = argument.slice(0, separator_pos);
+  out_value = argument.slice(separator_pos);
   return true;
 }
 

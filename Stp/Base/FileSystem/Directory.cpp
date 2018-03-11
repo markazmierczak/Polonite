@@ -73,7 +73,7 @@ void Directory::removeRecursively(const FilePath& path) {
 
   RecursiveDirectoryEnumerator enumerator;
   while (!directories.isEmpty()) {
-    enumerator.open(directories.getLast());
+    enumerator.open(directories.last());
 
     bool has_nested = false;
     while (enumerator.moveNext()) {
@@ -86,7 +86,7 @@ void Directory::removeRecursively(const FilePath& path) {
       }
     }
     if (!has_nested) {
-      removeEmpty(directories.getLast());
+      removeEmpty(directories.last());
       directories.removeLast();
     }
     enumerator.close();

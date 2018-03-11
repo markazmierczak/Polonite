@@ -5,7 +5,6 @@
 
 #include "Base/Time/Time.h"
 
-#include "Base/Debug/Log.h"
 #include "Base/Time/ThreadTicks.h"
 #include "Base/Time/TimeTicks.h"
 
@@ -143,13 +142,8 @@ timespec Time::toTimespec() const {
 
 Time Time::Now() {
   struct timeval tv;
-  struct timezone tz = { 0, 0 };  // UTC
-  if (gettimeofday(&tv, &tz) != 0) {
-    RELEASE_LOG(ERROR, "gettimeofday failed");
-    ASSERT(false, "could not determine time of day");
-    // Return null instead of uninitialized |tv| value, which contains random garbage data.
-    return Time();
-  }
+  struct timezone tz = { 0, 0 }; // UTC
+  PANIC_IF(gettimeofday(&tv, &tz) != 0, "gettimeofday failed");
   // Combine seconds and microseconds in a 64-bit field containing microseconds since the epoch.
   return Time(tv.tv_sec * TimeDelta::MicrosecondsPerSecond + tv.tv_usec);
 }

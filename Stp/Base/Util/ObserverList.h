@@ -72,7 +72,7 @@ template<class TObserver>
 ObserverList<TObserver>::Iterator::~Iterator() {
   if (list_) {
     auto& iterators = list_->iterators_;
-    ASSERT(iterators.getFirst() == this);
+    ASSERT(iterators.first() == this);
     iterators.removeFirst();
     if (iterators.isEmpty() && list_->needs_compact_)
       list_->compact();

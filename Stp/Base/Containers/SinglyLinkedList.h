@@ -41,8 +41,8 @@ class SinglyLinkedList {
   // Call before destruction when you know items will no longer be used.
   void Reset();
 
-  T* getFirst() const;
-  T* getLast() const;
+  T* first() const;
+  T* last() const;
 
   void append(T* node);
   void prepend(T* node);
@@ -178,13 +178,13 @@ inline void SinglyLinkedList<T>::Reset() {
 }
 
 template<typename T>
-inline T* SinglyLinkedList<T>::getFirst() const {
+inline T* SinglyLinkedList<T>::first() const {
   ASSERT(!isEmpty());
   return head_;
 }
 
 template<typename T>
-inline T* SinglyLinkedList<T>::getLast() const {
+inline T* SinglyLinkedList<T>::last() const {
   ASSERT(!isEmpty());
   return tail_;
 }

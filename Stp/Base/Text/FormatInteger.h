@@ -5,6 +5,7 @@
 #define STP_BASE_TEXT_FORMATINTEGER_H_
 
 #include "Base/Containers/Array.h"
+#include "Base/String/StringSpan.h"
 #include "Base/Type/Sign.h"
 #include "Base/Text/AsciiChar.h"
 

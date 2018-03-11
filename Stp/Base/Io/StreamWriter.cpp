@@ -119,7 +119,7 @@ void StreamWriter::writeToBuffer(BufferSpan input) {
     return;
   }
 
-  buffer_.append(input.getSlice(remaining_capacity));
+  buffer_.append(input.slice(remaining_capacity));
   input.removePrefix(remaining_capacity);
 
   flushBuffer();

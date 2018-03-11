@@ -22,8 +22,8 @@ class FileInfo {
 
   uint64_t getSize() const;
 
-  Time getLastAccessTime() const;
-  Time getLastModifiedTime() const;
+  Time lastAccessTime() const;
+  Time lastModifiedTime() const;
   #if OS(WIN)
   Time getCreationTime() const;
   #endif
@@ -58,10 +58,10 @@ inline uint64_t FileInfo::getSize() const {
   return size.QuadPart;
 }
 
-inline Time FileInfo::getLastAccessTime() const {
+inline Time FileInfo::lastAccessTime() const {
   return Time::fromFileTime(attr_data_.ftLastAccessTime);
 }
-inline Time FileInfo::getLastModifiedTime() const {
+inline Time FileInfo::lastModifiedTime() const {
   return Time::fromFileTime(attr_data_.ftLastWriteTime);
 }
 inline Time FileInfo::getCreationTime() const {
@@ -75,10 +75,10 @@ inline bool FileInfo::isDirectory() const {
   return S_ISDIR(stat_.st_mode);
 }
 
-inline Time FileInfo::getLastAccessTime() const {
+inline Time FileInfo::lastAccessTime() const {
   return Time::FromTimeT(stat_.st_atime);
 }
-inline Time FileInfo::getLastModifiedTime() const {
+inline Time FileInfo::lastModifiedTime() const {
   return Time::FromTimeT(stat_.st_mtime);
 }
 #endif // OS(*)

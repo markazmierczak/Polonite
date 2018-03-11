@@ -48,8 +48,8 @@ class BASE_EXPORT FilePath {
   void ensureCapacity(int request);
   void shrinkToFit();
 
-  SpanType getSlice(int at) const { return toSpan().getSlice(at); }
-  SpanType getSlice(int at, int n) const { return toSpan().getSlice(at, n); }
+  SpanType slice(int at) const { return toSpan().slice(at); }
+  SpanType slice(int at, int n) const { return toSpan().slice(at, n); }
 
   void truncate(int at) { chars_.truncate(at); }
 

@@ -24,7 +24,7 @@ enum class WinErrorCode : DWORD {
 
 inline bool IsOk(WinErrorCode code) { return LIKELY(code == WinErrorCode::Success); }
 
-inline WinErrorCode getLastWinErrorCode() {
+inline WinErrorCode lastWinErrorCode() {
   return static_cast<WinErrorCode>(::GetLastError());
 }
 

@@ -3,7 +3,6 @@
 
 #include "Base/Thread/NativeThread.h"
 
-#include "Base/Debug/Log.h"
 #include "Base/String/StringSpan.h"
 
 #if !OS(ANDROID)
@@ -23,7 +22,7 @@ ErrorCode NativeThread::SetPriority(NativeThreadObject thread, ThreadPriority pr
     ErrorCode error = static_cast<PosixErrorCode>(
         pthread_setschedparam(thread, SCHED_IDLE, &param));
     if (!isOk(error)) {
-      LOG(WARN, "unable to set idle policy for thread");
+      // Unable to set idle policy for thread.
       return error;
     }
     return ErrorCode();
@@ -50,13 +49,6 @@ ErrorCode NativeThread::SetPriority(NativeThreadObject thread, ThreadPriority pr
 
 #if !OS(FREEBSD)
 ErrorCode NativeThread::SetName(const char* name_cstr) {
-  // On linux we can get the thread names to show up in the debugger by setting
-  // the process name for the LWP. We don't want to do this for the main
-  // thread because that would rename the process, causing tools like killall
-  // to stop working.
-  if (NativeThread::CurrentId() == getpid())
-    LOG(WARN, "changing main thread name");
-
   // From spec:
   //  The name can be up to 16 bytes long, including the terminating null byte.
   //  (If the length of the string, including the terminating null byte,
@@ -75,14 +67,9 @@ ErrorCode NativeThread::SetName(const char* name_cstr) {
   ASSERT(*(name.data() + name.length()) == '\0');
 
   int rv = prctl(PR_SET_NAME, name.data());
+  if (rv != 0)
+    return lastPosixErrorCode();
 
-  if (rv != 0) {
-    auto error = getLastPosixErrorCode();
-    if (error != PosixErrorCode::OperationNotPermitted) {
-      LOG(ERROR, "prctl(PR_SET_NAME) failed ");
-      return error;
-    }
-  }
   return ErrorCode();
 }
 #endif // OS(*)

@@ -59,8 +59,8 @@ int indexOfIgnoringAsciiCase(StringSpan haystack, StringSpan needle) {
 
   const char* orig_data = haystack.data();
 
-  char first_char = needle.getFirst();
-  StringSpan needle_rest = needle.getSlice(1);
+  char first_char = needle.first();
+  StringSpan needle_rest = needle.slice(1);
 
   while (haystack.size() >= needle.size()) {
     int found = indexOfIgnoringAsciiCase(haystack, first_char);
@@ -78,8 +78,8 @@ int lastIndexOfIgnoringAsciiCase(StringSpan haystack, StringSpan needle) {
   if (needle.isEmpty())
     return haystack.size();
 
-  char last_char = needle.getLast();
-  StringSpan needle_rest = needle.getSlice(0, needle.size() - 1);
+  char last_char = needle.last();
+  StringSpan needle_rest = needle.slice(0, needle.size() - 1);
 
   while (haystack.size() >= needle.size()) {
     int found = lastIndexOfIgnoringAsciiCase(haystack, last_char);

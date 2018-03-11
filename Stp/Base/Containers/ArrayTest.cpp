@@ -19,8 +19,8 @@ TEST(ArrayTest, Basic) {
   EXPECT_EQ(3, array[1]);
   EXPECT_EQ(4, array[2]);
 
-  EXPECT_EQ(2, array.getFirst());
-  EXPECT_EQ(4, array.getLast());
+  EXPECT_EQ(2, array.first());
+  EXPECT_EQ(4, array.last());
 
   int tmp = 2;
   for (int x : array) {

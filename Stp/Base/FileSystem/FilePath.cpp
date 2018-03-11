@@ -104,7 +104,7 @@ void FilePath::addComponent(FilePathSpan component) {
 
   bool need_separator = false;
   if (!isEmpty())
-    need_separator = !isFilePathSeparator(chars_.getLast());
+    need_separator = !isFilePathSeparator(chars_.last());
 
   int length = component.size();
   CharType* dst = chars_.appendUninitialized(length + (need_separator ? 1 : 0));
@@ -119,7 +119,7 @@ void FilePath::addComponentAscii(StringSpan component) {
 
   bool need_separator = false;
   if (!isEmpty())
-    need_separator = !isFilePathSeparator(chars_.getLast());
+    need_separator = !isFilePathSeparator(chars_.last());
 
   int length = component.size();
   auto* src = component.data();

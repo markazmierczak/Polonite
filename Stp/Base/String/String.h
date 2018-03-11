@@ -86,7 +86,7 @@ class String {
     return String(data, length, LiteralCapacity);
   }
   static String fromCStringLiteral(const char* cstr) {
-    return fromLiteral(cstr, getLengthOfCString(cstr));
+    return fromLiteral(cstr, lengthOfCString(cstr));
   }
 
   friend const char* begin(const String& x) { return x.data_; }

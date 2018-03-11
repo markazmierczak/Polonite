@@ -26,8 +26,8 @@ TEST(StringSpanTest, Basic) {
 
 TEST(StringSpanTest, FirstLast) {
   StringSpan s = "abc";
-  EXPECT_EQ('a', s.getFirst());
-  EXPECT_EQ('c', s.getLast());
+  EXPECT_EQ('a', s.first());
+  EXPECT_EQ('c', s.last());
 }
 
 TEST(StringSpanTest, removePrefixSuffix) {
@@ -46,13 +46,13 @@ TEST(StringSpanTest, removePrefixSuffix) {
 TEST(StringSpanTest, Slice) {
   {
     StringSpan s = "abcde";
-    s = s.getSlice(1, 2);
+    s = s.slice(1, 2);
     EXPECT_EQ(StringSpan("bc"), s);
   }
   // Past end.
   {
     StringSpan s = "abcde";
-    s = s.getSlice(2);
+    s = s.slice(2);
     EXPECT_EQ(StringSpan("cde"), s);
   }
 }

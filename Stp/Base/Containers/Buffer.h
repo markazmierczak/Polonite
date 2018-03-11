@@ -47,10 +47,10 @@ class Buffer {
 
   void willGrow(int n);
 
-  SpanType getSlice(int at) const { return toSpan().getSlice(at); }
-  SpanType getSlice(int at, int n) const { return toSpan().getSlice(at, n); }
-  MutableSpanType getSlice(int at) { return toSpan().getSlice(at); }
-  MutableSpanType getSlice(int at, int n) { return toSpan().getSlice(at, n); }
+  SpanType slice(int at) const { return toSpan().slice(at); }
+  SpanType slice(int at, int n) const { return toSpan().slice(at, n); }
+  MutableSpanType slice(int at) { return toSpan().slice(at); }
+  MutableSpanType slice(int at, int n) { return toSpan().slice(at, n); }
 
   int add(byte_t byte);
 

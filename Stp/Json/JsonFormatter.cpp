@@ -170,7 +170,7 @@ void JsonFormatter::EscapeSimple(TextWriter& out, StringSpan str) {
     char replacement;
     if (EscapeSpecialCharacter(str[i], replacement)) {
       if (i > 0)
-        out << str.getSlice(0, i);
+        out << str.slice(0, i);
       str.removePrefix(i + 1);
       char escaped[2] = { '\\', replacement };
       out << escaped;

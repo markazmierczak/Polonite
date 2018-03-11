@@ -63,7 +63,7 @@ void DemangleSymbols(TextWriter& out, StringSpan mangled) {
       break; // Mangled symbol not found.
     }
     if (mangled_start > 0) {
-      out << mangled.getSlice(0, mangled_start);
+      out << mangled.slice(0, mangled_start);
       mangled.removePrefix(mangled_start);
     }
 
@@ -72,7 +72,7 @@ void DemangleSymbols(TextWriter& out, StringSpan mangled) {
     if (mangled_end < 0)
       mangled_end = mangled.size();
 
-    String mangled_symbol(mangled.getSlice(0, mangled_end));
+    String mangled_symbol(mangled.slice(0, mangled_end));
 
     // Try to demangle the mangled symbol candidate.
     int status = 0;
