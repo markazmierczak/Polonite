@@ -13,26 +13,26 @@ class Sha1Digest {
   static constexpr int Length = 20;
 
   enum NoInitTag { NoInit };
-  explicit Sha1Digest(NoInitTag) noexcept {}
+  explicit Sha1Digest(NoInitTag) {}
 
-  explicit Sha1Digest(Span<byte_t> raw) noexcept {
+  explicit Sha1Digest(Span<byte_t> raw) {
     ASSERT(raw.size() == Length);
     uninitializedCopy(raw_, raw.data(), Length);
   }
 
-  const byte_t& operator[](int pos) const noexcept {
+  const byte_t& operator[](int pos) const {
     ASSERT(0 <= pos && pos < Length);
     return raw_[pos];
   }
-  byte_t& operator[](int pos) noexcept {
+  byte_t& operator[](int pos) {
     ASSERT(0 <= pos && pos < Length);
     return raw_[pos];
   }
 
-  friend bool operator==(const Sha1Digest& l, const Sha1Digest& r) noexcept {
+  friend bool operator==(const Sha1Digest& l, const Sha1Digest& r) {
     return makeSpan(l.raw_) == makeSpan(r.raw_);
   }
-  friend bool operator!=(const Sha1Digest& l, const Sha1Digest& r) noexcept {
+  friend bool operator!=(const Sha1Digest& l, const Sha1Digest& r) {
     return !operator==(l, r);
   }
 
@@ -40,23 +40,23 @@ class Sha1Digest {
   byte_t raw_[Length];
 };
 
-BASE_EXPORT Sha1Digest computeSha1Digest(BufferSpan input) noexcept;
-BASE_EXPORT bool tryParse(StringSpan s, Sha1Digest& out_digest) noexcept;
+BASE_EXPORT Sha1Digest computeSha1Digest(BufferSpan input);
+BASE_EXPORT bool tryParse(StringSpan s, Sha1Digest& out_digest);
 
 BASE_EXPORT void format(TextWriter& out, const Sha1Digest& digest, const StringSpan& opts);
 BASE_EXPORT TextWriter& operator<<(TextWriter& out, const Sha1Digest& digest);
 
 class Sha1Hasher {
  public:
-  Sha1Hasher() noexcept { reset(); }
+  Sha1Hasher() { reset(); }
 
-  BASE_EXPORT void reset() noexcept;
-  BASE_EXPORT void update(BufferSpan input) noexcept;
-  BASE_EXPORT void finish(Sha1Digest& out_digest) noexcept;
+  BASE_EXPORT void reset();
+  BASE_EXPORT void update(BufferSpan input);
+  BASE_EXPORT void finish(Sha1Digest& out_digest);
 
  private:
-  void pad() noexcept;
-  void process() noexcept;
+  void pad();
+  void process();
 
   uint32_t a_, b_, c_, d_, e_;
 

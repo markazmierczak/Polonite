@@ -28,7 +28,7 @@ class BASE_EXPORT MemoryStream final : public Stream {
   void ensureCapacity(int request);
 
   void close() override;
-  bool isOpen() const noexcept override;
+  bool isOpen() const override;
   int readAtMost(MutableBufferSpan output) override;
   void write(BufferSpan input) override;
   void positionalRead(int64_t offset, MutableBufferSpan output) override;

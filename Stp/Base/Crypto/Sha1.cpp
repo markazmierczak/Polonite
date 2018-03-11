@@ -13,7 +13,7 @@ namespace stp {
 
 static constexpr int NibbleCount = Sha1Digest::Length * 2;
 
-bool tryParse(StringSpan input, Sha1Digest& out_digest) noexcept {
+bool tryParse(StringSpan input, Sha1Digest& out_digest) {
   if (input.length() != NibbleCount)
     return false;
 
@@ -59,7 +59,7 @@ void format(TextWriter& out, const Sha1Digest& digest, const StringSpan& opts) {
   format(out, digest, uppercase);
 }
 
-void Sha1Hasher::reset() noexcept {
+void Sha1Hasher::reset() {
   a_ = 0;
   b_ = 0;
   c_ = 0;
@@ -74,7 +74,7 @@ void Sha1Hasher::reset() noexcept {
   h_[4] = 0xC3D2E1F0;
 }
 
-void Sha1Hasher::finish(Sha1Digest& out_digest) noexcept {
+void Sha1Hasher::finish(Sha1Digest& out_digest) {
   pad();
   process();
 
@@ -84,7 +84,7 @@ void Sha1Hasher::finish(Sha1Digest& out_digest) noexcept {
   memcpy(&out_digest[0], h_, Sha1Digest::Length);
 }
 
-void Sha1Hasher::update(BufferSpan buffer) noexcept {
+void Sha1Hasher::update(BufferSpan buffer) {
   auto* bytes = static_cast<const byte_t*>(buffer.data());
   int nbytes = buffer.size();
 
@@ -96,7 +96,7 @@ void Sha1Hasher::update(BufferSpan buffer) noexcept {
   }
 }
 
-void Sha1Hasher::pad() noexcept {
+void Sha1Hasher::pad() {
   m_[cursor_++] = 0x80;
 
   if (cursor_ > 64-8) {
@@ -145,7 +145,7 @@ static inline uint32_t K(uint32_t t) {
   return 0xCA62C1D6;
 }
 
-void Sha1Hasher::process() noexcept {
+void Sha1Hasher::process() {
   // Each a...e corresponds to a section in the FIPS 180-3 algorithm.
 
   // a.
@@ -186,7 +186,7 @@ void Sha1Hasher::process() noexcept {
   cursor_ = 0;
 }
 
-Sha1Digest computeSha1Digest(BufferSpan input) noexcept {
+Sha1Digest computeSha1Digest(BufferSpan input) {
   Sha1Digest digest(Sha1Digest::NoInit);
   Sha1Hasher hasher;
   hasher.update(input);

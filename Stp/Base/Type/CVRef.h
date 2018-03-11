@@ -91,18 +91,18 @@ template<typename T>
 using TAddRvalueReference = typename detail::TAddRvalueReferenceHelper<T>::Type;
 
 template<typename T>
-ALWAYS_INLINE constexpr TRemoveReference<T> && move(T&& t) noexcept {
+ALWAYS_INLINE constexpr TRemoveReference<T> && move(T&& t) {
   typedef TRemoveReference<T> U;
   return static_cast<U&&>(t);
 }
 
 template<typename T>
-ALWAYS_INLINE constexpr T&& forward(TRemoveReference<T>& t) noexcept {
+ALWAYS_INLINE constexpr T&& forward(TRemoveReference<T>& t) {
   return static_cast<T&&>(t);
 }
 
 template<typename T>
-ALWAYS_INLINE constexpr T&& forward(TRemoveReference<T>&& t) noexcept {
+ALWAYS_INLINE constexpr T&& forward(TRemoveReference<T>&& t) {
   static_assert(!TIsLvalueReference<T>, "can not forward an rvalue as an lvalue");
   return static_cast<T&&>(t);
 }
@@ -232,7 +232,7 @@ using TApplyCV = typename detail::TApplyCVHelper<T, U>::Type;
 template<typename T>
 using TRemoveCVRef = TRemoveCV<TRemoveReference<T>>;
 
-template<class T> constexpr TAddConst<T>& asConst(T& x) noexcept { return x; }
+template<class T> constexpr TAddConst<T>& asConst(T& x) { return x; }
 template<class T> void asConst(const T&&) = delete;
 
 } // namespace stp

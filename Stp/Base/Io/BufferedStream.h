@@ -33,7 +33,7 @@ class BASE_EXPORT BufferedStream final : public Stream {
   void open(Stream* underlying) { openInternal(underlying, false); }
 
   void close() override;
-  bool isOpen() const noexcept override;
+  bool isOpen() const override;
   int readAtMost(MutableBufferSpan output) override;
   void write(BufferSpan input) override;
   void writeByte(byte_t byte) override;

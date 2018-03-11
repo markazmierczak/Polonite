@@ -62,6 +62,10 @@ class StringSpan {
   int length_;
 };
 
+inline int getLengthOfCString(const char* cstr) {
+  return static_cast<int>(::strlen(cstr));
+}
+
 BASE_EXPORT bool operator==(const StringSpan& lhs, const StringSpan& rhs);
 
 inline bool operator!=(const StringSpan& lhs, const StringSpan& rhs) {
@@ -75,7 +79,7 @@ inline HashCode partialHash(const StringSpan& text) {
 }
 
 inline StringSpan StringSpan::fromCString(const char* cstr) {
-  return cstr ? StringSpan(cstr, static_cast<int>(::strlen(cstr))) : empty();
+  return cstr ? StringSpan(cstr, getLengthOfCString(cstr)) : empty();
 }
 
 constexpr const char& StringSpan::operator[](int at) const {

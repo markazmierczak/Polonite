@@ -69,7 +69,7 @@ void MemoryStream::close() {
   expandable_ = false;
 }
 
-bool MemoryStream::isOpen() const noexcept {
+bool MemoryStream::isOpen() const {
   return open_;
 }
 

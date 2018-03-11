@@ -18,8 +18,8 @@ class Buffer {
   Buffer() = default;
   ~Buffer() { freeIfNotNull(data_); }
 
-  Buffer(Buffer&& other) noexcept;
-  Buffer& operator=(Buffer&& other) noexcept;
+  Buffer(Buffer&& other);
+  Buffer& operator=(Buffer&& other);
 
   Buffer(const Buffer& other) { assign(other); }
   Buffer& operator=(const Buffer& other);
@@ -75,7 +75,7 @@ class Buffer {
 
   Buffer& operator+=(SpanType range) { append(range); return *this; }
 
-  friend void swap(Buffer& l, Buffer& r) noexcept {
+  friend void swap(Buffer& l, Buffer& r) {
     swap(l.data_, r.data_);
     swap(l.size_, r.size_);
     swap(l.capacity_, r.capacity_);
@@ -156,12 +156,12 @@ inline Buffer makeBuffer(List<T>&& list) {
   return Buffer::adoptMemory(list.releaseMemory(), size, capacity);
 }
 
-inline Buffer::Buffer(Buffer&& other) noexcept
+inline Buffer::Buffer(Buffer&& other)
     : data_(exchange(other.data_, nullptr)),
       size_(exchange(other.size_, 0)),
       capacity_(exchange(other.capacity_, 0)) {}
 
-inline Buffer& Buffer::operator=(Buffer&& other) noexcept {
+inline Buffer& Buffer::operator=(Buffer&& other) {
   freeIfNotNull(data_);
   data_ = exchange(other.data_, nullptr);
   size_ = exchange(other.size_, 0);

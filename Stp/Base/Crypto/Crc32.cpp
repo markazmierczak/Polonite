@@ -4,13 +4,12 @@
 #include "Base/Crypto/Crc32.h"
 
 #include "Base/Containers/Array.h"
-#include "Base/Error/BasicExceptions.h"
 #include "Base/Text/AsciiChar.h"
 #include "Base/Type/Formattable.h"
 
 namespace stp {
 
-bool tryParse(StringSpan input, Crc32Value& out) noexcept {
+bool tryParse(StringSpan input, Crc32Value& out) {
   constexpr int NibbleCount = 8;
   if (input.length() < NibbleCount)
     return false;
@@ -114,7 +113,7 @@ static const uint32_t Crc32Table[256] = {
   0x2D02EF8Du
 };
 
-void Crc32Algorithm::update(BufferSpan input) noexcept {
+void Crc32Algorithm::update(BufferSpan input) {
   uint32_t c = residue_;
 
   auto* input_bytes = static_cast<const byte_t*>(input.data());
@@ -125,7 +124,7 @@ void Crc32Algorithm::update(BufferSpan input) noexcept {
   residue_ = c;
 }
 
-Crc32Value computeCrc32(BufferSpan input) noexcept {
+Crc32Value computeCrc32(BufferSpan input) {
   Crc32Algorithm algorithm;
   algorithm.update(input);
   return algorithm.getChecksum();

@@ -63,8 +63,8 @@ BASE_EXPORT extern const TextEncodingData UndefinedTextEncodingData;
 
 class TextEncoding {
  public:
-  constexpr TextEncoding() noexcept : codec_(detail::UndefinedTextEncodingData) {}
-  constexpr TextEncoding(const TextEncodingData* codec) noexcept : codec_(*codec) {}
+  constexpr TextEncoding() : codec_(detail::UndefinedTextEncodingData) {}
+  constexpr TextEncoding(const TextEncodingData* codec) : codec_(*codec) {}
 
   // The name as specified in IANA character sets:
   // https://www.iana.org/assignments/character-sets/character-sets.xhtml
@@ -82,12 +82,12 @@ class TextEncoding {
   friend bool operator!=(const TextEncoding& l, const TextEncoding& r) { return !operator==(l, r); }
   friend HashCode partialHash(const TextEncoding& codec) { return codec.HashImpl(); }
 
-  BASE_EXPORT static bool AreNamesMatching(StringSpan lhs, StringSpan rhs) noexcept;
+  BASE_EXPORT static bool AreNamesMatching(StringSpan lhs, StringSpan rhs);
 
  private:
   const TextEncodingData& codec_;
 
-  BASE_EXPORT HashCode HashImpl() const noexcept;
+  BASE_EXPORT HashCode HashImpl() const;
 };
 
 BASE_EXPORT String ToString(BufferSpan buffer, TextEncoding codec);

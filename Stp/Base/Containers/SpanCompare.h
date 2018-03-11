@@ -10,7 +10,7 @@
 namespace stp {
 
 template<typename T, typename U = T>
-inline int compareSpans(Span<T> lhs, Span<U> rhs) noexcept {
+inline int compareSpans(Span<T> lhs, Span<U> rhs) {
   int common = min(lhs.size(), rhs.size());
   for (int i = 0; i < common; ++i) {
     int rv = compare(lhs[i], rhs[i]);

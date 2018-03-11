@@ -80,13 +80,5 @@ FilePath resolveInternal(int& key, ProvideType provider, bool directory, Option 
 
 } // namespace detail
 
-NotFoundException::NotFoundException(FilePath path) noexcept
-    : path_(move(path)) {
-}
-
-StringSpan NotFoundException::getName() const noexcept {
-  return "known_path::NotFoundException";
-}
-
 } // namespace known_path
 } // namespace stp

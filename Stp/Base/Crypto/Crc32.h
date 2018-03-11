@@ -10,9 +10,9 @@ namespace stp {
 
 enum class Crc32Value : uint32_t {};
 
-BASE_EXPORT Crc32Value computeCrc32(BufferSpan input) noexcept;
+BASE_EXPORT Crc32Value computeCrc32(BufferSpan input);
 
-BASE_EXPORT bool tryParse(StringSpan s, Crc32Value& out_checksum) noexcept;
+BASE_EXPORT bool tryParse(StringSpan s, Crc32Value& out_checksum);
 
 BASE_EXPORT void format(TextWriter& out, Crc32Value checksum, const StringSpan& opts);
 
@@ -23,7 +23,7 @@ class Crc32Algorithm {
   Crc32Algorithm() = default;
 
   void reset() { residue_ = InitialResidue; }
-  BASE_EXPORT void update(BufferSpan input) noexcept;
+  BASE_EXPORT void update(BufferSpan input);
   Crc32Value getChecksum() const { return static_cast<Crc32Value>(~residue_); }
 
  private:

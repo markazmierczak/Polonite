@@ -30,7 +30,7 @@ LazyInstance<URandom>::LeakAtExit g_urandom_fd_instance = LAZY_INSTANCE_INITIALI
 
 } // namespace
 
-void CryptoRandom::generate(MutableBufferSpan buffer) noexcept {
+void CryptoRandom::generate(MutableBufferSpan buffer) {
   g_urandom_fd_instance->read(buffer);
 }
 

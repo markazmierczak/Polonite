@@ -10,17 +10,17 @@
 namespace stp {
 
 template<typename T, TEnableIf<TIsBoolean<T>>* = nullptr>
-constexpr int compare(T l, T r) noexcept {
+constexpr int compare(T l, T r) {
   return static_cast<int>(l) - static_cast<int>(r);
 }
 
 template<typename T, typename U, TEnableIf<TIsCharacter<T> && TIsCharacter<U>>* = nullptr>
-constexpr int compare(T lhs, U rhs) noexcept {
+constexpr int compare(T lhs, U rhs) {
   return static_cast<int>(charCast<char32_t>(lhs) - charCast<char32_t>(rhs));
 }
 
 template<typename T, typename U, TEnableIf<TIsInteger<T> && TIsInteger<U>>* = nullptr>
-constexpr int compare(T l, U r) noexcept {
+constexpr int compare(T l, U r) {
   if (l < r)
     return -1;
   if (l > r)
@@ -29,7 +29,7 @@ constexpr int compare(T l, U r) noexcept {
 }
 
 template<typename T, typename U, TEnableIf<TIsFloatingPoint<T> && TIsFloatingPoint<U>>* = nullptr>
-constexpr int compare(T l, U r) noexcept {
+constexpr int compare(T l, U r) {
   if (l < r)
     return -1;
   if (l > r)
@@ -42,7 +42,7 @@ constexpr int compare(T l, U r) noexcept {
 }
 
 template<typename T, typename U, TEnableIf<TIsPointer<T> && TIsPointer<U>>* = nullptr>
-constexpr int compare(const T& l, const U& r) noexcept {
+constexpr int compare(const T& l, const U& r) {
   if (l < r)
     return -1;
   if (l > r)
@@ -51,7 +51,7 @@ constexpr int compare(const T& l, const U& r) noexcept {
 }
 
 template<typename T, TEnableIf<TIsEnum<T>>* = nullptr>
-constexpr int compare(T l, T r) noexcept {
+constexpr int compare(T l, T r) {
   if (l < r)
     return -1;
   if (l > r)
@@ -73,7 +73,7 @@ constexpr bool TIsComparable = TIsComparableWith<T, T>;
 
 struct DefaultComparer {
   template<typename T, typename U>
-  constexpr int operator()(const T& x, const U& y) const noexcept {
+  constexpr int operator()(const T& x, const U& y) const {
     return compare(x, y);
   }
 };

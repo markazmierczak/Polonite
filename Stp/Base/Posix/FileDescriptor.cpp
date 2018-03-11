@@ -3,14 +3,12 @@
 
 #include "Base/Posix/FileDescriptor.h"
 
-#include "Base/Error/SystemException.h"
-
 #include <fcntl.h>
 
 namespace stp {
 namespace posix {
 
-FileDescriptor& FileDescriptor::operator=(FileDescriptor&& other) noexcept {
+FileDescriptor& FileDescriptor::operator=(FileDescriptor&& other) {
   ASSERT(this != &other);
   FileDescriptor tmp(exchange(fd_, exchange(other.fd_, InvalidFd)));
   return *this;

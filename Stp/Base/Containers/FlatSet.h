@@ -18,8 +18,8 @@ class FlatSet {
   FlatSet() = default;
   ~FlatSet() = default;
 
-  FlatSet(FlatSet&& other) noexcept : list_(move(other.list_)) {}
-  FlatSet& operator=(FlatSet&& other) noexcept { list_ = move(other); return *this; }
+  FlatSet(FlatSet&& other) : list_(move(other.list_)) {}
+  FlatSet& operator=(FlatSet&& other) { list_ = move(other); return *this; }
 
   FlatSet(const FlatSet& other) : list_(other.list_) {}
   FlatSet& operator=(const FlatSet& other) { list_ = other; return *this; }
@@ -56,7 +56,7 @@ class FlatSet {
   }
   ListType releaseList() { return move(list_); }
 
-  friend void swap(FlatSet& l, FlatSet& r) noexcept { swap(l.list_, r.list_); }
+  friend void swap(FlatSet& l, FlatSet& r) { swap(l.list_, r.list_); }
   friend bool operator==(const FlatSet& l, const FlatSet& r) { return l.list_ == r.list_; }
   friend bool operator!=(const FlatSet& l, const FlatSet& r) { return !(l == r); }
   friend auto begin(const FlatSet& x) { return begin(x.list_); }
@@ -66,7 +66,7 @@ class FlatSet {
   ListType list_;
 
   struct OrderedUniqueTag {};
-  FlatSet(OrderedUniqueTag, ListType&& list) noexcept : list_(move(list)) {}
+  FlatSet(OrderedUniqueTag, ListType&& list) : list_(move(list)) {}
 };
 
 template<typename T, class TList>

@@ -85,6 +85,9 @@ class String {
     ASSERT(data[length] == '\0');
     return String(data, length, LiteralCapacity);
   }
+  static String fromCStringLiteral(const char* cstr) {
+    return fromLiteral(cstr, getLengthOfCString(cstr));
+  }
 
   friend const char* begin(const String& x) { return x.data_; }
   friend const char* end(const String& x) { return x.data_ + x.length_; }
