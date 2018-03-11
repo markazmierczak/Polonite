@@ -4,92 +4,118 @@
 #ifndef STP_BASE_STRING_STRING_H_
 #define STP_BASE_STRING_STRING_H_
 
-#include "Base/String/StringImpl.h"
+#include "Base/Memory/Allocate.h"
+#include "Base/String/StringSpan.h"
 
 namespace stp {
 
 class String {
  public:
-  String(String&& other) noexcept : impl_(move(other.impl_)) {}
-  String(const String& other) noexcept : impl_(other.impl_.copyRef()) {}
+  ~String() {
+    #if SANITIZER(ADDRESS)
+    if (__asan_address_is_poisoned(this))
+      __asan_unpoison_memory_region(this, sizeof(*this));
+    #endif
+    if (capacity_ > 0)
+      freeMemory(const_cast<char*>(data_));
+  }
 
-  String& operator=(String&& other) noexcept { impl_ = move(other.impl_); return *this; }
-  String& operator=(const String& other) noexcept { impl_ = other.impl_.copyRef(); return *this; }
+  String(String&& o);
+  String& operator=(String&& o) { exchange(*this, move(o)); return *this;  }
 
-  explicit String(const StringSpan& text) : impl_(StringImpl::create(text)) {}
+  BASE_EXPORT explicit String(const String& o);
+  String& operator=(const String& o) { return operator=(o.toSpan()); }
 
-  template<int N>
-  explicit String(const char (&text)[N]) = delete; // Use StringLiteral instead.
+  BASE_EXPORT explicit String(StringSpan text);
+  String& operator=(StringSpan o) { assign(o); return *this; }
 
-  String(Rc<StringImpl> impl) noexcept : impl_(move(impl)) {}
-
-  static String isolate(String s);
+  // In general you should use StringLiteral instead.
+  template<int N> explicit String(const char (&text)[N]) = delete;
+  template<int N> String& operator=(const char (&text)[N]) = delete;
 
   BASE_EXPORT static String fromCString(const char* cstr);
-  static String empty() noexcept { return adoptRc(StringImpl::staticEmpty()); }
+  static String empty() { return String(EmptyData, 0, 0); }
 
-  static String createUninitialized(int length, char*& out_data);
+  BASE_EXPORT static String createUninitialized(int length, char*& out_data);
 
-  StringSpan toSpan() const noexcept { return impl_->toSpan(); }
-  operator StringSpan() const noexcept { return impl_->toSpan(); }
+  StringSpan toSpan() const { return StringSpan(data_, length_); }
+  operator StringSpan() const { return toSpan(); }
 
-  bool isEmpty() const noexcept { return impl_->isEmpty(); }
+  bool isEmpty() const { return length_ == 0; }
 
-  const char* data() const noexcept { return impl_->data(); }
-  int length() const noexcept { return impl_->length(); }
+  const char* data() const { return data_; }
+  int length() const { return length_; }
+  const char* c_str() const { return data_; }
 
-  StringImpl& getImpl() const noexcept { return impl_; }
-
-  const char& operator[](int at) const noexcept {
+  const char& operator[](int at) const {
     ASSERT(0 <= at && at < length());
-    return *(data() + at);
+    return *(data_ + at);
   }
 
-  String substring(int at) const { return substring(at, length() - at); }
-  String substring(int at, int n) const { return impl_->substring(at, n); }
-  String left(int n) const { return substring(0, n); }
-  String right(int n) const { return substring(length() - n, n); }
+  StringSpan substring(int at) const { return toSpan().substring(at); }
+  StringSpan substring(int at, int n) const { return toSpan().substring(at, n); }
+  StringSpan left(int n) const { return toSpan().left(n); }
+  StringSpan right(int n) const { return toSpan().right(n); }
 
-  int indexOfUnit(char c) const noexcept { return toSpan().indexOfUnit(c); }
-  int lastIndexOfUnit(char c) const noexcept { return toSpan().lastIndexOfUnit(c); }
-  bool containsUnit(char c) const noexcept { return indexOfUnit(c) >= 0; }
+  int indexOfUnit(char c) const { return toSpan().indexOfUnit(c); }
+  int lastIndexOfUnit(char c) const { return toSpan().lastIndexOfUnit(c); }
+  bool containsUnit(char c) const { return indexOfUnit(c) >= 0; }
 
-  int indexOfRune(char32_t rune) const noexcept { return toSpan().indexOfRune(rune); }
-  int lastIndexOfRune(char32_t rune) const noexcept { return toSpan().lastIndexOfRune(rune); }
-  bool containsRune(char32_t rune) const noexcept { return indexOfRune(rune) >= 0; }
+  int indexOfRune(char32_t rune) const { return toSpan().indexOfRune(rune); }
+  int lastIndexOfRune(char32_t rune) const { return toSpan().lastIndexOfRune(rune); }
+  bool containsRune(char32_t rune) const { return indexOfRune(rune) >= 0; }
 
-  int indexOf(const StringSpan& s) const noexcept { return toSpan().indexOf(s); }
-  int lastIndexOf(const StringSpan& s) const noexcept { return toSpan().lastIndexOf(s); }
-  bool contains(const StringSpan& s) const noexcept { return indexOf(s) >= 0; }
+  int indexOf(const StringSpan& s) const { return toSpan().indexOf(s); }
+  int lastIndexOf(const StringSpan& s) const { return toSpan().lastIndexOf(s); }
+  bool contains(const StringSpan& s) const { return indexOf(s) >= 0; }
 
-  bool startsWith(const StringSpan& s) const noexcept { return toSpan().startsWith(s); }
-  bool endsWith(const StringSpan& s) const noexcept { return toSpan().endsWith(s); }
+  bool startsWith(const StringSpan& s) const { return toSpan().startsWith(s); }
+  bool endsWith(const StringSpan& s) const { return toSpan().endsWith(s); }
 
-  friend void swap(String& x, String& y) noexcept { swap(x.impl_, y.impl_); }
-  friend HashCode partialHash(const String& s) noexcept;
+  bool isSourceOf(const char* ptr) const { return toSpan().isSourceOf(ptr); }
+
+  friend void swap(String& x, String& y) {
+    swap(x.data_, y.data_);
+    swap(x.length_, y.length_);
+    swap(x.capacity_, y.capacity_);
+  }
+  friend HashCode partialHash(const String& s);
+
+  static String fromLiteral(const char* data, int length) {
+    ASSERT(data[length] == '\0');
+    return String(data, length, LiteralCapacity);
+  }
+
+  friend const char* begin(const String& x) { return x.data_; }
+  friend const char* end(const String& x) { return x.data_ + x.length_; }
 
  private:
-  Rc<StringImpl> impl_;
+  const char* data_;
+  int length_;
+  int capacity_;
+
+  String(const char* data, int length, int capacity)
+      : data_(data), length_(length), capacity_(capacity) {}
+
+  void assign(StringSpan o);
+
+  static constexpr int LiteralCapacity = -1;
+
+  BASE_EXPORT static char EmptyData[1];
 };
 
-BASE_EXPORT bool operator==(const String& lhs, const String& rhs) noexcept;
-inline bool operator!=(const String& lhs, const String& rhs) noexcept { return !operator==(lhs, rhs); }
-BASE_EXPORT int compare(const String& lhs, String& rhs) noexcept;
+#define StringLiteral(text) String::fromLiteral(text, isizeof(text))
 
-#define StringLiteral(text) \
-  []() noexcept -> String { \
-    static StaticStringImpl<isizeof(text)> r = { \
-      { StringImplShape::StaticRefCount, isizeof(text) - 1, StringImplShape::NotInterned }, \
-      text \
-    }; \
-    return reinterpret_cast<StringImpl&>(r.shape); \
-  }
-
-inline String toString(String s) noexcept { return s; }
+inline String toString(String s) { return s; }
 inline String toString(const StringSpan& s) { return String(s); }
 
-inline String String::createUninitialized(int length, char*& out_data) {
-  return StringImpl::createUninitialized(length, out_data);
+inline String::String(String&& o)
+    : data_(exchange(o.data_, nullptr)),
+      length_(exchange(o.length_, 0)),
+      capacity_(exchange(o.capacity_, 0)) {
+  #if SANITIZER(ADDRESS)
+  __asan_poison_memory_region(&o, sizeof(o));
+  #endif
 }
 
 } // namespace stp

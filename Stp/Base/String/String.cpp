@@ -3,48 +3,88 @@
 
 #include "Base/String/String.h"
 
+#include "Base/Memory/Allocate.h"
 #include "Base/Type/Comparable.h"
 
 namespace stp {
+
+char String::EmptyData[1] = "";
 
 /**
  * @fn String::String(StringSpan text)
  * Construct a UTF-8 string.
  * A copy of given |text| is made for new string.
  */
-
-String String::isolate(String s) {
-  // Whether impl is safe to be moved to another thread ?
-  if (s.impl_->isStatic() ||
-      (s.impl_->hasOneRef() && !s.impl_->isInterned())) {
-    return move(s);
+String::String(StringSpan text) {
+  if (text.isEmpty()) {
+    data_ = "";
+    length_ = 0;
+    capacity_ = 0;
+  } else {
+    char* data = static_cast<char*>(allocateMemory(text.length() + 1));
+    length_ = text.length();
+    capacity_ = text.length();
+    uninitializedCopy(data, text.data(), text.length());
+    *(data + length_) = '\0';
+    data_ = data;
   }
-  return String(StringSpan(s));
+}
+
+String::String(const String& o) {
+  if (o.capacity_ > 0) {
+    char* data = static_cast<char*>(allocateMemory(o.length_ + 1));
+    uninitializedCopy(data, o.data_, o.length_ + 1);
+    data_ = data;
+    length_ = o.length_;
+    capacity_ = o.length_;
+  } else {
+    data_ = o.data_;
+    length_ = o.length_;
+    capacity_ = o.capacity_;
+  }
+}
+
+void String::assign(StringSpan o) {
+  char* data;
+  if (capacity_ < o.length()) {
+    if (capacity_ > 0) {
+      data = const_cast<char*>(data_);
+      data = static_cast<char*>(reallocateMemory(data, o.length() + 1));
+    } else {
+      data = static_cast<char*>(allocateMemory(o.length() + 1));
+    }
+  } else {
+    data = const_cast<char*>(data_);
+  }
+  uninitializedCopy(data, o.data(), o.length());
+  length_ = o.length();
+  *(data + length_) = '\0';
 }
 
 /**
  * Do not use this function for string literals.
  * @param cstr Null-terminated string UTF-8 encoded.
- * @return A new string value with copy of
+ * @return A new string value with copy of given C-string.
  */
 String String::fromCString(const char* cstr) {
   int length = static_cast<int>(::strlen(cstr));
-  return StringImpl::createFromCString(cstr, length);
+  if (length == 0)
+    return empty();
+
+  char* data = static_cast<char*>(allocateMemory(length + 1));
+  uninitializedCopy(data, cstr, length + 1);
+  return String(data, length, length);
 }
 
-bool operator==(const String& lhs, const String& rhs) noexcept {
-  if (lhs.length() != rhs.length())
-    return false;
-  return ::memcmp(lhs.data(), rhs.data(), lhs.length()) == 0;
-}
-
-int compare(const String& lhs, String& rhs) noexcept {
-  int common_length = min(lhs.length(), rhs.length());
-  int rv = ::memcmp(lhs.data(), rhs.data(), toUnsigned(common_length));
-  if (rv)
-    return rv;
-  return compare(lhs.length(), rhs.length());
-
+String String::createUninitialized(int length, char*& out_data) {
+  ASSERT(length >= 0);
+  if (length == 0) {
+    out_data = EmptyData;
+    return empty();
+  }
+  char* data = static_cast<char*>(allocateMemory(length + 1));
+  *(data + length) = '\0';
+  return String(data, length, length);
 }
 
 } // namespace stp

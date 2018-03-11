@@ -27,22 +27,22 @@ class Own {
       delete ptr_;
   }
 
-  Own(Own&& o) noexcept : ptr_(&o.leakRef()) {}
+  Own(Own&& o) : ptr_(&o.leakRef()) {}
 
   template<class U, TEnableIf<TIsConvertibleTo<U*, T*>>* = nullptr>
-  Own(Own<U>&& o) noexcept : ptr_(&o.leakRef()) {}
+  Own(Own<U>&& o) : ptr_(&o.leakRef()) {}
 
-  Own& operator=(Own&& o) noexcept {
-    Own moved = move(o); swap(*this, moved); return *this;
+  Own& operator=(Own&& o) {
+    exchange(*this, move(o)); return *this;
   }
   template<class U, TEnableIf<TIsConvertibleTo<U*, T*>>* = nullptr>
-  Own& operator=(Own<U>&& o) noexcept {
-    Own moved = move(o); swap(*this, moved); return *this;
+  Own& operator=(Own<U>&& o) {
+    exchange(*this, move(o)); return *this;
   }
 
-  explicit Own(T& object) noexcept : ptr_(&object) { ASSERT(ptr_); }
+  explicit Own(T& object) : ptr_(&object) { ASSERT(ptr_); }
 
-  [[nodiscard]] T& leakRef() noexcept {
+  [[nodiscard]] T& leakRef() {
     T& result = *exchange(ptr_, nullptr);
     #if SANITIZER(ADDRESS)
     __asan_poison_memory_region(this, sizeof(*this));
@@ -50,16 +50,16 @@ class Own {
     return result;
   }
 
-  T& operator*() const noexcept { ASSERT(ptr_); return *ptr_; }
-  T* operator->() const noexcept { ASSERT(ptr_); return ptr_; }
+  T& operator*() const { ASSERT(ptr_); return *ptr_; }
+  T* operator->() const { ASSERT(ptr_); return ptr_; }
 
-  T& get() const noexcept { ASSERT(ptr_); return *ptr_; }
-  operator T&() const noexcept { ASSERT(ptr_); return *ptr_; }
+  T& get() const { ASSERT(ptr_); return *ptr_; }
+  operator T&() const { ASSERT(ptr_); return *ptr_; }
 
   template<typename... TArgs>
   static Own create(TArgs&&... args);
 
-  friend void swap(Own& l, Own& r) noexcept { swap(l.ptr_, r.ptr_); }
+  friend void swap(Own& l, Own& r) { swap(l.ptr_, r.ptr_); }
 
  private:
   T* ptr_;

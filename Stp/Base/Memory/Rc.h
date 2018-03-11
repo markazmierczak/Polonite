@@ -38,11 +38,11 @@ class Rc {
   Rc(Rc<U>&& o) noexcept : ptr_(&o.leakRef()) {}
 
   Rc& operator=(Rc&& o) noexcept {
-    Rc moved = move(o); swap(*this, moved); return *this;
+    exchange(*this, move(o)); return *this;
   }
   template<typename U, TEnableIf<TIsConvertibleTo<U*, T*>>* = nullptr>
   Rc& operator=(Rc<U>&& o) noexcept {
-    Rc moved = move(o); swap(*this, moved); return *this;
+    exchange(*this, move(o)); return *this;
   }
 
   Rc(T& object) noexcept : ptr_(&object) { object.incRef(); }
