@@ -18,12 +18,12 @@ class BASE_EXPORT FileDescriptor {
   FileDescriptor() = default;
   ~FileDescriptor();
 
-  FileDescriptor(FileDescriptor&& other) : fd_(other.leakDescriptor()) {}
-  FileDescriptor& operator=(FileDescriptor&& other);
+  FileDescriptor(FileDescriptor&& other) noexcept : fd_(other.leakDescriptor()) {}
+  FileDescriptor& operator=(FileDescriptor&& other) noexcept;
 
-  explicit FileDescriptor(int fd) : fd_(fd) {}
+  explicit FileDescriptor(int fd) noexcept : fd_(fd) {}
 
-  [[nodiscard]] int leakDescriptor() { return exchange(fd_, InvalidFd); }
+  [[nodiscard]] int leakDescriptor() noexcept { return exchange(fd_, InvalidFd); }
 
   void reset(int new_fd = InvalidFd);
 
@@ -31,9 +31,9 @@ class BASE_EXPORT FileDescriptor {
   ALWAYS_INLINE bool isValid() const { return fd_ != InvalidFd; }
 
   [[nodiscard]] FileDescriptor duplicate();
-  [[nodiscard]] FileDescriptor tryDuplicate() { return FileDescriptor(::dup(fd_)); }
+  [[nodiscard]] FileDescriptor tryDuplicate() noexcept { return FileDescriptor(::dup(fd_)); }
 
-  [[nodiscard]] FileDescriptor tryDuplicateTo(int new_fd) {
+  [[nodiscard]] FileDescriptor tryDuplicateTo(int new_fd) noexcept {
     return FileDescriptor(IGNORE_EINTR(::dup2(fd_, new_fd)));
   }
   [[nodiscard]] FileDescriptor duplicateTo(int new_fd);

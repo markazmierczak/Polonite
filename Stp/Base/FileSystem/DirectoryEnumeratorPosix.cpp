@@ -23,7 +23,7 @@ SystemErrorCode DirectoryEnumerator::tryOpen(const FilePath& path) {
   return getLastPosixErrorCode();
 }
 
-void DirectoryEnumerator::close() {
+void DirectoryEnumerator::close() noexcept {
   ASSERT(isOpen());
   DIR* dir = exchange(current_dir_, nullptr);
   if (::closedir(dir) != 0)

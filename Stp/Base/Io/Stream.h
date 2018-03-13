@@ -25,7 +25,7 @@ class BASE_EXPORT Stream {
 
   virtual void close() = 0;
 
-  virtual bool isOpen() const = 0;
+  virtual bool isOpen() const noexcept = 0;
 
   virtual int readAtMost(MutableBufferSpan output) = 0;
   void read(MutableBufferSpan output);

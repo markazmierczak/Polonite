@@ -24,7 +24,7 @@ namespace stp {
 
 static constexpr int NibbleCount = Md5Digest::Length * 2;
 
-bool tryParse(StringSpan input, Md5Digest& out_digest) {
+bool tryParse(StringSpan input, Md5Digest& out_digest) noexcept {
   if (input.length() != NibbleCount)
     return false;
 
@@ -86,7 +86,7 @@ void format(TextWriter& out, const Md5Digest& digest, const StringSpan& opts) {
  * The core of the MD5 algorithm, this alters an existing MD5 hash to
  * reflect the addition of 16 longwords of new data.
  */
-void Md5Hasher::transform() {
+void Md5Hasher::transform() noexcept {
   uint32_t a, b, c, d;
 
   a = buf_[0];
@@ -174,7 +174,7 @@ void Md5Hasher::transform() {
  * Start MD5 accumulation.
  * Set bit count to 0 and buffer to mysterious initialization constants.
  */
-void Md5Hasher::reset() {
+void Md5Hasher::reset() noexcept {
   buf_[0] = 0x67452301;
   buf_[1] = 0xEFCDAB89;
   buf_[2] = 0x98BADCFE;
@@ -186,7 +186,7 @@ void Md5Hasher::reset() {
 /**
  * Update context to reflect the concatenation of another buffer full of bytes.
  */
-void Md5Hasher::update(BufferSpan input) {
+void Md5Hasher::update(BufferSpan input) noexcept {
   // Update bitcount
 
   auto* d = static_cast<const byte_t*>(input.data());
@@ -233,7 +233,7 @@ void Md5Hasher::update(BufferSpan input) {
  * Final wrapup - pad to 64-byte boundary with the bit pattern
  * 1 0* (64-bit count of bits processed, MSB-first)
  */
-void Md5Hasher::finish(Md5Digest& digest) {
+void Md5Hasher::finish(Md5Digest& digest) noexcept {
   // Compute number of bytes mod 64.
   unsigned count = (bits_[0] >> 3) & 0x3F;
 
@@ -265,7 +265,7 @@ void Md5Hasher::finish(Md5Digest& digest) {
   memcpy(&digest[0], buf_, 16);
 }
 
-Md5Digest computeMd5Digest(BufferSpan input) {
+Md5Digest computeMd5Digest(BufferSpan input) noexcept {
   Md5Digest digest(Md5Digest::NoInit);
   Md5Hasher hasher;
   hasher.update(input);

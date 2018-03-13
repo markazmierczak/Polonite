@@ -12,14 +12,14 @@ class BASE_EXPORT CryptoRandom {
  public:
   CryptoRandom() = default;
 
-  void generate(MutableBufferSpan buffer);
+  void generate(MutableBufferSpan buffer) noexcept;
 
-  uint32_t nextUint32() { return generateTrivial<uint32_t>(); }
-  uint64_t nextUint64() { return generateTrivial<uint64_t>(); }
+  uint32_t nextUint32() noexcept { return generateTrivial<uint32_t>(); }
+  uint64_t nextUint64() noexcept { return generateTrivial<uint64_t>(); }
 
  private:
   template<typename T>
-  T generateTrivial() {
+  T generateTrivial() noexcept {
     T x;
     generate(MutableBufferSpan(&x, 1));
     return x;

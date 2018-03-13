@@ -16,36 +16,36 @@ template<typename TTo, typename TFrom, typename TEnabler = void>
 struct TIsInstanceOf;
 
 template<class T, class U>
-inline bool isInstanceOf(U& x) {
+inline bool isInstanceOf(U& x) noexcept {
   const U& y = x;
   return TIsBaseOf<T, U> || TIsInstanceOf<T, U>::check(y);
 }
 
 template<class T, class U>
-inline bool isInstanceOf(U* x) {
+inline bool isInstanceOf(U* x) noexcept {
   const U& y = *x;
   return TIsBaseOf<T, U> || TIsInstanceOf<T, U>::check(y);
 }
 
 template<class T, class U, class R = TApplyCV<U, T>>
-inline R& objectCast(U& x) {
+inline R& objectCast(U& x) noexcept {
   ASSERT(isInstanceOf<T>(x), "argument of incompatible type!");
   return static_cast<R&>(x);
 }
 
 template<class T, class U, class R = TApplyCV<U, T>>
-inline R* objectCast(U* x) {
+inline R* objectCast(U* x) noexcept {
   ASSERT(!x || isInstanceOf<T>(*x), "argument of incompatible type!");
   return static_cast<R*>(x);
 }
 
 template<class T, class U, class R = TApplyCV<U, T>>
-inline R* tryObjectCast(U& x) {
+inline R* tryObjectCast(U& x) noexcept {
   return isInstanceOf<T>(x) ? static_cast<R*>(&x) : nullptr;
 }
 
 template<class T, class U, class R = TApplyCV<U, T>>
-inline R* tryObjectCast(U* x) {
+inline R* tryObjectCast(U* x) noexcept {
   return x ? stp::tryObjectCast<T>(*x) : nullptr;
 }
 

@@ -49,7 +49,7 @@ namespace {
 class NullStream final : public Stream {
  public:
   void close() override { ASSERT(false); }
-  bool isOpen() const override { return true; }
+  bool isOpen() const noexcept override { return true; }
   int readAtMost(MutableBufferSpan output) override { return 0; }
   void write(BufferSpan output) override {}
   void positionalRead(int64_t offset, MutableBufferSpan output) override;

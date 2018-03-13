@@ -101,7 +101,7 @@ int BufferedStream::writeToBuffer(BufferSpan input) {
   return bytes_to_write;
 }
 
-bool BufferedStream::isOpen() const {
+bool BufferedStream::isOpen() const noexcept {
   return underlying_ != nullptr;
 }
 

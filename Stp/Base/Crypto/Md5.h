@@ -13,26 +13,26 @@ class Md5Digest {
   static constexpr int Length = 16;
 
   enum NoInitTag { NoInit };
-  explicit Md5Digest(NoInitTag) {}
+  explicit Md5Digest(NoInitTag) noexcept {}
 
-  explicit Md5Digest(Span<byte_t> raw) {
+  explicit Md5Digest(Span<byte_t> raw) noexcept {
     ASSERT(raw.size() == Length);
     uninitializedCopy(raw_, raw.data(), Length);
   }
 
-  const byte_t& operator[](int pos) const {
+  const byte_t& operator[](int pos) const noexcept {
     ASSERT(0 <= pos && pos < Length);
     return raw_[pos];
   }
-  byte_t& operator[](int pos) {
+  byte_t& operator[](int pos) noexcept {
     ASSERT(0 <= pos && pos < Length);
     return raw_[pos];
   }
 
-  friend bool operator==(const Md5Digest& l, const Md5Digest& r) {
+  friend bool operator==(const Md5Digest& l, const Md5Digest& r) noexcept {
     return makeSpan(l.raw_) == makeSpan(r.raw_);
   }
-  friend bool operator!=(const Md5Digest& l, const Md5Digest& r) {
+  friend bool operator!=(const Md5Digest& l, const Md5Digest& r) noexcept {
     return !operator==(l, r);
   }
 
@@ -40,22 +40,22 @@ class Md5Digest {
   byte_t raw_[Length];
 };
 
-BASE_EXPORT Md5Digest computeMd5Digest(BufferSpan input);
-BASE_EXPORT bool tryParse(StringSpan s, Md5Digest& out_digest);
+BASE_EXPORT Md5Digest computeMd5Digest(BufferSpan input) noexcept;
+BASE_EXPORT bool tryParse(StringSpan s, Md5Digest& out_digest) noexcept;
 
 BASE_EXPORT void format(TextWriter& out, const Md5Digest& digest, const StringSpan& opts);
 BASE_EXPORT TextWriter& operator<<(TextWriter& out, const Md5Digest& digest);
 
 class Md5Hasher {
  public:
-  Md5Hasher() { reset(); }
+  Md5Hasher() noexcept { reset(); }
 
-  BASE_EXPORT void reset();
-  BASE_EXPORT void update(BufferSpan input);
-  BASE_EXPORT void finish(Md5Digest& out_digest);
+  BASE_EXPORT void reset() noexcept;
+  BASE_EXPORT void update(BufferSpan input) noexcept;
+  BASE_EXPORT void finish(Md5Digest& out_digest) noexcept;
 
  private:
-  void transform();
+  void transform() noexcept;
 
   uint32_t buf_[4];
   uint32_t bits_[2];

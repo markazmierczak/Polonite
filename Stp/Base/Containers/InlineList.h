@@ -5,6 +5,7 @@
 #define STP_BASE_CONTAINERS_INLINELIST_H_
 
 #include "Base/Containers/Span.h"
+#include "Base/Error/BasicExceptions.h"
 #include "Base/Memory/Allocate.h"
 #include "Base/Type/Limits.h"
 
@@ -104,7 +105,7 @@ class InlineListBase {
   int capacity_;
   AlignedStorage<T> first_item_;
 
-  explicit InlineListBase(int capacity) : data_(getInlineData()), capacity_(capacity) {}
+  explicit InlineListBase(int capacity) noexcept : data_(getInlineData()), capacity_(capacity) {}
   ~InlineListBase() { destroyAndFree(data_, size_, capacity_); }
 
   void destroyAndFree(T* data, int size, int capacity);
@@ -179,11 +180,11 @@ class InlineList : public InlineListBase<T> {
  public:
   using typename SuperType::SpanType;
 
-  InlineList() : InlineListBase<T>(N) {}
+  InlineList() noexcept : InlineListBase<T>(N) {}
   ~InlineList() = default;
 
-  InlineList(InlineList&& other);
-  InlineList& operator=(InlineList&& other);
+  InlineList(InlineList&& other) noexcept;
+  InlineList& operator=(InlineList&& other) noexcept;
 
   InlineList(const InlineList& other) : InlineListBase<T>(N) { this->assignExternal(other); }
   InlineList& operator=(const InlineList& other);
@@ -199,12 +200,12 @@ class InlineList : public InlineListBase<T> {
   void shrinkCapacity(int request);
   void shrinkToFit() { shrinkCapacity(this->size_); }
 
-  friend void swap(InlineList& l, InlineList& r) { l.swapWith(r); }
+  friend void swap(InlineList& l, InlineList& r) noexcept { l.swapWith(r); }
 
  private:
   detail::InlineListStorage<T, N> additional_items_;
 
-  void swapWith(InlineList& other);
+  void swapWith(InlineList& other) noexcept;
 };
 
 // InlineList is not zero-constructible (capacity_ must be set to N initially).
@@ -219,7 +220,7 @@ inline void InlineListBase<T>::destroyAndFree(T* data, int size, int capacity) {
 }
 
 template<typename T, int N>
-void InlineList<T, N>::swapWith(InlineList& other) {
+void InlineList<T, N>::swapWith(InlineList& other) noexcept {
   if (this->isInline() == other.isInline()) {
     if (this->isInline()) {
       InlineList& small = this->size_ < other.size_ ? *this : other;
@@ -246,7 +247,7 @@ void InlineList<T, N>::swapWith(InlineList& other) {
 }
 
 template<typename T, int N>
-inline InlineList<T, N>::InlineList(InlineList&& other) : InlineListBase<T>(N) {
+inline InlineList<T, N>::InlineList(InlineList&& other) noexcept : InlineListBase<T>(N) {
   if (other.isInline()) {
     uninitializedRelocate(this->data_, other.data_, other.size_);
   } else {
@@ -257,7 +258,7 @@ inline InlineList<T, N>::InlineList(InlineList&& other) : InlineListBase<T>(N) {
 }
 
 template<typename T, int N>
-inline InlineList<T, N>& InlineList<T, N>::operator=(InlineList&& other) {
+inline InlineList<T, N>& InlineList<T, N>::operator=(InlineList&& other) noexcept {
   if (!this->isInline())
     destroyAndFree(this->data_, this->size_, this->capacity_);
   if (other.isInline()) {

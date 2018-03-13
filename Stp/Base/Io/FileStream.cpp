@@ -3,6 +3,8 @@
 
 #include "Base/Io/FileStream.h"
 
+#include "Base/FileSystem/FileSystemException.h"
+
 namespace stp {
 
 FileStream::FileStream(NativeFile native_file, FileAccess access)
@@ -22,7 +24,7 @@ FileStream::~FileStream() {
   }
 }
 
-bool FileStream::isOpen() const {
+bool FileStream::isOpen() const noexcept {
   return native_.isValid();
 }
 

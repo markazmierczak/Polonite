@@ -9,7 +9,7 @@
 namespace stp {
 
 template<typename T, typename TPredicate>
-constexpr int findIndexInSpan(Span<T> span, TPredicate&& matcher) {
+constexpr int findIndexInSpan(Span<T> span, TPredicate&& matcher) noexcept {
   auto* d = span.data();
   for (int i = 0, s = span.size(); i < s; ++i) {
     if (matcher(d[i]))
@@ -19,7 +19,7 @@ constexpr int findIndexInSpan(Span<T> span, TPredicate&& matcher) {
 }
 
 template<typename T, typename TPredicate>
-constexpr int findLastIndexInSpan(Span<T> span, TPredicate&& matcher) {
+constexpr int findLastIndexInSpan(Span<T> span, TPredicate&& matcher) noexcept {
   auto* d = span.data();
   for (int i = span.size() - 1; i >= 0; --i) {
     if (matcher(d[i]))
@@ -29,12 +29,12 @@ constexpr int findLastIndexInSpan(Span<T> span, TPredicate&& matcher) {
 }
 
 template<typename T, typename TPredicate>
-constexpr bool existsInSpan(Span<T> span, TPredicate&& matcher) {
+constexpr bool existsInSpan(Span<T> span, TPredicate&& matcher) noexcept {
   return findIndexInSpan(span, forward<TPredicate>(matcher)) >= 0;
 }
 
 template<typename T, typename TItem>
-inline int countInSpan(Span<T> span, const TItem& item) {
+inline int countInSpan(Span<T> span, const TItem& item) noexcept {
   int count = 0;
   while (true) {
     int pos = span.indexOf(item);
@@ -47,7 +47,7 @@ inline int countInSpan(Span<T> span, const TItem& item) {
 }
 
 template<typename T, typename TItem, typename TPredicate>
-constexpr int countMatchingInSpan(Span<T> span, const TItem& item, TPredicate&& match) {
+constexpr int countMatchingInSpan(Span<T> span, const TItem& item, TPredicate&& match) noexcept {
   auto* d = span.data();
   int n = 0;
   for (int i = 0, s = span.size(); i < s; ++i) {

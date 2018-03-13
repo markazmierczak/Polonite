@@ -20,20 +20,20 @@ class Span {
 
   typedef T ItemType;
 
-  constexpr Span()
+  constexpr Span() noexcept
       : data_(nullptr), size_(0) {}
 
-  constexpr Span(const T* data, int size)
+  constexpr Span(const T* data, int size) noexcept
       : data_(data), size_(size) { ASSERT(size >= 0); }
 
   template<int N>
-  constexpr Span(const T (&array)[N])
+  constexpr Span(const T (&array)[N]) noexcept
       : data_(array), size_(N) {}
 
-  constexpr Span(InitializerList<T> ilist)
+  constexpr Span(InitializerList<T> ilist) noexcept
       : data_(ilist.begin()), size_(static_cast<int>(ilist.size())) {}
 
-  explicit Span(BufferSpan buffer)
+  explicit Span(BufferSpan buffer) noexcept
       : data_(reinterpret_cast<const T*>(buffer.data())),
         size_(static_cast<int>(toUnsigned(buffer.size()) / sizeof(T))) {
     static_assert(TIsTrivial<T>, "!");
@@ -79,9 +79,9 @@ class Span {
   constexpr void removeSuffix(int n) { truncate(size_ - n); }
 
   template<typename U>
-  int indexOf(const U& item) const;
+  int indexOf(const U& item) const noexcept;
   template<typename U>
-  int lastIndexOf(const U& item) const;
+  int lastIndexOf(const U& item) const noexcept;
   template<typename U>
   bool contains(const U& item) const { return indexOf(item) >= 0; }
 
@@ -105,24 +105,24 @@ class MutableSpan {
 
   typedef T ItemType;
 
-  constexpr MutableSpan()
+  constexpr MutableSpan() noexcept
       : data_(nullptr), size_(0) {}
 
-  constexpr MutableSpan(T* data, int size)
+  constexpr MutableSpan(T* data, int size) noexcept
       : data_(data), size_(size) { ASSERT(size >= 0); }
 
   template<int N>
-  constexpr MutableSpan(T (&array)[N])
+  constexpr MutableSpan(T (&array)[N]) noexcept
       : data_(array), size_(N) {}
 
-  explicit MutableSpan(MutableBufferSpan buffer)
+  explicit MutableSpan(MutableBufferSpan buffer) noexcept
       : data_(reinterpret_cast<T*>(buffer.data())),
         size_(static_cast<int>(toUnsigned(buffer.size()) / sizeof(T))) {
     static_assert(TIsTrivial<T>, "!");
     ASSERT(toUnsigned(buffer.size()) % sizeof(T) == 0);
   }
 
-  constexpr operator Span<T>() const { return Span<T>(data_, size_); }
+  constexpr operator Span<T>() const noexcept { return Span<T>(data_, size_); }
 
   ALWAYS_INLINE constexpr const T* data() const { return data_; }
   ALWAYS_INLINE constexpr T* data() { return data_; }
@@ -254,7 +254,7 @@ inline bool operator!=(const T (&lhs)[N], const MutableSpan<T>& rhs) {
 
 template<typename T>
 template<typename U>
-inline int Span<T>::indexOf(const U& item) const {
+inline int Span<T>::indexOf(const U& item) const noexcept {
   const T* d = data_;
   for (int i = 0, s = size_; i < s; ++i) {
     if (d[i] == item)
@@ -265,7 +265,7 @@ inline int Span<T>::indexOf(const U& item) const {
 
 template<typename T>
 template<typename U>
-inline int Span<T>::lastIndexOf(const U& item) const {
+inline int Span<T>::lastIndexOf(const U& item) const noexcept {
   const T* d = data_;
   for (int i = size_ - 1; i >= 0; --i) {
     if (d[i] == item)

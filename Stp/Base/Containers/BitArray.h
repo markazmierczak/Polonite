@@ -22,7 +22,7 @@ class BitReference {
   // uintptr_t is selected as Word type for maximum performance.
   typedef uintptr_t WordType;
 
-  BitReference(WordType* word, WordType bit)
+  BitReference(WordType* word, WordType bit) noexcept
       : word_(word), bit_(bit) {}
 
   BitReference(const BitReference&) = default;
@@ -70,9 +70,9 @@ class BitArray {
  public:
   static_assert(N > 0, "!");
 
-  constexpr BitArray() : words_() {}
+  constexpr BitArray() noexcept : words_() {}
 
-  explicit constexpr BitArray(uint64_t x);
+  explicit constexpr BitArray(uint64_t x) noexcept;
 
   bool operator[](int index) const { return makeRef(index); }
   BitReference operator[](int index) { return makeRef(index); }
@@ -126,7 +126,7 @@ class BitArray {
     BitArray rv = lhs; rv ^= rhs; return rv;
   }
 
-  friend void swap(BitArray& l, BitArray& r) { swap(l.words_, r.words_); }
+  friend void swap(BitArray& l, BitArray& r) noexcept { swap(l.words_, r.words_); }
   friend bool operator==(const BitArray& l, const BitArray& r) {
     return ::memcmp(l.words_, r.words_, sizeof(words_)) == 0;
   }
@@ -185,7 +185,7 @@ template<int N>
 struct TIsTriviallyEqualityComparableTmpl<BitArray<N>> : TTrue {};
 
 template<int N>
-constexpr BitArray<N>::BitArray(uint64_t x) : words_() {
+constexpr BitArray<N>::BitArray(uint64_t x) noexcept : words_() {
   for (int i = 0; i < WordCount; ++i) {
     if (sizeof(WordType) == sizeof(uint64_t)) {
       words_[i] = x;

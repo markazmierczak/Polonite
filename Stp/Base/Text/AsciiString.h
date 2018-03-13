@@ -15,12 +15,12 @@ BASE_EXPORT int compareIgnoringAsciiCase(const char* lhs, const char* rhs, int l
 
 } // namespace detail
 
-inline bool equalIgnoringAsciiCase(StringSpan lhs, StringSpan rhs) {
+inline bool equalIgnoringAsciiCase(StringSpan lhs, StringSpan rhs) noexcept {
   return lhs.length() == rhs.length() &&
       detail::compareIgnoringAsciiCase(lhs.data(), rhs.data(), lhs.length()) == 0;
 }
 
-BASE_EXPORT int compareIgnoringAsciiCase(StringSpan lhs, StringSpan rhs);
+BASE_EXPORT int compareIgnoringAsciiCase(StringSpan lhs, StringSpan rhs) noexcept;
 
 struct IgnoringAsciiCaseComparer {
   int operator()(StringSpan lhs, StringSpan rhs) const { return compareIgnoringAsciiCase(lhs, rhs); }
@@ -42,7 +42,7 @@ BASE_EXPORT int lastIndexOfIgnoringAsciiCase(const StringSpan& str, char c);
 BASE_EXPORT int indexOfIgnoringAsciiCase(StringSpan haystack, StringSpan needle);
 BASE_EXPORT int lastIndexOfIgnoringAsciiCase(StringSpan haystack, StringSpan needle);
 
-constexpr int countLeadingSpaceAscii(StringSpan s) {
+constexpr int countLeadingSpaceAscii(StringSpan s) noexcept {
   int i = 0;
   for (; i < s.length(); ++i) {
     if (!isSpaceAscii(s[i]))
@@ -51,7 +51,7 @@ constexpr int countLeadingSpaceAscii(StringSpan s) {
   return i;
 }
 
-constexpr int countTrailingSpaceAscii(StringSpan s) {
+constexpr int countTrailingSpaceAscii(StringSpan s) noexcept {
   int i = s.length();
   while (i > 0) {
     int next = i - 1;

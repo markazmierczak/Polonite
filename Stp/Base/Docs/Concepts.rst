@@ -1,6 +1,8 @@
 
 **MoveConstructible**
 
+   Move construction/assignment must be ``noexcept`` always.
+
 **Swappable**
 
    ``void swap(T& x, T& y)``

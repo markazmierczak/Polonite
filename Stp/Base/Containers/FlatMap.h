@@ -37,8 +37,8 @@ class FlatMap {
   FlatMap() = default;
   ~FlatMap() = default;
 
-  FlatMap(FlatMap&& other) : list_(move(other.list_)) {}
-  FlatMap& operator=(FlatMap&& other) { list_ = move(other.list_); return *this; }
+  FlatMap(FlatMap&& other) noexcept : list_(move(other.list_)) {}
+  FlatMap& operator=(FlatMap&& other) noexcept { list_ = move(other.list_); return *this; }
 
   FlatMap(const FlatMap& other) : list_(other.list_) {}
   FlatMap& operator=(const FlatMap& other) { list_ = other.list_; return *this; }
@@ -150,7 +150,7 @@ class FlatMap {
   ListType list_;
 
   struct OrderedUniqueTag {};
-  FlatMap(OrderedUniqueTag, ListType&& list) : list_(move(list)) {}
+  FlatMap(OrderedUniqueTag, ListType&& list) noexcept : list_(move(list)) {}
 };
 
 template<typename K, typename T, class TList>

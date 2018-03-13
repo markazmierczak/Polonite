@@ -48,8 +48,8 @@ class BASE_EXPORT FilePathSpan {
 
   constexpr FilePathSpan() = default;
 
-  constexpr FilePathSpan(const CharType* data, int size) : chars_(data, size) {}
-  constexpr explicit FilePathSpan(Span<CharType> native) : chars_(native) {}
+  constexpr FilePathSpan(const CharType* data, int size) noexcept : chars_(data, size) {}
+  constexpr explicit FilePathSpan(Span<CharType> native) noexcept : chars_(native) {}
 
   ALWAYS_INLINE constexpr const CharType* data() const { return chars_.data(); }
   ALWAYS_INLINE constexpr int size() const { return chars_.size(); }

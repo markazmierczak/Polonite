@@ -375,20 +375,20 @@ struct TIsSwappableTmpl;
 } // namespace detail
 
 template<typename T, TEnableIf<detail::TIsGenericSwappable<T>>* = nullptr>
-constexpr void swap(T& x, T& y) {
+constexpr void swap(T& x, T& y) noexcept {
   T t(move(x));
   x = move(y);
   y = move(t);
 }
 
 template<typename T, int N, TEnableIf<detail::TIsSwappableTmpl<T>::Value>* = nullptr>
-constexpr void swap(T (&a)[N], T (&b)[N]) {
+constexpr void swap(T (&a)[N], T (&b)[N]) noexcept {
   for (int i = 0; i < N; ++i)
     swap(a[i], b[i]);
 }
 
 template<typename T, typename U = T>
-constexpr T exchange(T& obj, U&& new_val) {
+constexpr T exchange(T& obj, U&& new_val) noexcept {
   T val = forward<U>(new_val);
   swap(val, obj);
   return val;
@@ -415,7 +415,7 @@ constexpr bool TIsTriviallyRelocatable = TIsTriviallyRelocatableTmpl<T>::Value;
 
 
 template<typename T>
-inline void destroyObject(T& item) {
+inline void destroyObject(T& item) noexcept {
   item.~T();
 }
 
@@ -452,12 +452,12 @@ constexpr bool TIsEqualityComparable = TIsEqualityComparableWith<T, T>;
 
 struct DefaultEqualityComparer {
   template<typename T, typename U>
-  constexpr bool operator()(const T& x, const U& y) const {
+  constexpr bool operator()(const T& x, const U& y) const noexcept {
     return x == y;
   }
 };
 
-BASE_EXPORT HashCode hashBuffer(const void* data, int size);
+BASE_EXPORT HashCode hashBuffer(const void* data, int size) noexcept;
 
 #if SANITIZER(ADDRESS)
 extern "C" void __asan_poison_memory_region(void const volatile *addr, size_t size);

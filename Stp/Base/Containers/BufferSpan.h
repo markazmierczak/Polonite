@@ -13,19 +13,19 @@ BASE_EXPORT void formatBuffer(TextWriter& out, const void* data, int size);
 
 class BufferSpan {
  public:
-  constexpr BufferSpan()
+  constexpr BufferSpan() noexcept
       : data_(nullptr), size_(0) {}
 
   template<typename T, TEnableIf<TIsVoid<T>>* = nullptr>
-  explicit constexpr BufferSpan(const T* data, int size)
+  explicit constexpr BufferSpan(const T* data, int size) noexcept
       : data_(static_cast<const byte_t*>(data)), size_(size) {}
 
   template<typename T, TEnableIf<TIsTrivial<T>>* = nullptr>
-  explicit constexpr BufferSpan(const T* data, int size)
+  explicit constexpr BufferSpan(const T* data, int size) noexcept
       : data_(reinterpret_cast<const byte_t*>(data)), size_(size * isizeof(T)) {}
 
   template<typename T, int N, TEnableIf<TIsTrivial<T>>* = nullptr>
-  explicit constexpr BufferSpan(const T (&array)[N])
+  explicit constexpr BufferSpan(const T (&array)[N]) noexcept
       : BufferSpan(array, N - TIsCharacter<T>) {
     if constexpr (TIsCharacter<T>)
       ASSERT(array[N - 1] == '\0');
@@ -91,25 +91,25 @@ class BufferSpan {
 
 class MutableBufferSpan {
  public:
-  constexpr MutableBufferSpan()
+  constexpr MutableBufferSpan() noexcept
       : data_(nullptr), size_(0) {}
 
   template<typename T, TEnableIf<TIsVoid<T> && !TIsConst<T>>* = nullptr>
-  explicit constexpr MutableBufferSpan(T* data, int size)
+  explicit constexpr MutableBufferSpan(T* data, int size) noexcept
       : data_(static_cast<byte_t*>(data)), size_(size) {}
 
   template<typename T, TEnableIf<TIsTrivial<T> && !TIsConst<T>>* = nullptr>
-  explicit constexpr MutableBufferSpan(T* data, int size)
+  explicit constexpr MutableBufferSpan(T* data, int size) noexcept
       : data_(reinterpret_cast<byte_t*>(data)), size_(size * isizeof(T)) {}
 
   template<typename T, int N, TEnableIf<TIsTrivial<T> && !TIsConst<T>>* = nullptr>
-  explicit constexpr MutableBufferSpan(T (&array)[N])
+  explicit constexpr MutableBufferSpan(T (&array)[N]) noexcept
       : MutableBufferSpan(array, N - TIsCharacter<T>) {
     if constexpr (TIsCharacter<T>)
       ASSERT(array[N - 1] == '\0');
   }
 
-  constexpr operator BufferSpan() const { return BufferSpan(data_, size_); }
+  constexpr operator BufferSpan() const noexcept { return BufferSpan(data_, size_); }
 
   ALWAYS_INLINE constexpr const void* data() const { return data_; }
   ALWAYS_INLINE constexpr void* data() { return data_; }

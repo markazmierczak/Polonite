@@ -27,7 +27,7 @@ int compareIgnoringAsciiCase(const char* lhs, const char* rhs, int length) {
 
 } // namespace detail
 
-int compareIgnoringAsciiCase(StringSpan lhs, StringSpan rhs) {
+int compareIgnoringAsciiCase(StringSpan lhs, StringSpan rhs) noexcept {
   int min_size = min(lhs.length(), rhs.length());
   int rv = detail::compareIgnoringAsciiCase(lhs.data(), rhs.data(), min_size);
   return rv != 0 ? rv : compare(lhs.length(), rhs.length());

@@ -51,7 +51,7 @@ class BASE_EXPORT FileStream final : public Stream {
       NativeFileLifetime lifetime = AutoClose);
 
   void close() override;
-  bool isOpen() const override;
+  bool isOpen() const noexcept override;
   int readAtMost(MutableBufferSpan output) override;
   void write(BufferSpan input) override;
   void positionalRead(int64_t offset, MutableBufferSpan output) override;

@@ -15,11 +15,11 @@ class BASE_EXPORT FilePath {
   typedef FilePathChar CharType;
   typedef FilePathSpan SpanType;
 
-  FilePath() = default;
+  FilePath() noexcept = default;
   ~FilePath() = default;
 
-  FilePath(FilePath&& other) : chars_(move(other.chars_)) {}
-  FilePath& operator=(FilePath&& other) { chars_ = move(other.chars_); return *this; }
+  FilePath(FilePath&& other) noexcept : chars_(move(other.chars_)) {}
+  FilePath& operator=(FilePath&& other) noexcept { chars_ = move(other.chars_); return *this; }
 
   FilePath(const FilePath& other) : chars_(other.chars_) {}
   FilePath& operator=(const FilePath& other) { return operator=(other.toSpan()); }
@@ -100,7 +100,7 @@ class BASE_EXPORT FilePath {
   friend bool operator< (const FilePath& l, const FilePathSpan& r) { return l.toSpan() <  r; }
   friend bool operator> (const FilePath& l, const FilePathSpan& r) { return l.toSpan() >  r; }
 
-  friend void swap(FilePath& l, FilePath& r) { swap(l.chars_, r.chars_); }
+  friend void swap(FilePath& l, FilePath& r) noexcept { swap(l.chars_, r.chars_); }
   friend bool operator==(const FilePath& l, FilePathSpan r) { return l.toSpan() == r; }
   friend bool operator!=(const FilePath& l, FilePathSpan r) { return !operator==(l, r); }
   friend HashCode partialHash(const FilePath& x) { return partialHash(x.toSpan()); }

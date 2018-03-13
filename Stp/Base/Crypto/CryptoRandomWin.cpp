@@ -14,7 +14,7 @@
 
 namespace stp {
 
-void CryptoRandom::generate(MutableBufferSpan buffer) {
+void CryptoRandom::generate(MutableBufferSpan buffer) noexcept {
   bool success = RtlGenRandom(buffer.data(), toUnsigned(buffer.size())) != FALSE;
   ASSERT(success);
 }

@@ -48,7 +48,7 @@ SystemErrorCode DirectoryEnumerator::tryOpen(const FilePath& path) {
   return error;
 }
 
-void DirectoryEnumerator::close() {
+void DirectoryEnumerator::close() noexcept {
   ASSERT(isOpen());
   pattern_.clear();
   if (status_ != Status::Empty) {

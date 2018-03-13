@@ -17,7 +17,7 @@ namespace stp {
 //  return result;
 //}
 
-HashCode TextEncoding::HashImpl() const {
+HashCode TextEncoding::HashImpl() const noexcept {
   return partialHash(this);
 }
 
@@ -39,7 +39,7 @@ static inline StringSpan RemoveNonAlphaNumericPrefix(StringSpan s) {
   return s;
 }
 
-bool TextEncoding::AreNamesMatching(StringSpan lhs, StringSpan rhs) {
+bool TextEncoding::AreNamesMatching(StringSpan lhs, StringSpan rhs) noexcept {
   if (lhs == rhs)
     return true;
 

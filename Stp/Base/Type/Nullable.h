@@ -118,7 +118,7 @@ class Nullable {
     return *this;
   }
 
-  constexpr Nullable& operator=(const T& other) {
+  constexpr Nullable& operator=(const T& other) noexcept(noexcept(declval<T&>() = other)) {
     if (isNull())
       init(other);
     else
@@ -126,7 +126,7 @@ class Nullable {
     return *this;
   }
 
-  friend void swap(Nullable& l, Nullable& r) {
+  friend void swap(Nullable& l, Nullable& r) noexcept {
     if (l.isNull() == r.isNull()) {
       if (l)
         swap(*l, *r);
@@ -175,7 +175,7 @@ class Nullable {
     storage_.is_valid = true;
   }
 
-  void relocate(Nullable& other) {
+  void relocate(Nullable& other) noexcept {
     ASSERT(!storage_.is_valid && other.storage_.is_valid);
     storage_.is_valid = true;
     storage_.is_valid = false;

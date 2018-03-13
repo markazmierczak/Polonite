@@ -33,7 +33,7 @@ class DirectoryEnumerator {
   void open(const FilePath& path, StringSpan pattern);
   SystemErrorCode tryOpen(const FilePath& path, StringSpan pattern);
 
-  void close();
+  void close() noexcept;
 
   bool isOpen() const;
 

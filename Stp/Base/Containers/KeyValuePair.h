@@ -15,14 +15,14 @@ class KeyValuePair {
   KeyValuePair(TKey&& key, TValue&& value)
       : key_(forward<TKey>(key)), value_(forward<TValue>(value)) {}
 
-  KeyValuePair(KeyValuePair&& o) : key_(move(o.key_)), value_(move(o.value_)) {}
-  KeyValuePair& operator=(KeyValuePair&& o);
+  KeyValuePair(KeyValuePair&& o) noexcept : key_(move(o.key_)), value_(move(o.value_)) {}
+  KeyValuePair& operator=(KeyValuePair&& o) noexcept;
 
   const K& key() const { return key_; }
   const T& value() const { return value_; }
   T& value() { return value_; }
 
-  friend void swap(KeyValuePair& l, KeyValuePair& r) {
+  friend void swap(KeyValuePair& l, KeyValuePair& r) noexcept {
     swap(l.key_, r.key_);
     swap(l.value_, r.value_);
   }
@@ -52,7 +52,7 @@ struct TIsTriviallyEqualityComparableTmpl<KeyValuePair<K, T>>
                     sizeof(KeyValuePair<K, T>) == sizeof(K) + sizeof(T)> {};
 
 template<typename K, typename T>
-inline KeyValuePair<K, T>& KeyValuePair<K, T>::operator=(KeyValuePair&& o) {
+inline KeyValuePair<K, T>& KeyValuePair<K, T>::operator=(KeyValuePair&& o) noexcept {
   key_ = move(o.key_);
   value_ = move(o.value_);
   return *this;

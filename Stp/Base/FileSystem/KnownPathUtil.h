@@ -31,6 +31,17 @@ inline FilePath resolveDirectory(Key& key, ProvideType provider, Option option) 
   return detail::resolveInternal(key, provider, true, option);
 }
 
+class BASE_EXPORT NotFoundException : public Exception {
+ public:
+  explicit NotFoundException(FilePath path) noexcept;
+  StringSpan getName() const noexcept override;
+
+  const FilePath& getPath() const noexcept { return path_; }
+
+ private:
+  FilePath path_;
+};
+
 } // namespace known_path
 } // namespace stp
 

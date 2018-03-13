@@ -20,8 +20,8 @@ class List {
   List() : data_(nullptr), size_(0), capacity_(0) {}
   ~List() { destroyAndFree(data_, size_, capacity_); }
 
-  List(List&& other);
-  List& operator=(List&& other);
+  List(List&& other) noexcept;
+  List& operator=(List&& other) noexcept;
 
   List(const List& other) { assignExternal(other); }
   List& operator=(const List& other);
@@ -98,7 +98,7 @@ class List {
   List& operator+=(T item) { add(move(item)); return *this; }
   List& operator+=(SpanType range) { append(range); return *this; }
 
-  friend void swap(List& l, List& r) {
+  friend void swap(List& l, List& r) noexcept {
     swap(l.data_, r.data_);
     swap(l.size_, r.size_);
     swap(l.capacity_, r.capacity_);
@@ -180,13 +180,13 @@ inline MutableBufferSpan makeBufferSpan(List<T>& list) {
 }
 
 template<typename T>
-inline List<T>::List(List&& other)
+inline List<T>::List(List&& other) noexcept
     : data_(exchange(other.data_, nullptr)),
       size_(exchange(other.size_, 0)),
       capacity_(exchange(other.capacity_, 0)) {}
 
 template<typename T>
-inline List<T>& List<T>::operator=(List&& other) {
+inline List<T>& List<T>::operator=(List&& other) noexcept {
   destroyAndFree(data_, size_, capacity_);
   data_ = exchange(other.data_, nullptr);
   size_ = exchange(other.size_, 0);
