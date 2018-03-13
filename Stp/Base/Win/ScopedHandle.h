@@ -17,26 +17,26 @@ class ScopedHandle;
 
 class BASE_EXPORT ScopedHandle {
  public:
-  ScopedHandle() : handle_(INVALID_HANDLE_VALUE) {}
+  ScopedHandle() noexcept : handle_(INVALID_HANDLE_VALUE) {}
 
   ~ScopedHandle() {
     if (IsValid())
       CloseHandle(handle_);
   }
 
-  explicit ScopedHandle(HANDLE handle)
+  explicit ScopedHandle(HANDLE handle) noexcept
       : handle_(handle) {}
 
-  ScopedHandle(ScopedHandle&& other)
+  ScopedHandle(ScopedHandle&& other) noexcept
       : handle_(other.release()) {}
 
-  ScopedHandle& operator=(ScopedHandle&& other) {
+  ScopedHandle& operator=(ScopedHandle&& other) noexcept {
     if (this != &other)
       Reset(other.release());
     return *this;
   }
 
-  void SwapSwith(ScopedHandle& other) { swap(handle_, other.handle_); }
+  void SwapSwith(ScopedHandle& other) noexcept { swap(handle_, other.handle_); }
 
   bool IsValid() const { return handle_ != INVALID_HANDLE_VALUE; }
 

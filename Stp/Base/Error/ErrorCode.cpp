@@ -10,14 +10,14 @@
 
 namespace stp {
 
-int compare(const ErrorCode& l, const ErrorCode& r) {
+int compare(const ErrorCode& l, const ErrorCode& r) noexcept {
   int rv = compare(&l.getCategory(), &r.getCategory());
   if (!rv)
     rv = compare(l.getCode(), r.getCode());
   return rv;
 }
 
-HashCode partialHash(const ErrorCode& x) {
+HashCode partialHash(const ErrorCode& x) noexcept {
   return partialHashMany(&x.getCategory(), x.getCode());
 }
 
@@ -31,7 +31,7 @@ void format(TextWriter& out, const ErrorCode& x) {
   }
 }
 
-StringSpan SuccessErrorCategory::getName() const {
+StringSpan SuccessErrorCategory::getName() const noexcept {
   return "success";
 }
 

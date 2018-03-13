@@ -11,7 +11,7 @@ namespace stp {
 class RefCountedBase {
   DISALLOW_COPY_AND_ASSIGN(RefCountedBase);
  public:
-  RefCountedBase() {
+  RefCountedBase() noexcept {
     #if ASSERT_IS_ON
     ref_count_ = -1;
     #else
@@ -23,22 +23,22 @@ class RefCountedBase {
     ASSERT(ref_count_ == 0, "RefCountedBase object deleted without calling decRef()");
   }
 
-  bool hasOneRef() const { return ref_count_ == 1; }
+  bool hasOneRef() const noexcept { return ref_count_ == 1; }
 
-  void incRef() const {
+  void incRef() const noexcept {
     ASSERT(ref_count_ > 0);
     ref_count_++;
   }
 
   #if ASSERT_IS_ON
-  void verifyAdoption() {
+  void verifyAdoption() noexcept {
     ASSERT(ref_count_ == -1);
     ref_count_ = 1;
   }
   #endif
 
  protected:
-  bool decRefBase() const {
+  bool decRefBase() const noexcept {
     ASSERT(ref_count_ > 0);
     return --ref_count_ == 0;
   }
@@ -47,7 +47,7 @@ class RefCountedBase {
   mutable int ref_count_;
 };
 
-inline void adoptedByRc(RefCountedBase* refed) {
+inline void adoptedByRc(RefCountedBase* refed) noexcept {
   #if ASSERT_IS_ON
   refed->verifyAdoption();
   #endif
@@ -56,7 +56,7 @@ inline void adoptedByRc(RefCountedBase* refed) {
 template<typename T>
 class RefCounted : public RefCountedBase {
  public:
-  void decRef() const {
+  void decRef() const noexcept {
     if (decRefBase())
       delete static_cast<const T*>(this);
   }

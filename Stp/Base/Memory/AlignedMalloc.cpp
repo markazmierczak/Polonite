@@ -7,7 +7,7 @@
 
 namespace stp {
 
-void* tryAllocateAlignedMemory(int size, int alignment) {
+void* tryAllocateAlignedMemory(int size, int alignment) noexcept {
   ASSERT(size > 0);
   ASSERT(isPowerOfTwo(alignment));
   ASSERT(alignment >= isizeof(void*));

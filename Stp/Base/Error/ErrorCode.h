@@ -10,11 +10,11 @@ namespace stp {
 
 class ErrorCategory {
  public:
-  virtual StringSpan getName() const = 0;
+  virtual StringSpan getName() const noexcept = 0;
   virtual void formatMessage(TextWriter& out, int code) const = 0;
 
-  bool operator==(const ErrorCategory& other) const { return this == &other; }
-  bool operator!=(const ErrorCategory& other) const { return this != &other; }
+  bool operator==(const ErrorCategory& other) const noexcept { return this == &other; }
+  bool operator!=(const ErrorCategory& other) const noexcept { return this != &other; }
 };
 
 template<typename T>
@@ -27,7 +27,7 @@ namespace detail {
 
 class SuccessErrorCategory final : public ErrorCategory {
  public:
-  StringSpan getName() const override;
+  StringSpan getName() const noexcept override;
   void formatMessage(TextWriter& out, int code) const override;
 };
 
@@ -37,21 +37,21 @@ BASE_EXPORT extern const SuccessErrorCategory SuccessErrorCategoryInstance;
 
 enum class PosixErrorCode : int;
 class ErrorCode;
-inline ErrorCode makeErrorCode(PosixErrorCode code);
+inline ErrorCode makeErrorCode(PosixErrorCode code) noexcept;
 
 class [[nodiscard]] ErrorCode final {
  public:
   using CategoryType = const ErrorCategory*;
 
-  ErrorCode() : code_(0), category_(&detail::SuccessErrorCategoryInstance) {}
+  ErrorCode() noexcept : code_(0), category_(&detail::SuccessErrorCategoryInstance) {}
 
-  ErrorCode(int code, CategoryType category) : code_(code), category_(category) {}
-
-  template<typename TErrorCodeEnum, TEnableIf<TIsErrorCodeEnum<TErrorCodeEnum>>* = nullptr>
-  ErrorCode(TErrorCodeEnum e) { *this = makeErrorCode(e); }
+  ErrorCode(int code, CategoryType category) noexcept : code_(code), category_(category) {}
 
   template<typename TErrorCodeEnum, TEnableIf<TIsErrorCodeEnum<TErrorCodeEnum>>* = nullptr>
-  ErrorCode& operator=(TErrorCodeEnum e) { return *this = MakeErrorCode(e); }
+  ErrorCode(TErrorCodeEnum e) noexcept { *this = makeErrorCode(e); }
+
+  template<typename TErrorCodeEnum, TEnableIf<TIsErrorCodeEnum<TErrorCodeEnum>>* = nullptr>
+  ErrorCode& operator=(TErrorCodeEnum e) noexcept { return *this = MakeErrorCode(e); }
 
   int getCode() const { return code_; }
   const ErrorCategory& getCategory() const { return *category_; }
@@ -68,8 +68,8 @@ class [[nodiscard]] ErrorCode final {
   CategoryType category_;
 };
 
-BASE_EXPORT int compare(const ErrorCode& l, const ErrorCode& r);
-BASE_EXPORT HashCode partialHash(const ErrorCode& x);
+BASE_EXPORT int compare(const ErrorCode& l, const ErrorCode& r) noexcept;
+BASE_EXPORT HashCode partialHash(const ErrorCode& x) noexcept;
 
 namespace detail {
 BASE_EXPORT void format(TextWriter& out, const ErrorCode& x);

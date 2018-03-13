@@ -29,7 +29,7 @@ namespace {
 
 class WinErrorCategory final : public ErrorCategory {
  public:
-  StringSpan getName() const override { return "win"; }
+  StringSpan getName() const noexcept override { return "win"; }
 
   void formatMessage(TextWriter& out, int code) const override {
     detail::format(out, static_cast<WinErrorCode>(code));
