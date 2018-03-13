@@ -52,7 +52,7 @@ struct TextEncodingData {
   TextDecoderFactory create_decoder = nullptr;
   TextEncoderFactory create_encoder = nullptr;
 
-  StringSpan name = StringSpan::empty();
+  StringSpan name;
 
   const TextEncodingConfig* config = nullptr;
 };

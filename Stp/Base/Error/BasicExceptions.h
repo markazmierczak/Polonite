@@ -39,7 +39,7 @@ class FormatException : public Exception {
   BASE_EXPORT void onFormat(TextWriter& out) const override;
 
  private:
-  StringSpan type_name_ = StringSpan::empty();
+  StringSpan type_name_;
   int argument_index_ = -1;
 };
 

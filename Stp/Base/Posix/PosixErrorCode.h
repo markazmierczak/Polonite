@@ -14,7 +14,7 @@ namespace detail {
 
 class BASE_EXPORT PosixErrorCategory final : public ErrorCategory {
  public:
-  StringSpan getName() const override;
+  StringSpan getName() const noexcept override;
   void formatMessage(TextWriter& out, int code) const override;
 };
 
@@ -31,15 +31,15 @@ enum class PosixErrorCode : int {
 
 template<> struct TIsErrorCodeEnumTmpl<PosixErrorCode> : TTrue {};
 
-inline bool isOk(PosixErrorCode code) { return LIKELY(code == PosixErrorCode::Ok); }
+inline bool isOk(PosixErrorCode code) noexcept { return LIKELY(code == PosixErrorCode::Ok); }
 
-inline PosixErrorCode getLastPosixErrorCode() { return static_cast<PosixErrorCode>(errno); }
+inline PosixErrorCode getLastPosixErrorCode() noexcept { return static_cast<PosixErrorCode>(errno); }
 
-inline const ErrorCategory* getPosixErrorCategory() {
+inline const ErrorCategory* getPosixErrorCategory() noexcept {
   return &detail::g_posixErrorCategory;
 }
 
-inline ErrorCode makeErrorCode(PosixErrorCode code) {
+inline ErrorCode makeErrorCode(PosixErrorCode code) noexcept {
   return ErrorCode(static_cast<int>(code), getPosixErrorCategory());
 }
 

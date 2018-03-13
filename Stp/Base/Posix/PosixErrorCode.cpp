@@ -108,7 +108,7 @@ void format(TextWriter& out, PosixErrorCode code) {
   out << StringSpan::fromCString(buf) << ", code=" << code;
 }
 
-StringSpan PosixErrorCategory::getName() const {
+StringSpan PosixErrorCategory::getName() const noexcept {
   return "posix";
 }
 

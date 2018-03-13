@@ -3,6 +3,7 @@
 
 #include "Base/Thread/NativeThread.h"
 
+#include "Base/Error/SystemException.h"
 #include "Base/Time/TimeTicks.h"
 
 #include <sched.h>
@@ -79,7 +80,7 @@ NativeThread::ObjectHandlePair NativeThread::Create(Delegate* delegate, int64_t 
   auto error = static_cast<PosixErrorCode>(
       pthread_create(&thread, attributes.get(), ThreadFunc, static_cast<void*>(delegate)));
   if (!isOk(error))
-    throw SystemException(error, String("unable to create new thread"));
+    throw SystemException(error, DebugStringLiteral("unable to create new thread"));
   return ObjectHandlePair { thread, thread };
 }
 
@@ -87,14 +88,14 @@ int NativeThread::Join(NativeThreadObject thread) {
   void* exit_code;
   auto error = static_cast<PosixErrorCode>(pthread_join(thread, &exit_code));
   if (!isOk(error))
-    throw SystemException(error, String("unable to join thread"));
+    throw SystemException(error, DebugStringLiteral("unable to join thread"));
   return static_cast<int>(reinterpret_cast<intptr_t>(exit_code));
 }
 
 void NativeThread::Detach(NativeThreadObject thread) {
   auto error = static_cast<PosixErrorCode>(pthread_detach(thread));
   if (!isOk(error))
-    throw SystemException(error, String("unable to detach thread"));
+    throw SystemException(error, DebugStringLiteral("unable to detach thread"));
 }
 
 void NativeThread::Yield() {

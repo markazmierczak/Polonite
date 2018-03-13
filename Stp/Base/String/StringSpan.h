@@ -64,7 +64,7 @@ class StringSpan {
 };
 
 inline int lengthOfCString(const char* cstr) {
-  return cstr ? static_cast<int>(::strlen(cstr)) : nullptr;
+  return cstr ? static_cast<int>(::strlen(cstr)) : 0;
 }
 
 BASE_EXPORT bool operator==(const StringSpan& lhs, const StringSpan& rhs);

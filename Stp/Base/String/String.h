@@ -103,6 +103,11 @@ class String {
 };
 
 #define StringLiteral(text) String::fromLiteral(text, isizeof(text))
+#ifndef NDEBUG
+#define DebugStringLiteral StringLiteral
+#else
+#define DebugStringLiteral(text) String()
+#endif
 
 inline String toString(String s) { return s; }
 inline String toString(const StringSpan& s) { return String(s); }

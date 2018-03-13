@@ -178,7 +178,7 @@ static inline void formatIntTmpl(TextWriter& out, T x, const StringSpan& opts) {
 
   Array<char, MaxBufferSize> buffer;
 
-  StringSpan converted = StringSpan::empty();
+  StringSpan converted;
   switch (variant) {
     case Variant::Decimal:
       converted = FormatInteger(x, buffer);
@@ -218,7 +218,7 @@ void formatUint32(TextWriter& out, uint32_t x, const StringSpan& opts) { formatI
 void formatUint64(TextWriter& out, uint64_t x, const StringSpan& opts) { formatIntTmpl(out, x, opts); }
 
 void formatFloat(TextWriter& out, double x) {
-  formatFloat(out, x, StringSpan::empty());
+  formatFloat(out, x, StringSpan());
 }
 
 void formatFloat(TextWriter& out, double x, const StringSpan& opts) {
