@@ -33,7 +33,7 @@ template<> struct TIsErrorCodeEnumTmpl<PosixErrorCode> : TTrue {};
 
 inline bool isOk(PosixErrorCode code) { return LIKELY(code == PosixErrorCode::Ok); }
 
-inline PosixErrorCode lastPosixErrorCode() { return static_cast<PosixErrorCode>(errno); }
+inline PosixErrorCode getLastPosixErrorCode() { return static_cast<PosixErrorCode>(errno); }
 
 inline const ErrorCategory* getPosixErrorCategory() {
   return &detail::g_posixErrorCategory;

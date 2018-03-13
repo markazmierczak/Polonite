@@ -8,54 +8,40 @@
 
 namespace stp {
 
-template<typename T, class TList = List<T>>
+template<typename T, class TUnderlying = List<T>>
 class Stack {
  public:
-  using ListType = TList;
+  using UnderlyingType = TUnderlying;
 
   Stack() = default;
+  explicit Stack(UnderlyingType&& u) : u_(move(u)) {}
 
-  ALWAYS_INLINE int size() const { return list_.size(); }
+  ALWAYS_INLINE int size() const { return u_.size(); }
 
-  bool isEmpty() const { return list_.isEmpty(); }
+  bool isEmpty() const { return u_.isEmpty(); }
 
-  void clear() { list_.clear(); }
+  void clear() { u_.clear(); }
 
   template<typename U>
-  bool contains(const U& item) const { return list_.contains(item); }
+  bool contains(const U& item) const { return u_.contains(item); }
 
-  const T& peek() const { return list_.last(); }
-  T& peek() { return list_.last(); }
+  const T& peek() const { return u_.last(); }
+  T& peek() { return u_.last(); }
 
-  void push(T item) { list_.add(move(item)); }
+  void push(T item) { u_.add(move(item)); }
   T pop();
 
-  const T* TryPeek() const { return isEmpty() ? nullptr : &peek(); }
-  T* TryPeek() { return isEmpty() ? nullptr : &peek(); }
-
-  void ensureCapacity(int request) { list_.ensureCapacity(request); }
-  void willGrow(int n) { list_.willGrow(n); }
-
-  void shrinkCapacity(int request) { list_.shrinkCapacity(request); }
-  void shrinkToFit() { list_.shrinkToFit(); }
-
-  operator Span<T>() const { return list_; }
-  operator MutableSpan<T>() { return list_; }
-
-  // Only for for-range loops.
-  const T* begin() const { return list_.begin(); }
-  const T* end() const { return list_.end(); }
-  T* begin() { return list_.begin(); }
-  T* end() { return list_.end(); }
+  const T* tryPeek() const { return isEmpty() ? nullptr : &peek(); }
+  T* tryPeek() { return isEmpty() ? nullptr : &peek(); }
 
  private:
-  ListType list_;
+  UnderlyingType u_;
 };
 
-template<typename T, class TList>
-inline T Stack<T, TList>::pop() {
-  T value = move(list_.last());
-  list_.removeLast();
+template<typename T, class TUnderlying>
+inline T Stack<T, TUnderlying>::pop() {
+  T value = move(u_.last());
+  u_.removeLast();
   return value;
 }
 

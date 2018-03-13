@@ -17,7 +17,7 @@ class List {
   typedef Span<T> SpanType;
   typedef MutableSpan<T> MutableSpanType;
 
-  List() = default;
+  List() : data_(nullptr), size_(0), capacity_(0) {}
   ~List() { destroyAndFree(data_, size_, capacity_); }
 
   List(List&& other);
@@ -115,9 +115,9 @@ class List {
   MutableSpanType toSpan() { return MutableSpanType(data_, size_); }
 
  private:
-  T* data_ = nullptr;
-  int size_ = 0;
-  int capacity_ = 0;
+  T* data_;
+  int size_;
+  int capacity_;
 
   static constexpr int MaxCapacity_ = Limits<int>::Max / isizeof(T);
 

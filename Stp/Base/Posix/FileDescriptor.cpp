@@ -23,7 +23,7 @@ void FileDescriptor::close() {
   int ret = IGNORE_EINTR(::close(fd_));
   if (ret != 0) {
     throw Exception::withDebug(
-        SystemException(lastPosixErrorCode()), "closing descriptor failed");
+        SystemException(getLastPosixErrorCode()), "closing descriptor failed");
   }
   fd_ = InvalidFd;
 }
@@ -32,7 +32,7 @@ FileDescriptor FileDescriptor::duplicate() {
   FileDescriptor rv = tryDuplicate();
   if (!rv.isValid()) {
     throw Exception::withDebug(
-        SystemException(lastPosixErrorCode()), "failed to duplicate file descriptor");
+        SystemException(getLastPosixErrorCode()), "failed to duplicate file descriptor");
   }
   return rv;
 }
@@ -41,7 +41,7 @@ FileDescriptor FileDescriptor::duplicateTo(int new_fd) {
   FileDescriptor rv = tryDuplicateTo(new_fd);
   if (!rv.isValid()) {
     throw Exception::withDebug(
-        SystemException(lastPosixErrorCode()), "failed to duplicate file descriptor");
+        SystemException(getLastPosixErrorCode()), "failed to duplicate file descriptor");
   }
   return rv;
 }
@@ -51,13 +51,13 @@ void FileDescriptor::setNonBlocking() {
 
   if (flags == -1) {
     throw Exception::withDebug(
-        SystemException(lastPosixErrorCode()), "unable to get descriptor flags");
+        SystemException(getLastPosixErrorCode()), "unable to get descriptor flags");
   }
 
   if (!(flags & O_NONBLOCK)) {
     if (HANDLE_EINTR(::fcntl(fd_, F_SETFL, flags | O_NONBLOCK)) == -1)
       throw Exception::withDebug(
-          SystemException(lastPosixErrorCode()),
+          SystemException(getLastPosixErrorCode()),
           "unable to set non-blocking flag on descriptor");
   }
 }

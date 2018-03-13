@@ -65,7 +65,7 @@ SystemErrorCode FileStream::tryOpenInternal(
   int open_flags = mode_flags | access_flags;
   int descriptor = HANDLE_EINTR(::open(toNullTerminated(path), open_flags, perm_flags));
   if (descriptor == -1)
-    return lastPosixErrorCode();
+    return getLastPosixErrorCode();
 
   native_.reset(descriptor);
   access_ = access;
@@ -78,7 +78,7 @@ SystemErrorCode FileStream::tryOpenInternal(
 void FileStream::closeInternal(NativeFile fd) {
   int rv = IGNORE_EINTR(::close(fd));
   if (rv != 0)
-    throw SystemException(lastPosixErrorCode());
+    throw SystemException(getLastPosixErrorCode());
 }
 
 int FileStream::readAtMost(MutableBufferSpan output) {
@@ -96,7 +96,7 @@ int FileStream::readAtMost(MutableBufferSpan output) {
       if (rv == 0)
         break;
       if (errno != EINTR)
-        throw SystemException(lastPosixErrorCode());
+        throw SystemException(getLastPosixErrorCode());
     }
   } while (!output.isEmpty());
   return bytes_read;
@@ -115,7 +115,7 @@ void FileStream::write(BufferSpan input) {
       input.removePrefix(rv);
     } else {
       if (errno != EINTR)
-        throw SystemException(lastPosixErrorCode());
+        throw SystemException(getLastPosixErrorCode());
     }
   } while (!input.isEmpty());
 }
@@ -146,7 +146,7 @@ void FileStream::positionalRead(int64_t offset, MutableBufferSpan output) {
         if (!output.isEmpty()) // zero length was requested ?
           throw EndOfStreamException();
       } else if (errno != EINTR) {
-        throw SystemException(lastPosixErrorCode());
+        throw SystemException(getLastPosixErrorCode());
       }
     }
   } while (!output.isEmpty());
@@ -169,7 +169,7 @@ void FileStream::positionalWrite(int64_t offset, BufferSpan input) {
       input.removePrefix(rv);
     } else {
       if (errno != EINTR)
-        throw SystemException(lastPosixErrorCode());
+        throw SystemException(getLastPosixErrorCode());
     }
   } while (!input.isEmpty());
 }
@@ -179,7 +179,7 @@ int64_t FileStream::seek(int64_t offset, SeekOrigin origin) {
   int64_t rv = ::lseek(native_.get(), offset, static_cast<int>(origin));
   ASSERT(rv >= -1);
   if (rv < 0)
-    throw SystemException(lastPosixErrorCode());
+    throw SystemException(getLastPosixErrorCode());
   return rv;
 }
 
@@ -204,7 +204,7 @@ int64_t FileStream::getLength() {
 
   stat_wrapper_t file_info;
   if (posix::callFstat(native_.get(), &file_info) != 0)
-    throw SystemException(lastPosixErrorCode());
+    throw SystemException(getLastPosixErrorCode());
 
   return file_info.st_size;
 }
@@ -215,7 +215,7 @@ void FileStream::setLength(int64_t length) {
 
   int rv = HANDLE_EINTR(::ftruncate(native_.get(), length));
   if (rv != 0)
-    throw SystemException(lastPosixErrorCode());
+    throw SystemException(getLastPosixErrorCode());
 }
 
 void FileStream::syncToDisk() {
@@ -227,13 +227,13 @@ void FileStream::syncToDisk() {
   int rv = HANDLE_EINTR(::fsync(native_.get()));
   #endif
   if (rv != 0)
-    throw SystemException(lastPosixErrorCode());
+    throw SystemException(getLastPosixErrorCode());
 }
 
 void FileStream::getInfo(FileStreamInfo& out) {
   ASSERT(isOpen());
   if (posix::callFstat(native_.get(), &out.stat_) != 0)
-    throw SystemException(lastPosixErrorCode());
+    throw SystemException(getLastPosixErrorCode());
 }
 
 void FileStream::setTimes(Time last_accessed, Time last_modified, Time creation_time) {
@@ -258,7 +258,7 @@ void FileStream::setTimes(Time last_accessed, Time last_modified, Time creation_
   #endif
 
   if (rv != 0)
-    throw SystemException(lastPosixErrorCode());
+    throw SystemException(getLastPosixErrorCode());
 }
 
 } // namespace stp

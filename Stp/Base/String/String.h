@@ -11,12 +11,10 @@ namespace stp {
 
 class String {
  public:
+  String() : data_(nullptr), length_(0), capacity_(0) {}
+
   ~String() {
-    #if SANITIZER(ADDRESS)
-    if (__asan_address_is_poisoned(this))
-      __asan_unpoison_memory_region(this, sizeof(*this));
-    #endif
-    if (capacity_ > 0)
+    if (data_)
       freeMemory(const_cast<char*>(data_));
   }
 
@@ -34,7 +32,6 @@ class String {
   template<int N> String& operator=(const char (&text)[N]) = delete;
 
   BASE_EXPORT static String fromCString(const char* cstr);
-  static String empty() { return String(EmptyData, 0, 0); }
 
   BASE_EXPORT static String createUninitialized(int length, char*& out_data);
 
@@ -45,7 +42,7 @@ class String {
 
   const char* data() const { return data_; }
   int length() const { return length_; }
-  const char* asCString() const { return data_; }
+  const char* asCString() const { return data_ ? data_ : ""; }
 
   const char& operator[](int at) const {
     ASSERT(0 <= at && at < length());
@@ -103,8 +100,6 @@ class String {
   void assign(StringSpan o);
 
   static constexpr int LiteralCapacity = -1;
-
-  BASE_EXPORT static char EmptyData[1];
 };
 
 #define StringLiteral(text) String::fromLiteral(text, isizeof(text))
@@ -116,9 +111,6 @@ inline String::String(String&& o)
     : data_(exchange(o.data_, nullptr)),
       length_(exchange(o.length_, 0)),
       capacity_(exchange(o.capacity_, 0)) {
-  #if SANITIZER(ADDRESS)
-  __asan_poison_memory_region(&o, sizeof(o));
-  #endif
 }
 
 } // namespace stp

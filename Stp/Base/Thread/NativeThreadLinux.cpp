@@ -68,7 +68,7 @@ ErrorCode NativeThread::SetName(const char* name_cstr) {
 
   int rv = prctl(PR_SET_NAME, name.data());
   if (rv != 0)
-    return lastPosixErrorCode();
+    return getLastPosixErrorCode();
 
   return ErrorCode();
 }

@@ -64,10 +64,10 @@ void AtExitManager::registerCallback(Callback callback) {
  * It is possible to register new callbacks after calling this function.
  */
 void AtExitManager::processCallbacksNow() {
-  ASSERT(g_top_manager_ != nullptr, "tried to ProcessCallbacksNow without an AtExitManager");
+  ASSERT(g_top_manager_ != nullptr, "tried to processCallbacksNow without an AtExitManager");
 
   // Callbacks may try to add new callbacks, so run them without holding |lock_|.
-  // This is an error and caught by the ASSERT in RegisterCallback(), but
+  // This is an error and caught by the ASSERT in registerCallback(), but
   // handle it gracefully in release builds so we don't deadlock.
   Stack<Callback> tasks;
   {

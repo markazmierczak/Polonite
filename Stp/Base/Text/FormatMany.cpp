@@ -5,7 +5,6 @@
 
 #include "Base/Debug/Log.h"
 #include "Base/Io/ClipTextWriter.h"
-#include "Base/Io/InlineStringWriter.h"
 #include "Base/Text/AsciiChar.h"
 #include "Base/Type/ParseInteger.h"
 

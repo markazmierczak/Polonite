@@ -10,7 +10,8 @@ namespace stp {
 
 class StringSpan {
  public:
-  static constexpr StringSpan empty() { return StringSpan(g_valid_char_objects, 0); }
+  constexpr StringSpan()
+      : data_(nullptr), length_(0) {}
 
   constexpr StringSpan(const char* data, int length)
       : data_(data), length_(length) { ASSERT(data && length >= 0); }
@@ -63,7 +64,7 @@ class StringSpan {
 };
 
 inline int lengthOfCString(const char* cstr) {
-  return static_cast<int>(::strlen(cstr));
+  return cstr ? static_cast<int>(::strlen(cstr)) : nullptr;
 }
 
 BASE_EXPORT bool operator==(const StringSpan& lhs, const StringSpan& rhs);
@@ -79,7 +80,7 @@ inline HashCode partialHash(const StringSpan& text) {
 }
 
 inline StringSpan StringSpan::fromCString(const char* cstr) {
-  return cstr ? StringSpan(cstr, lengthOfCString(cstr)) : empty();
+  return StringSpan(cstr, lengthOfCString(cstr));
 }
 
 constexpr const char& StringSpan::operator[](int at) const {

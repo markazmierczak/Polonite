@@ -8,8 +8,6 @@
 
 namespace stp {
 
-char String::EmptyData[1] = "";
-
 /**
  * @fn String::String(StringSpan text)
  * Construct a UTF-8 string.
@@ -31,7 +29,7 @@ String::String(StringSpan text) {
 }
 
 String::String(const String& o) {
-  if (o.capacity_ > 0) {
+  if (o.capacity_ > 0 && o.length_ > 0) {
     char* data = static_cast<char*>(allocateMemory(o.length_ + 1));
     uninitializedCopy(data, o.data_, o.length_ + 1);
     data_ = data;
@@ -53,6 +51,7 @@ void String::assign(StringSpan o) {
     } else {
       data = static_cast<char*>(allocateMemory(o.length() + 1));
     }
+    capacity_ = o.length();
   } else {
     data = const_cast<char*>(data_);
   }
@@ -67,9 +66,9 @@ void String::assign(StringSpan o) {
  * @return A new string value with copy of given C-string.
  */
 String String::fromCString(const char* cstr) {
-  int length = static_cast<int>(::strlen(cstr));
+  int length = lengthOfCString(cstr);
   if (length == 0)
-    return empty();
+    return String();
 
   char* data = static_cast<char*>(allocateMemory(length + 1));
   uninitializedCopy(data, cstr, length + 1);
@@ -79,8 +78,8 @@ String String::fromCString(const char* cstr) {
 String String::createUninitialized(int length, char*& out_data) {
   ASSERT(length >= 0);
   if (length == 0) {
-    out_data = EmptyData;
-    return empty();
+    out_data = nullptr;
+    return String();
   }
   char* data = static_cast<char*>(allocateMemory(length + 1));
   *(data + length) = '\0';

@@ -38,7 +38,7 @@ SystemErrorCode DirectoryEnumerator::tryOpen(const FilePath& path) {
     status_ = Status::AtFirst;
     return WinErrorCode::Success;
   }
-  auto error = lastWinErrorCode();
+  auto error = getLastWinErrorCode();
   // An empty root directory has no entries (even dot entries).
   if (error == WinErrorCode::FileNotFound ||
       error == WinErrorCode::NoMoreFiles) {
@@ -81,7 +81,7 @@ bool DirectoryEnumerator::tryMoveNext(SystemErrorCode& out_error_code) {
       continue;
     return true;
   }
-  auto error = lastWinErrorCode();
+  auto error = getLastWinErrorCode();
   if (error == WinErrorCode::NoMoreFiles)
     out_error_code = WinErrorCode::Sucess;
   else
