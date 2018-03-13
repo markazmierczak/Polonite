@@ -126,10 +126,6 @@ inline Application& Application::instance() {
 
 #endif // OS(*)
 
-[[noreturn]] inline void Application::terminate() {
-  abort();
-}
-
 } // namespace stp
 
 #endif // STP_BASE_APP_APPLICATION_H_

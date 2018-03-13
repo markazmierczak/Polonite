@@ -5,6 +5,7 @@
 #define STP_BASE_CONTAINERS_LIST_H_
 
 #include "Base/Containers/Span.h"
+#include "Base/Error/BasicExceptions.h"
 #include "Base/Memory/Allocate.h"
 #include "Base/Type/Limits.h"
 
@@ -143,7 +144,8 @@ class List {
   void resizeStorage(int new_capacity);
 
   void checkGrow(int n) {
-    PANIC_IF(MaxCapacity_ - size_ < n, "length overflow");
+    if (MaxCapacity_ - size_ < n)
+      throw LengthException();
   }
 
   int recommendCapacity(int request) const {
@@ -240,7 +242,8 @@ template<typename T>
 inline void List<T>::ensureCapacity(int request) {
   ASSERT(request >= size_);
   if (request > capacity_) {
-    PANIC_IF(request > MaxCapacity_, "length overflow")
+    if (request > MaxCapacity_)
+      throw LengthException();
     resizeStorage(request);
   }
 }
