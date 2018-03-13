@@ -243,6 +243,7 @@ test("BaseUnitTests") {
 
     "../Util/AutoResetTest.cpp",
     "../Util/DelegateTest.cpp",
+    "../Util/FinallyTest.cpp",
     "../Util/FlagsTest.cpp",
     "../Util/FunctionTest.cpp",
     "../Util/LazyInstanceTest.cpp",

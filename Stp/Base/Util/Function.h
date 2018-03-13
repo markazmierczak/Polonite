@@ -40,7 +40,7 @@ using TDecayIfConstructible = TEnableIf<
 
 template<typename TFunction, typename TDecayed = TDecay<TFunction>>
 static constexpr bool TRequiresHeap =
-    (sizeof(TDecayed) > sizeof(Storage::local)) || !TIsMoveConstructible<TDecayed>;
+    (sizeof(TDecayed) > sizeof(Storage::local)) || !TIsNoexceptMoveConstructible<TDecayed>;
 
 template<typename T>
 constexpr bool isNullPtr(T* p) { return p == nullptr; }

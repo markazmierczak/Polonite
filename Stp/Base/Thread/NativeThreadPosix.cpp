@@ -68,8 +68,7 @@ static void* ThreadFunc(void* opaque) {
   return reinterpret_cast<void*>(exit_code);
 }
 
-Expected<NativeThread::ObjectHandlePair, ErrorCode> NativeThread::Create(
-    Delegate* delegate, int64_t stack_size) {
+NativeThread::ObjectHandlePair NativeThread::Create(Delegate* delegate, int64_t stack_size) {
   ASSERT(stack_size >= 0);
 
   PthreadAttributes attributes;
@@ -80,23 +79,22 @@ Expected<NativeThread::ObjectHandlePair, ErrorCode> NativeThread::Create(
   auto error = static_cast<PosixErrorCode>(
       pthread_create(&thread, attributes.get(), ThreadFunc, static_cast<void*>(delegate)));
   if (!isOk(error))
-    return makeErrorCode(error);
+    throw SystemException(error, String("unable to create new thread"));
   return ObjectHandlePair { thread, thread };
 }
 
-Expected<int, ErrorCode> NativeThread::Join(NativeThreadObject thread) {
+int NativeThread::Join(NativeThreadObject thread) {
   void* exit_code;
   auto error = static_cast<PosixErrorCode>(pthread_join(thread, &exit_code));
   if (!isOk(error))
-    return makeErrorCode(error);
+    throw SystemException(error, String("unable to join thread"));
   return static_cast<int>(reinterpret_cast<intptr_t>(exit_code));
 }
 
-Expected<void, ErrorCode> NativeThread::Detach(NativeThreadObject thread) {
+void NativeThread::Detach(NativeThreadObject thread) {
   auto error = static_cast<PosixErrorCode>(pthread_detach(thread));
   if (!isOk(error))
-    return makeErrorCode(error);
-  return Expected<void, ErrorCode>();
+    throw SystemException(error, String("unable to detach thread"));
 }
 
 void NativeThread::Yield() {
