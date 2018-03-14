@@ -81,8 +81,8 @@ class String {
     return fromLiteral(cstr, getLengthOfCString(cstr));
   }
 
-  static String adoptMemory(const char* data, int length, int capacity);
-  char* releaseMemory();
+  static String adoptMemory(const char* data, int length, int capacity) noexcept;
+  char* releaseMemory() noexcept;
 
   friend void swap(String& x, String& y) noexcept {
     swap(x.data_, y.data_);
@@ -135,14 +135,17 @@ inline String& String::operator=(String&& o) noexcept {
   return *this;
 }
 
-inline String String::adoptMemory(const char* data, int length, int capacity) {
+inline String String::adoptMemory(const char* data, int length, int capacity) noexcept {
   ASSERT(capacity > 0);
+  ASSERT(0 <= length && length <= capacity);
   return String(data, length, capacity);
 }
 
-inline char* String::releaseMemory() {
+inline char* String::releaseMemory() noexcept {
   if (capacity_ <= 0)
     return nullptr;
+  length_ = 0;
+  capacity_ = 0;
   return const_cast<char*>(exchange(data_, nullptr));
 }
 

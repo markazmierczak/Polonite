@@ -13,6 +13,8 @@ BASE_EXPORT void formatBuffer(TextWriter& out, const void* data, int size);
 
 class BufferSpan {
  public:
+  static constexpr bool IsZeroConstructible = true;
+
   constexpr BufferSpan() noexcept
       : data_(nullptr), size_(0) {}
 
@@ -91,6 +93,8 @@ class BufferSpan {
 
 class MutableBufferSpan {
  public:
+  static constexpr bool IsZeroConstructible = true;
+
   constexpr MutableBufferSpan() noexcept
       : data_(nullptr), size_(0) {}
 
@@ -180,11 +184,6 @@ class MutableBufferSpan {
   byte_t* data_;
   int size_;
 };
-
-template<>
-struct TIsZeroConstructibleTmpl<BufferSpan> : TTrue {};
-template<>
-struct TIsZeroConstructibleTmpl<MutableBufferSpan> : TTrue {};
 
 template<typename T, TEnableIf<TIsTrivial<T> || TIsVoid<T>>* = nullptr>
 constexpr BufferSpan makeBufferSpan(const T* data, int size) noexcept {

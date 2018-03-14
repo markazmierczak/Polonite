@@ -29,6 +29,8 @@ String::String(StringSpan text) {
 }
 
 String::String(const String& o) {
+  if (UNLIKELY(this == &o))
+    return;
   if (o.capacity_ > 0 && o.length_ > 0) {
     char* data = static_cast<char*>(allocateMemory(o.length_ + 1));
     uninitializedCopy(data, o.data_, o.length_ + 1);
@@ -43,6 +45,7 @@ String::String(const String& o) {
 }
 
 void String::assign(StringSpan o) {
+  // No need for special case when span points inside this string.
   char* data;
   if (capacity_ < o.length()) {
     if (capacity_ > 0) {
@@ -66,7 +69,7 @@ void String::assign(StringSpan o) {
  * @return A new string value with copy of given C-string.
  */
 String String::fromCString(const char* cstr) {
-  int length = lengthOfCString(cstr);
+  int length = getLengthOfCString(cstr);
   if (length == 0)
     return String();
 
