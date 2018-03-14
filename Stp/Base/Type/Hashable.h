@@ -9,9 +9,9 @@
 
 namespace stp {
 
-BASE_EXPORT HashCode combineHash(HashCode first, HashCode second);
+BASE_EXPORT HashCode combineHash(HashCode first, HashCode second) noexcept;
 
-BASE_EXPORT HashCode finalizeHash(HashCode code);
+BASE_EXPORT HashCode finalizeHash(HashCode code) noexcept;
 
 template<typename T, TEnableIf<TIsScalar<T>>* = nullptr>
 inline HashCode partialHash(T x) {
@@ -59,23 +59,23 @@ template<typename T>
 constexpr bool TIsHashable = TsAreSame<HashCode, TDetect<detail::THashableConcept, T>>;
 
 template<typename T, TEnableIf<TIsHashable<T>>* = nullptr>
-constexpr HashCode partialHash(const Nullable<T>& x) {
+constexpr HashCode partialHash(const Nullable<T>& x) noexcept {
   return x ? partialHash(*x) : HashCode::Zero;
 }
 
-inline HashCode partialHashMany() { return HashCode::Zero; }
+inline HashCode partialHashMany() noexcept { return HashCode::Zero; }
 
 template<typename T>
-inline HashCode partialHashMany(const T& v) { return partialHash(v); }
+inline HashCode partialHashMany(const T& v) noexcept { return partialHash(v); }
 
 template<typename T, typename... Ts>
-inline HashCode partialHashMany(const T& v, const Ts&... vs) {
+inline HashCode partialHashMany(const T& v, const Ts&... vs) noexcept {
   return combineHash(partialHashMany(vs...), partialHash(v));
 }
 
 struct DefaultHasher {
   template<typename T>
-  HashCode operator()(const T& x) const {
+  HashCode operator()(const T& x) const noexcept {
     return finalizeHash(partialHash(x));
   }
 };

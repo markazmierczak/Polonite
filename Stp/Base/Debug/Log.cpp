@@ -110,7 +110,7 @@ static StringSpan GetModule(StringSpan file) {
   if (last_slash_pos >= 0)
     module.removePrefix(last_slash_pos + 1);
 
-  int extension_start = module.lastIndexOfUnit('.');
+  int extension_start = module.lastIndexOf('.');
   if (extension_start >= 0)
     module.truncate(extension_start);
 
@@ -194,12 +194,12 @@ static void ParseMatchers(StringSpan input) {
   List<VmoduleMatcher>* matchers = g_verbose_matchers.Pointer();
 
   while (!input.isEmpty()) {
-    int comma = input.indexOfUnit(',');
+    int comma = input.indexOf(',');
     StringSpan pair = input.left(comma);
 
     bool parsed = false;
 
-    int pos = pair.lastIndexOfUnit('=');
+    int pos = pair.lastIndexOf('=');
     if (pos >= 0) {
       VmoduleMatcher matcher(String(pair.left(pos)));
       if (tryParse(pair.slice(pos + 1), matcher.level) == ParseIntegerErrorCode::Ok) {

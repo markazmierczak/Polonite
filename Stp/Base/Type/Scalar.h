@@ -174,29 +174,29 @@ constexpr bool TIsNamedEnum = THasDetected<detail::TNamedEnumConcept, T>;
 // - const reference is returned for non-fundamental types
 
 template<typename T, TEnableIf<TIsFundamental<T>>* = nullptr>
-constexpr T min(T x, T y) {
+constexpr T min(T x, T y) noexcept {
   return x < y ? x : y;
 }
 
 template<typename T, TEnableIf<TIsFundamental<T>>* = nullptr>
-constexpr T max(T x, T y) {
+constexpr T max(T x, T y) noexcept {
   return x < y ? y : x;
 }
 
 // clamp(x, min, max) - clamps |x| to the [min..max] range.
 template<typename T, TEnableIf<TIsFundamental<T>>* = nullptr>
-constexpr T clamp(T x, T min, T max) {
+constexpr T clamp(T x, T min, T max) noexcept {
   return min(max(x, min), max);
 }
 
 // lerp(a, b, t) - linear interpolation between |a| and |b|.
 template<typename T, TEnableIf<TIsArithmetic<T>>* = nullptr>
-constexpr T lerp(T x, T y, double t) {
+constexpr T lerp(T x, T y, double t) noexcept {
   return static_cast<T>(x * (1 - t) + y * t);
 }
 
 template<typename T>
-constexpr T* coalesce(T* nullable, T* default_not_null) {
+constexpr T* coalesce(T* nullable, T* default_not_null) noexcept {
   return nullable ? nullable : default_not_null;
 }
 

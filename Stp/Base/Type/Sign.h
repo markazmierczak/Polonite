@@ -109,37 +109,37 @@ using TMakeUnsigned = typename TMakeUnsignedTmpl<T>::Type;
 // Determines if a numeric value is negative without throwing compiler
 // warnings on: unsigned(value) < 0.
 template<typename T, TEnableIf<TIsUnsigned<T>>* = nullptr>
-constexpr bool isNegative(T x) {
+constexpr bool isNegative(T x) noexcept {
   return false;
 }
 template<typename T, TEnableIf<TIsSigned<T>>* = nullptr>
-constexpr bool isNegative(T x) {
+constexpr bool isNegative(T x) noexcept {
   return x < 0;
 }
 
 // https://en.wikipedia.org/wiki/Sign_function
 template<typename T, TEnableIf<TIsUnsigned<T>>* = nullptr>
-constexpr int mathSignum(T x) {
+constexpr int mathSignum(T x) noexcept {
   return 0 < x;
 }
 
 template<typename T, TEnableIf<TIsSigned<T>>* = nullptr>
-constexpr int mathSignum(T x) {
+constexpr int mathSignum(T x) noexcept {
   return (0 < x) - (x < 0);
 }
 
 template<typename T, TEnableIf<TIsInteger<T>>* = nullptr>
-constexpr TMakeSigned<T> toSigned(T x) {
+constexpr TMakeSigned<T> toSigned(T x) noexcept {
   return static_cast<TMakeSigned<T>>(x);
 }
 
 template<typename T, TEnableIf<TIsInteger<T>>* = nullptr>
-constexpr TMakeUnsigned<T> toUnsigned(T x) {
+constexpr TMakeUnsigned<T> toUnsigned(T x) noexcept {
   return static_cast<TMakeUnsigned<T>>(x);
 }
 
 template<typename T>
-constexpr auto mathAbsToUnsigned(T x) {
+constexpr auto mathAbsToUnsigned(T x) noexcept {
   using UnsignedType = TMakeUnsigned<T>;
   using ResultType = TMakeUnsigned<decltype(+x)>;
 
@@ -147,9 +147,9 @@ constexpr auto mathAbsToUnsigned(T x) {
   return isNegative(x) ? static_cast<ResultType>(0) - ux : static_cast<ResultType>(ux);
 }
 
-constexpr int mathAbs(int x) { return x >= 0 ? x : -x; }
-constexpr long mathAbs(long x) { return x >= 0 ? x : -x; }
-constexpr long long mathAbs(long long x) { return x >= 0 ? x : -x; }
+constexpr int mathAbs(int x) noexcept { return x >= 0 ? x : -x; }
+constexpr long mathAbs(long x) noexcept { return x >= 0 ? x : -x; }
+constexpr long long mathAbs(long long x) noexcept { return x >= 0 ? x : -x; }
 
 } // namespace stp
 

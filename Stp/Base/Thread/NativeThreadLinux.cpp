@@ -60,7 +60,7 @@ ErrorCode NativeThread::SetName(const char* name_cstr) {
   constexpr int MaxNameLength = 16 - 1; // 1 for null character
   auto name = StringSpan::fromCString(name_cstr);
   if (name.length() > MaxNameLength) {
-    int dot_index = name.lastIndexOfUnit('.');
+    int dot_index = name.lastIndexOf('.');
     if (dot_index >= 0)
       name.removePrefix(dot_index + 1);
   }

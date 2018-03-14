@@ -11,7 +11,7 @@ namespace stp {
 
 static_assert(sizeof(HashCode) == 4, "hashing assumes HashCode is 4 bits wide");
 
-HashCode finalizeHash(HashCode in_code) {
+HashCode finalizeHash(HashCode in_code) noexcept {
   auto code = toUnderlying(in_code);
   code ^= code >> 16;
   code *= UINT32_C(0x85EBCA6B);
@@ -21,7 +21,7 @@ HashCode finalizeHash(HashCode in_code) {
   return static_cast<HashCode>(code);
 }
 
-HashCode combineHash(HashCode in_seed, HashCode in_value) {
+HashCode combineHash(HashCode in_seed, HashCode in_value) noexcept {
   constexpr uint32_t C1 = UINT32_C(0xCC9E2D51);
   constexpr uint32_t C2 = UINT32_C(0x1B873593);
 

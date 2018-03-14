@@ -91,23 +91,19 @@ class RcPtr {
   friend bool operator!=(nullptr_t, const RcPtr& b) { return !!b; }
 };
 
-template<class T>
-struct TIsZeroConstructibleTmpl<RcPtr<T>> : TTrue {};
-template<class T>
-struct TIsTriviallyRelocatableTmpl<RcPtr<T>> : TTrue {};
-template<class T>
-struct TIsTriviallyEqualityComparableTmpl<RcPtr<T>> : TTrue {};
+template<class T> struct TIsZeroConstructibleTmpl<RcPtr<T>> : TTrue {};
+template<class T> struct TIsTriviallyRelocatableTmpl<RcPtr<T>> : TTrue {};
+template<class T> struct TIsTriviallyEqualityComparableTmpl<RcPtr<T>> : TTrue {};
 
-template<class T>
-inline RcPtr<T> adoptRc(T* ptr) {
+template<class T> inline RcPtr<T> adoptRc(T* ptr) {
   adoptedByRc(ptr);
   return RcPtr<T>(ptr, RcPtr<T>::Adopt);
 }
 
-template<class T>
-inline BorrowPtr<T> borrow(const RcPtr<T>& x) {
+template<class T> inline BorrowPtr<T> borrow(const RcPtr<T>& x) {
   return BorrowPtr<T>(x.get());
 }
+template<class T> BorrowPtr<T> borrow(RcPtr<T>&& x) = delete;
 
 } // namespace stp
 

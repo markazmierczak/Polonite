@@ -22,15 +22,15 @@ enum class WinErrorCode : DWORD {
   AlreadyExists = ERROR_ALREADY_EXISTS,
 };
 
-inline bool IsOk(WinErrorCode code) { return LIKELY(code == WinErrorCode::Success); }
+inline bool isOk(WinErrorCode code) noexcept { return LIKELY(code == WinErrorCode::Success); }
 
-inline WinErrorCode getLastWinErrorCode() {
+inline WinErrorCode getLastWinErrorCode() noexcept {
   return static_cast<WinErrorCode>(::GetLastError());
 }
 
 BASE_EXPORT const ErrorCategory* GetWinErrorCategory();
 
-inline ErrorCode MakeErrorCode(WinErrorCode code) {
+inline ErrorCode makeErrorCode(WinErrorCode code) noexcept {
   return ErrorCode(static_cast<int>(code), GetWinErrorCategory());
 }
 

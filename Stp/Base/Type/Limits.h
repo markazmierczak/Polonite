@@ -177,17 +177,17 @@ struct BASE_EXPORT Limits<long double> {
 };
 
 template<typename T, TEnableIf<TIsFloatingPoint<T>>* = nullptr>
-inline bool isNaN(T x) {
+inline bool isNaN(T x) noexcept {
   return isnan(x) != 0;
 }
 
 template<typename T, TEnableIf<TIsFloatingPoint<T>>* = nullptr>
-inline bool isInfinity(T x) {
+inline bool isInfinity(T x) noexcept {
   return isinf(x) != 0;
 }
 
 template<typename T, TEnableIf<TIsFloatingPoint<T>>* = nullptr>
-inline bool isFinite(T x) {
+inline bool isFinite(T x) noexcept {
   return isfinite(x) != 0;
 }
 

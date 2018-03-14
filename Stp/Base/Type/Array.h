@@ -94,9 +94,9 @@ template<typename T, int N = 0>
 constexpr int TExtent = detail::TExtentHelper<T, N>::Value;
 
 template<typename T, int N>
-constexpr T* begin(T (&array)[N]) { return array; }
+constexpr T* begin(T (&array)[N]) noexcept { return array; }
 template<typename T, int N>
-constexpr T* end(T (&array)[N]) { return array + N - TIsCharacter<T>; }
+constexpr T* end(T (&array)[N]) noexcept { return array + N - TIsCharacter<T>; }
 
 } // namespace stp
 

@@ -79,18 +79,18 @@ struct DefaultComparer {
 };
 
 template<typename T, typename U, TEnableIf<TIsComparableWith<T, U>>* = nullptr>
-constexpr int compare(const Nullable<T>& l, const Nullable<U>& r) {
+constexpr int compare(const Nullable<T>& l, const Nullable<U>& r) noexcept {
   return l.operator bool() == r.operator bool()
       ? (l ? compare(*l, *r) : 0)
       : (l ? 1 : -1);
 }
 
 template<typename T, typename U, TEnableIf<TIsComparableWith<T, U>>* = nullptr>
-constexpr int compare(const Nullable<T>& l, const U& r) {
+constexpr int compare(const Nullable<T>& l, const U& r) noexcept {
   return l ? compare(*l, r) : -1;
 }
 template<typename T, typename U, TEnableIf<TIsComparableWith<T, U>>* = nullptr>
-constexpr int compare(const T& l, const Nullable<U>& r) {
+constexpr int compare(const T& l, const Nullable<U>& r) noexcept {
   return l ? compare(l, *r) : 1;
 }
 

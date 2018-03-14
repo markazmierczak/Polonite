@@ -11,14 +11,14 @@
 namespace stp {
 
 int compare(const ErrorCode& l, const ErrorCode& r) noexcept {
-  int rv = compare(&l.getCategory(), &r.getCategory());
+  int rv = compare(&l.category(), &r.category());
   if (!rv)
-    rv = compare(l.getCode(), r.getCode());
+    rv = compare(l.code(), r.code());
   return rv;
 }
 
 HashCode partialHash(const ErrorCode& x) noexcept {
-  return partialHashMany(&x.getCategory(), x.getCode());
+  return partialHashMany(&x.category(), x.code());
 }
 
 namespace detail {
@@ -27,7 +27,7 @@ void format(TextWriter& out, const ErrorCode& x) {
   if (isOk(x)) {
     out << "no error";
   } else {
-    x.getCategory().formatMessage(out, x.getCode());
+    x.category().formatMessage(out, x.code());
   }
 }
 

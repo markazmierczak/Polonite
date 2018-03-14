@@ -51,17 +51,19 @@ class [[nodiscard]] ErrorCode final {
   ErrorCode(TErrorCodeEnum e) noexcept { *this = makeErrorCode(e); }
 
   template<typename TErrorCodeEnum, TEnableIf<TIsErrorCodeEnum<TErrorCodeEnum>>* = nullptr>
-  ErrorCode& operator=(TErrorCodeEnum e) noexcept { return *this = MakeErrorCode(e); }
+  ErrorCode& operator=(TErrorCodeEnum e) noexcept { return *this = makeErrorCode(e); }
 
-  int getCode() const { return code_; }
-  const ErrorCategory& getCategory() const { return *category_; }
+  int code() const noexcept { return code_; }
+  const ErrorCategory& category() const noexcept { return *category_; }
 
-  friend bool operator==(const ErrorCode& l, const ErrorCode& r) {
+  friend bool operator==(const ErrorCode& l, const ErrorCode& r) noexcept {
     return l.category_ == r.category_ && l.code_ == r.code_;
   }
-  friend bool operator!=(const ErrorCode& l, const ErrorCode& r) { return !operator==(l, r); }
+  friend bool operator!=(const ErrorCode& l, const ErrorCode& r) noexcept {
+    return !operator==(l, r);
+  }
 
-  friend bool isOk(const ErrorCode& x) { return LIKELY(x.code_ == 0); }
+  friend bool isOk(const ErrorCode& x) noexcept { return LIKELY(x.code_ == 0); }
 
  private:
   int code_;

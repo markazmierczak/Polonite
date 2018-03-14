@@ -85,21 +85,18 @@ inline OwnPtr<T, TAllocator> OwnPtr<T, TAllocator>::create(TArgs&&... args) {
   }
 }
 
-template<class T, class TAllocator>
-struct TIsZeroConstructibleTmpl<OwnPtr<T, TAllocator>> : TTrue {};
-template<class T, class TAllocator>
-struct TIsTriviallyRelocatableTmpl<OwnPtr<T, TAllocator>> : TTrue {};
+template<class T, class TAllocator> struct TIsZeroConstructibleTmpl<OwnPtr<T, TAllocator>> : TTrue {};
+template<class T, class TAllocator> struct TIsTriviallyRelocatableTmpl<OwnPtr<T, TAllocator>> : TTrue {};
 
 // Helper to transfer ownership of a raw pointer to a OwnPtr<T>.
-template<class T>
-inline OwnPtr<T> makeOwnPtr(T* ptr) {
+template<class T> inline OwnPtr<T> makeOwnPtr(T* ptr) {
   return OwnPtr<T>(ptr);
 }
 
-template<class T>
-inline BorrowPtr<T> borrow(const OwnPtr<T>& x) {
+template<class T> inline BorrowPtr<T> borrow(const OwnPtr<T>& x) {
   return BorrowPtr<T>(x.get());
 }
+template<class T> BorrowPtr<T> borrow(OwnPtr<T>&& x) = delete;
 
 } // namespace stp
 

@@ -90,21 +90,19 @@ class Rc {
 template<class T>
 struct TIsTriviallyRelocatableTmpl<Rc<T>> : TTrue {};
 
-template<class T>
-inline Rc<T> adoptRc(T& object) {
+template<class T> inline Rc<T> adoptRc(T& object) {
   adoptedByRc(&object);
   return Rc<T>(object, Rc<T>::Adopt);
 }
 
-template<class T>
-inline Rc<T> makeRc(T& object) {
+template<class T> inline Rc<T> makeRc(T& object) {
   return Rc<T>(object);
 }
 
-template<class T>
-inline Borrow<T> borrow(const Rc<T>& x) {
+template<class T> inline Borrow<T> borrow(const Rc<T>& x) {
   return Borrow<T>(x.get());
 }
+template<class T> Borrow<T> borrow(Rc<T>&& x) = delete;
 
 } // namespace stp
 

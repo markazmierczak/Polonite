@@ -66,29 +66,24 @@ class Own {
   T* ptr_;
 };
 
-template<class T>
-template<class... TArgs>
+template<class T> template<class... TArgs>
 inline Own<T> Own<T>::create(TArgs&&... args) {
   return Own(*new T(forward<TArgs>(args)...));
 }
 
-template<class T>
-struct TIsZeroConstructibleTmpl<Own<T>> : TTrue {};
-template<class T>
-struct TIsTriviallyRelocatableTmpl<Own<T>> : TTrue {};
-template<class T>
-struct TIsTriviallyEqualityComparableTmpl<Own<T>> : TTrue {};
+template<class T> struct TIsZeroConstructibleTmpl<Own<T>> : TTrue {};
+template<class T> struct TIsTriviallyRelocatableTmpl<Own<T>> : TTrue {};
+template<class T> struct TIsTriviallyEqualityComparableTmpl<Own<T>> : TTrue {};
 
 // Helper to transfer ownership of a raw pointer to a Own<T>.
-template<class T>
-inline Own<T> makeOwn(T& object) {
+template<class T> inline Own<T> makeOwn(T& object) {
   return Own<T>(object);
 }
 
-template<class T>
-inline Borrow<T> borrow(const Own<T>& x) {
+template<class T> inline Borrow<T> borrow(const Own<T>& x) {
   return Borrow<T>(x.get());
 }
+template<class T> Borrow<T> borrow(Own<T>&& x) = delete;
 
 } // namespace stp
 

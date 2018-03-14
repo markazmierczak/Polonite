@@ -443,7 +443,7 @@ template<typename T>
 constexpr bool TIsZeroConstructible = TIsZeroConstructibleTmpl<T>::Value;
 
 template<class TDst, class TSrc>
-inline TDst bitCast(const TSrc& source) {
+inline TDst bitCast(const TSrc& source) noexcept {
   static_assert(sizeof(TDst) == sizeof(TSrc),
                 "bitCast requires source and destination to be the same size");
   static_assert(TIsTriviallyCopyable<TDst>,
@@ -506,8 +506,11 @@ template<typename T, typename = void>
 struct TIsTriviallyRelocatableTmpl : TBoolConstant<TIsTriviallyCopyable<T>> {};
 
 template<typename T>
-constexpr bool TIsTriviallyRelocatable = TIsTriviallyRelocatableTmpl<T>::Value;
+struct TIsTriviallyRelocatableTmpl<T, TVoid<decltype(T::IsTriviallyRelocatable)>>
+    : TBoolConstant<T::IsTriviallyRelocatable> {};
 
+template<typename T>
+constexpr bool TIsTriviallyRelocatable = TIsTriviallyRelocatableTmpl<T>::Value;
 
 template<typename T>
 inline void destroyObject(T& item) noexcept {

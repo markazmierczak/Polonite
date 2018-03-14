@@ -19,10 +19,11 @@ namespace stp {
 
 template<typename T>
 class AutoReset {
+  DISALLOW_COPY_AND_ASSIGN(AutoReset);
  public:
   template<typename U>
   AutoReset(Borrow<T> var, U&& new_value)
-      : scoped_variable_(var),
+      : scoped_variable_(&var.get()),
         original_value_(exchange(var, forward<U>(new_value))) {
   }
 
@@ -32,13 +33,11 @@ class AutoReset {
   }
 
   // The change will be permanent - no rollback happen at destruction.
-  void persist() { scoped_variable_ = nullptr; }
+  void persist() noexcept { scoped_variable_ = nullptr; }
 
  private:
-  T& scoped_variable_;
+  T* scoped_variable_;
   T original_value_;
-
-  DISALLOW_COPY_AND_ASSIGN(AutoReset);
 };
 
 } // namespace stp

@@ -21,7 +21,7 @@
 #endif
 
 template<typename T>
-inline void ignoreResult(const T&) {}
+inline void ignoreResult(const T&) noexcept {}
 
 #if COMPILER(GCC)
 #define NEVER_INLINE __attribute__((noinline))

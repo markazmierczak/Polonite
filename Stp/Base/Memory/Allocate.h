@@ -11,13 +11,13 @@
 
 namespace stp {
 
-inline void* tryAllocateMemory(int size) {
+inline void* tryAllocateMemory(int size) noexcept {
   return ::malloc(toUnsigned(size));
 }
-inline void* tryReallocateMemory(void* ptr, int size) {
+inline void* tryReallocateMemory(void* ptr, int size) noexcept {
   return ::realloc(ptr, toUnsigned(size));
 }
-inline void freeMemory(void* ptr) { ::free(ptr); }
+inline void freeMemory(void* ptr) noexcept { ::free(ptr); }
 
 inline void* allocateMemory(int size) {
   return operator new(toUnsigned(size));

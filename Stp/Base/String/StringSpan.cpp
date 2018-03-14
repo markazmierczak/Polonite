@@ -9,7 +9,7 @@
 
 namespace stp {
 
-int StringSpan::indexOfUnit(char c) const {
+int StringSpan::indexOf(char c) const noexcept {
   for (int i = 0; i < length_; ++i) {
     if (data_[i] == c)
       return i;
@@ -17,7 +17,7 @@ int StringSpan::indexOfUnit(char c) const {
   return -1;
 }
 
-int StringSpan::lastIndexOfUnit(char c) const {
+int StringSpan::lastIndexOf(char c) const noexcept {
   for (int i = length_ - 1; i >= 0; --i) {
     if (data_[i] == c)
       return i;
@@ -25,23 +25,23 @@ int StringSpan::lastIndexOfUnit(char c) const {
   return -1;
 }
 
-int StringSpan::indexOfRune(char32_t rune) const {
+int StringSpan::indexOf(char32_t rune) const noexcept {
   if (isAscii(rune))
-    return indexOfUnit(static_cast<char>(rune));
+    return indexOf(static_cast<char>(rune));
   char encoded[Utf8::MaxEncodedRuneLength];
   int n = EncodeUtf(encoded, rune);
   return indexOf(StringSpan(encoded, n));
 }
 
-int StringSpan::lastIndexOfRune(char32_t rune) const {
+int StringSpan::lastIndexOf(char32_t rune) const noexcept {
   if (isAscii(rune))
-    return lastIndexOfUnit(static_cast<char>(rune));
+    return lastIndexOf(static_cast<char>(rune));
   char encoded[Utf8::MaxEncodedRuneLength];
   int n = EncodeUtf(encoded, rune);
   return lastIndexOf(StringSpan(encoded, n));
 }
 
-int StringSpan::indexOf(const StringSpan& needle) const {
+int StringSpan::indexOf(const StringSpan& needle) const noexcept {
   auto* haystack_data = data_;
 
   auto* needle_data = needle.data_;
@@ -67,7 +67,7 @@ int StringSpan::indexOf(const StringSpan& needle) const {
   return i;
 }
 
-int StringSpan::lastIndexOf(const StringSpan& needle) const {
+int StringSpan::lastIndexOf(const StringSpan& needle) const noexcept {
   auto* haystack_data = data_;
 
   auto* needle_data = needle.data_;
@@ -92,7 +92,7 @@ int StringSpan::lastIndexOf(const StringSpan& needle) const {
   return delta;
 }
 
-bool operator==(const StringSpan& lhs, const StringSpan& rhs) {
+bool operator==(const StringSpan& lhs, const StringSpan& rhs) noexcept {
   if (lhs.length() != rhs.length())
     return false;
   if (!lhs.isEmpty())
@@ -100,7 +100,7 @@ bool operator==(const StringSpan& lhs, const StringSpan& rhs) {
   return true;
 }
 
-int compare(const StringSpan& lhs, const StringSpan& rhs) {
+int compare(const StringSpan& lhs, const StringSpan& rhs) noexcept {
   int common_length = min(lhs.length(), rhs.length());
   if (common_length) {
     int rv = ::memcmp(lhs.data(), rhs.data(), toUnsigned(common_length));

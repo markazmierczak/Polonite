@@ -114,8 +114,8 @@ bool FormatLayout::parse(StringSpan s) {
 }
 
 bool FormatReplacement::parse(StringSpan s) {
-  int comma = s.indexOfUnit(',');
-  int semicolon = s.indexOfUnit(':');
+  int comma = s.indexOf(',');
+  int semicolon = s.indexOf(':');
 
   // options specification can also use comma.
   // Detect the case when comma is specified after semicolon only.
@@ -209,7 +209,7 @@ void formatManyImpl(TextWriter& out, StringSpan fmt, Span<Formatter*> args) {
   // TODO handle double }} correctly
   int implicit_index = -1;
   while (!fmt.isEmpty()) {
-    int brace = fmt.indexOfUnit('{');
+    int brace = fmt.indexOf('{');
     if (brace < 0) {
       out << fmt;
       break;
@@ -223,7 +223,7 @@ void formatManyImpl(TextWriter& out, StringSpan fmt, Span<Formatter*> args) {
       fmt.removePrefix(brace + 1);
 
       // Find replacement boundaries.
-      int closing_brace = fmt.indexOfUnit('}');
+      int closing_brace = fmt.indexOf('}');
       ASSERT(closing_brace >= 0);
       StringSpan rep_string = fmt.substring(0, closing_brace);
       fmt.removePrefix(closing_brace + 1);
