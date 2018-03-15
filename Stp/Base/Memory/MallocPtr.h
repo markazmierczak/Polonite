@@ -12,20 +12,20 @@ namespace stp {
 
 template<class T>
 class MallocPtr {
+  DISALLOW_COPY_AND_ASSIGN(MallocPtr);
  public:
   static_assert(!TIsArray<T>, "C arrays disallowed, use List class instead");
-
-  typedef T ElementType;
+  static constexpr bool IsZeroConstructible = true;
+  static constexpr bool IsTriviallyRelocatable = true;
+  static constexpr bool IsTriviallyEqualityComparable = true;
 
   MallocPtr() = default;
   ~MallocPtr() { if (ptr_) ::free(ptr_); }
 
-  DISALLOW_COPY_AND_ASSIGN(MallocPtr);
-
   template<class U, TEnableIf<!TIsArray<U> && TIsConvertibleTo<U*, T*>>* = nullptr>
   MallocPtr(MallocPtr<U>&& u) noexcept : ptr_(u.leakPtr()) {}
   template<class U, TEnableIf<!TIsArray<U> && TIsConvertibleTo<U*, T*>>* = nullptr>
-  MallocPtr& operator=(MallocPtr<U>&& u) noexcept { Reset(u.leakPtr()); return *this; }
+  MallocPtr& operator=(MallocPtr<U>&& u) noexcept { reset(u.leakPtr()); return *this; }
 
   MallocPtr(nullptr_t) noexcept {}
   MallocPtr& operator=(nullptr_t) noexcept { reset(); return *this; }
@@ -54,40 +54,25 @@ class MallocPtr {
   friend bool operator==(const MallocPtr& l, const MallocPtr& r) noexcept { return l.ptr_ == r.ptr_; }
   friend bool operator!=(const MallocPtr& l, const MallocPtr& r) noexcept { return l.ptr_ != r.ptr_; }
 
-  friend bool operator==(const MallocPtr& l, T* r) noexcept { return l.ptr_ == r; }
-  friend bool operator!=(const MallocPtr& l, T* r) noexcept { return l.ptr_ != r; }
-  friend bool operator==(T* l, const MallocPtr& r) noexcept { return l == r.ptr_; }
-  friend bool operator!=(T* l, const MallocPtr& r) noexcept { return l != r.ptr_; }
+  friend bool operator==(const MallocPtr& l, nullptr_t) noexcept { return !l.ptr_; }
+  friend bool operator!=(const MallocPtr& l, nullptr_t) noexcept { return !!l.ptr_; }
+  friend bool operator==(nullptr_t, const MallocPtr& r) noexcept { return !r.ptr_; }
+  friend bool operator!=(nullptr_t, const MallocPtr& r) noexcept { return !!r.ptr_; }
 
  private:
   T* ptr_ = nullptr;
 };
 
-template<class T> bool operator==(const MallocPtr<T>&, nullptr_t) = delete;
-template<class T> bool operator!=(const MallocPtr<T>&, nullptr_t) = delete;
-template<class T> bool operator==(nullptr_t, const MallocPtr<T>&) = delete;
-template<class T> bool operator!=(nullptr_t, const MallocPtr<T>&) = delete;
-
-template<typename T>
-inline MallocPtr<T> MallocPtr<T>::create(int size_in_bytes) {
+template<class T> inline MallocPtr<T> MallocPtr<T>::create(int size_in_bytes) {
   return (T*)allocateMemory(size_in_bytes);
 }
 
-template<typename T>
-inline MallocPtr<T> MallocPtr<T>::tryCreate(int size_in_bytes) noexcept {
+template<class T> inline MallocPtr<T> MallocPtr<T>::tryCreate(int size_in_bytes) noexcept {
   return (T*)tryAllocateMemory(size_in_bytes);
 }
 
-template<typename T>
-struct TIsZeroConstructibleTmpl<MallocPtr<T>> : TTrue {};
-template<typename T>
-struct TIsTriviallyRelocatableTmpl<MallocPtr<T>> : TTrue {};
-template<typename T>
-struct TIsTriviallyEqualityComparableTmpl<MallocPtr<T>> : TTrue {};
-
 // Helper to transfer ownership of a raw pointer to a MallocPtr<T>.
-template<typename T>
-inline MallocPtr<T> makeMallocPtr(T* ptr) noexcept {
+template<class T> inline MallocPtr<T> makeMallocPtr(T* ptr) noexcept {
   return MallocPtr<T>(ptr);
 }
 

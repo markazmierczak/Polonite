@@ -10,13 +10,10 @@
 namespace stp {
 
 class BASE_EXPORT RefCountedThreadSafeBase {
+  DISALLOW_COPY_AND_ASSIGN(RefCountedThreadSafeBase);
  public:
   RefCountedThreadSafeBase() noexcept
-      : ref_count_(1)
-      #if ASSERT_IS_ON
-      , in_dtor_(false)
-      #endif
-      {}
+      : ref_count_(1) {}
 
   ~RefCountedThreadSafeBase() noexcept {
     #if ASSERT_IS_ON
@@ -53,10 +50,8 @@ class BASE_EXPORT RefCountedThreadSafeBase {
  private:
   mutable AtomicRefCount ref_count_;
   #if ASSERT_IS_ON
-  mutable bool in_dtor_;
+  mutable bool in_dtor_ = false;
   #endif
-
-  DISALLOW_COPY_AND_ASSIGN(RefCountedThreadSafeBase);
 };
 
 template<typename T>

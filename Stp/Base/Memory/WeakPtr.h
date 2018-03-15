@@ -120,11 +120,11 @@ class BASE_EXPORT WeakReferenceOwner {
   }
 
   bool hasRefs() const {
-    return flag_ != WeakReference::Flag::Null && !flag_->hasOneRef();
+    return flag_.get() != WeakReference::Flag::Null && !flag_->hasOneRef();
   }
 
   void Invalidate() {
-    if (flag_ != WeakReference::Flag::Null) {
+    if (flag_.get() != WeakReference::Flag::Null) {
       flag_->invalidate();
       flag_ = WeakReference::Flag::Null;
     }

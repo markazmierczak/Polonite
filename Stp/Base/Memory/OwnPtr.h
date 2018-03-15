@@ -4,9 +4,7 @@
 #ifndef STP_BASE_MEMORY_OWNPTR_H_
 #define STP_BASE_MEMORY_OWNPTR_H_
 
-#include "Base/Debug/Assert.h"
-#include "Base/Memory/Allocate.h"
-#include "Base/Type/Variable.h"
+#include "Base/Memory/Own.h"
 
 namespace stp {
 
@@ -18,15 +16,19 @@ class OwnPtr {
   static_assert(!TIsArray<T>, "C arrays disallowed, use List class instead");
   static constexpr bool IsZeroConstructible = true;
   static constexpr bool IsTriviallyRelocatable = true;
-  typedef T ElementType;
 
   OwnPtr() = default;
   ~OwnPtr() { if (ptr_) delete ptr_; }
 
-  template<class U, TEnableIf<!TIsArray<U> && TIsConvertibleTo<U*, T*>>* = nullptr>
+  template<class U, TEnableIf<TIsConvertibleTo<U*, T*>>* = nullptr>
   OwnPtr(OwnPtr<U>&& u) noexcept : ptr_(u.leakPtr()) {}
-  template<class U, TEnableIf<!TIsArray<U> && TIsConvertibleTo<U*, T*>>* = nullptr>
+  template<class U, TEnableIf<TIsConvertibleTo<U*, T*>>* = nullptr>
   OwnPtr& operator=(OwnPtr<U>&& u) noexcept { reset(u.leakPtr()); return *this; }
+
+  template<class U, TEnableIf<TIsConvertibleTo<U*, T*>>* = nullptr>
+  OwnPtr(Own<U>&& u) noexcept : ptr_(&u.leakRef()) {}
+  template<class U, TEnableIf<TIsConvertibleTo<U*, T*>>* = nullptr>
+  OwnPtr& operator=(Own<U>&& u) noexcept { reset(&u.leakRef()); return *this; }
 
   OwnPtr(nullptr_t) noexcept {}
   OwnPtr& operator=(nullptr_t) noexcept { reset(); return *this; }

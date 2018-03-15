@@ -167,7 +167,7 @@ void Application::setName(const String& name) {
 
 static String resolveNameFromExecutablePath() {
   // FIXME
-  return String("toReplace");
+  return StringLiteral("toReplace");
 }
 
 const String& Application::getName() {

@@ -18,7 +18,6 @@ class Own {
   static_assert(!TIsArray<T>, "C arrays disallowed, use List class instead");
   static constexpr bool IsZeroConstructible = true;
   static constexpr bool IsTriviallyRelocatable = true;
-  typedef T ElementType;
 
   ~Own() {
     #if SANITIZER(ADDRESS)
