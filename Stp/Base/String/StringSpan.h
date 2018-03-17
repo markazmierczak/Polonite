@@ -42,7 +42,7 @@ class StringSpan {
 
   BASE_EXPORT int indexOf(char c) const noexcept;
   BASE_EXPORT int lastIndexOf(char c) const noexcept;
-  bool containsUnit(char c) const noexcept { return indexOf(c) >= 0; }
+  bool contains(char c) const noexcept { return indexOf(c) >= 0; }
 
   int indexOf(char16_t rune) const noexcept { return indexOf(static_cast<char32_t>(rune)); }
   int lastIndexOf(char16_t rune) const noexcept { return lastIndexOf(static_cast<char32_t>(rune)); }
@@ -68,10 +68,6 @@ class StringSpan {
   const char* data_;
   int length_;
 };
-
-inline int getLengthOfCString(const char* cstr) noexcept {
-  return cstr ? static_cast<int>(::strlen(cstr)) : 0;
-}
 
 BASE_EXPORT bool operator==(const StringSpan& lhs, const StringSpan& rhs) noexcept;
 

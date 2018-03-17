@@ -35,6 +35,7 @@ class BasicLock {
 };
 
 class BASE_EXPORT Lock : public BasicLock {
+  DISALLOW_COPY_AND_ASSIGN(Lock);
  public:
   Lock() {
     NativeLock::init(&native_object_);
@@ -44,11 +45,11 @@ class BASE_EXPORT Lock : public BasicLock {
   }
 
   ~Lock() {
+    #if ASSERT_IS_ON
     ASSERT(owning_thread_ == InvalidNativeThreadHandle);
+    #endif
     NativeLock::fini(&native_object_);
   }
-
-  DISALLOW_COPY_AND_ASSIGN(Lock);
 
   using BasicLock::tryAcquire;
   using BasicLock::acquire;
@@ -59,6 +60,7 @@ class BASE_EXPORT Lock : public BasicLock {
 };
 
 class AutoLock {
+  DISALLOW_COPY_AND_ASSIGN(AutoLock);
  public:
   enum AlreadyAcquiredTag { AlreadyAcquired };
 
@@ -75,13 +77,12 @@ class AutoLock {
     lock_.release();
   }
 
-  DISALLOW_COPY_AND_ASSIGN(AutoLock);
-
  private:
   BasicLock& lock_;
 };
 
 class AutoUnlock {
+  DISALLOW_COPY_AND_ASSIGN(AutoUnlock);
  public:
   explicit AutoUnlock(BasicLock* lock) : lock_(*lock) {
     lock_.assertAcquired();
@@ -91,8 +92,6 @@ class AutoUnlock {
   ~AutoUnlock() {
     lock_.acquire();
   }
-
-  DISALLOW_COPY_AND_ASSIGN(AutoUnlock);
 
  private:
   BasicLock& lock_;

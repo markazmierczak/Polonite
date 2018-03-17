@@ -11,7 +11,7 @@ namespace stp {
 using testing::_;
 using testing::Truly;
 
-TEST(ArrayTest, Basic) {
+TEST(ArrayTest, basic) {
   auto array = makeArray<int>(2, 3, 4);
   EXPECT_EQ(3, array.size());
 
@@ -33,7 +33,7 @@ TEST(ArrayTest, Basic) {
   EXPECT_EQ(0, array[2]);
 }
 
-TEST(ArrayTest, Find) {
+TEST(ArrayTest, indexOf) {
   auto array = makeArray(2, 2, 4, 5, 6, 7, 8);
 
   EXPECT_EQ(-1, array.indexOf(0));

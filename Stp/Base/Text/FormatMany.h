@@ -35,7 +35,12 @@ class DefaultFormatter final : public Formatter {
   explicit DefaultFormatter(const T& adapted) : adapted_(adapted) {}
 
   void execute(TextWriter& out, const StringSpan& opts) const override {
-    format(out, adapted_, opts);
+    if constexpr (TIsFormattableExtended<T>) {
+      format(out, adapted_, opts);
+    } else {
+      ASSERT(opts.isEmpty());
+      out << adapted_;
+    }
   }
 
  private:

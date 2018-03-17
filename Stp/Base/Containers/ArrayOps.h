@@ -15,24 +15,24 @@ namespace stp {
 
 namespace detail {
 
-template<typename T>
+template<class T>
 constexpr bool TIsCopyInitializableWithMemset =
     TIsTriviallyDefaultConstructible<T> && sizeof(T) == sizeof(char);
 
 } // namespace detail
 
-template<typename T, typename U>
+template<class T, class U>
 constexpr bool areObjectsOverlapping(const T* lhs, int lhs_count, const U* rhs, int rhs_count) noexcept {
   return (rhs <= lhs && lhs < rhs + rhs_count) ||
          (lhs <= rhs && rhs < lhs + lhs_count);
 }
 
-template<typename T>
+template<class T>
 constexpr bool areObjectsOverlapping(const T* lhs, const T* rhs, int count) noexcept {
   return areObjectsOverlapping(lhs, count, rhs, count);
 }
 
-template<typename T>
+template<class T>
 inline void destroyObjects(T* items, int count) noexcept {
   ASSERT(count >= 0);
   if constexpr (!TIsTriviallyDestructible<T>) {
@@ -41,7 +41,7 @@ inline void destroyObjects(T* items, int count) noexcept {
   }
 }
 
-template<typename T>
+template<class T>
 inline void uninitializedInit(T* items, int count) noexcept(TIsNoexceptConstructible<T>) {
   ASSERT(count >= 0);
   if constexpr (TIsNoexceptConstructible<T>) {
@@ -64,7 +64,7 @@ inline void uninitializedInit(T* items, int count) noexcept(TIsNoexceptConstruct
   }
 }
 
-template<typename T>
+template<class T>
 inline void uninitializedCopy(T* dst, const T* src, int count) noexcept(TIsNoexceptCopyConstructible<T>) {
   ASSERT(count >= 0);
   ASSERT(!areObjectsOverlapping(dst, src, count));
@@ -88,7 +88,7 @@ inline void uninitializedCopy(T* dst, const T* src, int count) noexcept(TIsNoexc
   }
 }
 
-template<typename T>
+template<class T>
 inline void uninitializedMove(T* dst, T* src, int count) noexcept {
   ASSERT(count >= 0);
   ASSERT(!areObjectsOverlapping(dst, src, count));
@@ -107,7 +107,7 @@ inline void uninitializedMove(T* dst, T* src, int count) noexcept {
   }
 }
 
-template<typename T>
+template<class T>
 inline void uninitializedRelocate(T* dst, T* src, int count) noexcept {
   ASSERT(count >= 0);
   // Destination and source may overlap.
@@ -129,7 +129,7 @@ inline void uninitializedRelocate(T* dst, T* src, int count) noexcept {
   }
 }
 
-template<typename T, typename U>
+template<class T, class U>
 inline void uninitializedFill(T* items, int count, U&& value) noexcept(TIsNoexceptCopyConstructible<T>) {
   ASSERT(count >= 0);
   if constexpr (TIsNoexceptCopyConstructible<T>) {
@@ -153,7 +153,7 @@ inline void uninitializedFill(T* items, int count, U&& value) noexcept(TIsNoexce
   }
 }
 
-template<typename T, typename U>
+template<class T, class U>
 inline void fillObjects(T* items, int count, const U& value) noexcept(TIsNoexceptCopyAssignable<T>) {
   ASSERT(count >= 0);
   if constexpr (TIsNoexceptCopyAssignable<T>) {
@@ -170,7 +170,7 @@ inline void fillObjects(T* items, int count, const U& value) noexcept(TIsNoexcep
   }
 }
 
-template<typename T>
+template<class T>
 inline bool equalObjects(const T* lhs, const T* rhs, int count) noexcept {
   ASSERT(count >= 0);
   if constexpr (TIsTriviallyEqualityComparable<T>) {
@@ -184,12 +184,12 @@ inline bool equalObjects(const T* lhs, const T* rhs, int count) noexcept {
   }
 }
 
-template<typename T>
+template<class T>
 inline void copyObjects(T* dst, const T* src, int count) noexcept(TIsNoexceptCopyAssignable<T>) {
   ASSERT(count >= 0);
   // Destination and source may overlap.
   if constexpr (TIsTriviallyCopyAssignable<T>) {
-    if (count != 0)
+    if (count)
       ::memmove(dst, src, toUnsigned(count) * sizeof(T));
   } else {
     if (src > dst) {
@@ -202,17 +202,21 @@ inline void copyObjects(T* dst, const T* src, int count) noexcept(TIsNoexceptCop
   }
 }
 
-template<typename T>
+template<class T>
 inline void copyObjectsNonOverlapping(T* dst, const T* src, int count) noexcept(TIsNoexceptCopyAssignable<T>) {
   ASSERT(count >= 0);
   ASSERT(!areObjectsOverlapping(dst, src, count));
   if constexpr (TIsTriviallyCopyAssignable<T>) {
-    if (count != 0)
+    if (count)
       ::memcpy(dst, src, toUnsigned(count) * sizeof(T));
   } else {
     for (int i = 0; i < count; ++i)
       dst[i] = src[i];
   }
+}
+
+inline int getLengthOfCString(const char* cstr) noexcept {
+  return cstr ? static_cast<int>(::strlen(cstr)) : 0;
 }
 
 } // namespace stp

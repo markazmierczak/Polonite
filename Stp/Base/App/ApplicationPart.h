@@ -8,7 +8,6 @@
 
 namespace stp {
 
-class Application;
 class ApplicationPart;
 
 struct ApplicationPartInfo {

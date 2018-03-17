@@ -39,11 +39,11 @@ class BASE_EXPORT WeakReference {
         ASSERT(valid_ == 0);
         return;
       }
-      #endif
       // The flag being invalidated with a single ref implies that there are no
       // weak pointers in existence. Allow deletion on other thread in this case.
       ASSERT(thread_checker_.calledOnValidThread() || hasOneRef(),
              "WeakPtrs must be invalidated on the same sequenced thread");
+      #endif
       valid_ = 0;
     }
 
@@ -53,9 +53,9 @@ class BASE_EXPORT WeakReference {
         ASSERT(valid_ == 0);
         return 0;
       }
-      #endif
       ASSERT(thread_checker_.calledOnValidThread(),
              "WeakPtrs must be checked on the same sequenced thread");
+      #endif
       return valid_;
     }
 

@@ -23,7 +23,7 @@ static inline String formatInteger(T value) {
   return String(FormatInteger(value, buffer));
 }
 
-TEST(FormatIntegerTest, Basic) {
+TEST(FormatIntegerTest, basic) {
   static const FormatIntegerTest<int> IntTests[] = {
     { 0, "0", "0" },
     { -1, "-1", "4294967295" },
@@ -47,7 +47,7 @@ TEST(FormatIntegerTest, Basic) {
   }
 }
 
-TEST(FormatIntegerTest, UnsignedAtEdge) {
+TEST(FormatIntegerTest, unsignedAtEdge) {
   static const struct {
     uint64_t input;
     StringSpan expected;

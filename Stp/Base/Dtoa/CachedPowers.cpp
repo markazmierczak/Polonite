@@ -134,9 +134,7 @@ static const CachedPower CachedPowers[] = {
     {UINT64_2PART_C(0xaf87023b, 9bf0ee6b), 1066, 340},
 };
 
-#if ASSERT_IS_ON
 static constexpr int CachedPowersLength = isizeofArray(CachedPowers);
-#endif
 
 static constexpr int CachedPowersOffset = 348; // -kCachedPowers[0].decimal_exponent
 static constexpr double D_1_Log2_10 = 0.30102999566398114;  //  1 / lg(10)

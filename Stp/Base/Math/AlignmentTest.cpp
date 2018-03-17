@@ -23,7 +23,7 @@ TEST(AlignmentTest, whichAlignment32) {
   EXPECT_EQ(512u, whichAlignment(0xEE00u));
 }
 
-TEST(AlignmentTest, AlignPointer) {
+TEST(AlignmentTest, alignPointer) {
   const unsigned N = 20;
   char buf[N];
   bool r;

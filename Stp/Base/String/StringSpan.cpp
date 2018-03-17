@@ -95,15 +95,13 @@ int StringSpan::lastIndexOf(const StringSpan& needle) const noexcept {
 bool operator==(const StringSpan& lhs, const StringSpan& rhs) noexcept {
   if (lhs.length() != rhs.length())
     return false;
-  if (!lhs.isEmpty())
-    return ::memcmp(lhs.data(), rhs.data(), lhs.length()) == 0;
-  return true;
+  return equalObjects(lhs.data(), rhs.data(), lhs.length());
 }
 
 int compare(const StringSpan& lhs, const StringSpan& rhs) noexcept {
   int common_length = min(lhs.length(), rhs.length());
   if (common_length) {
-    int rv = ::memcmp(lhs.data(), rhs.data(), toUnsigned(common_length));
+    int rv = equalObjects(lhs.data(), rhs.data(), common_length);
     if (rv)
       return rv;
   }

@@ -53,9 +53,7 @@ class BASE_EXPORT TextWriter {
   virtual void onFlush();
 
  private:
-  #if ASSERT_IS_ON
-  static bool isValidChar(char c);
-  #endif
+  BASE_EXPORT static bool isValidChar(char c);
 
   void writeRune(char32_t rune);
 };
