@@ -10,8 +10,6 @@ namespace stp {
 
 class StringSpan {
  public:
-  static constexpr bool IsZeroConstructible = true;
-
   constexpr StringSpan() noexcept
       : data_(nullptr), length_(0) {}
 
@@ -68,6 +66,8 @@ class StringSpan {
   const char* data_;
   int length_;
 };
+
+template<> struct TIsZeroConstructibleTmpl<StringSpan> : TTrue {};
 
 BASE_EXPORT bool operator==(const StringSpan& lhs, const StringSpan& rhs) noexcept;
 

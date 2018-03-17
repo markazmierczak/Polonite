@@ -15,9 +15,6 @@ class MallocPtr {
   DISALLOW_COPY_AND_ASSIGN(MallocPtr);
  public:
   static_assert(!TIsArray<T>, "C arrays disallowed, use List class instead");
-  static constexpr bool IsZeroConstructible = true;
-  static constexpr bool IsTriviallyRelocatable = true;
-  static constexpr bool IsTriviallyEqualityComparable = true;
 
   MallocPtr() = default;
   ~MallocPtr() { if (ptr_) ::free(ptr_); }
@@ -62,6 +59,10 @@ class MallocPtr {
  private:
   T* ptr_ = nullptr;
 };
+
+template<class T> struct TIsZeroConstructibleTmpl<MallocPtr<T>> : TTrue {};
+template<class T> struct TIsTriviallyRelocatableTmpl<MallocPtr<T>> : TTrue {};
+template<class T> struct TIsTriviallyEqualityComparableTmpl<MallocPtr<T>> : TTrue {};
 
 template<class T> inline MallocPtr<T> MallocPtr<T>::create(int size_in_bytes) {
   return (T*)allocateMemory(size_in_bytes);

@@ -153,10 +153,8 @@ class List {
   }
 };
 
-template<typename T>
-struct TIsZeroConstructibleTmpl<List<T>> : TTrue {};
-template<typename T>
-struct TIsTriviallyRelocatableTmpl<List<T>> : TIsTriviallyRelocatableTmpl<T> {};
+template<typename T> struct TIsZeroConstructibleTmpl<List<T>> : TTrue {};
+template<typename T> struct TIsTriviallyRelocatableTmpl<List<T>> : TIsTriviallyRelocatableTmpl<T> {};
 
 template<typename T, int N>
 inline bool operator==(const T (&lhs)[N], const List<T>& rhs) {

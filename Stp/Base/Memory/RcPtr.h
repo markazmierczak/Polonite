@@ -11,10 +11,6 @@ namespace stp {
 template<class T>
 class RcPtr {
  public:
-  static constexpr bool IsZeroConstructible = true;
-  static constexpr bool IsTriviallyRelocatable = true;
-  static constexpr bool IsTriviallyEqualityComparable = true;
-
   RcPtr() noexcept : ptr_(nullptr) {}
   ~RcPtr() { decRefIfNotNull(ptr_); }
 
@@ -91,6 +87,10 @@ class RcPtr {
   friend bool operator==(nullptr_t, const RcPtr& b) noexcept { return !b; }
   friend bool operator!=(nullptr_t, const RcPtr& b) noexcept { return !!b; }
 };
+
+template<class T> struct TIsZeroConstructibleTmpl<RcPtr<T>> : TTrue {};
+template<class T> struct TIsTriviallyRelocatableTmpl<RcPtr<T>> : TTrue {};
+template<class T> struct TIsTriviallyEqualityComparableTmpl<RcPtr<T>> : TTrue {};
 
 template<class T> inline RcPtr<T> adoptRc(T* ptr) noexcept {
   adoptedByRc(ptr);

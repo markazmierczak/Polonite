@@ -10,14 +10,12 @@
 
 namespace stp {
 
-template<typename T>
-using InitializerList = std::initializer_list<T>;
+template<class T> using InitializerList = std::initializer_list<T>;
 
-template<typename T>
+template<class T>
 class Span {
  public:
   static_assert(TsAreSame<T, TRemoveCVRef<T>>, "!");
-  static constexpr bool IsZeroConstructible = true;
   typedef T ItemType;
 
   constexpr Span() noexcept
@@ -78,9 +76,9 @@ class Span {
   }
   constexpr void removeSuffix(int n) noexcept { truncate(size_ - n); }
 
-  template<typename U> int indexOf(const U& item) const noexcept;
-  template<typename U> int lastIndexOf(const U& item) const noexcept;
-  template<typename U> bool contains(const U& item) const noexcept {
+  template<class U> int indexOf(const U& item) const noexcept;
+  template<class U> int lastIndexOf(const U& item) const noexcept;
+  template<class U> bool contains(const U& item) const noexcept {
     return indexOf(item) >= 0;
   }
 
@@ -99,11 +97,10 @@ class Span {
   int size_;
 };
 
-template<typename T>
+template<class T>
 class MutableSpan {
  public:
   static_assert(TsAreSame<T, TRemoveCVRef<T>>, "!");
-  static constexpr bool IsZeroConstructible = true;
   typedef T ItemType;
 
   constexpr MutableSpan() noexcept
@@ -182,17 +179,17 @@ class MutableSpan {
   }
   constexpr void removeSuffix(int n) noexcept { truncate(size_ - n); }
 
-  template<typename U> int indexOf(const U& item) const noexcept {
+  template<class U> int indexOf(const U& item) const noexcept {
     return indexOfItem(data_, size_, item);
   }
-  template<typename U> int lastIndexOf(const U& item) const noexcept {
+  template<class U> int lastIndexOf(const U& item) const noexcept {
     return lastIndexOfItem(data_, size_, item);
   }
-  template<typename U> bool contains(const U& item) const noexcept {
+  template<class U> bool contains(const U& item) const noexcept {
     return indexOf(item) >= 0;
   }
 
-  template<typename U>
+  template<class U>
   void fill(const U& item) noexcept { fillObjects(data_, size_, item); }
 
   friend bool operator==(const MutableSpan& lhs, const Span<T>& rhs) noexcept {
@@ -211,46 +208,60 @@ class MutableSpan {
   int size_;
 };
 
-template<typename T> constexpr Span<T> makeSpan(const T* data, int size) noexcept {
+template<class T> struct TIsZeroConstructibleTmpl<Span<T>> : TTrue {};
+template<class T> struct TIsZeroConstructibleTmpl<MutableSpan<T>> : TTrue {};
+
+template<class T>
+constexpr Span<T> makeSpan(const T* data, int size) noexcept {
   return Span<T>(data, size);
 }
-template<typename T> constexpr MutableSpan<T> makeSpan(T* data, int size) noexcept {
+template<class T>
+constexpr MutableSpan<T> makeSpan(T* data, int size) noexcept {
   return MutableSpan<T>(data, size);
 }
 
-template<typename T, int N> constexpr Span<T> makeSpan(const T (&array)[N]) noexcept {
+template<class T, int N>
+constexpr Span<T> makeSpan(const T (&array)[N]) noexcept {
   return array;
 }
-template<typename T, int N> constexpr MutableSpan<T> makeSpan(T (&array)[N]) noexcept {
+template<class T, int N>
+constexpr MutableSpan<T> makeSpan(T (&array)[N]) noexcept {
   return array;
 }
 
-template<typename T> constexpr Span<T> makeSpan(const InitializerList<T>& ilist) noexcept {
+template<class T>
+constexpr Span<T> makeSpan(const InitializerList<T>& ilist) noexcept {
   return Span<T>(ilist);
 }
 
-template<typename T> inline BufferSpan makeBufferSpan(Span<T> span) noexcept {
+template<class T>
+inline BufferSpan makeBufferSpan(Span<T> span) noexcept {
   return makeBufferSpan(span.data(), span.size());
 }
-template<typename T> inline MutableBufferSpan makeBufferSpan(MutableSpan<T> span) noexcept {
+template<class T>
+inline MutableBufferSpan makeBufferSpan(MutableSpan<T> span) noexcept {
   return makeBufferSpan(span.data(), span.size());
 }
 
-template<typename T, int N> inline bool operator==(const T (&lhs)[N], const Span<T>& rhs) noexcept {
+template<class T, int N>
+inline bool operator==(const T (&lhs)[N], const Span<T>& rhs) noexcept {
   return operator==(makeSpan(lhs), rhs);
 }
-template<typename T, int N> inline bool operator==(const T (&lhs)[N], const MutableSpan<T>& rhs) noexcept {
+template<class T, int N>
+inline bool operator==(const T (&lhs)[N], const MutableSpan<T>& rhs) noexcept {
   return operator==(makeSpan(lhs), rhs);
 }
 
-template<typename T, int N> inline bool operator!=(const T (&lhs)[N], const Span<T>& rhs) noexcept {
+template<class T, int N>
+inline bool operator!=(const T (&lhs)[N], const Span<T>& rhs) noexcept {
   return operator!=(makeSpan(lhs), rhs);
 }
-template<typename T, int N> inline bool operator!=(const T (&lhs)[N], const MutableSpan<T>& rhs) noexcept {
+template<class T, int N>
+inline bool operator!=(const T (&lhs)[N], const MutableSpan<T>& rhs) noexcept {
   return operator!=(makeSpan(lhs), rhs);
 }
 
-template<typename T> template<typename U>
+template<class T> template<class U>
 inline int Span<T>::indexOf(const U& item) const noexcept {
   const T* d = data_;
   for (int i = 0, s = size_; i < s; ++i) {
@@ -260,7 +271,7 @@ inline int Span<T>::indexOf(const U& item) const noexcept {
   return -1;
 }
 
-template<typename T> template<typename U>
+template<class T> template<class U>
 inline int Span<T>::lastIndexOf(const U& item) const noexcept {
   const T* d = data_;
   for (int i = size_ - 1; i >= 0; --i) {

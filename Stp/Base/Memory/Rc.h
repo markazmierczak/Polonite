@@ -20,8 +20,6 @@ ALWAYS_INLINE void adoptedByRc(const void*) noexcept {}
 template<class T>
 class Rc {
  public:
-  static constexpr bool IsTriviallyRelocatable = true;
-
   ~Rc() {
     #if SANITIZER(ADDRESS)
     if (__asan_address_is_poisoned(this))
@@ -82,6 +80,8 @@ class Rc {
 
   Rc(T& object, AdoptTag) : ptr_(&object) {}
 };
+
+template<class T> struct TIsTriviallyRelocatableTmpl<Rc<T>> : TTrue {};
 
 template<class T> inline Rc<T> adoptRc(T& object) noexcept {
   adoptedByRc(&object);

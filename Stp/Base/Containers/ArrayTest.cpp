@@ -3,13 +3,9 @@
 
 #include "Base/Containers/Array.h"
 
-#include "Base/Test/GMock.h"
 #include "Base/Test/GTest.h"
 
 namespace stp {
-
-using testing::_;
-using testing::Truly;
 
 TEST(ArrayTest, basic) {
   auto array = makeArray<int>(2, 3, 4);

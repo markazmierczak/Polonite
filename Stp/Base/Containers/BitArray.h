@@ -177,12 +177,9 @@ class BitArray {
   }
 };
 
-template<int N>
-struct TIsZeroConstructibleTmpl<BitArray<N>> : TTrue {};
-template<int N>
-struct TIsTriviallyRelocatableTmpl<BitArray<N>> : TTrue {};
-template<int N>
-struct TIsTriviallyEqualityComparableTmpl<BitArray<N>> : TTrue {};
+template<int N> struct TIsZeroConstructibleTmpl<BitArray<N>> : TTrue {};
+template<int N> struct TIsTriviallyRelocatableTmpl<BitArray<N>> : TTrue {};
+template<int N> struct TIsTriviallyEqualityComparableTmpl<BitArray<N>> : TTrue {};
 
 template<int N>
 constexpr BitArray<N>::BitArray(uint64_t x) noexcept : words_() {

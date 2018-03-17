@@ -506,10 +506,6 @@ template<typename T, typename = void>
 struct TIsTriviallyRelocatableTmpl : TBoolConstant<TIsTriviallyCopyable<T>> {};
 
 template<typename T>
-struct TIsTriviallyRelocatableTmpl<T, TVoid<decltype(T::IsTriviallyRelocatable)>>
-    : TBoolConstant<T::IsTriviallyRelocatable> {};
-
-template<typename T>
 constexpr bool TIsTriviallyRelocatable = TIsTriviallyRelocatableTmpl<T>::Value;
 
 template<typename T>

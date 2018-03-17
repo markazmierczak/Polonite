@@ -11,9 +11,6 @@ namespace stp {
 
 class String {
  public:
-  static constexpr bool IsZeroConstructible = true;
-  static constexpr bool IsTriviallyRelocatable = true;
-
   String() noexcept : data_(nullptr), length_(0), capacity_(0) {}
   ~String() { destroy(data_, capacity_); }
 
@@ -110,6 +107,9 @@ class String {
 
   static constexpr int LiteralCapacity = -1;
 };
+
+template<> struct TIsZeroConstructibleTmpl<String> : TTrue {};
+template<> struct TIsTriviallyRelocatableTmpl<String> : TTrue {};
 
 #define StringLiteral(text) String::fromLiteral(text, isizeof(text) - 1)
 #ifndef NDEBUG

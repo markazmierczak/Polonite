@@ -8,7 +8,7 @@
 
 namespace stp {
 
-TEST(BinarySearch, BinarySearch) {
+TEST(BinarySearchTest, basic) {
   int array[] = { 2, 2, 4, 5, 5, 5, 5, 6, 7, 8 };
   Span<int> span = array;
   EXPECT_EQ(-1, binarySearchInSpan(span, 1));

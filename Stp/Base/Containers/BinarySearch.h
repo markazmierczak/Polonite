@@ -8,9 +8,9 @@
 
 namespace stp {
 
-template<typename T, typename TItem, typename TComparer = DefaultComparer>
+template<class T, class TItem, class TComparer = DefaultComparer>
 constexpr int lowerBoundOfSpan(
-    Span<T> sequence, const TItem& item, TComparer&& comparer = DefaultComparer()) {
+    Span<T> sequence, const TItem& item, TComparer&& comparer = DefaultComparer()) noexcept {
   const auto* d = sequence.data();
   int lo = 0;
   int hi = sequence.size() - 1;
@@ -34,9 +34,9 @@ constexpr int lowerBoundOfSpan(
   return lo;
 }
 
-template<typename T, typename TItem, typename TComparer = DefaultComparer>
+template<class T, class TItem, class TComparer = DefaultComparer>
 constexpr int upperBoundOfSpan(
-    Span<T> sequence, const TItem& item, TComparer&& comparer = DefaultComparer()) {
+    Span<T> sequence, const TItem& item, TComparer&& comparer = DefaultComparer()) noexcept {
   const auto* d = sequence.data();
   int lo = 0;
   int hi = sequence.size() - 1;
@@ -60,9 +60,9 @@ constexpr int upperBoundOfSpan(
   return lo;
 }
 
-template<typename T, typename TItem, typename TComparer = DefaultComparer>
+template<class T, class TItem, class TComparer = DefaultComparer>
 constexpr int binarySearchInSpan(
-    Span<T> sequence, const TItem& item, TComparer&& comparer = DefaultComparer()) {
+    Span<T> sequence, const TItem& item, TComparer&& comparer = DefaultComparer()) noexcept {
   const auto* d = sequence.data();
   int lo = 0;
   int hi = sequence.size() - 1;

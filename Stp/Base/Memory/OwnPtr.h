@@ -14,8 +14,6 @@ class OwnPtr {
  public:
   static_assert(!TIsVoid<T>, "void type");
   static_assert(!TIsArray<T>, "C arrays disallowed, use List class instead");
-  static constexpr bool IsZeroConstructible = true;
-  static constexpr bool IsTriviallyRelocatable = true;
 
   OwnPtr() = default;
   ~OwnPtr() { if (ptr_) delete ptr_; }
@@ -63,6 +61,9 @@ class OwnPtr {
  private:
   T* ptr_ = nullptr;
 };
+
+template<class T> struct TIsZeroConstructibleTmpl<OwnPtr<T>> : TTrue {};
+template<class T> struct TIsTriviallyRelocatableTmpl<OwnPtr<T>> : TTrue {};
 
 template<class T> template<class... TArgs>
 inline OwnPtr<T> OwnPtr<T>::create(TArgs&&... args) {

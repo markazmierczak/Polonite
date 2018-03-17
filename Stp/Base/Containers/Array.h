@@ -14,8 +14,6 @@ struct Array {
   typedef T ItemType;
   typedef Span<T> SpanType;
   typedef MutableSpan<T> MutableSpanType;
-  static constexpr bool IsZeroConstructible = TIsZeroConstructible<T>;
-  static constexpr bool IsTriviallyRelocatable = TIsTriviallyRelocatable<T>;
 
   T data_[N];
 
@@ -69,6 +67,9 @@ struct Array {
   friend constexpr T* begin(Array& x) noexcept { return x.data_; }
   friend constexpr T* end(Array& x) noexcept { return x.data_ + N; }
 };
+
+template<class T, int N> struct TIsZeroConstructibleTmpl<Array<T, N>> : TIsZeroConstructibleTmpl<T> {};
+template<class T, int N> struct TIsTriviallyRelocatableTmpl<Array<T, N>> : TIsTriviallyRelocatableTmpl<T> {};
 
 template<class T = void, class... TElements>
 constexpr auto makeArray(TElements&&... elements) {

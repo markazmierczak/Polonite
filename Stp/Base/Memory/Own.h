@@ -16,8 +16,6 @@ class Own {
  public:
   static_assert(!TIsVoid<T>, "void type");
   static_assert(!TIsArray<T>, "C arrays disallowed, use List class instead");
-  static constexpr bool IsZeroConstructible = true;
-  static constexpr bool IsTriviallyRelocatable = true;
 
   ~Own() {
     #if SANITIZER(ADDRESS)
@@ -65,6 +63,8 @@ class Own {
  private:
   T* ptr_;
 };
+
+template<class T> struct TIsTriviallyRelocatableTmpl<Own<T>> : TTrue {};
 
 template<class T> template<class... TArgs>
 inline Own<T> Own<T>::create(TArgs&&... args) {
