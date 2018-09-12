@@ -4,23 +4,17 @@
 #ifndef STP_BASE_FS_FILEPATHSPAN_H_
 #define STP_BASE_FS_FILEPATHSPAN_H_
 
-#include "Base/Compiler/Os.h"
-#include "Base/Containers/Span.h"
+#include "Base/System/OsStringSpan.h"
+#include "Base/Type/Nullable.h"
 
 namespace stp {
 
 class FilePath;
-class FilePathEnumerator;
+class FilePathComponents;
 
 #if OS(POSIX)
-// On most platforms, native pathnames are char arrays, and the encoding
-// may or may not be specified. On Mac OS X, native pathnames are encoded in UTF-8.
-typedef char FilePathChar;
 # define FILE_PATH_LITERAL(x) x
 #elif OS(WIN)
-// On Windows, for Unicode-aware applications, native pathnames are wchar_t
-// arrays encoded in UTF-16.
-typedef wchar_t FilePathChar;
 # define FILE_PATH_LITERAL(x) L ## x
 #endif
 
@@ -31,82 +25,73 @@ typedef wchar_t FilePathChar;
 #define HAVE_FILE_PATH_WITH_DRIVE_LETTER (OS(WIN))
 
 #if OS(POSIX)
-constexpr FilePathChar FilePathSeparator = '/';
-constexpr FilePathChar FilePathAltSeparator = '/';
+constexpr OsChar FilePathSeparator = '/';
+constexpr OsChar FilePathAltSeparator = '/';
 #elif OS(WIN)
-constexpr FilePathChar FilePathSeparator = L'\\';
-constexpr FilePathChar FilePathAltSeparator = L'/';
+constexpr OsChar FilePathSeparator = L'\\';
+constexpr OsChar FilePathAltSeparator = L'/';
 #endif
 
-constexpr bool isFilePathSeparator(FilePathChar c) {
+constexpr bool isFilePathSeparator(OsChar c) {
   return c == FilePathSeparator || c == FilePathAltSeparator;
 }
 
-class BASE_EXPORT FilePathSpan {
+class FilePathSpan {
  public:
-  typedef FilePathChar CharType;
-
   constexpr FilePathSpan() = default;
 
-  constexpr FilePathSpan(const CharType* data, int size) noexcept : chars_(data, size) {}
-  constexpr explicit FilePathSpan(Span<CharType> native) noexcept : chars_(native) {}
+  constexpr FilePathSpan(const OsChar* data, int size) noexcept : str_(data, size) {}
+  constexpr explicit FilePathSpan(OsStringSpan str) noexcept : str_(str) {}
 
-  ALWAYS_INLINE constexpr const CharType* data() const { return chars_.data(); }
-  ALWAYS_INLINE constexpr int size() const { return chars_.size(); }
+  ALWAYS_INLINE constexpr const OsChar* data() const noexcept { return str_.data(); }
+  ALWAYS_INLINE constexpr int length() const noexcept { return str_.length(); }
 
   // Returns underlying characters in native encoding.
   // Be very careful on using this. See documentation beforehand.
-  ALWAYS_INLINE const Span<CharType>& chars() const { return chars_; }
-  ALWAYS_INLINE Span<CharType>& chars() { return chars_; }
+  ALWAYS_INLINE const OsStringSpan& asOsStr() const noexcept { return str_; }
 
-  constexpr bool isEmpty() const { return chars_.isEmpty(); }
+  constexpr bool isEmpty() const noexcept { return str_.isEmpty(); }
 
-  FilePathSpan slice(int at) const { return FilePathSpan(chars_.slice(at)); }
-  FilePathSpan slice(int at, int n) const { return FilePathSpan(chars_.slice(at, n)); }
+  FilePathSpan getRoot() const noexcept;
+  FilePathSpan getDirectoryName() const noexcept;
 
-  void truncate(int at) { chars_.truncate(at); }
+  bool cdUp() noexcept;
 
-  FilePathSpan getRoot() const;
-  FilePathSpan getDirectoryName() const;
+  Nullable<OsStringSpan> fileName() const noexcept;
+  Nullable<OsStringSpan> fileStem() const noexcept;
 
-  bool cdUp();
+  void stripTrailingSeparators() noexcept;
 
-  FilePathSpan getFileName() const;
-  FilePathSpan getFileNameWithoutExtension() const;
+  int indexOfSeparator() const noexcept;
+  int indexOfSeparator(int begin) const noexcept;
+  int lastIndexOfSeparator() const noexcept;
+  int lastIndexOfSeparator(int end) const noexcept;
 
-  void stripTrailingSeparators();
+  int indexOfDriveLetter() const noexcept;
 
-  int indexOfSeparator() const;
-  int indexOfSeparator(int begin) const;
-  int lastIndexOfSeparator() const;
-  int lastIndexOfSeparator(int end) const;
+  Nullable<OsStringSpan> extension() const noexcept;
+  bool matchesExtension(StringSpan extension) const noexcept;
+  void removeExtension() noexcept;
 
-  int indexOfDriveLetter() const;
+  bool isAbsolute() const noexcept { return getRootLength() > 0; }
+  bool IsRelative() const noexcept { return !isAbsolute(); }
 
-  bool hasExtension() const;
-  String getExtension() const;
-  bool matchesExtension(StringSpan extension) const;
-  void removeExtension();
+  FilePathComponents components() const noexcept;
 
-  bool IsAbsolute() const { return getRootLength() > 0; }
-  bool IsRelative() const { return !IsAbsolute(); }
+  int getRootLength() const noexcept;
+  int getDirectoryNameLength() const noexcept;
+  int indexOfExtension() const noexcept;
+  int countTrailingSeparators() const noexcept;
 
-  FilePathEnumerator enumerate() const;
+  friend bool operator<=(const FilePathSpan& l, const FilePathSpan& r) noexcept { return l.compareTo(r) <= 0; }
+  friend bool operator>=(const FilePathSpan& l, const FilePathSpan& r) noexcept { return l.compareTo(r) >= 0; }
+  friend bool operator< (const FilePathSpan& l, const FilePathSpan& r) noexcept { return l.compareTo(r) <  0; }
+  friend bool operator> (const FilePathSpan& l, const FilePathSpan& r) noexcept { return l.compareTo(r) >  0; }
 
-  int getRootLength() const;
-  int getDirectoryNameLength() const;
-  int indexOfExtension() const;
-  int countTrailingSeparators() const;
-
-  friend bool operator<=(const FilePathSpan& l, const FilePathSpan& r) { return l.compareTo(r) <= 0; }
-  friend bool operator>=(const FilePathSpan& l, const FilePathSpan& r) { return l.compareTo(r) >= 0; }
-  friend bool operator< (const FilePathSpan& l, const FilePathSpan& r) { return l.compareTo(r) <  0; }
-  friend bool operator> (const FilePathSpan& l, const FilePathSpan& r) { return l.compareTo(r) >  0; }
-
-  friend bool operator==(const FilePathSpan& l, const FilePathSpan& r) { return l.equalsTo(r); }
-  friend bool operator!=(const FilePathSpan& l, const FilePathSpan& r) { return !operator==(l, r); }
-  friend HashCode partialHash(const FilePathSpan& x) { return x.hashImpl(); }
-  friend int compare(const FilePathSpan& l, const FilePathSpan& r) { return l.compareTo(r); }
+  friend bool operator==(const FilePathSpan& l, const FilePathSpan& r) noexcept { return l.equalsTo(r); }
+  friend bool operator!=(const FilePathSpan& l, const FilePathSpan& r) noexcept { return !operator==(l, r); }
+  friend HashCode partialHash(const FilePathSpan& x) noexcept { return partialHash(x.str_); }
+  friend int compare(const FilePathSpan& l, const FilePathSpan& r) noexcept { return l.compareTo(r); }
   friend TextWriter& operator<<(TextWriter& out, const FilePathSpan& x) {
     x.formatImpl(out);
     return out;
@@ -116,38 +101,33 @@ class BASE_EXPORT FilePathSpan {
   }
 
  private:
-  bool equalsTo(const FilePathSpan& other) const;
-  int compareTo(const FilePathSpan& other) const;
-  HashCode hashImpl() const;
-  void formatImpl(TextWriter& out) const;
+  OsStringSpan str_;
 
-  Span<CharType> chars_;
+  BASE_EXPORT bool equalsTo(const FilePathSpan& other) const noexcept;
+  BASE_EXPORT int compareTo(const FilePathSpan& other) const noexcept;
+  BASE_EXPORT void formatImpl(TextWriter& out) const;
 };
 
-inline FilePathSpan makeFilePathSpanFromNullTerminated(const FilePathChar* cstr) {
-  return FilePathSpan(makeSpanFromNullTerminated(cstr));
-}
-
-class BASE_EXPORT FilePathEnumerator {
+class FilePathComponents {
  public:
-  explicit FilePathEnumerator(FilePathSpan path);
+  explicit FilePathComponents(FilePathSpan path) noexcept;
 
   FilePathSpan getCurrent() const { return path_.slice(now_pos_, now_len_); }
 
-  FilePathEnumerator* next();
+  FilePathComponents* next() noexcept;
 
   class Iterator {
    public:
-    explicit Iterator(FilePathEnumerator* e) : enumerator_(e) {}
+    explicit Iterator(FilePathComponents* e) noexcept : enumerator_(e) {}
 
-    Iterator& operator++() { enumerator_ = enumerator_->next(); return *this; }
-    FilePathSpan operator*() const { return enumerator_->getCurrent(); }
+    Iterator& operator++() noexcept { enumerator_ = enumerator_->next(); return *this; }
+    FilePathSpan operator*() const noexcept { return enumerator_->getCurrent(); }
 
-    bool operator==(const Iterator& o) const { return enumerator_ == o.enumerator_; }
-    bool operator!=(const Iterator& o) const { return enumerator_ != o.enumerator_; }
+    bool operator==(const Iterator& o) const noexcept { return enumerator_ == o.enumerator_; }
+    bool operator!=(const Iterator& o) const noexcept { return enumerator_ != o.enumerator_; }
 
    private:
-    FilePathEnumerator* enumerator_;
+    FilePathComponents* enumerator_;
   };
 
  private:
@@ -156,8 +136,8 @@ class BASE_EXPORT FilePathEnumerator {
   int now_len_;
 };
 
-inline FilePathEnumerator FilePathSpan::enumerate() const {
-  return FilePathEnumerator(*this);
+inline FilePathComponents FilePathSpan::components() const noexcept {
+  return FilePathComponents(*this);
 }
 
 } // namespace stp

@@ -35,10 +35,12 @@ class BASE_EXPORT Application {
   void addPart(ApplicationPart* part);
 
   void setName(const String& name);
-  const String& getName();
+  const String& name() const noexcept { return name_; }
 
   void setDisplayName(const String& display_name);
-  const String& getDisplayName();
+  const String& displayName() const {
+    return !display_name_.isEmpty() ? display_name_ : name_;
+  }
 
   void setVersion(const Version& version);
   const Version& getVersion() const { return version_; }

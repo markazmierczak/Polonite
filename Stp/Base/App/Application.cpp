@@ -8,13 +8,10 @@
 #include "Base/Debug/Console.h"
 #include "Base/Debug/StackTrace.h"
 #include "Base/Error/ExceptionPtr.h"
-#include "Base/FileSystem/KnownPaths.h"
 #include "Base/Text/AsciiString.h"
 #include "Base/Text/FormatMany.h"
 
 namespace stp {
-
-static BasicLock g_data_lock = BASIC_LOCK_INITIALIZER;
 
 Application* Application::g_instance_ = nullptr;
 
@@ -35,9 +32,10 @@ void Application::addPart(ApplicationPart* part) {
   ASSERT(phase_ == Phase::Born);
 
   if (part->status_ != ApplicationPart::Unregistered) {
-    ASSERT(part->status_ == ApplicationPart::Registered,
-           "application parts are circular dependent {}<->{}",
-           part->getName(), part_being_registered_->getName());
+    // FIXME
+//    ASSERT(part->status_ == ApplicationPart::Registered,
+//           "application parts are circular dependent {}<->{}",
+//           part->getName(), part_being_registered_->getName());
     return; // already registered
   }
 
@@ -106,7 +104,7 @@ void Application::init() {
 
   onCaptureArguments(native_arguments_);
 
-  CommandLine::init(native_arguments_);
+  // FIXME CommandLine::init(native_arguments_);
 
   for (auto* part = parts_head_; part; part = part->next_)
     part->init();
@@ -126,7 +124,7 @@ void Application::fini() {
   for (auto* part = parts_tail_; part; part = part->prev_)
     part->fini();
 
-  CommandLine::fini();
+  // FIXME CommandLine::fini();
 
   #if OS(MAC)
   NSAutoreleasePoolFini();
@@ -157,24 +155,12 @@ void Application::fini() {
 void Application::setName(const String& name) {
   ASSERT(!name.isEmpty());
   // Many clients depends on short name being ASCII.
-  ASSERT(isAscii(name));
+  // FIXME ASSERT(isAscii(name));
   // Short name may not contain, otherwise it cannot be used in path specification.
   // FIXME ASSERT(name.indexOfAny("/\\:") < 0);
 
   ASSERT(phase_ == Phase::Born);
   name_ = name;
-}
-
-static String resolveNameFromExecutablePath() {
-  // FIXME
-  return StringLiteral("toReplace");
-}
-
-const String& Application::getName() {
-  AutoLock auto_lock(borrow(g_data_lock));
-  if (name_.isEmpty())
-    name_ = resolveNameFromExecutablePath();
-  return name_;
 }
 
 /**
@@ -186,10 +172,6 @@ void Application::setDisplayName(const String& display_name) {
 
   ASSERT(phase_ == Phase::Born);
   display_name_ = display_name;
-}
-
-const String& Application::getDisplayName() {
-  return !display_name_.isEmpty() ? display_name_ : getName();
 }
 
 void Application::setVersion(const Version& version) {
@@ -210,12 +192,12 @@ static void defaultTerminate() {
     try {
       exception_ptr.rethrow();
     } catch(Exception& exception) {
-      RELEASE_LOG(FATAL, "unhandled exception {}", exception);
+      // FIXME RELEASE_LOG(FATAL, "unhandled exception {}", exception);
     } catch(...) {
-      RELEASE_LOG(FATAL, "unhandled unknown exception");
+      // FIXME RELEASE_LOG(FATAL, "unhandled unknown exception");
     }
   } else {
-    RELEASE_LOG(FATAL, "terminated");
+    // FIXME RELEASE_LOG(FATAL, "terminated");
   }
 }
 

@@ -92,7 +92,7 @@ FilePathSpan FilePathSpan::getDirectoryName() const {
  * object, either a file or a directory. If this object refers to
  * the root directory, returns empty path.
  */
-FilePathSpan FilePathSpan::getFileName() const {
+Nullable<OsStringSpan> FilePathSpan::fileName() const noexcept {
   int root_len = getRootLength();
 
   // Keep everything after the final separator.

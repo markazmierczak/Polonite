@@ -16,26 +16,27 @@
 namespace stp {
 
 void BaseApplicationPart::init() {
-  auto& command_line = CommandLine::forCurrentProcess();
-  ALLOW_UNUSED_LOCAL(command_line);
+  // FIXME auto& command_line = CommandLine::forCurrentProcess();
+  // FIXME ALLOW_UNUSED_LOCAL(command_line);
 
-  #if !defined(NDEBUG) && !OS(IOS)
-  // Will wait for 60 seconds for a debugger to come to attach to the process.
-  if (command_line.has("wait-for-debugger"))
-    Debugger::waitFor(60, true);
-  #endif
+  // FIXME
+//  #if !defined(NDEBUG) && !OS(IOS)
+//  // Will wait for 60 seconds for a debugger to come to attach to the process.
+//  if (command_line.has("wait-for-debugger"))
+//    Debugger::waitFor(60, true);
+//  #endif
 
-  CpuInfo::ClassInit();
+  // FIXME CpuInfo::ClassInit();
   detail::WeakReference::Flag::classInit();
-  Console::classInit();
-  InitLogging();
+  // FIXME Console::classInit();
+  // FIXME InitLogging();
   TimeTicks::ClassInit();
-  Thread::ClassInit();
+  // FIXME Thread::ClassInit();
 }
 
 void BaseApplicationPart::fini() {
-  Thread::ClassFini();
-  Console::classFini();
+  // FIXME Thread::ClassFini();
+  // FIXME Console::classFini();
 }
 
 constexpr const ApplicationPartInfo BaseApplicationPart::Info_ = makeInfo();
